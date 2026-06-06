@@ -1,19 +1,17 @@
 import { CircularProgress, Stack } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { StoriesService } from '../../api/Learnup';
+import { StoriesService, type StoryResponse } from '../../api/Learnup';
 import { EmptyList } from '../../shared/components/EmptyList';
 import { ErrorPage } from '../../shared/components/ErrorPage';
 import { Scaffold } from '../../shared/components/Scaffold';
 import { StoryControls } from './components/StoryControls';
 import { StoryItem } from './components/StoryItem';
-import { useStoryAudio } from './hooks/useStoryAudio';
+import { StoryAudioProvider, useStoryAudio } from './hooks/useStoryAudio';
 
 export default function StoryDetailPage () {
   const { id: storyId } = useParams<{ id: string; }>();
   const storyIdNumber = Number(storyId);
-  const [showTranslation, setShowTranslation] = useState(true);
 
   const storyQuery = useQuery({
     queryKey: ['story', storyIdNumber],
@@ -24,13 +22,6 @@ export default function StoryDetailPage () {
   const story = storyQuery.data;
   const storyItems = story?.items ?? [];
 
-  const {
-    activeItemId,
-    playItemAudio,
-
-  } = useStoryAudio(storyItems);
-
-
   if (storyQuery.isLoading) {
     return <CircularProgress />;
   }
@@ -40,7 +31,22 @@ export default function StoryDetailPage () {
   }
 
   return (
-    <Scaffold title={story.title}>
+    <StoryAudioProvider storyItems={storyItems}>
+      <StoryDetailContent story={story} />
+    </StoryAudioProvider>
+  );
+}
+
+function StoryDetailContent (props: { story: StoryResponse; }) {
+  const storyItems = props.story.items ?? [];
+  const {
+    activeItemId,
+    playItemAudio,
+    showTranslation,
+  } = useStoryAudio();
+
+  return (
+    <Scaffold title={props.story.title}>
       <Stack>
         {storyItems.length === 0 ? (
           <EmptyList />
@@ -58,11 +64,7 @@ export default function StoryDetailPage () {
           </Stack>
         )}
       </Stack>
-      <StoryControls
-        story={story}
-        showTranslation={showTranslation}
-        onToggleTranslation={() => setShowTranslation((current) => !current)}
-      />
+      <StoryControls />
     </Scaffold>
   );
 }

@@ -1,13 +1,8 @@
 import { Box, Icon, IconButton, Stack } from "@mui/material";
 import { useState } from "react";
-import type { StoryResponse } from "../../../api/Learnup";
 import { useStoryAudio } from "../hooks/useStoryAudio";
 
-export function StoryControls (props: {
-  story: StoryResponse;
-  showTranslation: boolean;
-  onToggleTranslation: () => void;
-}) {
+export function StoryControls () {
 
   const {
     audioRef,
@@ -20,7 +15,9 @@ export function StoryControls (props: {
     handleLoadedMetadata,
     handlePause,
     handleTimeUpdate,
-  } = useStoryAudio(props.story.items ?? []);
+    showTranslation,
+    onToggleTranslation,
+  } = useStoryAudio();
 
   const isPlaying = playbackStatus === 'playing';
   const [isSlowSpeed, setIsSlowSpeed] = useState(false);
@@ -77,7 +74,6 @@ export function StoryControls (props: {
           <Icon sx={{ fontSize: '25px !important' }}>chevron_left</Icon>
         </IconButton>
 
-
         {
           isPlaying ?
             <IconButton
@@ -94,7 +90,6 @@ export function StoryControls (props: {
             </IconButton>
         }
 
-
         <IconButton
           onClick={playNextItem}
           sx={{ width: 30, height: 30, borderRadius: 999, border: '1px solid', borderColor: ' divider' }}>
@@ -102,18 +97,16 @@ export function StoryControls (props: {
         </IconButton>
 
         <IconButton
-          color={props.showTranslation ? "primary" : "default"}
-          onClick={props.onToggleTranslation}
-          title={props.showTranslation ? "Hide translation" : "Show translation"}
+          color={showTranslation ? "primary" : "default"}
+          onClick={onToggleTranslation}
+          title={showTranslation ? "Hide translation" : "Show translation"}
           sx={{ width: 30, height: 30, borderRadius: 999 }}>
           <Icon sx={{ fontSize: '25px !important' }}>
             closed_caption
           </Icon>
         </IconButton>
 
-
       </Stack>
-
 
     </Box>
   );

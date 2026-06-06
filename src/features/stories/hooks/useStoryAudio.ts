@@ -1,4 +1,14 @@
-import { useEffect, useMemo, useRef, useState, type RefObject } from 'react';
+import {
+  createContext,
+  createElement,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+  type RefObject,
+} from 'react';
 import type { StoryItemResponse } from '../../../api/Learnup';
 
 export type PlaybackStatus = 'idle' | 'playing' | 'paused';
@@ -10,6 +20,8 @@ type UseStoryAudioResult = {
   playbackStatus: PlaybackStatus;
   playableItemCount: number;
   progressPercentage: number;
+  showTranslation: boolean;
+  onToggleTranslation: () => void;
   hasAudio: (itemId: number | null | undefined) => boolean;
   playItemAudio: (itemId: number) => Promise<void>;
   play: () => Promise<void>;
@@ -23,12 +35,15 @@ type UseStoryAudioResult = {
   handleTimeUpdate: () => void;
 };
 
-export function useStoryAudio (storyItems: StoryItemResponse[]): UseStoryAudioResult {
+const StoryAudioContext = createContext<UseStoryAudioResult | null>(null);
+
+function useStoryAudioState (storyItems: StoryItemResponse[]): UseStoryAudioResult {
   const [audioMap, setAudioMap] = useState<Record<number, string>>({});
   const [playingItemId, setPlayingItemId] = useState<number | null>(null);
   const [playbackStatus, setPlaybackStatus] = useState<PlaybackStatus>('idle');
   const [audioProgress, setAudioProgress] = useState(0);
   const [audioDuration, setAudioDuration] = useState(0);
+  const [showTranslation, setShowTranslation] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? '';
@@ -230,6 +245,8 @@ export function useStoryAudio (storyItems: StoryItemResponse[]): UseStoryAudioRe
     playbackStatus,
     playableItemCount: playableItemIds.length,
     progressPercentage,
+    showTranslation,
+    onToggleTranslation: () => setShowTranslation((current) => !current),
     hasAudio: (itemId) => itemId != null && Boolean(audioMap[itemId]),
     playItemAudio,
     play,
@@ -242,4 +259,20 @@ export function useStoryAudio (storyItems: StoryItemResponse[]): UseStoryAudioRe
     handlePause,
     handleTimeUpdate,
   };
+}
+
+export function StoryAudioProvider (props: { storyItems: StoryItemResponse[]; children: ReactNode; }) {
+  const storyAudio = useStoryAudioState(props.storyItems);
+
+  return createElement(StoryAudioContext.Provider, { value: storyAudio }, props.children);
+}
+
+export function useStoryAudio (): UseStoryAudioResult {
+  const storyAudio = useContext(StoryAudioContext);
+
+  if (!storyAudio) {
+    throw new Error('useStoryAudio must be used within StoryAudioProvider');
+  }
+
+  return storyAudio;
 }

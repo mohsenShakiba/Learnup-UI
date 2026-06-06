@@ -3,10 +3,11 @@ import type { StoryItemResponse } from '../../../api/Learnup';
 type StoryItemProps = {
   item: StoryItemResponse;
   isActive: boolean;
+  showTranslation: boolean;
   onPlay: (itemId: number) => void;
 };
 
-export function StoryItem ({ item, isActive, onPlay }: StoryItemProps) {
+export function StoryItem ({ item, isActive, showTranslation, onPlay }: StoryItemProps) {
   const itemId = item.id;
 
   const handlePlay = () => {
@@ -52,14 +53,16 @@ export function StoryItem ({ item, isActive, onPlay }: StoryItemProps) {
           <div style={{ whiteSpace: 'pre-wrap' }}>{item.content || 'No content provided.'}</div>
         </div>
 
-        <div>
-          <div style={{ fontSize: 13, fontWeight: 600, color: '#6b7280', marginBottom: 4 }}>
-            Translation
+        {showTranslation ? (
+          <div>
+            <div style={{ fontSize: 13, fontWeight: 600, color: '#6b7280', marginBottom: 4 }}>
+              Translation
+            </div>
+            <div style={{ whiteSpace: 'pre-wrap', color: '#374151' }}>
+              {item.translation || 'No translation provided.'}
+            </div>
           </div>
-          <div style={{ whiteSpace: 'pre-wrap', color: '#374151' }}>
-            {item.translation || 'No translation provided.'}
-          </div>
-        </div>
+        ) : null}
       </div>
     </article>
   );

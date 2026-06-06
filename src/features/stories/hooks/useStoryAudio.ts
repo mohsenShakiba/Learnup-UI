@@ -15,6 +15,8 @@ type UseStoryAudioResult = {
   play: () => Promise<void>;
   pause: () => void;
   restart: () => Promise<void>;
+  playNextItem: () => Promise<void>;
+  playPreviousItem: () => Promise<void>;
   handleAudioEnded: () => void;
   handleLoadedMetadata: () => void;
   handlePause: () => void;
@@ -163,6 +165,32 @@ export function useStoryAudio (storyItems: StoryItemResponse[]): UseStoryAudioRe
     await playItemAudio(playableItemIds[0]);
   };
 
+  const playNextItem = async () => {
+    if (playableItemIds.length === 0) {
+      return;
+    }
+
+    const currentIndex = playingItemId == null
+      ? -1
+      : playableItemIds.indexOf(playingItemId);
+    const nextItemId = playableItemIds[currentIndex + 1] ?? playableItemIds[0];
+
+    await playItemAudio(nextItemId);
+  };
+
+  const playPreviousItem = async () => {
+    if (playableItemIds.length === 0) {
+      return;
+    }
+
+    const currentIndex = playingItemId == null
+      ? 0
+      : playableItemIds.indexOf(playingItemId);
+    const previousItemId = playableItemIds[currentIndex - 1] ?? playableItemIds[playableItemIds.length - 1];
+
+    await playItemAudio(previousItemId);
+  };
+
   const handleAudioEnded = () => {
     if (playingItemId == null) {
       setPlaybackStatus('idle');
@@ -207,6 +235,8 @@ export function useStoryAudio (storyItems: StoryItemResponse[]): UseStoryAudioRe
     play,
     pause,
     restart,
+    playNextItem,
+    playPreviousItem,
     handleAudioEnded,
     handleLoadedMetadata,
     handlePause,

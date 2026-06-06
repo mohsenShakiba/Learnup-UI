@@ -1,5 +1,6 @@
 import { CircularProgress, Stack } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { StoriesService } from '../../api/Learnup';
 import { EmptyList } from '../../shared/components/EmptyList';
@@ -12,6 +13,7 @@ import { useStoryAudio } from './hooks/useStoryAudio';
 export default function StoryDetailPage () {
   const { id: storyId } = useParams<{ id: string; }>();
   const storyIdNumber = Number(storyId);
+  const [showTranslation, setShowTranslation] = useState(true);
 
   const storyQuery = useQuery({
     queryKey: ['story', storyIdNumber],
@@ -49,13 +51,18 @@ export default function StoryDetailPage () {
                 key={item.id ?? `${item.order ?? index}-${index}`}
                 item={item}
                 isActive={item.id === activeItemId}
+                showTranslation={showTranslation}
                 onPlay={playItemAudio}
               />
             ))}
           </Stack>
         )}
       </Stack>
-      <StoryControls story={story} />
+      <StoryControls
+        story={story}
+        showTranslation={showTranslation}
+        onToggleTranslation={() => setShowTranslation((current) => !current)}
+      />
     </Scaffold>
   );
 }

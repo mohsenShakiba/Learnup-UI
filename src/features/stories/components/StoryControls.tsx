@@ -1,16 +1,21 @@
-import { Box, Icon, IconButton, LinearProgress, Stack } from "@mui/material";
+import { Box, Icon, IconButton, Stack } from "@mui/material";
+import { useState } from "react";
 import type { StoryResponse } from "../../../api/Learnup";
 import { useStoryAudio } from "../hooks/useStoryAudio";
 
-export function StoryControls (props: { story: StoryResponse; }) {
+export function StoryControls (props: {
+  story: StoryResponse;
+  showTranslation: boolean;
+  onToggleTranslation: () => void;
+}) {
 
   const {
     audioRef,
     playbackStatus,
-    progressPercentage,
     play,
     pause,
-    restart,
+    playNextItem,
+    playPreviousItem,
     handleAudioEnded,
     handleLoadedMetadata,
     handlePause,
@@ -18,18 +23,31 @@ export function StoryControls (props: { story: StoryResponse; }) {
   } = useStoryAudio(props.story.items ?? []);
 
   const isPlaying = playbackStatus === 'playing';
+  const [isSlowSpeed, setIsSlowSpeed] = useState(false);
+
+  const togglePlaybackSpeed = () => {
+    const nextIsSlowSpeed = !isSlowSpeed;
+    const nextPlaybackRate = nextIsSlowSpeed ? 0.75 : 1;
+
+    setIsSlowSpeed(nextIsSlowSpeed);
+
+    if (audioRef.current) {
+      audioRef.current.playbackRate = nextPlaybackRate;
+    }
+  };
 
   return (
     <Box
       sx={{
         position: 'fixed',
-        right: 12,
         bottom: 12,
-        left: 12,
-        maxWidth: 600,
-        margin: '0 auto',
-        padding: 2,
-        borderRadius: 2,
+        left: { xs: 12, md: 'auto' },
+        right: { xs: 12, md: '50%' },
+        width: 'auto',
+        px: 4,
+        py: 2,
+        transform: { xs: 'none', md: 'translate(50%)' },
+        borderRadius: 16,
         boxShadow: '0 2px 12px rgba(0,0,0,0.2)',
         backdropFilter: 'blur(12px)',
       }}
@@ -43,42 +61,60 @@ export function StoryControls (props: { story: StoryResponse; }) {
         onTimeUpdate={handleTimeUpdate}
       />
 
-      <Stack direction='row'>
+      <Stack direction='row' spacing={2} sx={{ justifyContent: { xs: 'space-between', md: 'center' } }} >
+
+        <IconButton
+          color={isSlowSpeed ? "primary" : "default"}
+          onClick={togglePlaybackSpeed}
+          title={isSlowSpeed ? "Normal speed" : "Slow speed"}
+          sx={{ width: 30, height: 30, borderRadius: 999 }}>
+          <Icon sx={{ fontSize: '25px !important' }}>speed</Icon>
+        </IconButton>
+
+        <IconButton
+          onClick={playPreviousItem}
+          sx={{ width: 30, height: 30, borderRadius: 999, border: '1px solid', borderColor: ' divider' }}>
+          <Icon sx={{ fontSize: '25px !important' }}>chevron_left</Icon>
+        </IconButton>
+
 
         {
-          !isPlaying && <>
-            <IconButton
-              color="primary"
-              onClick={play}
-              sx={{ width: 50, height: 50, borderRadius: 999 }}>
-              <Icon sx={{ fontSize: '35px !important' }}>play_circle</Icon>
-            </IconButton>
-          </>
-        }
-
-        {
-          isPlaying && <>
+          isPlaying ?
             <IconButton
               color="warning"
               onClick={pause}
-              sx={{ width: 50, height: 50, borderRadius: 999 }}>
-              <Icon sx={{ fontSize: '35px !important' }}>pause_circle</Icon>
+              sx={{ width: 30, height: 30, borderRadius: 999, border: '1px solid', borderColor: ' divider' }}>
+              <Icon sx={{ fontSize: '25px !important' }}>pause</Icon>
             </IconButton>
-          </>
+            : <IconButton
+              color="primary"
+              onClick={play}
+              sx={{ width: 30, height: 30, borderRadius: 999, border: '1px solid', borderColor: ' divider' }}>
+              <Icon sx={{ fontSize: '25px !important' }}>play_arrow</Icon>
+            </IconButton>
         }
 
+
         <IconButton
-          color="secondary"
-          onClick={restart}
-          sx={{ width: 50, height: 50, borderRadius: 999 }}>
-          <Icon sx={{ fontSize: '35px !important' }}>replay</Icon>
+          onClick={playNextItem}
+          sx={{ width: 30, height: 30, borderRadius: 999, border: '1px solid', borderColor: ' divider' }}>
+          <Icon sx={{ fontSize: '25px !important' }}>chevron_right</Icon>
         </IconButton>
+
+        <IconButton
+          color={props.showTranslation ? "primary" : "default"}
+          onClick={props.onToggleTranslation}
+          title={props.showTranslation ? "Hide translation" : "Show translation"}
+          sx={{ width: 30, height: 30, borderRadius: 999 }}>
+          <Icon sx={{ fontSize: '25px !important' }}>
+            closed_caption
+          </Icon>
+        </IconButton>
+
 
       </Stack>
 
-      <LinearProgress
-        variant="determinate"
-        value={progressPercentage} />
+
     </Box>
   );
 }

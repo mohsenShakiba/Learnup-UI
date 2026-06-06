@@ -1,5 +1,5 @@
+import { Box, Divider, Stack, Typography } from '@mui/material';
 import type { ReactNode } from 'react';
-import { Box, Typography } from '@mui/material';
 
 type ScaffoldProps = {
   title: ReactNode;
@@ -19,18 +19,15 @@ export function Scaffold ({ title, children }: ScaffoldProps) {
         boxSizing: 'border-box',
       }}
     >
-      <Typography
-        component="h1"
-        variant="h4"
-        sx={{
-          mb: 3,
-          fontWeight: 700,
-        }}
-      >
-        {title}
-      </Typography>
+      <Stack spacing={2}>
+        <Typography>
+          {title}
+        </Typography>
 
-      <Box>{children}</Box>
+        <Divider />
+
+        <Box>{children}</Box>
+      </Stack>
     </Box>
   );
 }

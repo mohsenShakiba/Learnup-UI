@@ -1,3 +1,8 @@
+body {
+  margin: 0 !important;
+  font-family: 'IranSans';
+}
+
 @font-face {
 font-family: 'IranSans';
 font-style: normal;
@@ -27,3 +32,5 @@ src: url('/fonts/material-symbols-outlined.woff2') format('woff2');
   -webkit-font-smoothing: antialiased;
   text-decoration: none !important;
 }
+
+

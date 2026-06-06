@@ -31,12 +31,12 @@ export function StoryItem ({ item }: StoryItemProps) {
           cursor: 'pointer',
         }}
       >
-        <Typography>
+        <Typography color='primary'>
           {item.content}
         </Typography>
 
         {
-          showTranslation && <Typography>
+          showTranslation && <Typography sx={{ color: 'text.secondary', textAlign: 'right', direction: 'rtl' }}>
             {item.translation}
           </Typography>
         }

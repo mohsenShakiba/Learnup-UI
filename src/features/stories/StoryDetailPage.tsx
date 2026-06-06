@@ -37,7 +37,7 @@ export default function StoryDetailPage () {
           {storyItems.length === 0 ? (
             <EmptyList />
           ) : (
-            <Stack spacing={2}>
+            <Stack spacing={1}>
               {storyItems.map((item) => (
                 <StoryItem key={item.id} item={item} />
               ))}

@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import setupOpenApi from './api/setup';
-import './app.css';
+import './App.css';
 import CourseDetailPage from './features/courses/CourseDetailPage';
 import StoryDetailPage from './features/stories/StoryDetailPage';
 setupOpenApi();

@@ -1,37 +1,35 @@
 import { Box, Card, Typography } from '@mui/material';
 import type { StoryItemResponse } from '../../../api/Learnup';
-import { useStoryItem } from '../hooks/useStoryItem';
+import { useStoryAudio } from '../hooks/useStoryAudio';
 
 type StoryItemProps = {
   item: StoryItemResponse;
 };
 
 export function StoryItem ({ item }: StoryItemProps) {
-  const itemId = item.id;
-  const { isActive, showTranslation, playItem } = useStoryItem(item);
+
+  const { activeItemId, playbackStatus, showTranslation, play } = useStoryAudio();
+
+  const isActive = playbackStatus === 'playing' && activeItemId === item.id;
 
   return (
     <Box
       key={item.id}
-      onClick={playItem}
+      onClick={play}
       role="button"
       tabIndex={0}
-      onKeyDown={(event) => {
-        if ((event.key === 'Enter' || event.key === ' ') && itemId != null) {
-          event.preventDefault();
-          playItem();
-        }
-      }}
     >
       <Card
-        sx={{
+        sx={(theme) => ({
           border: '1px solid',
           borderColor: isActive ? 'primary.main' : 'divider',
-          backgroundColor: isActive ? 'primary.50' : 'background.paper',
           cursor: 'pointer',
-        }}
+          transition: theme.transitions.create(['border-color'], {
+            duration: theme.transitions.duration.short,
+          }),
+        })}
       >
-        <Typography color='primary'>
+        <Typography >
           {item.content}
         </Typography>
 

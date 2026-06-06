@@ -1,8 +1,9 @@
 import { createTheme } from '@mui/material';
+import type { PaletteMode } from '@mui/material';
 
-export const learnupTheme = createTheme({
+export const createLearnupTheme = (mode: PaletteMode) => createTheme({
   palette: {
-    mode: 'light',
+    mode,
     primary: {
       main: '#2563eb',
       light: '#60a5fa',
@@ -22,14 +23,14 @@ export const learnupTheme = createTheme({
       main: '#dc2626',
     },
     background: {
-      default: '#f7f8fb',
-      paper: '#ffffff',
+      default: mode === 'dark' ? '#111827' : '#f7f8fb',
+      paper: mode === 'dark' ? '#1f2937' : '#ffffff',
     },
     text: {
-      primary: '#111827',
-      secondary: '#4b5563',
+      primary: mode === 'dark' ? '#f9fafb' : '#111827',
+      secondary: mode === 'dark' ? '#d1d5db' : '#4b5563',
     },
-    divider: '#e5e7eb',
+    divider: mode === 'dark' ? '#374151' : '#e5e7eb',
   },
   shape: {
     borderRadius: 8,
@@ -82,8 +83,10 @@ export const learnupTheme = createTheme({
       styleOverrides: {
         root: {
           padding: 16,
-          border: '1px solid #e5e7eb',
-          boxShadow: '0 10px 24px rgba(17, 24, 39, 0.06)',
+          border: `1px solid ${mode === 'dark' ? '#374151' : '#e5e7eb'}`,
+          boxShadow: mode === 'dark'
+            ? '0 10px 24px rgba(0, 0, 0, 0.25)'
+            : '0 10px 24px rgba(17, 24, 39, 0.06)',
         },
       },
     },

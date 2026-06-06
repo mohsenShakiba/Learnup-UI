@@ -3,10 +3,13 @@
 /* tslint:disable */
 /* eslint-disable */
 
+import type { StoryItemTimestampResponse } from './StoryItemTimestampResponse';
+
 export type StoryItemResponse = {
     id?: number;
     content?: string | null;
     translation?: string | null;
     order?: number;
     voiceId?: string | null;
+    timestamps?: Array<StoryItemTimestampResponse> | null;
 };

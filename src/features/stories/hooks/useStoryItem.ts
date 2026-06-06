@@ -4,6 +4,7 @@ import { useStoryAudio } from './useStoryAudio';
 export function useStoryItem (item: StoryItemResponse) {
   const {
     activeItemId,
+    playbackStatus,
     playItemAudio,
     showTranslation,
   } = useStoryAudio();
@@ -17,7 +18,7 @@ export function useStoryItem (item: StoryItemResponse) {
   };
 
   return {
-    isActive: itemId === activeItemId,
+    isPlaying: itemId === activeItemId && playbackStatus === 'playing',
     showTranslation,
     playItem,
   };

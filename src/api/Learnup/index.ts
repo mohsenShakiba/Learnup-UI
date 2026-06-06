@@ -17,6 +17,7 @@ export type { LessonResponse } from './models/LessonResponse';
 export { LessonStatus } from './models/LessonStatus';
 export type { StoryItemRequest } from './models/StoryItemRequest';
 export type { StoryItemResponse } from './models/StoryItemResponse';
+export type { StoryItemTimestampResponse } from './models/StoryItemTimestampResponse';
 export type { StoryRequest } from './models/StoryRequest';
 export type { StoryResponse } from './models/StoryResponse';
 export type { VocabResponse } from './models/VocabResponse';

@@ -2,11 +2,18 @@ import { Box, Divider, Stack, Typography } from '@mui/material';
 import type { ReactNode } from 'react';
 
 type ScaffoldProps = {
-  title: ReactNode;
+  title?: ReactNode;
+  header?: ReactNode;
   children: ReactNode;
 };
 
-export function Scaffold ({ title, children }: ScaffoldProps) {
+export function Scaffold ({ title, header, children }: ScaffoldProps) {
+  const scaffoldHeader = header ?? (title ? (
+    <Typography>
+      {title}
+    </Typography>
+  ) : null);
+
   return (
     <Box
       component="main"
@@ -20,11 +27,12 @@ export function Scaffold ({ title, children }: ScaffoldProps) {
       }}
     >
       <Stack spacing={2}>
-        <Typography>
-          {title}
-        </Typography>
-
-        <Divider />
+        {scaffoldHeader && (
+          <>
+            {scaffoldHeader}
+            <Divider />
+          </>
+        )}
 
         <Box>{children}</Box>
       </Stack>

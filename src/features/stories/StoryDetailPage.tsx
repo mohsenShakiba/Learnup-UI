@@ -1,4 +1,4 @@
-import { CircularProgress, Stack } from '@mui/material';
+import { Box, CircularProgress, Stack, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { StoriesService } from '../../api/Learnup';
@@ -32,7 +32,10 @@ export default function StoryDetailPage () {
 
   return (
     <StoryAudioProvider storyItems={storyItems}>
-      <Scaffold title={story.title}>
+      <Scaffold title={<Box>
+        <Typography color='primary'>lesson {story.id}</Typography>
+        <Typography >{story.title}</Typography>
+      </Box>}>
         <Stack>
           {storyItems.length === 0 ? (
             <EmptyList />

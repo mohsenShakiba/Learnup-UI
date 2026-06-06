@@ -14,13 +14,13 @@ export type { ImportStoryRequest } from './models/ImportStoryRequest';
 export type { ImportVocabsResponse } from './models/ImportVocabsResponse';
 export type { LessonDetailResponse } from './models/LessonDetailResponse';
 export type { LessonResponse } from './models/LessonResponse';
-export { LessonStatus } from './models/LessonStatus';
+export type { LessonStatus } from './models/LessonStatus';
 export type { StoryItemRequest } from './models/StoryItemRequest';
 export type { StoryItemResponse } from './models/StoryItemResponse';
 export type { StoryRequest } from './models/StoryRequest';
 export type { StoryResponse } from './models/StoryResponse';
 export type { VocabResponse } from './models/VocabResponse';
-export { VocalLevel } from './models/VocalLevel';
+export type { VocalLevel } from './models/VocalLevel';
 
 export { CoursesService } from './services/CoursesService';
 export { ImportService } from './services/ImportService';

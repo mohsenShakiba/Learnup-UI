@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { StoriesService, type StoryResponse } from '../../api/Learnup';
+import { StoryControls, type PlaybackStatus } from './components/StoryControls';
+import { StoryItem } from './components/StoryItem';
 
 export default function StoryDetailPage () {
   const params = useParams();
@@ -8,11 +10,23 @@ export default function StoryDetailPage () {
   const [story, setStory] = useState<StoryResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [audioMap, setAudioMap] = useState<Record<number, string>>({});
+  const [playingItemId, setPlayingItemId] = useState<number | null>(null);
+  const [playbackStatus, setPlaybackStatus] = useState<PlaybackStatus>('idle');
+  const [audioProgress, setAudioProgress] = useState(0);
+  const [audioDuration, setAudioDuration] = useState(0);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? '';
+
+  useEffect(() => {
+    return () => {
+      Object.values(audioMap).forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, [audioMap]);
 
   useEffect(() => {
     if (!storyId) {
-      setError("No Story ID provided in the URL parameters.");
-      setLoading(false);
       return;
     }
 
@@ -23,7 +37,7 @@ export default function StoryDetailPage () {
         setStory(fetchedStory);
         setError(null);
       } catch (err) {
-        console.error("Failed to fetch story:", err);
+        console.error("Filed to fetch story:", err);
         setError("Failed to load story. Please try again later.");
         setStory(null);
       } finally {
@@ -33,6 +47,163 @@ export default function StoryDetailPage () {
 
     fetchStory();
   }, [storyId]);
+
+  useEffect(() => {
+    const storyItems = story?.items ?? [];
+    const voiceItems = storyItems.filter((item) => item.id != null && item.voiceId);
+
+    const abortController = new AbortController();
+    const objectUrls: string[] = [];
+
+    const loadStoryAudios = async () => {
+      if (voiceItems.length === 0) {
+        setAudioMap({});
+        return;
+      }
+
+      const results = await Promise.allSettled(
+        voiceItems.map(async (item) => {
+          const voiceFileUrl = `${apiBaseUrl}/Mobile/Files/${item.voiceId}`;
+          const response = await fetch(voiceFileUrl, { signal: abortController.signal });
+
+          if (!response.ok) {
+            throw new Error(`Failed to load audio for story item ${item.id}`);
+          }
+
+          const blob = await response.blob();
+          const objectUrl = URL.createObjectURL(blob);
+          objectUrls.push(objectUrl);
+
+          return [item.id as number, objectUrl] as const;
+        }),
+      );
+
+      if (abortController.signal.aborted) {
+        objectUrls.forEach((url) => URL.revokeObjectURL(url));
+        return;
+      }
+
+      const nextAudioMap: Record<number, string> = {};
+
+      results.forEach((result) => {
+        if (result.status === 'fulfilled') {
+          const [itemId, objectUrl] = result.value;
+          nextAudioMap[itemId] = objectUrl;
+        }
+      });
+
+      setAudioMap((currentAudioMap) => {
+        Object.values(currentAudioMap).forEach((url) => {
+          if (!Object.values(nextAudioMap).includes(url)) {
+            URL.revokeObjectURL(url);
+          }
+        });
+
+        return nextAudioMap;
+      });
+    };
+
+    loadStoryAudios().catch((err) => {
+      if (!abortController.signal.aborted) {
+        console.error('Failed to load story item audios:', err);
+      }
+    });
+
+    return () => {
+      abortController.abort();
+      objectUrls.forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, [apiBaseUrl, story]);
+
+  const storyItems = (story?.items ?? []).slice().sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  const playableItemIds = storyItems
+    .filter((item) => item.id != null && audioMap[item.id])
+    .map((item) => item.id as number);
+  const activeItemId = playingItemId;
+  const progressPercentage = audioDuration > 0 ? Math.min((audioProgress / audioDuration) * 100, 100) : 0;
+
+  const playItemAudio = async (itemId: number, startTime = 0) => {
+    const audioUrl = audioMap[itemId];
+
+    if (!audioUrl || !audioRef.current) {
+      return;
+    }
+
+    setPlayingItemId(itemId);
+    setPlaybackStatus('playing');
+    audioRef.current.pause();
+
+    if (audioRef.current.src !== audioUrl) {
+      audioRef.current.src = audioUrl;
+    }
+
+    audioRef.current.currentTime = startTime;
+
+    try {
+      await audioRef.current.play();
+    } catch (err) {
+      setPlaybackStatus('paused');
+      console.error('Failed to play story item audio:', err);
+    }
+  };
+
+  const handlePlay = async () => {
+    if (!audioRef.current || playableItemIds.length === 0) {
+      return;
+    }
+
+    if (playingItemId != null && audioMap[playingItemId]) {
+      const resumeTime = audioRef.current.src ? audioRef.current.currentTime : audioProgress;
+      await playItemAudio(playingItemId, resumeTime);
+      return;
+    }
+
+    await playItemAudio(playableItemIds[0]);
+  };
+
+  const handlePause = () => {
+    if (!audioRef.current) {
+      return;
+    }
+
+    setAudioProgress(audioRef.current.currentTime);
+    setPlaybackStatus('paused');
+    audioRef.current.pause();
+  };
+
+  const handleRestart = async () => {
+    if (playableItemIds.length === 0) {
+      return;
+    }
+
+    setAudioProgress(0);
+    setAudioDuration(0);
+    await playItemAudio(playableItemIds[0]);
+  };
+
+  const handleAudioEnded = () => {
+    if (playingItemId == null) {
+      setPlaybackStatus('idle');
+      return;
+    }
+
+    const currentIndex = playableItemIds.indexOf(playingItemId);
+    const nextItemId = playableItemIds[currentIndex + 1];
+
+    if (nextItemId != null) {
+      void playItemAudio(nextItemId);
+      return;
+    }
+
+    setPlaybackStatus('idle');
+    setPlayingItemId(null);
+    setAudioProgress(0);
+  };
+
+  if (!storyId) {
+    return <div style={{ color: 'red' }}>Error: No Story ID provided in the URL parameters.</div>;
+  }
+
   if (loading) {
     return <div>Loading story...</div>;
   }
@@ -45,10 +216,19 @@ export default function StoryDetailPage () {
     return <div>Story not found for ID: {storyId}.</div>;
   }
 
-  const storyItems = story.items ?? [];
-
   return (
-    <div className="story-page" style={{ maxWidth: 960, margin: '0 auto', padding: '24px 0' }}>
+    <div className="story-page" style={{ maxWidth: 960, margin: '0 auto', padding: '24px 0 120px' }}>
+      <audio
+        ref={audioRef}
+        onEnded={handleAudioEnded}
+        onLoadedMetadata={() => setAudioDuration(audioRef.current?.duration || 0)}
+        onTimeUpdate={() => setAudioProgress(audioRef.current?.currentTime || 0)}
+        onPause={() => {
+          if (audioRef.current?.ended) {
+            setPlaybackStatus('idle');
+          }
+        }}
+      />
       <header style={{ marginBottom: 24 }}>
         <p style={{ margin: 0, color: '#666', fontSize: 14 }}>Story ID: {story.id ?? storyId}</p>
         <h1 style={{ margin: '8px 0 0', fontSize: 32, lineHeight: 1.2 }}>
@@ -65,46 +245,29 @@ export default function StoryDetailPage () {
           </div>
         ) : (
           <div style={{ display: 'grid', gap: 12 }}>
-            {storyItems
-              .slice()
-              .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
-              .map((item, index) => (
-                <article
-                  key={item.id ?? `${item.order ?? index}-${index}`}
-                  style={{
-                    border: '1px solid #e5e7eb',
-                    borderRadius: 8,
-                    padding: 16,
-                    background: '#fff',
-                  }}
-                >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, marginBottom: 12 }}>
-                    <strong>Item {item.order ?? index + 1}</strong>
-                    {item.voiceId ? (
-                      <span style={{ color: '#6b7280', fontSize: 13 }}>Voice: {item.voiceId}</span>
-                    ) : null}
-                  </div>
-
-                  <div style={{ display: 'grid', gap: 8 }}>
-                    <div>
-                      <div style={{ fontSize: 13, fontWeight: 600, color: '#6b7280', marginBottom: 4 }}>Content</div>
-                      <div style={{ whiteSpace: 'pre-wrap' }}>{item.content || 'No content provided.'}</div>
-                    </div>
-
-                    <div>
-                      <div style={{ fontSize: 13, fontWeight: 600, color: '#6b7280', marginBottom: 4 }}>
-                        Translation
-                      </div>
-                      <div style={{ whiteSpace: 'pre-wrap', color: '#374151' }}>
-                        {item.translation || 'No translation provided.'}
-                      </div>
-                    </div>
-                  </div>
-                </article>
-              ))}
+            {storyItems.map((item, index) => (
+              <StoryItem
+                key={item.id ?? `${item.order ?? index}-${index}`}
+                item={item}
+                index={index}
+                isActive={item.id === activeItemId}
+                hasAudio={item.id != null && Boolean(audioMap[item.id])}
+                onPlay={(itemId) => void playItemAudio(itemId)}
+              />
+            ))}
           </div>
         )}
       </section>
+
+      <StoryControls
+        activeItemId={activeItemId}
+        playbackStatus={playbackStatus}
+        playableItemCount={playableItemIds.length}
+        progressPercentage={progressPercentage}
+        onPlay={() => void handlePlay()}
+        onPause={handlePause}
+        onRestart={() => void handleRestart()}
+      />
     </div>
   );
 };

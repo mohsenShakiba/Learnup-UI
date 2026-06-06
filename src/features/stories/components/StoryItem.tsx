@@ -1,32 +1,25 @@
 import { Box, Card, Typography } from '@mui/material';
 import type { StoryItemResponse } from '../../../api/Learnup';
+import { useStoryItem } from '../hooks/useStoryItem';
 
 type StoryItemProps = {
   item: StoryItemResponse;
-  isActive: boolean;
-  showTranslation: boolean;
-  onPlay: (itemId: number) => void;
 };
 
-export function StoryItem ({ item, isActive, showTranslation, onPlay }: StoryItemProps) {
+export function StoryItem ({ item }: StoryItemProps) {
   const itemId = item.id;
-
-  const handlePlay = () => {
-    if (itemId != null) {
-      onPlay(itemId);
-    }
-  };
+  const { isActive, showTranslation, playItem } = useStoryItem(item);
 
   return (
     <Box
       key={item.id}
-      onClick={handlePlay}
+      onClick={playItem}
       role="button"
       tabIndex={0}
       onKeyDown={(event) => {
         if ((event.key === 'Enter' || event.key === ' ') && itemId != null) {
           event.preventDefault();
-          onPlay(itemId);
+          playItem();
         }
       }}
     >

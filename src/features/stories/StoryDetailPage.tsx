@@ -1,13 +1,13 @@
 import { CircularProgress, Stack } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
-import { StoriesService, type StoryResponse } from '../../api/Learnup';
+import { StoriesService } from '../../api/Learnup';
 import { EmptyList } from '../../shared/components/EmptyList';
 import { ErrorPage } from '../../shared/components/ErrorPage';
 import { Scaffold } from '../../shared/components/Scaffold';
 import { StoryControls } from './components/StoryControls';
 import { StoryItem } from './components/StoryItem';
-import { StoryAudioProvider, useStoryAudio } from './hooks/useStoryAudio';
+import { StoryAudioProvider } from './hooks/useStoryAudio';
 
 export default function StoryDetailPage () {
   const { id: storyId } = useParams<{ id: string; }>();
@@ -32,39 +32,20 @@ export default function StoryDetailPage () {
 
   return (
     <StoryAudioProvider storyItems={storyItems}>
-      <StoryDetailContent story={story} />
+      <Scaffold title={story.title}>
+        <Stack>
+          {storyItems.length === 0 ? (
+            <EmptyList />
+          ) : (
+            <Stack spacing={2}>
+              {storyItems.map((item) => (
+                <StoryItem key={item.id} item={item} />
+              ))}
+            </Stack>
+          )}
+        </Stack>
+        <StoryControls />
+      </Scaffold>
     </StoryAudioProvider>
-  );
-}
-
-function StoryDetailContent (props: { story: StoryResponse; }) {
-  const storyItems = props.story.items ?? [];
-  const {
-    activeItemId,
-    playItemAudio,
-    showTranslation,
-  } = useStoryAudio();
-
-  return (
-    <Scaffold title={props.story.title}>
-      <Stack>
-        {storyItems.length === 0 ? (
-          <EmptyList />
-        ) : (
-          <Stack spacing={2}>
-            {storyItems.map((item, index) => (
-              <StoryItem
-                key={item.id ?? `${item.order ?? index}-${index}`}
-                item={item}
-                isActive={item.id === activeItemId}
-                showTranslation={showTranslation}
-                onPlay={playItemAudio}
-              />
-            ))}
-          </Stack>
-        )}
-      </Stack>
-      <StoryControls />
-    </Scaffold>
   );
 }

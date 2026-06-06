@@ -2,15 +2,12 @@ import type { StoryItemResponse } from '../../../api/Learnup';
 
 type StoryItemProps = {
   item: StoryItemResponse;
-  index: number;
   isActive: boolean;
-  hasAudio: boolean;
   onPlay: (itemId: number) => void;
 };
 
-export function StoryItem ({ item, index, isActive, hasAudio, onPlay }: StoryItemProps) {
+export function StoryItem ({ item, isActive, onPlay }: StoryItemProps) {
   const itemId = item.id;
-  const canPlay = itemId != null && hasAudio;
 
   const handlePlay = () => {
     if (itemId != null) {
@@ -34,19 +31,19 @@ export function StoryItem ({ item, index, isActive, hasAudio, onPlay }: StoryIte
         borderRadius: 8,
         padding: 16,
         background: isActive ? '#eff6ff' : '#fff',
-        cursor: canPlay ? 'pointer' : 'default',
+        cursor: 'pointer',
         boxShadow: isActive ? '0 12px 30px rgba(37, 99, 235, 0.14)' : 'none',
         transition: 'background 180ms ease, border-color 180ms ease, box-shadow 180ms ease',
       }}
     >
       <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, marginBottom: 12 }}>
-        <strong>Item {item.order ?? index + 1}</strong>
+        <strong>Item {item.order}</strong>
         {item.voiceId ? (
           <span style={{ color: '#6b7280', fontSize: 13 }}>Voice: {item.voiceId}</span>
         ) : null}
       </div>
       <div style={{ marginBottom: 12, fontSize: 13, color: '#2563eb' }}>
-        {canPlay ? 'Tap to play audio' : 'Audio unavailable'}
+        {'Tap to play audio'}
       </div>
 
       <div style={{ display: 'grid', gap: 8 }}>

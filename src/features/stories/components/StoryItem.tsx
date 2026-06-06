@@ -1,4 +1,5 @@
 import { Box, Card, Typography } from '@mui/material';
+import { useMemo } from 'react';
 import type { StoryItemResponse } from '../../../api/Learnup';
 import { useStoryAudio } from '../hooks/useStoryAudio';
 
@@ -6,11 +7,43 @@ type StoryItemProps = {
   item: StoryItemResponse;
 };
 
+const tokenizeContent = (content: string) => content.split(/(\s+)/);
+const isWhitespace = (token: string) => /^\s+$/.test(token);
+
 export function StoryItem ({ item }: StoryItemProps) {
 
-  const { activeItemId, playbackStatus, showTranslation, play } = useStoryAudio();
+  const { activeItemId, audioProgress, playbackStatus, showTranslation, playItemAudio } = useStoryAudio();
+
 
   const isActive = playbackStatus === 'playing' && activeItemId === item.id;
+  let activeTimestampIndex = isActive
+    ? item.timestamps?.findIndex((timestamp) => (
+      audioProgress >= timestamp.start! && audioProgress < timestamp.end!
+    )) ?? -1
+    : -1;
+
+
+  if (activeItemId === item.id && audioProgress === 0) {
+    activeTimestampIndex = 0;
+  }
+
+  const play = () => {
+    if (item.id != null) {
+      void playItemAudio(item.id);
+    }
+  };
+
+  const contentTokens = useMemo(() => {
+    const tokens = tokenizeContent(item.content ?? '');
+
+    return tokens.map((token, tokenIndex) => ({
+      token,
+      tokenIndex,
+      wordIndex: isWhitespace(token)
+        ? null
+        : tokens.slice(0, tokenIndex + 1).filter((currentToken) => !isWhitespace(currentToken)).length - 1,
+    }));
+  }, [item.content]);
 
   return (
     <Box
@@ -30,7 +63,26 @@ export function StoryItem ({ item }: StoryItemProps) {
         })}
       >
         <Typography >
-          {item.content}
+          {contentTokens.map(({ token, tokenIndex, wordIndex }) => {
+            if (wordIndex == null) {
+              return token;
+            }
+
+            return (
+              <Box
+                component="span"
+                key={`${token}-${tokenIndex}`}
+                sx={(theme) => ({
+                  color: wordIndex === activeTimestampIndex ? 'primary.main' : 'inherit',
+                  transition: theme.transitions.create(['background-color', 'color'], {
+                    duration: theme.transitions.duration.standard,
+                  }),
+                })}
+              >
+                {token}
+              </Box>
+            );
+          })}
         </Typography>
 
         {

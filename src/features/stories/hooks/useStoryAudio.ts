@@ -16,6 +16,7 @@ export type PlaybackStatus = 'idle' | 'playing' | 'paused';
 
 type UseStoryAudioResult = {
   activeItemId: number | null;
+  audioProgress: number;
   audioRef: RefObject<HTMLAudioElement | null>;
   playbackStatus: PlaybackStatus;
   playableItemCount: number;
@@ -47,6 +48,25 @@ function useStoryAudioState (storyItems: StoryItemResponse[]): UseStoryAudioResu
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? '';
+
+  useEffect(() => {
+    if (playbackStatus !== 'playing') {
+      return;
+    }
+
+    let animationFrameId = 0;
+
+    const syncAudioProgress = () => {
+      setAudioProgress(audioRef.current?.currentTime || 0);
+      animationFrameId = requestAnimationFrame(syncAudioProgress);
+    };
+
+    animationFrameId = requestAnimationFrame(syncAudioProgress);
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, [playbackStatus]);
 
   useEffect(() => {
     const voiceItems = storyItems.filter((item) => item.id != null && item.voiceId);
@@ -137,6 +157,7 @@ function useStoryAudioState (storyItems: StoryItemResponse[]): UseStoryAudioResu
     }
 
     audioRef.current.currentTime = startTime;
+    setAudioProgress(startTime);
 
     try {
       await audioRef.current.play();
@@ -241,6 +262,7 @@ function useStoryAudioState (storyItems: StoryItemResponse[]): UseStoryAudioResu
 
   return {
     activeItemId: playingItemId,
+    audioProgress,
     audioRef,
     playbackStatus,
     playableItemCount: playableItemIds.length,

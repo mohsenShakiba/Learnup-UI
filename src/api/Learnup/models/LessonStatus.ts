@@ -3,4 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type LessonStatus = -1 | 0 | 1;
+export enum LessonStatus {
+    '_0' = 0,
+    '_1' = 1,
+    '_-1' = -1,
+}

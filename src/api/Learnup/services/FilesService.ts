@@ -2,27 +2,25 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { VocabResponse } from '../models/VocabResponse';
-
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 
-export class VocabsService {
+export class FilesService {
 
     /**
-     * @param word 
-     * @returns VocabResponse OK
+     * @param id 
+     * @returns any OK
      * @throws ApiError
      */
-    public static getVocabByWord(
-word: string,
-): CancelablePromise<VocabResponse> {
+    public static getFileById(
+id: string,
+): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/Mobile/Vocabs/{word}',
+            url: '/Mobile/Files/{id}',
             path: {
-                'word': word,
+                'id': id,
             },
         });
     }

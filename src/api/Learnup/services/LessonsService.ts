@@ -16,7 +16,7 @@ export class LessonsService {
      * @returns LessonResponse OK
      * @throws ApiError
      */
-    public static getMobileLessonsCourse(
+    public static getLessonsByCourseId(
 courseId: number,
 ): CancelablePromise<Array<LessonResponse>> {
         return __request(OpenAPI, {
@@ -33,7 +33,7 @@ courseId: number,
      * @returns LessonDetailResponse OK
      * @throws ApiError
      */
-    public static getMobileLessons(
+    public static getLessonById(
 id: number,
 ): CancelablePromise<LessonDetailResponse> {
         return __request(OpenAPI, {

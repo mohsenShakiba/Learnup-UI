@@ -16,7 +16,7 @@ export class CoursesService {
      * @returns CourseResponse OK
      * @throws ApiError
      */
-    public static getMobileCoursesLanguage(
+    public static getCoursesByLanguageId(
 languageId: number,
 ): CancelablePromise<Array<CourseResponse>> {
         return __request(OpenAPI, {
@@ -33,7 +33,7 @@ languageId: number,
      * @returns CourseDetailResponse OK
      * @throws ApiError
      */
-    public static getMobileCourses(
+    public static getCourseById(
 id: number,
 ): CancelablePromise<CourseDetailResponse> {
         return __request(OpenAPI, {

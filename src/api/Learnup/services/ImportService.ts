@@ -16,7 +16,7 @@ export class ImportService {
      * @returns ImportVocabsResponse OK
      * @throws ApiError
      */
-    public static postAdminImportVocabs(
+    public static importVocabs(
 formData?: {
 File?: Blob;
 LevelId?: number;
@@ -36,7 +36,7 @@ LanguageId?: number;
      * @returns number OK
      * @throws ApiError
      */
-    public static postAdminImportStories(
+    public static importStory(
 requestBody?: ImportStoryRequest,
 ): CancelablePromise<number> {
         return __request(OpenAPI, {

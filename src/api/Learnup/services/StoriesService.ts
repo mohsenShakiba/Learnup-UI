@@ -15,7 +15,7 @@ export class StoriesService {
      * @returns StoryResponse OK
      * @throws ApiError
      */
-    public static getMobileStories(
+    public static getStoryById(
 id: number,
 ): CancelablePromise<StoryResponse> {
         return __request(OpenAPI, {

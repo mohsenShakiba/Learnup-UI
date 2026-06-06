@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { StoriesService, type StoryResponse } from '../../api/Learnup';
+import { EmptyList } from '../../shared/components/EmptyList';
+import { ErrorPage } from '../../shared/components/ErrorPage';
 import { StoryControls, type PlaybackStatus } from './components/StoryControls';
 import { StoryItem } from './components/StoryItem';
 
@@ -33,7 +35,7 @@ export default function StoryDetailPage () {
     const fetchStory = async () => {
       try {
         setLoading(true);
-        const fetchedStory = await StoriesService.getMobileStories(parseInt(storyId));
+        const fetchedStory = await StoriesService.getStoryById(parseInt(storyId));
         setStory(fetchedStory);
         setError(null);
       } catch (err) {
@@ -201,7 +203,7 @@ export default function StoryDetailPage () {
   };
 
   if (!storyId) {
-    return <div style={{ color: 'red' }}>Error: No Story ID provided in the URL parameters.</div>;
+    return <ErrorPage message="No Story ID provided in the URL parameters." />;
   }
 
   if (loading) {
@@ -209,7 +211,7 @@ export default function StoryDetailPage () {
   }
 
   if (error) {
-    return <div style={{ color: 'red' }}>Error: {error}</div>;
+    return <ErrorPage message={error} />;
   }
 
   if (!story) {
@@ -240,9 +242,7 @@ export default function StoryDetailPage () {
         <h2 style={{ margin: '0 0 16px', fontSize: 20 }}>Story Items</h2>
 
         {storyItems.length === 0 ? (
-          <div style={{ padding: 16, border: '1px solid #e5e7eb', borderRadius: 8, color: '#6b7280' }}>
-            No story items were returned for this story.
-          </div>
+          <EmptyList message="No story items were returned for this story." />
         ) : (
           <div style={{ display: 'grid', gap: 12 }}>
             {storyItems.map((item, index) => (

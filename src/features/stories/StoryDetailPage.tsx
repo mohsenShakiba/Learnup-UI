@@ -1,10 +1,11 @@
-import { Box, CircularProgress, Stack, Typography } from '@mui/material';
+import { CircularProgress, Stack } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { StoriesService } from '../../api/Learnup';
 import { EmptyList } from '../../shared/components/EmptyList';
 import { ErrorPage } from '../../shared/components/ErrorPage';
 import { Scaffold } from '../../shared/components/Scaffold';
+import { StoryCoverHeader } from './components/StoryCoverHeader';
 import { StoryControls } from './components/StoryControls';
 import { StoryItem } from './components/StoryItem';
 import { StoryAudioProvider } from './hooks/useStoryAudio';
@@ -32,15 +33,13 @@ export default function StoryDetailPage () {
 
   return (
     <StoryAudioProvider storyItems={storyItems}>
-      <Scaffold title={<Box>
-        <Typography color='primary'>lesson {story.id}</Typography>
-        <Typography >{story.title}</Typography>
-      </Box>}>
+      <StoryCoverHeader storyId={story.id} title={story.title} />
+      <Scaffold>
         <Stack>
           {storyItems.length === 0 ? (
             <EmptyList />
           ) : (
-            <Stack spacing={1}>
+            <Stack direction='column' sx={{ flexWrap: 'wrap', gap: 1 }}>
               {storyItems.map((item) => (
                 <StoryItem key={item.id} item={item} />
               ))}

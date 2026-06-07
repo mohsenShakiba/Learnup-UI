@@ -1,4 +1,4 @@
-import { AppBar, Box, Divider, Stack, Toolbar, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import type { ReactNode } from 'react';
 
 type ScaffoldProps = {
@@ -16,35 +16,7 @@ export function Scaffold ({ title, header, children }: ScaffoldProps) {
 
   return (
     <>
-      <AppBar
-        position="sticky"
-        color="inherit"
-        elevation={0}
-        sx={{
-          borderBottom: 1,
-          borderColor: 'divider',
-          bgcolor: 'background.paper',
-        }}
-      >
-        <Toolbar
-          sx={{
-            width: '100%',
-            maxWidth: 960,
-            mx: 'auto',
-            px: { xs: 2, sm: 2 },
-            boxSizing: 'border-box',
-          }}
-        >
-          <Typography
-            component="span"
-            variant="h6"
-            color="primary"
-            sx={{ fontWeight: 800 }}
-          >
-            Learnup
-          </Typography>
-        </Toolbar>
-      </AppBar>
+
 
       <Box
         component="main"
@@ -61,7 +33,6 @@ export function Scaffold ({ title, header, children }: ScaffoldProps) {
           {scaffoldHeader && (
             <>
               {scaffoldHeader}
-              <Divider />
             </>
           )}
 

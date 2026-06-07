@@ -3,15 +3,16 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { LessonStatus } from './LessonStatus';
+import type { GrammarResponse } from './GrammarResponse';
+import type { StoryResponse } from './StoryResponse';
+import type { VocabResponse } from './VocabResponse';
 
 export type LessonDetailResponse = {
     id?: number;
     title?: string | null;
     order?: number;
-    status?: LessonStatus;
     courseId?: number;
-    storyIds?: Array<number> | null;
-    grammarIds?: Array<number> | null;
-    vocabIds?: Array<number> | null;
+    storyIds?: Array<StoryResponse> | null;
+    grammarIds?: Array<GrammarResponse> | null;
+    vocabIds?: Array<VocabResponse> | null;
 };

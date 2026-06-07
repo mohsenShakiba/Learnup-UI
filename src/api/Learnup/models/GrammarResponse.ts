@@ -3,9 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type LessonResponse = {
+export type GrammarResponse = {
     id?: number;
-    title?: string | null;
-    order?: number;
-    courseId?: number;
+    name?: string | null;
 };

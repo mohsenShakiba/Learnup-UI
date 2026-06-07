@@ -5,9 +5,9 @@ export const createLearnupTheme = (mode: PaletteMode) => createTheme({
   palette: {
     mode,
     primary: {
-      main: '#2563eb',
+      main: '#60a5fa',
       light: '#60a5fa',
-      dark: '#1d4ed8',
+      dark: '#60a5fa',
       contrastText: '#ffffff',
     },
     secondary: {
@@ -23,14 +23,14 @@ export const createLearnupTheme = (mode: PaletteMode) => createTheme({
       main: '#dc2626',
     },
     background: {
-      default: mode === 'dark' ? '#111827' : '#f7f8fb',
-      paper: mode === 'dark' ? '#1f2937' : '#ffffff',
+      default: mode === 'dark' ? '#212021' : '#f7f8fb',
+      paper: mode === 'dark' ? '#212021' : '#ffffff',
     },
     text: {
       primary: mode === 'dark' ? '#f9fafb' : '#111827',
       secondary: mode === 'dark' ? '#d1d5db' : '#4b5563',
     },
-    divider: mode === 'dark' ? '#374151' : '#e5e7eb',
+    divider: mode === 'dark' ? '#383638' : '#e5e7eb',
   },
   shape: {
     borderRadius: 8,
@@ -69,6 +69,7 @@ export const createLearnupTheme = (mode: PaletteMode) => createTheme({
         },
       },
     },
+
     MuiButton: {
       defaultProps: {
         variant: 'contained',
@@ -78,6 +79,14 @@ export const createLearnupTheme = (mode: PaletteMode) => createTheme({
           boxShadow: 'none',
         },
       },
+    },
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          background: 'rgba(0,0,0,0.2)',
+          backdropFilter: 'blur(20px)'
+        }
+      }
     },
     MuiCard: {
       styleOverrides: {

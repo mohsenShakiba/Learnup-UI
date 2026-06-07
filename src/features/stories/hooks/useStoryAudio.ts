@@ -85,6 +85,14 @@ function useStoryAudioState (storyItems: StoryItemResponse[]): UseStoryAudioResu
     }
 
     const syncActiveTimestamp = () => {
+
+      if (audioRef.current) {
+        audioRef.current.ontimeupdate = (e) => {
+          console.log('on update', e.timeStamp)
+        }
+      }
+     
+
       const currentTime = audioRef.current?.currentTime || 0;
       const activeItem = storyItems.find((item) => item.id === playingItemId);
 

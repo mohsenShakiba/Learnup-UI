@@ -14,7 +14,6 @@ export function StoryItem ({ item }: StoryItemProps) {
 
   const { activeItemId, activeTimestampIndex, playbackStatus, showTranslation, playItemAudio } = useStoryAudio();
 
-
   const isActive = playbackStatus === 'playing' && activeItemId === item.id;
   const highlightedWordIndex = isActive ? activeTimestampIndex : -1;
 
@@ -45,10 +44,13 @@ export function StoryItem ({ item }: StoryItemProps) {
     >
       <Card
         sx={(theme) => ({
+          px: 1,
+          py: 1,
           border: '1px solid',
           borderColor: isActive ? 'primary.main' : 'divider',
           cursor: 'pointer',
-          transition: theme.transitions.create(['border-color'], {
+          opacity: isActive ? '1' : '0.5',
+          transition: theme.transitions.create(['border-color', 'opacity'], {
             duration: theme.transitions.duration.short,
           }),
         })}
@@ -77,7 +79,7 @@ export function StoryItem ({ item }: StoryItemProps) {
         </Typography>
 
         {
-          showTranslation && <Typography sx={{ color: 'text.secondary', textAlign: 'right', direction: 'rtl' }}>
+          showTranslation && <Typography sx={{ fontSize: '12px', color: 'rgba(255,255,255,0.3)', textAlign: 'right', direction: 'rtl' }}>
             {item.translation}
           </Typography>
         }

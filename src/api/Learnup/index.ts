@@ -10,6 +10,7 @@ export type { OpenAPIConfig } from './core/OpenAPI';
 export type { CourseDetailResponse } from './models/CourseDetailResponse';
 export type { CourseLessonResponse } from './models/CourseLessonResponse';
 export type { CourseResponse } from './models/CourseResponse';
+export type { GrammarResponse } from './models/GrammarResponse';
 export type { ImportStoryRequest } from './models/ImportStoryRequest';
 export type { ImportVocabsResponse } from './models/ImportVocabsResponse';
 export type { LessonDetailResponse } from './models/LessonDetailResponse';

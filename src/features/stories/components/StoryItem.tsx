@@ -12,20 +12,11 @@ const isWhitespace = (token: string) => /^\s+$/.test(token);
 
 export function StoryItem ({ item }: StoryItemProps) {
 
-  const { activeItemId, audioProgress, playbackStatus, showTranslation, playItemAudio } = useStoryAudio();
+  const { activeItemId, activeTimestampIndex, playbackStatus, showTranslation, playItemAudio } = useStoryAudio();
 
 
   const isActive = playbackStatus === 'playing' && activeItemId === item.id;
-  let activeTimestampIndex = isActive
-    ? item.timestamps?.findIndex((timestamp) => (
-      audioProgress >= timestamp.start! && audioProgress < timestamp.end!
-    )) ?? -1
-    : -1;
-
-
-  if (activeItemId === item.id && audioProgress === 0) {
-    activeTimestampIndex = 0;
-  }
+  const highlightedWordIndex = isActive ? activeTimestampIndex : -1;
 
   const play = () => {
     if (item.id != null) {
@@ -73,7 +64,7 @@ export function StoryItem ({ item }: StoryItemProps) {
                 component="span"
                 key={`${token}-${tokenIndex}`}
                 sx={(theme) => ({
-                  color: wordIndex === activeTimestampIndex ? 'primary.main' : 'inherit',
+                  color: wordIndex === highlightedWordIndex ? 'primary.main' : 'inherit',
                   transition: theme.transitions.create(['background-color', 'color'], {
                     duration: theme.transitions.duration.standard,
                   }),

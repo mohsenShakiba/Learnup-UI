@@ -1,5 +1,5 @@
-import { createTheme } from '@mui/material';
 import type { PaletteMode } from '@mui/material';
+import { createTheme } from '@mui/material';
 
 export const createLearnupTheme = (mode: PaletteMode) => createTheme({
   palette: {

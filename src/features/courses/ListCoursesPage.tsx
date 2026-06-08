@@ -1,4 +1,4 @@
-import { CircularProgress, Stack } from '@mui/material';
+import { CircularProgress, Stack, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { CoursesService } from '../../api/Learnup';
 import { ErrorPage } from '../../shared/components/ErrorPage';
@@ -24,17 +24,23 @@ export default function ListCoursesPage () {
   const courses = coursesQuery.data ?? [];
 
   return (
-    <Scaffold title="Courses">
-      <Stack>
-        <Stack spacing={2}>
-          {courses.map((course) => (
-            <CourseListItem
-              key={course.id}
-              course={course}
-            />
-          ))}
+    <Scaffold
+      header={
+        <Stack>
+          <Typography color='primary'>
+            لیست دوره ها
+          </Typography>
         </Stack>
+
+      } maxWidth='sm' >
+      <Stack spacing={2}>
+        {courses.map((course) => (
+          <CourseListItem
+            key={course.id}
+            course={course}
+          />
+        ))}
       </Stack>
-    </Scaffold>
+    </Scaffold >
   );
 }

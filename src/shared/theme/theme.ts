@@ -11,10 +11,15 @@ export const createLearnupTheme = (mode: PaletteMode) => createTheme({
       contrastText: '#ffffff',
     },
     secondary: {
-      main: '#059669',
-      light: '#34d399',
-      dark: '#047857',
+      main: '#6945cc',
+      light: '#5232a8',
+      dark: '#392375',
       contrastText: '#ffffff',
+    },
+    success: {
+      light: '#34d399',
+      main: '#059669',
+      dark: '#047857',
     },
     warning: {
       main: '#d97706',
@@ -38,28 +43,7 @@ export const createLearnupTheme = (mode: PaletteMode) => createTheme({
   spacing: 8,
   typography: {
     fontFamily: 'IranSans, Arial, sans-serif',
-    h1: {
-      fontWeight: 800,
-    },
-    h2: {
-      fontWeight: 800,
-    },
-    h3: {
-      fontWeight: 700,
-    },
-    h4: {
-      fontWeight: 700,
-    },
-    h5: {
-      fontWeight: 700,
-    },
-    h6: {
-      fontWeight: 700,
-    },
-    button: {
-      fontWeight: 700,
-      textTransform: 'none',
-    },
+
   },
   components: {
     MuiCssBaseline: {

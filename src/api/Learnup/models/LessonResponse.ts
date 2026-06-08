@@ -7,5 +7,12 @@ export type LessonResponse = {
     id: number;
     title: string;
     order: number;
+    coverId: number | null;
     courseId: number;
+    storiesCount: number;
+    grammarsCount: number;
+    vocabsCount: number;
+    completedStoriesCount: number;
+    completedGrammarsCount: number;
+    completedVocabsCount: number;
 };

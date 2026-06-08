@@ -1,21 +1,16 @@
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Container, Divider, Stack } from '@mui/material';
 import type { ReactNode } from 'react';
 
 type ScaffoldProps = {
-  title?: ReactNode;
   header?: ReactNode;
   children: ReactNode;
+  maxWidth?: 'sm' | 'md';
 };
 
-export function Scaffold ({ title, header, children }: ScaffoldProps) {
-  const scaffoldHeader = header ?? (title ? (
-    <Typography>
-      {title}
-    </Typography>
-  ) : null);
+export function Scaffold ({ header, children, maxWidth }: ScaffoldProps) {
 
   return (
-    <>
+    <Container maxWidth={maxWidth}>
 
 
       <Box
@@ -24,21 +19,22 @@ export function Scaffold ({ title, header, children }: ScaffoldProps) {
           width: '100%',
           maxWidth: 960,
           mx: 'auto',
-          px: 2,
-          py: 3,
+          py: 2,
           boxSizing: 'border-box',
         }}
       >
         <Stack spacing={2}>
-          {scaffoldHeader && (
+          {header && (
             <>
-              {scaffoldHeader}
+              {header}
             </>
           )}
+
+          <Divider />
 
           <Box>{children}</Box>
         </Stack>
       </Box>
-    </>
+    </Container>
   );
 }

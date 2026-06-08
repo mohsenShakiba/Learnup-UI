@@ -1,4 +1,5 @@
 import { Box, Button, LinearProgress, Stack, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import type { CourseResponse } from '../../../api/Learnup';
 import { OpenAPI } from '../../../api/Learnup';
 
@@ -9,6 +10,9 @@ type CourseListItemProps = {
 const FALLBACK_COVER = '/images/course_cover.png';
 
 export function CourseListItem ({ course }: CourseListItemProps) {
+
+  const navigate = useNavigate();
+
   const coverUrl = course.coverId
     ? `${OpenAPI.BASE}/Mobile/Files/${course.coverId}`
     : FALLBACK_COVER;
@@ -16,6 +20,10 @@ export function CourseListItem ({ course }: CourseListItemProps) {
   const progress = course.totalLessonsCount > 0
     ? (course.completedLessonsCount / course.totalLessonsCount) * 100
     : 0;
+
+  const handleNavigateToCourseDetail = () => {
+    navigate(`/courses/${course.id}`);
+  };
 
   return (
     <Box
@@ -40,9 +48,9 @@ export function CourseListItem ({ course }: CourseListItemProps) {
         sx={{
           position: 'absolute',
           width: '100%',
-          height: '100%',
+          height: 'auto',
         }}
-        src={FALLBACK_COVER} />
+        src={coverUrl} />
       <Box
         sx={{
           position: 'absolute',
@@ -112,16 +120,18 @@ export function CourseListItem ({ course }: CourseListItemProps) {
         </Typography>
       </Stack>
 
-      <Button sx={{
-        backdropFilter: 'blur(5px)',
-        position: 'absolute',
-        bottom: 16,
-        left: 16,
-        right: 16,
-        borderColor: 'white',
-        color: 'white',
-        fontWeight: 100,
-      }} variant='outlined' >بریم شروع کنیم</Button>
+      <Button
+        onClick={handleNavigateToCourseDetail}
+        sx={{
+          backdropFilter: 'blur(5px)',
+          position: 'absolute',
+          bottom: 16,
+          left: 16,
+          right: 16,
+          borderColor: 'white',
+          color: 'white',
+          fontWeight: 100,
+        }} variant='outlined' >بریم شروع کنیم</Button>
 
     </Box>
   );

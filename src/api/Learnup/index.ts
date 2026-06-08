@@ -7,15 +7,12 @@ export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
-export type { CourseDetailResponse } from './models/CourseDetailResponse';
-export type { CourseLessonResponse } from './models/CourseLessonResponse';
 export type { CourseResponse } from './models/CourseResponse';
 export type { GrammarResponse } from './models/GrammarResponse';
 export type { ImportStoryRequest } from './models/ImportStoryRequest';
 export type { ImportVocabsResponse } from './models/ImportVocabsResponse';
 export type { LessonDetailResponse } from './models/LessonDetailResponse';
 export type { LessonResponse } from './models/LessonResponse';
-export { LessonStatus } from './models/LessonStatus';
 export type { StoryItemRequest } from './models/StoryItemRequest';
 export type { StoryItemResponse } from './models/StoryItemResponse';
 export type { StoryItemTimestampResponse } from './models/StoryItemTimestampResponse';

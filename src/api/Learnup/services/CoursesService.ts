@@ -2,7 +2,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CourseDetailResponse } from '../models/CourseDetailResponse';
 import type { CourseResponse } from '../models/CourseResponse';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -30,12 +29,12 @@ languageId: number,
 
     /**
      * @param id 
-     * @returns CourseDetailResponse OK
+     * @returns CourseResponse OK
      * @throws ApiError
      */
     public static getCourseById(
 id: number,
-): CancelablePromise<CourseDetailResponse> {
+): CancelablePromise<CourseResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/Mobile/Courses/{id}',

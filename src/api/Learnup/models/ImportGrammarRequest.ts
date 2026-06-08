@@ -3,12 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export enum VocalLevel {
-    COMMON = 0,
-    A1 = 1,
-    A2 = 2,
-    B1 = 3,
-    B2 = 4,
-    C1 = 5,
-    C2 = 6,
-}
+import type { GrammarRequest } from './GrammarRequest';
+
+export type ImportGrammarRequest = {
+    grammar: GrammarRequest;
+};

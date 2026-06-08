@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { ImportGrammarRequest } from '../models/ImportGrammarRequest';
 import type { ImportStoryRequest } from '../models/ImportStoryRequest';
 import type { ImportVocabsResponse } from '../models/ImportVocabsResponse';
 
@@ -42,6 +43,22 @@ requestBody?: ImportStoryRequest,
         return __request(OpenAPI, {
             method: 'POST',
             url: '/Admin/Import/stories',
+            body: requestBody,
+            mediaType: 'application/json',
+        });
+    }
+
+    /**
+     * @param requestBody 
+     * @returns number OK
+     * @throws ApiError
+     */
+    public static postAdminImportGrammars(
+requestBody?: ImportGrammarRequest,
+): CancelablePromise<number> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/Admin/Import/grammars',
             body: requestBody,
             mediaType: 'application/json',
         });

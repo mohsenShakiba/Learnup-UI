@@ -4,6 +4,6 @@
 /* eslint-disable */
 
 export type ImportVocabsResponse = {
-    parsedCount?: number;
-    importedCount?: number;
+    parsedCount: number;
+    importedCount: number;
 };

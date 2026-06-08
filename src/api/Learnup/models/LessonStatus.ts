@@ -4,7 +4,7 @@
 /* eslint-disable */
 
 export enum LessonStatus {
-    '_0' = 0,
-    '_1' = 1,
-    '_-1' = -1,
+    PENDING = 0,
+    PUBLISHED = 1,
+    SOFT_DELETED = -1,
 }

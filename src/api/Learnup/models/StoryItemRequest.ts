@@ -4,7 +4,7 @@
 /* eslint-disable */
 
 export type StoryItemRequest = {
-    order?: number;
-    text?: string | null;
-    translation?: string | null;
+    order: number;
+    text: string;
+    translation: string;
 };

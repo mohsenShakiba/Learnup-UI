@@ -4,8 +4,8 @@
 /* eslint-disable */
 
 export type LessonResponse = {
-    id?: number;
-    title?: string | null;
-    order?: number;
-    courseId?: number;
+    id: number;
+    title: string;
+    order: number;
+    courseId: number;
 };

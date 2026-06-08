@@ -37,16 +37,16 @@ export function StoryControls () {
     <Box
       sx={{
         position: 'fixed',
-        bottom: 0,
-        left: { xs: 0, md: 'auto' },
-        right: { xs: 0, md: '50%' },
+        bottom: 8,
+        borderRadius: 2,
+        left: { xs: 8, md: 'auto' },
+        right: { xs: 8, md: '50%' },
         width: 'auto',
         px: 4,
         py: 2,
         transform: { xs: 'none', md: 'translate(50%)' },
-        background: 'rgba(0,0,0,0.2)',
         boxShadow: '0 2px 12px rgba(0,0,0,0.5)',
-        backdropFilter: 'blur(12px)',
+        bgcolor: 'background.paper'
       }}
     >
 

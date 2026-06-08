@@ -6,9 +6,9 @@
 import type { CourseLessonResponse } from './CourseLessonResponse';
 
 export type CourseDetailResponse = {
-    id?: number;
-    title?: string | null;
-    order?: number;
-    languageId?: number;
-    lessons?: Array<CourseLessonResponse> | null;
+    id: number;
+    title: string;
+    order: number;
+    languageId: number;
+    lessons: Array<CourseLessonResponse>;
 };

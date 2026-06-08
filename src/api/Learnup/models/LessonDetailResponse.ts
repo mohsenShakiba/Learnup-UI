@@ -8,11 +8,11 @@ import type { StoryResponse } from './StoryResponse';
 import type { VocabResponse } from './VocabResponse';
 
 export type LessonDetailResponse = {
-    id?: number;
-    title?: string | null;
-    order?: number;
-    courseId?: number;
-    storyIds?: Array<StoryResponse> | null;
-    grammarIds?: Array<GrammarResponse> | null;
-    vocabIds?: Array<VocabResponse> | null;
+    id: number;
+    title: string;
+    order: number;
+    courseId: number;
+    stories: Array<StoryResponse>;
+    grammars: Array<GrammarResponse>;
+    vocabs: Array<VocabResponse>;
 };

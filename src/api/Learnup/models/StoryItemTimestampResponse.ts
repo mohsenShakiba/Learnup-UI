@@ -4,8 +4,8 @@
 /* eslint-disable */
 
 export type StoryItemTimestampResponse = {
-    id?: number;
-    word?: string | null;
-    start?: number;
-    end?: number;
+    id: number;
+    word: string;
+    start: number;
+    end: number;
 };

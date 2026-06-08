@@ -6,8 +6,8 @@
 import type { StoryItemResponse } from './StoryItemResponse';
 
 export type StoryResponse = {
-    id?: number;
-    title?: string | null;
-    coverId?: number | null;
-    items?: Array<StoryItemResponse> | null;
+    id: number;
+    title: string;
+    coverId: number | null;
+    items: Array<StoryItemResponse>;
 };

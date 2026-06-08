@@ -6,8 +6,8 @@
 import type { StoryRequest } from './StoryRequest';
 
 export type ImportStoryRequest = {
-    courseId?: number;
-    lessonId?: number;
-    grammarIds?: Array<number> | null;
-    story?: StoryRequest;
+    courseId: number;
+    lessonId: number;
+    grammarIds: Array<number>;
+    story: StoryRequest;
 };

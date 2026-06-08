@@ -47,24 +47,27 @@ const getActiveTimestampIndex = (
     return -1;
   }
 
-  const activeIndex = timestamps.findIndex((timestamp) => (
-    timestamp.start != null
-    && timestamp.end != null
-    && currentTime >= timestamp.start
-    && currentTime < timestamp.end
-  ));
+  // Highlight the last word whose start has passed, rather than requiring the
+  // sampled currentTime to fall strictly inside a [start, end) window. Polling
+  // is coarse (~40ms), so short words / gaps between words would otherwise be
+  // skipped entirely and never highlighted. Assumes timestamps are ordered by start.
+  let activeIndex = -1;
 
-  if (activeIndex !== -1) {
-    return activeIndex;
+  for (let index = 0; index < timestamps.length; index += 1) {
+    const { start } = timestamps[index];
+
+    if (start == null) {
+      continue;
+    }
+
+    if (currentTime < start) {
+      break;
+    }
+
+    activeIndex = index;
   }
 
-  const firstTimestamp = timestamps[0];
-
-  if (currentTime === 0 && firstTimestamp?.start === 0) {
-    return 0;
-  }
-
-  return -1;
+  return activeIndex;
 };
 
 function useStoryAudioState (storyItems: StoryItemResponse[]): UseStoryAudioResult {
@@ -85,14 +88,6 @@ function useStoryAudioState (storyItems: StoryItemResponse[]): UseStoryAudioResu
     }
 
     const syncActiveTimestamp = () => {
-
-      if (audioRef.current) {
-        audioRef.current.ontimeupdate = (e) => {
-          console.log('on update', e.timeStamp)
-        }
-      }
-     
-
       const currentTime = audioRef.current?.currentTime || 0;
       const activeItem = storyItems.find((item) => item.id === playingItemId);
 

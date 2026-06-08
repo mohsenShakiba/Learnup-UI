@@ -6,7 +6,7 @@
 import type { StoryItemRequest } from './StoryItemRequest';
 
 export type StoryRequest = {
-    title?: string | null;
-    words?: Array<string> | null;
-    sentences?: Array<StoryItemRequest> | null;
+    title: string;
+    words: Array<string>;
+    sentences: Array<StoryItemRequest>;
 };

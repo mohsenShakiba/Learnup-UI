@@ -3,15 +3,17 @@
 /* tslint:disable */
 /* eslint-disable */
 
+import type { VocabResponse } from './VocabResponse';
 import type { VocalLevel } from './VocalLevel';
 
-export type VocabResponse = {
+export type VocabDetailResponse = {
     id: number;
     word: string;
     translation: string | null;
     voiceId: string | null;
     description: string | null;
     level: VocalLevel;
-    parentVocabId: number | null;
+    parentVocab: VocabResponse;
     languageId: number;
+    languageName: string;
 };

@@ -4,6 +4,6 @@
 /* eslint-disable */
 
 export type GrammarResponse = {
-    id?: number;
-    name?: string | null;
+    id: number;
+    name: string;
 };

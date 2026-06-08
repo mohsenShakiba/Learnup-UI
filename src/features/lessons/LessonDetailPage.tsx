@@ -25,8 +25,6 @@ export default function LessonDetailPage () {
   }
 
   const lesson = lessonQuery.data;
-  const storyIds = lesson.storyIds ?? [];
-  const grammarIds = lesson.grammarIds ?? [];
 
   return (
     <Scaffold
@@ -44,8 +42,8 @@ export default function LessonDetailPage () {
         <Divider />
 
         <Stack spacing={1.5}>
-          {storyIds.map((id) => (
-            <StoryListItem key={id} storyId={id} />
+          {lesson.stories.map((story) => (
+            <StoryListItem key={story.id} storyId={story.id} />
           ))}
         </Stack>
 
@@ -55,9 +53,9 @@ export default function LessonDetailPage () {
         <Divider />
 
         <Stack spacing={1}>
-          {grammarIds.map((id) => (
-            <Typography key={id} variant="body2" color="text.secondary">
-              Grammar #{id}
+          {lesson.grammars.map((grammar) => (
+            <Typography key={grammar.id} variant="body2" color="text.secondary">
+              Grammar #{grammar.id}
             </Typography>
           ))}
         </Stack>

@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { VocabDetailResponse } from '../models/VocabDetailResponse';
 import type { VocabResponse } from '../models/VocabResponse';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -21,6 +22,23 @@ word: string,
         return __request(OpenAPI, {
             method: 'GET',
             url: '/Mobile/Vocabs/{word}',
+            path: {
+                'word': word,
+            },
+        });
+    }
+
+    /**
+     * @param word 
+     * @returns VocabDetailResponse OK
+     * @throws ApiError
+     */
+    public static getVocabDetailByWord(
+word: string,
+): CancelablePromise<VocabDetailResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/Mobile/Vocabs/{word}/detail',
             path: {
                 'word': word,
             },

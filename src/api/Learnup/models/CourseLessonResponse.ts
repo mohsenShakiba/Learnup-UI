@@ -6,8 +6,8 @@
 import type { LessonStatus } from './LessonStatus';
 
 export type CourseLessonResponse = {
-    id?: number;
-    title?: string | null;
-    order?: number;
-    status?: LessonStatus;
+    id: number;
+    title: string;
+    order: number;
+    status: LessonStatus;
 };

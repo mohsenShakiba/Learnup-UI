@@ -21,6 +21,7 @@ export type { StoryItemResponse } from './models/StoryItemResponse';
 export type { StoryItemTimestampResponse } from './models/StoryItemTimestampResponse';
 export type { StoryRequest } from './models/StoryRequest';
 export type { StoryResponse } from './models/StoryResponse';
+export type { VocabDetailResponse } from './models/VocabDetailResponse';
 export type { VocabResponse } from './models/VocabResponse';
 export { VocalLevel } from './models/VocalLevel';
 

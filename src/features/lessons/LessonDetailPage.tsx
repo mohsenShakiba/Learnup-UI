@@ -1,10 +1,11 @@
-import { Box, CircularProgress, Divider, Stack, Typography } from '@mui/material';
+import { Box, CircularProgress, Stack, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { LessonsService } from '../../api/Learnup';
 import { ErrorPage } from '../../shared/components/ErrorPage';
 import { Scaffold } from '../../shared/components/Scaffold';
 import { StoryListItem } from './components/StoryListItem';
+import { VocabBox } from './components/VocabBox';
 
 export default function LessonDetailPage () {
   const { id: lessonId } = useParams<{ id: string; }>();
@@ -37,20 +38,11 @@ export default function LessonDetailPage () {
       <Stack spacing={2}>
 
 
-        <Typography>داستان ها</Typography>
-
-        <Divider />
-
         <Stack spacing={1.5}>
           {lesson.stories.map((story) => (
-            <StoryListItem key={story.id} storyId={story.id} />
+            <StoryListItem key={story.id} story={story} />
           ))}
         </Stack>
-
-
-        <Typography>گرامر ها</Typography>
-
-        <Divider />
 
         <Stack spacing={1}>
           {lesson.grammars.map((grammar) => (
@@ -60,13 +52,7 @@ export default function LessonDetailPage () {
           ))}
         </Stack>
 
-        <Typography>گرامر ها</Typography>
-
-        <Divider />
-
-        <Stack spacing={1}>
-
-        </Stack>
+        <VocabBox vocabs={lesson.vocabs} />
 
       </Stack>
     </Scaffold>

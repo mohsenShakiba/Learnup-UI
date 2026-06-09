@@ -9,5 +9,6 @@ export type StoryResponse = {
     id: number;
     title: string;
     coverId: number | null;
+    isCompleted: boolean;
     items: Array<StoryItemResponse>;
 };

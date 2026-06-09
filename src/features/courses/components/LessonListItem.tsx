@@ -1,13 +1,10 @@
-import { Box, Icon, Stack, Typography } from '@mui/material';
+import { Box, Icon, Paper, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { LessonResponse } from '../../../api/Learnup';
-import { OpenAPI } from '../../../api/Learnup';
 
 type LessonListItemProps = {
   lesson: LessonResponse;
 };
-
-const FALLBACK_COVER = '/images/story_cover.png';
 
 function StoryIcon ({ completed }: { completed: boolean; }) {
   return (
@@ -39,12 +36,8 @@ function GrammarIcon ({ completed }: { completed: boolean; }) {
 export function LessonListItem ({ lesson }: LessonListItemProps) {
   const navigate = useNavigate();
 
-  const coverUrl = lesson.coverId
-    ? `${OpenAPI.BASE}/Mobile/Files/${lesson.coverId}`
-    : FALLBACK_COVER;
-
   return (
-    <Box
+    <Paper
       onClick={() => navigate(`/lessons/${lesson.id}`)}
       sx={{
         position: 'relative',
@@ -52,31 +45,14 @@ export function LessonListItem ({ lesson }: LessonListItemProps) {
         borderRadius: 1,
         overflow: 'hidden',
         cursor: 'pointer',
-        transition: 'transform 0.15s ease, opacity 0.15s ease',
-        '&:active': { transform: 'scale(0.97)', opacity: 0.85 },
       }}
     >
-      {/* Full-bleed cover image */}
-      <Box
-        component="img"
-        src={coverUrl}
-        sx={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-      />
-
-      {/* Gradient overlay */}
-      <Box
-        sx={{
-          position: 'absolute',
-          inset: 0,
-          background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.0) 100%)',
-        }}
-      />
 
       {/* Badge + title */}
       <Stack
         direction="row"
         spacing={1}
-        sx={{ position: 'absolute', inset: 0, px: 2, alignItems: 'center', justifyContent: 'flex-start' }}
+        sx={{ px: 2, alignItems: 'center', justifyContent: 'flex-start' }}
       >
         <Stack spacing={0.5} sx={{ overflow: 'hidden', alignItems: 'flex-start' }}>
           <Box
@@ -132,6 +108,6 @@ export function LessonListItem ({ lesson }: LessonListItemProps) {
           </Stack>
         )}
       </Stack>
-    </Box>
+    </Paper>
   );
 }

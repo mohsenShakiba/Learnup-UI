@@ -15,4 +15,5 @@ export type LessonResponse = {
     completedStoriesCount: number;
     completedGrammarsCount: number;
     completedVocabsCount: number;
+    readonly isCompleted: boolean;
 };

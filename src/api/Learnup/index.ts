@@ -8,7 +8,12 @@ export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
 export type { CourseResponse } from './models/CourseResponse';
+export type { GrammarLessonRequest } from './models/GrammarLessonRequest';
+export type { GrammarLessonResponse } from './models/GrammarLessonResponse';
+export type { GrammarRequest } from './models/GrammarRequest';
 export type { GrammarResponse } from './models/GrammarResponse';
+export { HTMLTag } from './models/HTMLTag';
+export type { ImportGrammarRequest } from './models/ImportGrammarRequest';
 export type { ImportStoryRequest } from './models/ImportStoryRequest';
 export type { ImportVocabsResponse } from './models/ImportVocabsResponse';
 export type { LessonDetailResponse } from './models/LessonDetailResponse';
@@ -19,11 +24,12 @@ export type { StoryItemTimestampResponse } from './models/StoryItemTimestampResp
 export type { StoryRequest } from './models/StoryRequest';
 export type { StoryResponse } from './models/StoryResponse';
 export type { VocabDetailResponse } from './models/VocabDetailResponse';
+export { VocabLevel } from './models/VocabLevel';
 export type { VocabResponse } from './models/VocabResponse';
-export { VocalLevel } from './models/VocalLevel';
 
 export { CoursesService } from './services/CoursesService';
 export { FilesService } from './services/FilesService';
+export { GrammarsService } from './services/GrammarsService';
 export { ImportService } from './services/ImportService';
 export { LessonsService } from './services/LessonsService';
 export { StoriesService } from './services/StoriesService';

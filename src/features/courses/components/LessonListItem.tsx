@@ -1,6 +1,6 @@
-import { Box, Icon, Paper, Stack, Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { Box, Icon, Stack, Typography } from '@mui/material';
 import type { LessonResponse } from '../../../api/Learnup';
+import { SuperFancyComponent } from '../../../shared/components/SuperFancyComponent';
 
 type LessonListItemProps = {
   lesson: LessonResponse;
@@ -8,7 +8,6 @@ type LessonListItemProps = {
 
 function StoryIcon ({ completed }: { completed: boolean; }) {
   return (
-
     <Box sx={{
       bgcolor: completed ? 'success.dark' : 'rgba(255,255,255,0.1)',
       borderRadius: '4px',
@@ -34,25 +33,17 @@ function GrammarIcon ({ completed }: { completed: boolean; }) {
 }
 
 export function LessonListItem ({ lesson }: LessonListItemProps) {
-  const navigate = useNavigate();
 
   return (
-    <Paper
-      onClick={() => navigate(`/lessons/${lesson.id}`)}
-      sx={{
-        position: 'relative',
-        height: 150,
-        borderRadius: 1,
-        overflow: 'hidden',
-        cursor: 'pointer',
-      }}
+    <SuperFancyComponent
+
     >
 
       {/* Badge + title */}
       <Stack
         direction="row"
         spacing={1}
-        sx={{ px: 2, alignItems: 'center', justifyContent: 'flex-start' }}
+        sx={{ px: 2, height: 200, alignItems: 'center', justifyContent: 'flex-start' }}
       >
         <Stack spacing={0.5} sx={{ overflow: 'hidden', alignItems: 'flex-start' }}>
           <Box
@@ -108,6 +99,6 @@ export function LessonListItem ({ lesson }: LessonListItemProps) {
           </Stack>
         )}
       </Stack>
-    </Paper>
+    </SuperFancyComponent>
   );
 }

@@ -14,7 +14,7 @@ function App () {
   return (
     <BrowserRouter>
       <Stack sx={{ height: '100dvh' }}>
-        <Box sx={{ flex: 1 }}>
+        <Box sx={{ flex: 1, overflowY: 'auto' }}>
           <Routes>
             <Route path="/stories/:id" element={<StoryDetailPage />} />
             <Route path="/courses/:id" element={<CourseDetailPage />} />

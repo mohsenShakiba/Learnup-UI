@@ -1,5 +1,5 @@
 import type { SxProps, Theme } from '@mui/material';
-import { Box, Button, LinearProgress, Paper, Stack, Typography } from '@mui/material';
+import { Box, Button, GlobalStyles, LinearProgress, Paper, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { CourseResponse } from '../../../api/Learnup';
 
@@ -41,20 +41,67 @@ export function CourseListItem ({ course }: CourseListItemProps) {
         }
       >
 
-        <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <img src='/images/course1/rocket.png' width={100} />
-          <img src='/images/course1/pen.png' width={50} />
+        <GlobalStyles styles={`
+          @keyframes float1 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(0,-5px); } }
+          @keyframes float2 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(10px,-5px); } }
+          @keyframes float3 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(5px,5px); } }
+          @keyframes float4 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-10px,-10px); } }
+          @keyframes float5 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-0px,10px); } }
+          @keyframes floatRocket { 0%,100% { transform: translate(-50%,-50%); } 50% { transform: translate(-50%,-58%); } }
+        `} />
+        <Box sx={{ flex: 1, position: 'relative', minHeight: 180 }}>
+          {/* Rocket — center */}
+          <Box component='img' src='/images/course1/rocket.png' width={130}
+            sx={{
+              position: 'absolute', top: '50%', left: '50%',
+              animation: 'floatRocket 10s ease-in-out infinite'
+            }} />
+
+          {/* pen — top center */}
+          <Box component='img' src='/images/course1/pen.png' width={40}
+            sx={{
+              position: 'absolute', top: '5%', left: '60%', transform: 'translateX(-50%)',
+              animation: 'float1 10s ease-in-out infinite'
+            }} />
+
+          {/* cup — right */}
+          <Box component='img' src='/images/course1/cup.png' width={86}
+            sx={{
+              position: 'absolute', top: '30%', right: '5%',
+              animation: 'float2 10s ease-in-out infinite 0.4s'
+            }} />
+
+          {/* suitcase — bottom right */}
+          <Box component='img' src='/images/course1/suitcase.png' width={90}
+            sx={{
+              position: 'absolute', bottom: '5%', right: '15%',
+              animation: 'float3 10s ease-in-out infinite 0.8s'
+            }} />
+
+          {/* book — bottom left */}
+          <Box component='img' src='/images/course1/book.png' width={80}
+            sx={{
+              position: 'absolute', bottom: '5%', left: '10%',
+              animation: 'float4 10s ease-in-out infinite 1.2s'
+            }} />
+
+          {/* plant — left */}
+          <Box component='img' src='/images/course1/plant.png' width={80}
+            sx={{
+              position: 'absolute', top: '10%', left: '5%',
+              animation: 'float5 10s ease-in-out infinite 0.6s'
+            }} />
         </Box>
 
 
         <Stack
           sx={{
-
             px: 1.5,
             pb: 8,
             pt: 5,
           }}
         >
+
           <Typography
             variant='h6'
             sx={{

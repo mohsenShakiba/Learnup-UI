@@ -1,6 +1,5 @@
-import { Box, Icon, Stack, Typography } from '@mui/material';
+import { Box, Card, Icon, Stack, Typography } from '@mui/material';
 import type { LessonResponse } from '../../../api/Learnup';
-import { SuperFancyComponent } from '../../../shared/components/SuperFancyComponent';
 
 type LessonListItemProps = {
   lesson: LessonResponse;
@@ -35,15 +34,13 @@ function GrammarIcon ({ completed }: { completed: boolean; }) {
 export function LessonListItem ({ lesson }: LessonListItemProps) {
 
   return (
-    <SuperFancyComponent
-
-    >
+    <Card >
 
       {/* Badge + title */}
       <Stack
         direction="row"
         spacing={1}
-        sx={{ px: 2, height: 200, alignItems: 'center', justifyContent: 'flex-start' }}
+        sx={{ px: 2, alignItems: 'center', justifyContent: 'flex-start' }}
       >
         <Stack spacing={0.5} sx={{ overflow: 'hidden', alignItems: 'flex-start' }}>
           <Box
@@ -99,6 +96,6 @@ export function LessonListItem ({ lesson }: LessonListItemProps) {
           </Stack>
         )}
       </Stack>
-    </SuperFancyComponent>
+    </Card>
   );
 }

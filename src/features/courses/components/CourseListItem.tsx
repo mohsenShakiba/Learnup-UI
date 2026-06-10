@@ -3,6 +3,7 @@ import { Box, Button, GlobalStyles, LinearProgress, Paper, Stack, Typography } f
 import { useNavigate } from 'react-router-dom';
 import type { CourseResponse } from '../../../api/Learnup';
 import { TypeWriter } from '../../../components/TypeWriter';
+import { DotGrid } from '../../../shared/components/DotGrid';
 
 type CourseListItemProps = {
   course: CourseResponse;
@@ -30,6 +31,7 @@ export function CourseListItem ({ course }: CourseListItemProps) {
       flexDirection: 'column',
 
     }}>
+
       <Paper
         sx={
           {
@@ -51,6 +53,9 @@ export function CourseListItem ({ course }: CourseListItemProps) {
           @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
         `} />
         <Box sx={{ flex: 1, position: 'relative', minHeight: 180 }}>
+
+          <DotGrid />
+
           {/* Rocket — center */}
           <Box component='img' src='/images/course1/rocket.png' width={130}
             sx={{

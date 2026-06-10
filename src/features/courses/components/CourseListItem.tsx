@@ -2,12 +2,12 @@ import type { SxProps, Theme } from '@mui/material';
 import { Box, Button, GlobalStyles, LinearProgress, Paper, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { CourseResponse } from '../../../api/Learnup';
+import { TypeWriter } from '../../../components/TypeWriter';
 
 type CourseListItemProps = {
   course: CourseResponse;
   sx?: SxProps<Theme>;
 };
-
 
 export function CourseListItem ({ course }: CourseListItemProps) {
 
@@ -48,6 +48,7 @@ export function CourseListItem ({ course }: CourseListItemProps) {
           @keyframes float4 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-10px,-10px); } }
           @keyframes float5 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-0px,10px); } }
           @keyframes floatRocket { 0%,100% { transform: translate(-50%,-50%); } 50% { transform: translate(-50%,-58%); } }
+          @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
         `} />
         <Box sx={{ flex: 1, position: 'relative', minHeight: 180 }}>
           {/* Rocket — center */}
@@ -96,9 +97,9 @@ export function CourseListItem ({ course }: CourseListItemProps) {
 
         <Stack
           sx={{
+            flex: 1,
             px: 1.5,
-            pb: 8,
-            pt: 5,
+            justifyContent: 'space-around'
           }}
         >
 
@@ -123,37 +124,52 @@ export function CourseListItem ({ course }: CourseListItemProps) {
             {course.description}
           </Typography>
 
+          <Stack direction='row' sx={{ direction: 'rtl', fontSize: '0.8rem', alignItems: 'center', color: 'rgba(255,255,255,0.5)' }}>
+
+            <Box sx={{ ml: 1 }}>
+              <Typography sx={{ fontSize: 'inherit' }}>با کلماتی مثل</Typography>
+            </Box>
+            <Box sx={{ ml: 1 }}>
+              <TypeWriter words={['BOOOK', 'FRIEND', 'SCHOOL', 'MEETING']} />
+            </Box>
+            <Box>
+              <Typography sx={{ fontSize: 'inherit' }}>آشنا میشید</Typography>
+            </Box>
+          </Stack>
+
+          <Stack spacing={1}>
+            <LinearProgress
+              variant='determinate'
+              value={progress}
+              sx={{
+                height: 6,
+                borderRadius: 3,
+                backgroundColor: 'rgba(255,255,255,0.5)',
+              }}
+            />
+            <Typography
+              sx={{
+                color: '#2aa15b',
+                fontSize: '0.6rem',
+                textAlign: 'right',
+              }}
+            >
+              {course.completedLessonsCount} / {course.totalLessonsCount}
+            </Typography>
+          </Stack>
+
+
+          <Button
+            onClick={handleNavigateToCourseDetail}
+            sx={{
+              backdropFilter: 'blur(5px)',
+              borderColor: 'white',
+              color: 'white',
+              fontWeight: 100,
+            }} variant='outlined' >بریم شروع کنیم</Button>
+
         </Stack>
 
-        <Stack spacing={0.5} sx={{}}>
-          <LinearProgress
-            variant='determinate'
-            value={progress}
-            sx={{
-              height: 6,
-              borderRadius: 3,
-              backgroundColor: 'rgba(255,255,255,0.5)',
-            }}
-          />
-          <Typography
-            sx={{
-              color: '#2aa15b',
-              fontSize: '0.6rem',
-              textAlign: 'right',
-            }}
-          >
-            {course.completedLessonsCount} / {course.totalLessonsCount}
-          </Typography>
-        </Stack>
-
-        <Button
-          onClick={handleNavigateToCourseDetail}
-          sx={{
-            backdropFilter: 'blur(5px)',
-            borderColor: 'white',
-            color: 'white',
-            fontWeight: 100,
-          }} variant='outlined' >بریم شروع کنیم</Button>
 
       </Paper>
     </Box>

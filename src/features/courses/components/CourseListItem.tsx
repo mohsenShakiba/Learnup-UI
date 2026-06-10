@@ -104,9 +104,8 @@ export function CourseListItem ({ course }: CourseListItemProps) {
         >
 
           <Typography
-            variant='h6'
             sx={{
-              color: '#fff',
+              color: 'text.primary',
               textAlign: 'right'
             }}
           >
@@ -116,7 +115,7 @@ export function CourseListItem ({ course }: CourseListItemProps) {
           <Typography
             variant='h6'
             sx={{
-              color: 'rgba(255,255,255,0.6)',
+              color: 'text.secondary',
               fontSize: '0.8rem',
               textAlign: 'right'
             }}
@@ -124,7 +123,7 @@ export function CourseListItem ({ course }: CourseListItemProps) {
             {course.description}
           </Typography>
 
-          <Stack direction='row' sx={{ direction: 'rtl', fontSize: '0.8rem', alignItems: 'center', color: 'rgba(255,255,255,0.5)' }}>
+          <Stack direction='row' sx={{ direction: 'rtl', fontSize: '0.8rem', alignItems: 'center', color: 'rgba(255,255,255,0.4)' }}>
 
             <Box sx={{ ml: 1 }}>
               <Typography sx={{ fontSize: 'inherit' }}>با کلماتی مثل</Typography>

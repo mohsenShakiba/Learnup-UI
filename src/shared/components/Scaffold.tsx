@@ -15,9 +15,9 @@ export function Scaffold ({ header, children, maxWidth }: ScaffoldProps) {
         component="main"
         sx={{
           width: '100%',
-          maxWidth: 960,
           mx: 'auto',
           py: 2,
+          paddingBottom: 10,
           boxSizing: 'border-box',
         }}
       >

@@ -1,8 +1,9 @@
 import type { SxProps, Theme } from '@mui/material';
-import { Box, LinearProgress, Paper, Stack, Typography } from '@mui/material';
+import { Box, Paper, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { CourseResponse } from '../../../api/Learnup';
 import { TypeWriter } from '../../../components/TypeWriter';
+import { DottedProgress } from '../../../shared/components/DottedProgress';
 import { FancyButton } from '../../../shared/components/FancyButton';
 import { ImageLoader } from '../../../shared/components/ImageLoader';
 
@@ -89,12 +90,11 @@ export function CourseListItem ({ course }: CourseListItemProps) {
           </Typography>
 
           <Stack direction='row' sx={{ direction: 'rtl', fontSize: '0.8rem', alignItems: 'center', color: 'rgba(255,255,255,0.4)' }}>
-
             <Box sx={{ ml: 1 }}>
-              <Typography sx={{ fontSize: 'inherit' }}>با کلماتی مثل</Typography>
+              <Typography sx={{ fontSize: 'inherit' }}>در این دوره با</Typography>
             </Box>
-            <Box sx={{ ml: 1 }}>
-              <TypeWriter words={['Book', 'Friend', 'School', 'Work']} />
+            <Box sx={{ ml: 1, color: 'secondary.main' }}>
+              <TypeWriter words={['25 درس', '30 داستان', '10 گرامر', '300 کلمه']} />
             </Box>
             <Box>
               <Typography sx={{ fontSize: 'inherit' }}>آشنا میشید</Typography>
@@ -102,15 +102,7 @@ export function CourseListItem ({ course }: CourseListItemProps) {
           </Stack>
 
           <Stack spacing={1} sx={{ width: '100%' }}>
-            <LinearProgress
-              variant='determinate'
-              value={progress}
-              sx={{
-                height: 6,
-                borderRadius: 3,
-                backgroundColor: 'rgba(255,255,255,0.5)',
-              }}
-            />
+            <DottedProgress value={progress} />
             <Typography
               sx={{
                 color: '#2aa15b',
@@ -121,7 +113,6 @@ export function CourseListItem ({ course }: CourseListItemProps) {
               {course.completedLessonsCount} / {course.totalLessonsCount}
             </Typography>
           </Stack>
-
 
           <FancyButton
             fullWidth

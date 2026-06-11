@@ -31,7 +31,7 @@ export function FancyButton ({ sx, children, ...props }: ButtonProps) {
           position: 'relative',
           overflow: 'hidden',
           color: theme.palette.primary.contrastText,
-          background: `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main}, ${theme.palette.primary.main})`,
+          background: `linear-gradient(90deg, #267558, #109463)`,
           backgroundSize: '200% 200%',
           animation: 'fancyButtonGradient 5s ease infinite',
           transition: theme.transitions.create(['box-shadow', 'transform'], {

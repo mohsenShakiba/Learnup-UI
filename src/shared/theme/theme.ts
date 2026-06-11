@@ -3,9 +3,9 @@ import { createTheme } from '@mui/material';
 
 
 export const createLearnupTheme = (mode: PaletteMode) => {
-  const sufaceBackground = mode === 'dark' ? '#212021' : '#f7f8fb';
-  const paperBackgorund = mode === 'dark' ? '#2b282b' : '#ffffff';
-  const dividerColor = mode === 'dark' ? '#383638' : '#e5e7eb';
+  const sufaceBackground = mode === 'dark' ? 'rgba(14, 12, 17)' : '#f7f8fb';
+  const paperBackgorund = mode === 'dark' ? 'rgba(17, 15, 20)' : '#ffffff';
+  const dividerColor = mode === 'dark' ? 'rgba(255,255,255,0.1)' : '#e5e7eb';
   return createTheme({
     palette: {
       mode,
@@ -80,8 +80,21 @@ export const createLearnupTheme = (mode: PaletteMode) => {
       MuiCard: {
         styleOverrides: {
           root: {
+            background: paperBackgorund,
             padding: 16,
-            border: `1px solid ${mode === 'dark' ? '#374151' : '#e5e7eb'}`,
+            border: `1px solid ${dividerColor}`,
+            boxShadow: mode === 'dark'
+              ? '0 10px 24px rgba(0, 0, 0, 0.25)'
+              : '0 10px 24px rgba(17, 24, 39, 0.06)',
+          },
+        },
+      },
+      MuiPaper: {
+        styleOverrides: {
+          root: {
+            background: paperBackgorund,
+            padding: 16,
+            border: `1px solid ${dividerColor}`,
             boxShadow: mode === 'dark'
               ? '0 10px 24px rgba(0, 0, 0, 0.25)'
               : '0 10px 24px rgba(17, 24, 39, 0.06)',

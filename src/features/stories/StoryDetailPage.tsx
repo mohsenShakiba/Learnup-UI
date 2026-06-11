@@ -1,7 +1,8 @@
-import { CircularProgress, Stack } from '@mui/material';
+import { Stack } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { StoriesService } from '../../api/Learnup';
+import { AppLoader } from '../../shared/components/AppLoader';
 import { ErrorPage } from '../../shared/components/ErrorPage';
 import { Scaffold } from '../../shared/components/Scaffold';
 import { StoryControls } from './components/StoryControls';
@@ -23,7 +24,7 @@ export default function StoryDetailPage () {
   const storyItems = story?.items ?? [];
 
   if (storyQuery.isLoading) {
-    return <CircularProgress />;
+    return <AppLoader />;
   }
 
   if (storyQuery.isError || !story) {

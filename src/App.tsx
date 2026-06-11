@@ -8,6 +8,7 @@ import ListGrammarPage from "./features/grammar/pages/ListGrammarPage";
 import LessonDetailPage from "./features/lessons/LessonDetailPage";
 import StoryDetailPage from "./features/stories/StoryDetailPage";
 import { BottomNav } from "./shared/components/BottomNav";
+import { DotGrid } from "./shared/components/DotGrid";
 setupOpenApi();
 
 function App () {
@@ -28,6 +29,8 @@ function App () {
             <Route path="*" element={<h1>404 - Not Found</h1>} />
           </Routes>
         </Box>
+        <DotGrid />
+
         <BottomNav />
       </Stack>
 

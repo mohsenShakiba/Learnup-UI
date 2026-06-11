@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 type DotGridProps = {
   /** Distance between dot centers in px. Smaller gap = more dots. */
@@ -12,13 +12,13 @@ type DotGridProps = {
   className?: string;
 };
 
-type Size = { width: number; height: number };
+type Size = { width: number; height: number; };
 
 export function DotGrid ({
   gap = 24,
   dotSize = 3,
   color = '#ffffff',
-  opacity = 0.15,
+  opacity = 0.1,
   style,
   className,
 }: DotGridProps) {
@@ -45,7 +45,7 @@ export function DotGrid ({
   const stepX = size.width / cols;
   const stepY = size.height / rows;
 
-  const dots: { cx: number; cy: number }[] = [];
+  const dots: { cx: number; cy: number; }[] = [];
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < cols; col++) {
       dots.push({
@@ -63,6 +63,7 @@ export function DotGrid ({
       style={{
         position: 'absolute',
         inset: 0,
+        zIndex: -1,
         overflow: 'hidden',
         pointerEvents: 'none',
         ...style,

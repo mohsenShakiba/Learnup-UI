@@ -1,7 +1,9 @@
-import { Box, CircularProgress, Stack, Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { LessonsService } from '../../api/Learnup';
+import { AppLoader } from '../../shared/components/AppLoader';
+import { DefaultHeader } from '../../shared/components/DefaultHeader';
 import { ErrorPage } from '../../shared/components/ErrorPage';
 import { Scaffold } from '../../shared/components/Scaffold';
 import { StoryListItem } from './components/StoryListItem';
@@ -18,7 +20,7 @@ export default function LessonDetailPage () {
   });
 
   if (lessonQuery.isLoading) {
-    return <CircularProgress />;
+    return <AppLoader />;
   }
 
   if (lessonQuery.isError || !lessonQuery.data) {
@@ -30,9 +32,7 @@ export default function LessonDetailPage () {
   return (
     <Scaffold
       header={
-        <Box>
-          <Typography variant="h6">{lesson.title}</Typography>
-        </Box>
+        <DefaultHeader header='درس اول' />
       }
     >
       <Stack spacing={2}>

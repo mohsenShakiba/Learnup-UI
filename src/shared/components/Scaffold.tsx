@@ -1,4 +1,4 @@
-import { Box, Container, Divider, Stack } from '@mui/material';
+import { Box, Container, Stack } from '@mui/material';
 import type { ReactNode } from 'react';
 
 type ScaffoldProps = {
@@ -11,8 +11,6 @@ export function Scaffold ({ header, children, maxWidth }: ScaffoldProps) {
 
   return (
     <Container maxWidth={maxWidth}>
-
-
       <Box
         component="main"
         sx={{
@@ -29,9 +27,6 @@ export function Scaffold ({ header, children, maxWidth }: ScaffoldProps) {
               {header}
             </>
           )}
-
-          <Divider />
-
           <Box>{children}</Box>
         </Stack>
       </Box>

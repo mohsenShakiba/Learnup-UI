@@ -1,10 +1,10 @@
-import { CircularProgress } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { CoursesService } from '../../api/Learnup';
+import { AppLoader } from '../../shared/components/AppLoader';
 import { ErrorPage } from '../../shared/components/ErrorPage';
 import { CourseListItem } from './components/CourseListItem';
 
@@ -15,7 +15,7 @@ export default function ListCoursesPage () {
   });
 
   if (coursesQuery.isLoading) {
-    return <CircularProgress sx={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)' }} />;
+    return <AppLoader />;
   }
 
   if (coursesQuery.isError) {
@@ -29,7 +29,7 @@ export default function ListCoursesPage () {
       direction='horizontal'
       style={{ height: '100%' }}
       modules={[Pagination]}
-      pagination={{ clickable: true }}
+      pagination={{ clickable: true, }}
     >
       {courses.map((course) => (
         <SwiperSlide key={course.id}>

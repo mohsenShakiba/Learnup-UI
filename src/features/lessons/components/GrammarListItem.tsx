@@ -2,6 +2,7 @@ import { Box, Divider, Icon, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { GrammarResponse } from '../../../api/Learnup/models/GrammarResponse';
 import { ActionCard } from '../../../shared/components/ActionCard';
+import { DurationBadge } from '../../../shared/components/DurationBadge';
 
 type Props = {
     grammar: GrammarResponse;
@@ -33,11 +34,7 @@ export function GrammarListItem ({ grammar }: Props) {
                         <Box>گرامر</Box>
                     </Stack>
 
-                    <Icon sx={{ fontSize: '0.8rem', color: 'text.secondary' }}>timer</Icon>
-                    <Typography sx={{ fontSize: '0.7rem', color: 'text.secondary', fontFamily: 'arial' }}>
-                        5 Min
-                    </Typography>
-
+                    <DurationBadge minutes={5} />
 
                     <Box sx={{ flex: 1 }}></Box>
 

@@ -2,6 +2,7 @@ import { Box, Icon, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { StoryResponse } from '../../../api/Learnup';
 import { ActionCard } from '../../../shared/components/ActionCard';
+import { DurationBadge } from '../../../shared/components/DurationBadge';
 import { ImageLoader } from '../../../shared/components/ImageLoader';
 
 type StoryListItemProps = {
@@ -46,10 +47,7 @@ export function StoryListItem ({ story }: StoryListItemProps) {
               <Box>داستان</Box>
             </Stack>
 
-            <Icon sx={{ fontSize: '0.8rem', color: 'text.secondary' }}>timer</Icon>
-            <Typography sx={{ fontSize: '0.7rem', color: 'text.secondary', fontFamily: 'arial' }}>
-              5 Min
-            </Typography>
+            <DurationBadge minutes={5} />
 
             <Box sx={{ flex: 1 }}></Box>
 

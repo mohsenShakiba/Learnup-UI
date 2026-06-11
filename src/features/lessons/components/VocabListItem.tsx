@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import type { VocabResponse } from '../../../api/Learnup/models/VocabResponse';
 import { TypeWriter } from '../../../components/TypeWriter';
 import { ActionCard } from '../../../shared/components/ActionCard';
+import { DurationBadge } from '../../../shared/components/DurationBadge';
 
 type Props = {
     vocabs: Array<VocabResponse>;
@@ -30,10 +31,7 @@ export function VocabListItem ({ vocabs, lessonId }: Props) {
                             <Icon sx={{ fontSize: '0.8rem' }}>translate</Icon>
                             <Box>مرور لغات</Box>
                         </Stack>
-                        <Icon sx={{ fontSize: '0.8rem', color: 'text.secondary' }}>timer</Icon>
-                        <Typography sx={{ fontSize: '0.7rem', color: 'text.secondary', fontFamily: 'arial' }}>
-                            8 Min
-                        </Typography>
+                        <DurationBadge minutes={8} />
                     </Stack>
                 </Stack>
 

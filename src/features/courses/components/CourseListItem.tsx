@@ -65,12 +65,16 @@ export function CourseListItem ({ course }: CourseListItemProps) {
           }}
         >
 
-          <Typography>
-            {course.id}
-          </Typography>
-          <Typography sx={{ background: '#ffaa00', display: 'block', borderRadius: 0.5, color: 'black', px: 0.8, py: 0.4, fontSize: '0.7rem' }}>
-            بخش اول
-          </Typography>
+
+          <Stack direction='row' sx={{ borderRadius: 0.5, overflow: 'hidden', fontSize: '0.7rem' }}>
+            <Box sx={{ background: 'rgba(255,255,255,0.2)', color: 'white', px: 0.8, py: 0.4 }}>
+              {course.slug}
+            </Box>
+            <Box sx={{ background: '#d683b9', color: 'black', px: 0.8, py: 0.4, fontFamily: 'arial' }}>
+              {course.code}
+            </Box>
+
+          </Stack>
 
           <Typography
             sx={{

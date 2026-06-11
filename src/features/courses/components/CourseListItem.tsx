@@ -1,8 +1,9 @@
 import type { SxProps, Theme } from '@mui/material';
-import { Box, Button, LinearProgress, Paper, Stack, Typography } from '@mui/material';
+import { Box, LinearProgress, Paper, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { CourseResponse } from '../../../api/Learnup';
 import { TypeWriter } from '../../../components/TypeWriter';
+import { FancyButton } from '../../../shared/components/FancyButton';
 import { ImageLoader } from '../../../shared/components/ImageLoader';
 
 type CourseListItemProps = {
@@ -122,10 +123,10 @@ export function CourseListItem ({ course }: CourseListItemProps) {
           </Stack>
 
 
-          <Button
+          <FancyButton
             fullWidth
             onClick={handleNavigateToCourseDetail}
-            variant='contained' >بریم شروع کنیم</Button>
+            variant='contained' >بریم شروع کنیم</FancyButton>
 
         </Stack>
 

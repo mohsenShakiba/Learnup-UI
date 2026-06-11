@@ -30,7 +30,6 @@ export function StoryItem ({ item }: StoryItemProps) {
           border: '1px solid',
           borderColor: isActive ? 'primary.main' : 'divider',
           cursor: 'pointer',
-          opacity: isActive ? '1' : '0.5',
           transition: theme.transitions.create(['border-color', 'opacity'], {
             duration: theme.transitions.duration.short,
           }),

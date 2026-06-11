@@ -33,7 +33,7 @@ export default function StoryDetailPage () {
 
   return (
     <StoryAudioProvider storyItems={storyItems}>
-      <StoryCoverHeader storyId={story.id} title={story.title} />
+      <StoryCoverHeader story={story} />
       <Scaffold>
         <Stack>
           <Stack direction='column' sx={{ flexWrap: 'wrap', gap: 1 }}>

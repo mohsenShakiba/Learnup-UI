@@ -1,11 +1,15 @@
 import { Box, Icon, IconButton, Stack, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import type { StoryResponse } from '../../../api/Learnup';
+import { ImageLoader } from '../../../shared/components/ImageLoader';
 
 type StoryCoverHeaderProps = {
-  storyId: number | undefined;
-  title: string | null | undefined;
+  story: StoryResponse;
 };
 
-export function StoryCoverHeader ({ storyId, title }: StoryCoverHeaderProps) {
+export function StoryCoverHeader ({ story }: StoryCoverHeaderProps) {
+  const navigate = useNavigate();
+
   return (
     <Box
       sx={{
@@ -15,18 +19,17 @@ export function StoryCoverHeader ({ storyId, title }: StoryCoverHeaderProps) {
         height: 220,
         borderRadius: 1,
         overflow: 'hidden',
-        backgroundImage: 'url(/images/story_cover.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
       }}
     >
+
+      <ImageLoader coverId={story.coverId} />
       <Box sx={{
         backdropFilter: 'blur(20px)',
         background: 'rgba(0,0,0,0.2)',
-        width: 38, height: 38, borderRadius: 999, position: 'absolute', zIndex: 1, left: 8, top: 8
+        width: 38, height: 38, borderRadius: 999, position: 'absolute', zIndex: 1, right: 8, top: 8
       }}>
-        <IconButton>
-          <Icon>arrow_back</Icon>
+        <IconButton onClick={() => navigate(-1)}>
+          <Icon>arrow_forward</Icon>
         </IconButton>
       </Box>
       <Box
@@ -52,10 +55,10 @@ export function StoryCoverHeader ({ storyId, title }: StoryCoverHeaderProps) {
         }}
       >
         <Typography variant='caption' sx={{ color: 'primary.light', fontWeight: 700, letterSpacing: 1 }}>
-          LESSON {storyId}
+          LESSON {story.id}
         </Typography>
         <Typography variant='h5' sx={{ color: '#fff', fontWeight: 700, lineHeight: 1.3 }}>
-          {title}
+          {story.title}
         </Typography>
       </Stack>
     </Box>

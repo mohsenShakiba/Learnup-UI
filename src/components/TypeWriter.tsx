@@ -12,7 +12,7 @@ export function TypeWriter ({
   words,
   typeSpeed = 120,
   eraseSpeed = 50,
-  pauseMs = 1000,
+  pauseMs = 2000,
 }: TypeWriterProps) {
   const [displayed, setDisplayed] = useState('');
   const [wordIndex, setWordIndex] = useState(0);
@@ -51,6 +51,6 @@ export function TypeWriter ({
   }, [displayed, phase, wordIndex, words, typeSpeed, eraseSpeed, pauseMs]);
 
   return (
-    <Typography component='span' sx={{ fontSize: 'inherit', color: 'primary.main', borderBottom: '1px dashed', borderColor: 'rgba(255,255,255,0.2)' }}>{displayed}</Typography>
+    <Typography component='span' sx={{ fontSize: 'inherit', color: 'inherit', lineHeight: 'inherit' }}>{displayed}</Typography>
   );
 }

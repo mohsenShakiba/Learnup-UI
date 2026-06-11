@@ -12,9 +12,15 @@ const tabs = [
   { label: 'Settings', icon: 'settings', path: '/settings' },
 ];
 
+const hiddenPaths = ['/stories/'];
+
 export function BottomNav () {
   const location = useLocation();
   const navigate = useNavigate();
+
+  if (hiddenPaths.some((path) => location.pathname.startsWith(path))) {
+    return null;
+  }
 
   const currentTab = tabs.findIndex((tab) =>
     tab.path === '/'

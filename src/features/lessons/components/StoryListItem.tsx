@@ -1,20 +1,16 @@
-import { Box, Chip, Icon, Stack, Typography } from '@mui/material';
+import { Box, Icon, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { StoryResponse } from '../../../api/Learnup';
-import { OpenAPI } from '../../../api/Learnup';
+import { ImageLoader } from '../../../shared/components/ImageLoader';
 
 type StoryListItemProps = {
   story: StoryResponse;
 };
 
-const FALLBACK_COVER = '/images/story_cover.png';
 
 export function StoryListItem ({ story }: StoryListItemProps) {
   const navigate = useNavigate();
 
-  const coverUrl = story.coverId
-    ? `${OpenAPI.BASE}/Mobile/Files/${story.coverId}`
-    : FALLBACK_COVER;
 
   return (
     <Box
@@ -22,26 +18,15 @@ export function StoryListItem ({ story }: StoryListItemProps) {
       sx={{
         position: 'relative',
         height: 120,
-        borderRadius: 2,
+        borderRadius: 1,
         overflow: 'hidden',
         cursor: 'pointer',
         transition: 'transform 0.15s ease, opacity 0.15s ease',
         '&:active': { transform: 'scale(0.97)', opacity: 0.85 },
       }}
     >
-      {/* Cover image */}
-      <Box
-        component="img"
-        src={coverUrl}
-        sx={{
-          position: 'absolute',
-          inset: 0,
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          display: 'block',
-        }}
-      />
+
+      <ImageLoader coverId={story.coverId} />
 
       {/* Gradient from top down, behind the title */}
       <Box
@@ -78,20 +63,27 @@ export function StoryListItem ({ story }: StoryListItemProps) {
 
       {/* Completed badge */}
       {story.isCompleted && (
-        <Chip
-          label="COMPLETED"
-          size="small"
-          color='success'
+        <Box
           sx={{
             position: 'absolute',
             bottom: 8,
             right: 8,
-            px: 1.5,
-            letterSpacing: '2px',
+            px: 1,
+            py: 0.5,
+            borderRadius: 1,
+            boxShadow: '0 2px 5px rgba(0,0,0,0.3)',
+            bgcolor: 'success.main',
             fontSize: '0.7rem !important',
-            fontFamily: 'sans-serif'
           }}
-        />
+        >
+          <Stack direction='row' sx={{ alignItems: 'center' }} spacing={0.5}>
+            <Icon sx={{ fontSize: '17px' }}>done</Icon>
+            <Typography sx={{ fontSize: 'inherit', fontFamily: 'arial' }}>
+              Completed
+            </Typography>
+          </Stack>
+
+        </Box>
       )}
     </Box>
   );

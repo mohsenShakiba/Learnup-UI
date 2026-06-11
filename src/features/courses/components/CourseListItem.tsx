@@ -3,6 +3,7 @@ import { Box, Button, LinearProgress, Paper, Stack, Typography } from '@mui/mate
 import { useNavigate } from 'react-router-dom';
 import type { CourseResponse } from '../../../api/Learnup';
 import { TypeWriter } from '../../../components/TypeWriter';
+import { ImageLoader } from '../../../shared/components/ImageLoader';
 
 type CourseListItemProps = {
   course: CourseResponse;
@@ -47,12 +48,10 @@ export function CourseListItem ({ course }: CourseListItemProps) {
       >
 
 
-        <Box component='img' sx={{
-          borderRadius: 1, flex: 1,
-          backgroundImage: 'url(/images/course_cover.png)',
-          backgroundSize: 'cover',
-          mb: 2
+        <Box sx={{
+          borderRadius: 1, flex: 1, overflow: 'hidden', mb: 2
         }}>
+          <ImageLoader coverId={course.coverId} />
         </Box>
 
 

@@ -38,7 +38,7 @@ export const createLearnupTheme = (mode: PaletteMode) => {
       },
       text: {
         primary: mode === 'dark' ? '#f9fafb' : '#111827',
-        secondary: mode === 'dark' ? '#d1d5db' : '#4b5563',
+        secondary: mode === 'dark' ? 'rgba(255,255,255,0.6)' : '#4b5563',
       },
       divider: dividerColor,
     },

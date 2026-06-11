@@ -27,7 +27,7 @@ export default function ListCoursesPage () {
   return (
     <Swiper
       direction='horizontal'
-      style={{ height: '100%' }}
+      style={{ height: 'calc(100dvh - 60px)' }}
       modules={[Pagination]}
       pagination={{ clickable: true, }}
     >

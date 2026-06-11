@@ -53,10 +53,14 @@ export function StoryListItem ({ story }: StoryListItemProps) {
           {story.title}
         </Typography>
 
-        <Stack direction='row' spacing={0.5}>
-          <Icon sx={{ fontSize: '0.8rem' }}>timer</Icon>
-          <Typography sx={{ fontSize: '0.7rem' }}>
-            8 MIN
+        <Stack direction='row' spacing={0.5} sx={{ alignItems: 'center' }} >
+
+          <Box sx={{ borderRadius: 1, bgcolor: 'secondary.main', fontSize: '0.7rem', px: 0.8, py: 0.3 }}>
+            داستان
+          </Box>
+          <Icon sx={{ fontSize: '0.8rem', color: 'text.secondary' }}>timer</Icon>
+          <Typography sx={{ fontSize: '0.7rem', color: 'text.secondary', fontFamily: 'arial' }}>
+            5 Min
           </Typography>
         </Stack>
       </Box>

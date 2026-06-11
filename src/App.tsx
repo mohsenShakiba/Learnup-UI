@@ -7,6 +7,7 @@ import ListCoursesPage from "./features/courses/ListCoursesPage";
 import ListGrammarPage from "./features/grammar/pages/ListGrammarPage";
 import LessonDetailPage from "./features/lessons/LessonDetailPage";
 import StoryDetailPage from "./features/stories/StoryDetailPage";
+import LessonVocabsPage from "./features/vocabs/LessonVocabsPage";
 import { BottomNav } from "./shared/components/BottomNav";
 import { DotGrid } from "./shared/components/DotGrid";
 import { PageFade } from "./shared/components/PageFade";
@@ -28,6 +29,7 @@ function App () {
                   element={<ListCoursesPage />}
                 />
                 <Route path="/lessons/:id" element={<LessonDetailPage />} />
+                <Route path="/lessons/:id/vocabs" element={<LessonVocabsPage />} />
                 <Route path="/" element={<ListCoursesPage />} />
                 <Route path="*" element={<h1>404 - Not Found</h1>} />
               </Routes>

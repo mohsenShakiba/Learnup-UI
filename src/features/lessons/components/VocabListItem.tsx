@@ -1,27 +1,37 @@
-import { Box, Card, Divider, Icon, LinearProgress, Stack, Typography } from '@mui/material';
+import { Box, Icon, LinearProgress, Stack, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import type { VocabResponse } from '../../../api/Learnup/models/VocabResponse';
 import { TypeWriter } from '../../../components/TypeWriter';
+import { ActionCard } from '../../../shared/components/ActionCard';
 
 type Props = {
     vocabs: Array<VocabResponse>;
+    lessonId: number;
 };
 
-export function VocabBox ({ vocabs }: Props) {
+export function VocabListItem ({ vocabs, lessonId }: Props) {
 
+    const navigate = useNavigate();
     if (!vocabs.length) return null;
 
+    const handleNavigateToVocabPage = () => {
+        navigate(`/lessons/${lessonId}/vocabs`);
+    };
+
     return (
-        <Card sx={{ overflow: 'hidden', borderRadius: 1 }}>
+        <ActionCard sx={{ overflow: 'hidden', borderRadius: 1 }} onClick={handleNavigateToVocabPage}>
             <Stack sx={{ alignItems: 'start' }} spacing={1}>
 
                 <Stack spacing={1} direction='column' sx={{ alignItems: 'start', justifyContent: 'space-between', width: '100%' }}>
                     <Typography sx={{ lineHeight: '15px' }}>Vocabulary Review</Typography>
                     <Stack direction='row' spacing={1} sx={{ alignItems: 'center' }}>
-                        <Typography sx={{ color: 'text.secondary', fontSize: '0.7rem' }}>مرور کلمات</Typography>
-                        <Divider orientation='vertical' sx={{ height: '10px', }} />
+
+                        <Box sx={{ borderRadius: 1, bgcolor: 'primary.main', fontSize: '0.7rem', px: 0.8, py: 0.3 }}>
+                            مرور لغات
+                        </Box>
                         <Icon sx={{ fontSize: '0.8rem', color: 'text.secondary' }}>timer</Icon>
                         <Typography sx={{ fontSize: '0.7rem', color: 'text.secondary', fontFamily: 'arial' }}>
-                            8 MIN
+                            8 Min
                         </Typography>
                     </Stack>
                 </Stack>
@@ -37,6 +47,6 @@ export function VocabBox ({ vocabs }: Props) {
 
                 <LinearProgress variant='determinate' value={20} color='warning' sx={{ width: '100%', borderRadius: 1 }} />
             </Stack>
-        </Card>
+        </ActionCard>
     );
 }

@@ -28,9 +28,10 @@ export function GrammarListItem ({ grammar }: Props) {
 
                 <Stack direction='row' spacing={1} sx={{ alignItems: 'center' }}>
 
-                    <Box sx={{ borderRadius: 1, bgcolor: 'primary.main', fontSize: '0.7rem', px: 0.8, py: 0.3 }}>
-                        گرامر
-                    </Box>
+                    <Stack direction='row' spacing={0.5} sx={{ alignItems: 'center', borderRadius: 1, bgcolor: 'primary.main', fontSize: '0.7rem', px: 0.8, py: 0.3 }}>
+                        <Icon sx={{ fontSize: '0.8rem' }}>menu_book</Icon>
+                        <Box>گرامر</Box>
+                    </Stack>
 
                     <Icon sx={{ fontSize: '0.8rem', color: 'text.secondary' }}>timer</Icon>
                     <Typography sx={{ fontSize: '0.7rem', color: 'text.secondary', fontFamily: 'arial' }}>
@@ -40,7 +41,10 @@ export function GrammarListItem ({ grammar }: Props) {
 
                     <Box sx={{ flex: 1 }}></Box>
 
-                    <Box sx={{ px: 0.8, py: 0.4, fontSize: '0.7rem', bgcolor: 'warning.main', borderRadius: 1 }}>در انتظار</Box>
+                    <Stack direction='row' spacing={0.5} sx={{ alignItems: 'center', px: 0.8, py: 0.4, fontSize: '0.7rem', bgcolor: 'warning.main', borderRadius: 1 }}>
+                        <Icon sx={{ fontSize: '0.8rem' }}>hourglass_empty</Icon>
+                        <Box>در انتظار</Box>
+                    </Stack>
                 </Stack>
 
             </Stack>

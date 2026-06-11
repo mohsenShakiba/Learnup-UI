@@ -2,7 +2,7 @@ import type { SxProps, Theme } from '@mui/material';
 import { Box, Paper, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { CourseResponse } from '../../../api/Learnup';
-import { TypeWriter } from '../../../components/TypeWriter';
+import { TextCarousel } from '../../../components/TextCarousel';
 import { DottedProgress } from '../../../shared/components/DottedProgress';
 import { FancyButton } from '../../../shared/components/FancyButton';
 import { ImageLoader } from '../../../shared/components/ImageLoader';
@@ -65,6 +65,9 @@ export function CourseListItem ({ course }: CourseListItemProps) {
           }}
         >
 
+          <Typography>
+            {course.id}
+          </Typography>
           <Typography sx={{ background: '#ffaa00', display: 'block', borderRadius: 0.5, color: 'black', px: 0.8, py: 0.4, fontSize: '0.7rem' }}>
             بخش اول
           </Typography>
@@ -89,17 +92,37 @@ export function CourseListItem ({ course }: CourseListItemProps) {
             {course.description}
           </Typography>
 
-          <Stack direction='row' sx={{ direction: 'rtl', fontSize: '0.8rem', alignItems: 'center', color: 'rgba(255,255,255,0.4)' }}>
+          <TextCarousel items={
+            [
+              <Stack direction='row' sx={{ direction: 'rtl', gap: 0.5 }}>
+                <Typography sx={{ fontSize: '0.8rem', opacity: 0.4 }}>در این دوره</Typography>
+                <Typography sx={{ fontSize: '0.8rem', color: 'orange' }}>30 تا داستان</Typography>
+                <Typography sx={{ fontSize: '0.8rem', opacity: 0.4 }}>میخونی</Typography>
+              </Stack>,
+              <Stack direction='row' sx={{ direction: 'rtl', gap: 0.5 }}>
+                <Typography sx={{ fontSize: '0.8rem', opacity: 0.4 }}>در این دوره</Typography>
+                <Typography sx={{ fontSize: '0.8rem', color: 'orange' }}>20 تا گرامر مهم</Typography>
+                <Typography sx={{ fontSize: '0.8rem', opacity: 0.4 }}>یاد میگیری</Typography>
+              </Stack>,
+              <Stack direction='row' sx={{ direction: 'rtl', gap: 0.5 }}>
+                <Typography sx={{ fontSize: '0.8rem', opacity: 0.4 }}>در این دوره</Typography>
+                <Typography sx={{ fontSize: '0.8rem', color: 'orange' }}>300 تا کلمه</Typography>
+                <Typography sx={{ fontSize: '0.8rem', opacity: 0.4 }}>یاد میگیری</Typography>
+              </Stack>,
+            ]
+          } />
+
+          {/* <Stack direction='row' sx={{ direction: 'rtl', fontSize: '0.8rem', alignItems: 'center', color: 'rgba(255,255,255,0.4)' }}>
             <Box sx={{ ml: 1 }}>
               <Typography sx={{ fontSize: 'inherit' }}>در این دوره با</Typography>
             </Box>
             <Box sx={{ ml: 1, color: 'secondary.main' }}>
-              <TypeWriter words={['25 درس', '30 داستان', '10 گرامر', '300 کلمه']} />
+              <ReplaceTypeWriter words={['25 درس', '30 داستان', '10 گرامر', '300 کلمه']} />
             </Box>
             <Box>
               <Typography sx={{ fontSize: 'inherit' }}>آشنا میشید</Typography>
             </Box>
-          </Stack>
+          </Stack> */}
 
           <Stack spacing={1} sx={{ width: '100%' }}>
             <DottedProgress value={progress} />

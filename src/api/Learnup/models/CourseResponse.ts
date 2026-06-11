@@ -5,11 +5,14 @@
 
 export type CourseResponse = {
     id: number;
+    code: string;
+    slug: string;
     title: string;
     description: string;
     order: number;
-    coverId: string | null;
     totalLessonsCount: number;
     completedLessonsCount: number;
     languageId: number;
+    coverId: string | null;
+    lastVisitedAt: string | null;
 };

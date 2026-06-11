@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { LessonsService } from '../../api/Learnup';
 import { AppLoader } from '../../shared/components/AppLoader';
 import { DefaultHeader } from '../../shared/components/DefaultHeader';
+import { DottedDivider } from '../../shared/components/DottedDivider';
 import { ErrorPage } from '../../shared/components/ErrorPage';
 import { Scaffold } from '../../shared/components/Scaffold';
 import { GrammarListItem } from './components/GrammarListItem';
@@ -45,11 +46,15 @@ export default function LessonDetailPage () {
           ))}
         </Stack>
 
+        <DottedDivider />
+
         <Stack spacing={1}>
           {lesson.grammars.map((grammar) => (
             <GrammarListItem key={grammar.id} grammar={grammar} />
           ))}
         </Stack>
+
+        <DottedDivider />
 
         <VocabListItem lessonId={lesson.id} vocabs={lesson.vocabs} />
 

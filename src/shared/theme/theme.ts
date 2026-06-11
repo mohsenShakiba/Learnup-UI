@@ -104,9 +104,8 @@ export const createLearnupTheme = (mode: PaletteMode) => {
       MuiBottomNavigation: {
         styleOverrides: {
           root: {
-            background: paperBackgorund,
             borderTop: '1px solid',
-            borderColor: dividerColor
+            borderColor: dividerColor,
           }
         }
       },

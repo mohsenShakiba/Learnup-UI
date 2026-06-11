@@ -9,7 +9,6 @@ import LessonDetailPage from "./features/lessons/LessonDetailPage";
 import StoryDetailPage from "./features/stories/StoryDetailPage";
 import LessonVocabsPage from "./features/vocabs/LessonVocabsPage";
 import { BottomNav } from "./shared/components/BottomNav";
-import { DotGrid } from "./shared/components/DotGrid";
 import { PageFade } from "./shared/components/PageFade";
 setupOpenApi();
 
@@ -36,7 +35,6 @@ function App () {
             )}
           </PageFade>
         </Box>
-        <DotGrid />
 
         <BottomNav />
       </Stack>

@@ -1,4 +1,4 @@
-import { Box, Icon, LinearProgress, Stack, Typography } from '@mui/material';
+import { Box, Icon, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { VocabResponse } from '../../../api/Learnup/models/VocabResponse';
 import { TypeWriter } from '../../../components/TypeWriter';
@@ -41,11 +41,10 @@ export function VocabListItem ({ vocabs, lessonId }: Props) {
                         <TypeWriter words={vocabs.map(v => v.word)} />
                     </Box>
                     <Box sx={{ bgcolor: 'warning.main', px: 1, py: 0.5, borderRadius: 1, mt: 1.5 }}>
-                        <Typography sx={{ fontSize: '0.7rem', fontFamily: 'arial' }}>0 of {vocabs.length} vocabs</Typography>
+                        <Typography sx={{ fontSize: '0.7rem', fontFamily: 'arial' }}>{vocabs.length} Vocabularies</Typography>
                     </Box>
                 </Stack>
 
-                <LinearProgress variant='determinate' value={20} color='warning' sx={{ width: '100%', borderRadius: 1 }} />
             </Stack>
         </ActionCard>
     );

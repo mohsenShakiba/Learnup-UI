@@ -27,7 +27,7 @@ export function VocabListItem ({ vocabs, lessonId }: Props) {
                     <Typography sx={{ lineHeight: '15px' }}>Vocabulary Review</Typography>
                     <Stack direction='row' spacing={1} sx={{ alignItems: 'center' }}>
 
-                        <Stack direction='row' spacing={0.5} sx={{ alignItems: 'center', borderRadius: 1, bgcolor: 'primary.main', fontSize: '0.7rem', px: 0.8, py: 0.3 }}>
+                        <Stack direction='row' spacing={0.5} sx={{ alignItems: 'center', borderRadius: 1, bgcolor: 'success.main', fontSize: '0.7rem', px: 0.8, py: 0.3 }}>
                             <Icon sx={{ fontSize: '0.8rem' }}>translate</Icon>
                             <Box>مرور لغات</Box>
                         </Stack>

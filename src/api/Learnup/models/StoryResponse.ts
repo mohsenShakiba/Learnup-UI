@@ -8,7 +8,7 @@ import type { StoryItemResponse } from './StoryItemResponse';
 export type StoryResponse = {
     id: number;
     title: string;
-    coverId: number | null;
+    coverId: string | null;
     isCompleted: boolean;
     items: Array<StoryItemResponse>;
 };

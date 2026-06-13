@@ -1,20 +1,21 @@
-import { CircularProgress, Stack, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import { Pagination } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
 import { CoursesService } from '../../api/Learnup';
+import { AppLoader } from '../../shared/components/AppLoader';
 import { ErrorPage } from '../../shared/components/ErrorPage';
-import { Scaffold } from '../../shared/components/Scaffold';
 import { CourseListItem } from './components/CourseListItem';
 
 export default function ListCoursesPage () {
-
-
   const coursesQuery = useQuery({
     queryKey: ['courses', 'language'],
     queryFn: () => CoursesService.getCoursesByLanguageId(1),
   });
 
   if (coursesQuery.isLoading) {
-    return <CircularProgress />;
+    return <AppLoader />;
   }
 
   if (coursesQuery.isError) {
@@ -24,23 +25,17 @@ export default function ListCoursesPage () {
   const courses = coursesQuery.data ?? [];
 
   return (
-    <Scaffold
-      header={
-        <Stack>
-          <Typography color='primary'>
-            لیست دوره ها
-          </Typography>
-        </Stack>
-
-      } maxWidth='sm' >
-      <Stack spacing={2}>
-        {courses.map((course) => (
-          <CourseListItem
-            key={course.id}
-            course={course}
-          />
-        ))}
-      </Stack>
-    </Scaffold >
+    <Swiper
+      direction='horizontal'
+      style={{ height: 'calc(100dvh - 60px)' }}
+      modules={[Pagination]}
+      pagination={{ clickable: true, }}
+    >
+      {courses.map((course) => (
+        <SwiperSlide key={course.id}>
+          <CourseListItem course={course} />
+        </SwiperSlide>
+      ))}
+    </Swiper>
   );
 }

@@ -4,7 +4,7 @@
 /* eslint-disable */
 
 import type { VocabLevel } from './VocabLevel';
-import type { VocabResponse } from './VocabResponse';
+import type { VocabTranslationResponse } from './VocabTranslationResponse';
 
 export type VocabDetailResponse = {
     id: number;
@@ -13,7 +13,7 @@ export type VocabDetailResponse = {
     voiceId: string | null;
     description: string | null;
     level: VocabLevel;
-    parentVocab: VocabResponse;
     languageId: number;
     languageName: string;
+    translations: Array<VocabTranslationResponse>;
 };

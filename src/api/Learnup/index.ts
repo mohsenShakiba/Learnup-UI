@@ -26,6 +26,8 @@ export type { StoryResponse } from './models/StoryResponse';
 export type { VocabDetailResponse } from './models/VocabDetailResponse';
 export { VocabLevel } from './models/VocabLevel';
 export type { VocabResponse } from './models/VocabResponse';
+export { VocabTransactionType } from './models/VocabTransactionType';
+export type { VocabTranslationResponse } from './models/VocabTranslationResponse';
 
 export { CoursesService } from './services/CoursesService';
 export { FilesService } from './services/FilesService';

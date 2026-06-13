@@ -4,14 +4,11 @@ import { useParams } from 'react-router-dom';
 import { LessonsService } from '../../api/Learnup';
 import { AppLoader } from '../../shared/components/AppLoader';
 import { DefaultHeader } from '../../shared/components/DefaultHeader';
-import { DottedDivider } from '../../shared/components/DottedDivider';
 import { ErrorPage } from '../../shared/components/ErrorPage';
 import { Scaffold } from '../../shared/components/Scaffold';
-import { GrammarListItem } from './components/GrammarListItem';
-import { StoryListItem } from './components/StoryListItem';
 import { VocabListItem } from './components/VocabListItem';
 
-export default function LessonDetailPage () {
+export default function LessonVocabsPage () {
   const { id: lessonId } = useParams<{ id: string; }>();
   const lessonIdNumber = Number(lessonId);
 
@@ -34,30 +31,13 @@ export default function LessonDetailPage () {
   return (
     <Scaffold
       header={
-        <DefaultHeader header='درس اول' />
+        <DefaultHeader header='کلمات' />
       }
     >
-      <Stack spacing={2}>
-
-
-        <Stack spacing={1.5}>
-          {lesson.stories.map((story) => (
-            <StoryListItem key={story.id} story={story} />
-          ))}
-        </Stack>
-
-        <DottedDivider />
-
-        <Stack spacing={1}>
-          {lesson.grammars.map((grammar) => (
-            <GrammarListItem key={grammar.id} grammar={grammar} />
-          ))}
-        </Stack>
-
-        <DottedDivider />
-
-        <VocabListItem lessonId={lesson.id} vocabs={lesson.vocabs} />
-
+      <Stack spacing={1.5}>
+        {lesson.vocabs.map((vocab) => (
+          <VocabListItem key={vocab.id} vocab={vocab} />
+        ))}
       </Stack>
     </Scaffold>
   );

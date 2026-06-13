@@ -2,7 +2,7 @@ import { Stack, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { GrammarsService } from "../../../api/Learnup";
-import { Scaffold } from "../../../shared/components/Scaffold";
+import { AppLoader } from "../../../shared/components/AppLoader";
 import GrammarCard from "../components/GrammarCard";
 
 export default function ListGrammarPage() {
@@ -17,7 +17,7 @@ export default function ListGrammarPage() {
   );
 
   if (grammarQuery.isLoading || grammarQuery.isFetching) {
-    return <>...isloading</>;
+    return <AppLoader />;
   }
 
   return (

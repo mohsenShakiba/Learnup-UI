@@ -1,7 +1,9 @@
-import { CircularProgress, Stack, Typography } from '@mui/material';
+import { Chip, Stack } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { CoursesService, LessonsService } from '../../api/Learnup';
+import { AppLoader } from '../../shared/components/AppLoader';
+import { DefaultHeader } from '../../shared/components/DefaultHeader';
 import { ErrorPage } from '../../shared/components/ErrorPage';
 import { Scaffold } from '../../shared/components/Scaffold';
 import { LessonListItem } from './components/LessonListItem';
@@ -22,7 +24,7 @@ export default function CourseDetailPage () {
   });
 
   if (courseQuery.isLoading || lessonsQuery.isLoading) {
-    return <CircularProgress />;
+    return <AppLoader />;
   }
 
   if (courseQuery.isError || lessonsQuery.isError) {
@@ -40,11 +42,9 @@ export default function CourseDetailPage () {
 
   return (
     <Scaffold maxWidth='sm' header={
-      <Stack>
-        <Typography color='primary'>
-          لیست دروس
-        </Typography>
-      </Stack>
+      <DefaultHeader header='لیست دروس' children={
+        <Chip label={'A1'} size='small' color='primary' />
+      } />
     }>
       <Stack>
         <Stack spacing={2}>

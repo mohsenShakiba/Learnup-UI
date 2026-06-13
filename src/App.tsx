@@ -1,3 +1,4 @@
+import { Box, Stack } from "@mui/material";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import setupOpenApi from "./api/setup";
 import "./App.css";
@@ -6,24 +7,39 @@ import ListCoursesPage from "./features/courses/ListCoursesPage";
 import ListGrammarPage from "./features/grammar/pages/ListGrammarPage";
 import LessonDetailPage from "./features/lessons/LessonDetailPage";
 import StoryDetailPage from "./features/stories/StoryDetailPage";
+import LessonVocabsPage from "./features/vocabs/LessonVocabsPage";
+import { BottomNav } from "./shared/components/BottomNav";
+import { PageFade } from "./shared/components/PageFade";
 setupOpenApi();
 
-function App() {
+function App () {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/story/:id" element={<StoryDetailPage />} />
-        <Route path="/courses/:id" element={<CourseDetailPage />} />
-        <Route path="/grammar" element={<ListGrammarPage />} />
-        <Route
-          path="/languages/:languageId/courses"
-          element={<ListCoursesPage />}
-        />
-        <Route path="/lessons/:id" element={<LessonDetailPage />} />
-        <Route path="/" element={<ListCoursesPage />} />
-        <Route path="*" element={<h1>404 - Not Found</h1>} />
-      </Routes>
-    </BrowserRouter>
+      <Stack sx={{ height: '100dvh' }}>
+        <Box sx={{ flex: 1, overflowY: 'auto' }}>
+          <PageFade>
+            {(location) => (
+              <Routes location={location}>
+                <Route path="/stories/:id" element={<StoryDetailPage />} />
+                <Route path="/courses/:id" element={<CourseDetailPage />} />
+                <Route path="/grammar" element={<ListGrammarPage />} />
+                <Route
+                  path="/languages/:languageId/courses"
+                  element={<ListCoursesPage />}
+                />
+                <Route path="/lessons/:id" element={<LessonDetailPage />} />
+                <Route path="/lessons/:id/vocabs" element={<LessonVocabsPage />} />
+                <Route path="/" element={<ListCoursesPage />} />
+                <Route path="*" element={<h1>404 - Not Found</h1>} />
+              </Routes>
+            )}
+          </PageFade>
+        </Box>
+
+        <BottomNav />
+      </Stack>
+
+    </BrowserRouter >
   );
 }
 

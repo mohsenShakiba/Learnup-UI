@@ -49,7 +49,32 @@ export const createLearnupTheme = (mode: PaletteMode) => {
     spacing: 8,
     typography: {
       fontFamily: 'IranSans, Arial, sans-serif',
-      fontSize: 13
+      h1: {
+        fontSize: "32px",
+        fontWeight: 600,
+      },
+      h2: {
+        fontSize: "26px",
+        fontWeight: 600,
+      },
+      h3: {
+        fontSize: "24px",
+      },
+      h4: {
+        fontSize: "24px",
+      },
+      h5: {
+        fontSize: "18px",
+      },
+      h6: {
+        fontSize: "18px",
+      },
+      body1: {
+        fontSize: "13px",
+      },
+      body2: {
+        fontSize: "13px",
+      },
     },
     components: {
       MuiCssBaseline: {

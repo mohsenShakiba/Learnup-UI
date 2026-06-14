@@ -58,8 +58,8 @@ export function GrammarContentRenderer({
           {section.lessons.map((lesson, lessonIndex) => {
             const isRtl = lesson.language === "fa";
             const isExample = lesson.language === "en";
-            const direction = isRtl ? "rtl" : "ltr";
-            const align = isRtl ? "right" : "left";
+            const direction = !isRtl ? "rtl" : "ltr";
+            const align = "start";
 
             const exampleBoxSx = isExample
               ? {
@@ -79,13 +79,13 @@ export function GrammarContentRenderer({
               : undefined;
 
             const noteBoxSx =
-              lesson.htmlTag === HTMLTag.BLOCKQUOTE || lesson.htmlTag === HTMLTag.STRONG
+              lesson.htmlTag === HTMLTag.BLOCKQUOTE ||
+              lesson.htmlTag === HTMLTag.STRONG
                 ? {
                     px: 2,
                     py: 1.25,
                     borderRadius: 2,
-                    borderLeft: isRtl ? "none" : "4px solid",
-                    borderRight: isRtl ? "4px solid" : "none",
+                    borderInlineStart: "4px solid",
                     borderColor:
                       lesson.htmlTag === HTMLTag.STRONG
                         ? theme.palette.warning.main
@@ -139,10 +139,8 @@ export function GrammarContentRenderer({
                   key={lesson.id}
                   sx={{
                     ...spacingSx,
-                    pl: isRtl ? 0 : 1.5,
-                    pr: isRtl ? 1.5 : 0,
-                    borderLeft: isRtl ? "none" : "4px solid",
-                    borderRight: isRtl ? "4px solid" : "none",
+                    paddingInlineStart: 1.5,
+                    borderInlineStart: "4px solid",
                     borderColor: alpha(theme.palette.secondary.main, 0.5),
                   }}
                 >
@@ -319,8 +317,7 @@ export function GrammarContentRenderer({
                     component={listTag}
                     sx={{
                       m: 0,
-                      pl: isRtl ? 0 : 3,
-                      pr: isRtl ? 3 : 0,
+                      paddingInlineStart: 3,
                       "& li": {
                         mb: 1.1,
                       },
@@ -407,7 +404,8 @@ export function GrammarContentRenderer({
                   <Typography
                     sx={{
                       direction,
-                      textAlign: lesson.htmlTag === HTMLTag.STRONG ? align : "justify",
+                      textAlign:
+                        lesson.htmlTag === HTMLTag.STRONG ? align : "justify",
                       lineHeight: 1.9,
                       fontWeight: lesson.htmlTag === HTMLTag.STRONG ? 700 : 400,
                     }}

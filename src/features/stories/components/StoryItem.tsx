@@ -40,7 +40,7 @@ export function StoryItem ({ item }: StoryItemProps) {
         </Typography>
 
         {
-          showTranslation && <Typography sx={{ fontSize: '12px', color: 'rgba(255,255,255,0.3)', textAlign: 'right', direction: 'rtl' }}>
+          showTranslation && <Typography sx={{ fontSize: '0.8rem', color: 'text.secondary', textAlign: 'right', direction: 'rtl' }}>
             {item.translation}
           </Typography>
         }

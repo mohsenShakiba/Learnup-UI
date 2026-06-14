@@ -7,6 +7,7 @@ import ListCoursesPage from "./features/courses/ListCoursesPage";
 import ListGrammarPage from "./features/grammar/pages/ListGrammarPage";
 import LessonDetailPage from "./features/lessons/LessonDetailPage";
 import StoryDetailPage from "./features/stories/StoryDetailPage";
+import SettingsPage from "./features/settings/SettingsPage";
 import LessonVocabsPage from "./features/vocabs/LessonVocabsPage";
 import { BottomNav } from "./shared/components/BottomNav";
 import { PageFade } from "./shared/components/PageFade";
@@ -15,7 +16,7 @@ setupOpenApi();
 function App () {
   return (
     <BrowserRouter>
-      <Stack sx={{ height: '100dvh' }}>
+      <Stack sx={{ height: '100dvh', overflow: 'hidden' }}>
         <Box sx={{ flex: 1, overflowY: 'auto' }}>
           <PageFade>
             {(location) => (
@@ -29,6 +30,7 @@ function App () {
                 />
                 <Route path="/lessons/:id" element={<LessonDetailPage />} />
                 <Route path="/lessons/:id/vocabs" element={<LessonVocabsPage />} />
+                <Route path="/settings" element={<SettingsPage />} />
                 <Route path="/" element={<ListCoursesPage />} />
                 <Route path="*" element={<h1>404 - Not Found</h1>} />
               </Routes>

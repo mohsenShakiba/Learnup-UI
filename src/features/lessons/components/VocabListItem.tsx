@@ -24,7 +24,7 @@ export function VocabListItem ({ vocabs, lessonId }: Props) {
             <Stack sx={{ alignItems: 'start' }} spacing={1}>
 
                 <Stack spacing={1} direction='column' sx={{ alignItems: 'start', justifyContent: 'space-between', width: '100%' }}>
-                    <Typography sx={{ lineHeight: '15px' }}>Vocabulary Review</Typography>
+                    <Typography sx={{ lineHeight: '15px', fontSize: '1.1rem' }}>Vocabulary Review</Typography>
                     <Stack direction='row' spacing={1} sx={{ alignItems: 'center' }}>
 
                         <Stack direction='row' spacing={0.5} sx={{ alignItems: 'center', borderRadius: 1, bgcolor: 'success.main', fontSize: '0.7rem', px: 0.8, py: 0.3 }}>

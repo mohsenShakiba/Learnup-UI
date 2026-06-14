@@ -3,8 +3,8 @@ import { createTheme } from '@mui/material';
 
 
 export const createLearnupTheme = (mode: PaletteMode) => {
-  const sufaceBackground = mode === 'dark' ? 'rgba(14, 12, 17)' : '#f7f8fb';
-  const paperBackgorund = mode === 'dark' ? 'rgba(17, 15, 20)' : '#ffffff';
+  const sufaceBackground = mode === 'dark' ? 'rgba(23, 20, 25)' : '#f7f8fb';
+  const paperBackgorund = mode === 'dark' ? 'rgba(25, 23, 29)' : '#ffffff';
   const dividerColor = mode === 'dark' ? 'rgba(255,255,255,0.1)' : '#e5e7eb';
   return createTheme({
     palette: {

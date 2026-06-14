@@ -56,19 +56,18 @@ export function LessonListItem ({ lesson }: LessonListItemProps) {
           <Box
             sx={{
               px: 0.8,
-              py: 0.5,
+              py: 0.4,
               borderRadius: 1,
               bgcolor: 'secondary.dark',
               backdropFilter: 'blur(6px)',
             }}
           >
-            <Typography sx={{ color: '#fff', fontSize: '0.6rem' }}>
+            <Typography sx={{ color: '#fff', fontSize: '0.7rem', fontFamily: 'arial' }}>
               LESSON {lesson.order}
             </Typography>
           </Box>
 
           <Typography
-            variant="subtitle2"
             sx={{
               color: '#fff',
               fontWeight: 700,

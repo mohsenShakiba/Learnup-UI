@@ -1,9 +1,8 @@
 import type { SxProps, Theme } from '@mui/material';
-import { Box, Paper, Stack, Typography } from '@mui/material';
+import { Box, LinearProgress, Paper, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { CourseResponse } from '../../../api/Learnup';
 import { TextCarousel } from '../../../components/TextCarousel';
-import { DottedProgress } from '../../../shared/components/DottedProgress';
 import { FancyButton } from '../../../shared/components/FancyButton';
 import { ImageLoader } from '../../../shared/components/ImageLoader';
 
@@ -27,128 +26,118 @@ export function CourseListItem ({ course }: CourseListItemProps) {
 
   return (
     <Box sx={{
-      height: '100%',
-      p: 3,
-      pb: 5,
-      display: 'flex',
-      boxSizing: 'border-box',
-      flexDirection: 'column',
-
+      p: 2,
+      mb: 2.5,
     }}>
-
 
       <Paper
         sx={
           {
-            position: 'relative',
-            p: 2,
             display: 'flex',
             flexDirection: 'column',
-            height: '100%'
+            height: 'calc(100dvh - 110px)',
+            boxShadow: '0 0 10px rgba(0,0,0,0.1)',
+            p: 0,
+            overflow: 'hidden'
           }
         }
       >
 
-
         <Box sx={{
-          borderRadius: 1, flex: 1, overflow: 'hidden', mb: 2
+          flex: 1, mb: 2
         }}>
           <ImageLoader coverId={course.coverId} />
         </Box>
 
-
         <Stack
           sx={{
-            flex: 1,
+            p: 2,
             gap: 2,
-            alignItems: 'end',
           }}
         >
 
+          <Stack spacing={1} sx={{ alignItems: 'end', }}>
+            <Stack direction='row' sx={{ borderRadius: 0.5, overflow: 'hidden', fontSize: '0.9rem' }}>
+              <Box sx={{ background: 'rgba(255,255,255,0.2)', color: 'white', px: 0.8, py: 0.4 }}>
+                {course.slug}
+              </Box>
+              <Box sx={{ background: '#d683b9', color: 'black', px: 0.8, py: 0.4, fontFamily: 'arial' }}>
+                {course.code}
+              </Box>
 
-          <Stack direction='row' sx={{ borderRadius: 0.5, overflow: 'hidden', fontSize: '0.7rem' }}>
-            <Box sx={{ background: 'rgba(255,255,255,0.2)', color: 'white', px: 0.8, py: 0.4 }}>
-              {course.slug}
-            </Box>
-            <Box sx={{ background: '#d683b9', color: 'black', px: 0.8, py: 0.4, fontFamily: 'arial' }}>
-              {course.code}
-            </Box>
+            </Stack>
 
-          </Stack>
-
-          <Typography
-            sx={{
-              color: 'text.primary',
-              textAlign: 'right'
-            }}
-          >
-            {course.title}
-          </Typography>
-
-          <Typography
-            variant='h6'
-            sx={{
-              color: 'text.secondary',
-              fontSize: '0.8rem',
-              textAlign: 'right'
-            }}
-          >
-            {course.description}
-          </Typography>
-
-          <TextCarousel items={
-            [
-              <Stack direction='row' sx={{ direction: 'rtl', gap: 0.5 }}>
-                <Typography sx={{ fontSize: '0.8rem', opacity: 0.4 }}>در این دوره</Typography>
-                <Typography sx={{ fontSize: '0.8rem', color: 'orange' }}>30 تا داستان</Typography>
-                <Typography sx={{ fontSize: '0.8rem', opacity: 0.4 }}>میخونی</Typography>
-              </Stack>,
-              <Stack direction='row' sx={{ direction: 'rtl', gap: 0.5 }}>
-                <Typography sx={{ fontSize: '0.8rem', opacity: 0.4 }}>در این دوره</Typography>
-                <Typography sx={{ fontSize: '0.8rem', color: 'orange' }}>20 تا گرامر مهم</Typography>
-                <Typography sx={{ fontSize: '0.8rem', opacity: 0.4 }}>یاد میگیری</Typography>
-              </Stack>,
-              <Stack direction='row' sx={{ direction: 'rtl', gap: 0.5 }}>
-                <Typography sx={{ fontSize: '0.8rem', opacity: 0.4 }}>در این دوره</Typography>
-                <Typography sx={{ fontSize: '0.8rem', color: 'orange' }}>300 تا کلمه</Typography>
-                <Typography sx={{ fontSize: '0.8rem', opacity: 0.4 }}>یاد میگیری</Typography>
-              </Stack>,
-            ]
-          } />
-
-          {/* <Stack direction='row' sx={{ direction: 'rtl', fontSize: '0.8rem', alignItems: 'center', color: 'rgba(255,255,255,0.4)' }}>
-            <Box sx={{ ml: 1 }}>
-              <Typography sx={{ fontSize: 'inherit' }}>در این دوره با</Typography>
-            </Box>
-            <Box sx={{ ml: 1, color: 'secondary.main' }}>
-              <ReplaceTypeWriter words={['25 درس', '30 داستان', '10 گرامر', '300 کلمه']} />
-            </Box>
-            <Box>
-              <Typography sx={{ fontSize: 'inherit' }}>آشنا میشید</Typography>
-            </Box>
-          </Stack> */}
-
-          <Stack spacing={1} sx={{ width: '100%' }}>
-            <DottedProgress value={progress} />
             <Typography
               sx={{
-                color: '#2aa15b',
-                fontSize: '0.6rem',
-                textAlign: 'right',
+                fontSize: '1.2rem',
+                color: 'text.primary',
+                textAlign: 'right'
               }}
             >
-              {course.completedLessonsCount} / {course.totalLessonsCount}
+              {course.title}
+            </Typography>
+
+            <TextCarousel items={
+              [
+                <Stack direction='row' sx={{ direction: 'rtl', gap: 0.5 }}>
+                  <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>در این دوره</Typography>
+                  <Typography sx={{ fontSize: '0.9rem', color: 'orange' }}>30 تا داستان</Typography>
+                  <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>میخونی</Typography>
+                </Stack>,
+                <Stack direction='row' sx={{ direction: 'rtl', gap: 0.5 }}>
+                  <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>در این دوره</Typography>
+                  <Typography sx={{ fontSize: '0.9rem', color: 'orange' }}>20 تا گرامر مهم</Typography>
+                  <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>یاد میگیری</Typography>
+                </Stack>,
+                <Stack direction='row' sx={{ direction: 'rtl', gap: 0.5 }}>
+                  <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>در این دوره</Typography>
+                  <Typography sx={{ fontSize: '0.9rem', color: 'orange' }}>300 تا کلمه</Typography>
+                  <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>یاد میگیری</Typography>
+                </Stack>,
+              ]
+            } />
+
+            <Typography
+              sx={{
+                color: 'text.secondary',
+                textAlign: 'right'
+              }}
+            >
+              {course.description}
             </Typography>
           </Stack>
 
+
+
+
+          <Stack spacing={1} sx={{ width: '100%' }}>
+            <LinearProgress variant='determinate' value={progress} sx={{ borderRadius: 1 }} />
+            {/* <DottedProgress value={progress} /> */}
+            <Stack direction='row' sx={{ color: 'text.secondary', fontSize: '0.8rem', gap: 1, direction: 'rtl' }}>
+              <Typography sx={{ fontSize: 'inherit', color: 'primary.main' }}>
+                {course.completedLessonsCount}
+              </Typography>
+              <Typography sx={{ fontSize: 'inherit' }}>
+                درس از مجموع
+              </Typography>
+              <Typography sx={{ fontSize: 'inherit', color: 'primary.main' }}>
+                {course.totalLessonsCount}
+              </Typography>
+              <Typography sx={{ fontSize: 'inherit' }}>
+                درس
+              </Typography>
+            </Stack>
+
+          </Stack>
+
           <FancyButton
+            sx={{ py: 1.5, borderRadius: 99 }}
             fullWidth
             onClick={handleNavigateToCourseDetail}
-            variant='contained' >بریم شروع کنیم</FancyButton>
-
+            variant='contained' >
+            بریم شروع کنیم
+          </FancyButton>
         </Stack>
-
-
       </Paper>
     </Box>
   );

@@ -21,6 +21,7 @@ export function DottedProgress ({ value, dotCount = 25, sx }: DottedProgressProp
       aria-valuemax={100}
       sx={[
         {
+          height: 30,
           justifyContent: 'space-between',
           alignItems: 'center',
         },
@@ -36,7 +37,7 @@ export function DottedProgress ({ value, dotCount = 25, sx }: DottedProgressProp
               width: '5px',
               height: '5px',
               borderRadius: 3,
-              backgroundColor: filled ? theme.palette.success.main : 'rgba(255,255,255,0.25)',
+              backgroundColor: filled ? theme.palette.success.main : 'rgba(124,124,124,0.2)',
               boxShadow: filled ? `0 0 6px ${theme.palette.success.main}` : 'none',
               transition: theme.transitions.create(['background-color', 'box-shadow'], {
                 duration: theme.transitions.duration.standard,

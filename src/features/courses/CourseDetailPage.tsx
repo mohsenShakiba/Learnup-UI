@@ -1,4 +1,4 @@
-import { Chip, Stack } from '@mui/material';
+import { Stack } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { CoursesService, LessonsService } from '../../api/Learnup';
@@ -6,6 +6,7 @@ import { AppLoader } from '../../shared/components/AppLoader';
 import { DefaultHeader } from '../../shared/components/DefaultHeader';
 import { ErrorPage } from '../../shared/components/ErrorPage';
 import { Scaffold } from '../../shared/components/Scaffold';
+import { WaveProgress } from '../../shared/components/WaveProgress';
 import { LessonListItem } from './components/LessonListItem';
 
 export default function CourseDetailPage () {
@@ -41,11 +42,14 @@ export default function CourseDetailPage () {
   const lessons = lessonsQuery.data ?? [];
 
   return (
-    <Scaffold maxWidth='sm' header={
-      <DefaultHeader header='لیست دروس' children={
-        <Chip label={'A1'} size='small' color='primary' />
-      } />
-    }>
+    <Scaffold maxWidth='sm'
+      header={
+        <DefaultHeader header='لیست دروس'
+          subtitle='12 درس'
+          children={
+            <WaveProgress value={20} size={40} />
+          } />
+      }>
       <Stack>
         <Stack spacing={2}>
           {lessons.map((lesson) => (

@@ -1,18 +1,39 @@
 import { CssBaseline, ThemeProvider, useMediaQuery } from '@mui/material';
-import { useMemo, type ReactNode } from 'react';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { createLearnupTheme } from './theme';
+import {
+  getStoredThemeMode,
+  ThemeModeContext,
+  THEME_MODE_STORAGE_KEY,
+  type ThemeMode,
+} from './themeMode';
 
 export function LearnupThemeProvider ({ children }: { children: ReactNode; }) {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  const [mode, setModeState] = useState<ThemeMode>(getStoredThemeMode);
+
+  const setMode = (next: ThemeMode) => {
+    setModeState(next);
+    localStorage.setItem(THEME_MODE_STORAGE_KEY, next);
+  };
+
+  const isDark = mode === 'system' ? prefersDarkMode : mode === 'dark';
+
   const theme = useMemo(
-    () => createLearnupTheme(prefersDarkMode ? 'dark' : 'light'),
-    [prefersDarkMode],
+    () => createLearnupTheme(isDark ? 'dark' : 'light'),
+    [isDark],
   );
 
+  useEffect(() => {
+    document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
+  }, [isDark]);
+
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      {children}
-    </ThemeProvider>
+    <ThemeModeContext.Provider value={{ mode, setMode, isDark }}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        {children}
+      </ThemeProvider>
+    </ThemeModeContext.Provider>
   );
 }

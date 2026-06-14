@@ -27,13 +27,13 @@ export default function ListCoursesPage () {
   return (
     <Swiper
       direction='horizontal'
-      style={{ height: 'calc(100dvh - 60px)' }}
       modules={[Pagination]}
-      pagination={{ clickable: true, }}
+      pagination={{ clickable: true }}
+      slidesPerView={1}
     >
       {courses.map((course) => (
-        <SwiperSlide key={course.id}>
-          <CourseListItem course={course} />
+        <SwiperSlide key={course.id} >
+          <CourseListItem key={course.id} course={course} />
         </SwiperSlide>
       ))}
     </Swiper>

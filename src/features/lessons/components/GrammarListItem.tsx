@@ -21,9 +21,9 @@ export function GrammarListItem ({ grammar }: Props) {
 
             <Stack spacing={1} sx={{}}>
 
-                <Typography sx={{ lineHeight: '15px' }}>{grammar.name}</Typography>
+                <Typography sx={{ lineHeight: '15px', fontSize: '1.1rem' }}>{grammar.name}</Typography>
 
-                <Typography sx={{ color: 'text.secondary', direction: 'rtl', fontSize: '0.7rem' }}>{grammar.description}</Typography>
+                <Typography sx={{ color: 'text.secondary', direction: 'rtl', fontSize: '0.9rem' }}>{grammar.description}</Typography>
 
                 <Divider />
 

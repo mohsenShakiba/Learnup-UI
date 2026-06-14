@@ -34,13 +34,13 @@ export default function LessonDetailPage () {
   return (
     <Scaffold
       header={
-        <DefaultHeader header='درس اول' />
+        <DefaultHeader header='درس اول' subtitle='12 درس' />
       }
     >
       <Stack spacing={2}>
 
 
-        <Stack spacing={1.5}>
+        <Stack spacing={2}>
           {lesson.stories.map((story) => (
             <StoryListItem key={story.id} story={story} />
           ))}
@@ -48,7 +48,7 @@ export default function LessonDetailPage () {
 
         <DottedDivider />
 
-        <Stack spacing={1}>
+        <Stack spacing={2}>
           {lesson.grammars.map((grammar) => (
             <GrammarListItem key={grammar.id} grammar={grammar} />
           ))}

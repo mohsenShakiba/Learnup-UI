@@ -29,7 +29,7 @@ export function WaveProgress ({ value, size = 64, sx }: WaveProgressProps) {
           position: 'relative',
           width: size,
           height: size,
-          borderRadius: '50%',
+          borderRadius: 2,
           overflow: 'hidden',
           border: `1px solid ${theme.palette.divider}`,
           backgroundColor: theme.palette.mode === 'dark'
@@ -54,20 +54,22 @@ export function WaveProgress ({ value, size = 64, sx }: WaveProgressProps) {
           }),
         })}
       >
-        {/* Animated wavy top edge, drawn as a repeating SVG strip twice the
-            circle's width so it can scroll left and loop seamlessly. The
-            vertical lift is done with `top` (not transform) so it doesn't get
-            clobbered by the translateX animation. */}
+        {/* Animated wavy surface, drawn as a repeating SVG strip twice the
+            circle's width so it can scroll left and loop seamlessly. It sits
+            at the top edge of the water body and is lifted by half its height
+            (via `top`, not transform, so the translateX animation isn't
+            clobbered) so the crests poke above the fill line while the SVG's
+            filled lower half blends into the solid water below. */}
         <Box
           component='svg'
           viewBox='0 0 200 20'
           preserveAspectRatio='none'
           sx={(theme) => ({
             position: 'absolute',
-            bottom: `7px`,
+            top: -10,
             left: 0,
             width: '200%',
-            height: 5,
+            height: 10,
             color: alpha(theme.palette.success.main, 1),
             animation: `${wave} 2s linear infinite`,
           })}
@@ -77,6 +79,27 @@ export function WaveProgress ({ value, size = 64, sx }: WaveProgressProps) {
             d='M0 10 Q 25 0 50 10 T 100 10 T 150 10 T 200 10 V 20 H 0 Z'
           />
         </Box>
+      </Box>
+      {/* Percent label centered over the wave. */}
+      <Box
+        sx={(theme) => ({
+          position: 'absolute',
+          inset: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: size * 0.28,
+          fontWeight: 800,
+          letterSpacing: '0.02em',
+          lineHeight: 1,
+          color: theme.palette.getContrastText(theme.palette.success.main),
+          textShadow: theme.palette.mode === 'dark'
+            ? '0 1px 3px rgba(0,0,0,0.6)'
+            : '0 1px 2px rgba(0,0,0,0.35)',
+          pointerEvents: 'none',
+        })}
+      >
+        {Math.round(clamped)}%
       </Box>
     </Box>
   );

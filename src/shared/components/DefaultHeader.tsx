@@ -14,14 +14,15 @@ export function DefaultHeader ({ header, subtitle, children }: DefaultHeaderProp
 
   return (
     <Stack direction='row' spacing={1} sx={{
-      alignItems: 'center', justifyContent: 'end', bgcolor: 'Background.paper', border: '1px solid',
-      borderColor: 'divider', borderRadius: 999, px: 1, py: 1,
+      alignItems: 'center', bgcolor: 'Background.paper', border: '1px solid',
+      borderColor: 'divider', borderRadius: 2, px: 1, py: 1,
       position: 'sticky', top: 16, left: 0, right: 0,
-      zIndex: 1, backdropFilter: 'blur(20px)', backgroundColor: 'rgba(0,0,0,0.1)',
+      zIndex: 1, backdropFilter: 'blur(20px)',
     }}>
-      {children}
-      <Box sx={{ flex: 1 }}></Box>
-      <Stack sx={{ alignItems: 'end' }}>
+      <IconButton onClick={() => navigate(-1)}>
+        <Icon sx={{ opacity: 0.5 }}>arrow_forward</Icon>
+      </IconButton>
+      <Stack >
         <Typography>
           {header}
         </Typography>
@@ -29,9 +30,8 @@ export function DefaultHeader ({ header, subtitle, children }: DefaultHeaderProp
           {subtitle}
         </Typography>}
       </Stack>
-      <IconButton onClick={() => navigate(-1)}>
-        <Icon sx={{ opacity: 0.5 }}>arrow_forward</Icon>
-      </IconButton>
+      <Box sx={{ flex: 1 }}></Box>
+      {children}
     </Stack>
   );
 }

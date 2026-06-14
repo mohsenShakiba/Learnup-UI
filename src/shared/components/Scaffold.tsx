@@ -1,5 +1,6 @@
 import { Box, Container, Stack } from '@mui/material';
 import type { ReactNode } from 'react';
+import { DotGrid } from './DotGrid';
 
 type ScaffoldProps = {
   header?: ReactNode;
@@ -21,6 +22,8 @@ export function Scaffold ({ header, children, maxWidth }: ScaffoldProps) {
           boxSizing: 'border-box',
         }}
       >
+        <DotGrid />
+
         <Stack spacing={2}>
           {header && (
             <>

@@ -3,10 +3,11 @@ import { createTheme } from '@mui/material';
 
 
 export const createLearnupTheme = (mode: PaletteMode) => {
-  const sufaceBackground = mode === 'dark' ? 'rgba(23, 20, 25)' : '#f7f8fb';
-  const paperBackgorund = mode === 'dark' ? 'rgba(25, 23, 29)' : '#ffffff';
-  const dividerColor = mode === 'dark' ? 'rgba(255,255,255,0.1)' : '#e5e7eb';
+  const sufaceBackground = mode === 'dark' ? 'rgba(23, 20, 25)' : 'rgba(233, 230, 235)';
+  const paperBackgorund = mode === 'dark' ? 'rgba(25, 23, 29)' : 'rgba(235, 233, 239)';
+  const dividerColor = mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
   return createTheme({
+    direction: 'rtl',
     palette: {
       mode,
       primary: {
@@ -83,9 +84,7 @@ export const createLearnupTheme = (mode: PaletteMode) => {
             background: paperBackgorund,
             padding: 16,
             border: `1px solid ${dividerColor}`,
-            boxShadow: mode === 'dark'
-              ? '0 10px 24px rgba(0, 0, 0, 0.25)'
-              : '0 10px 24px rgba(17, 24, 39, 0.06)',
+            boxShadow: 'none'
           },
         },
       },
@@ -95,9 +94,7 @@ export const createLearnupTheme = (mode: PaletteMode) => {
             background: paperBackgorund,
             padding: 16,
             border: `1px solid ${dividerColor}`,
-            boxShadow: mode === 'dark'
-              ? '0 10px 24px rgba(0, 0, 0, 0.25)'
-              : '0 10px 24px rgba(17, 24, 39, 0.06)',
+            boxShadow: 'none'
           },
         },
       },

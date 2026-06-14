@@ -47,15 +47,16 @@ export default function CourseDetailPage () {
         <DefaultHeader header='لیست دروس'
           subtitle='12 درس'
           children={
-            <WaveProgress value={20} size={40} />
+            <WaveProgress value={40} size={40} />
           } />
       }>
       <Stack>
         <Stack spacing={2}>
-          {lessons.map((lesson) => (
+          {lessons.map((lesson, index) => (
             <LessonListItem
               key={lesson.id}
               lesson={lesson}
+              isLast={index === lessons.length - 1}
             />
           ))}
         </Stack>

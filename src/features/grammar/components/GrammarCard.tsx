@@ -1,7 +1,10 @@
 import {
   Box,
   Card,
+  CardActionArea,
   CardContent,
+  CardHeader,
+  CardMedia,
   Chip,
   Icon,
   Stack,
@@ -29,28 +32,26 @@ export default function GrammarCard(props: TGrammarCardProps) {
         },
       }}
     >
+      <CardMedia
+        sx={{ height: 140 }}
+        image="/static/images/cards/contemplative-reptile.jpg"
+        title="green iguana"
+      />
+      <CardHeader title={grammar.name} />
       <CardContent>
         <Stack spacing={2}>
           {/* Header */}
-          <Box>
-            <Typography variant="h6" sx={{ fontWeight: 700 }} gutterBottom>
-              {grammar.name}
-            </Typography>
 
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              sx={{
-                direction: "rtl",
-                display: "-webkit-box",
-                WebkitLineClamp: 2,
-                WebkitBoxOrient: "vertical",
-                overflow: "hidden",
-              }}
-            >
-              {grammar.description}
-            </Typography>
-          </Box>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{
+              direction: "rtl",
+              paddingBottom: 4,
+            }}
+          >
+            {grammar.description}
+          </Typography>
 
           {/* Metadata */}
           <Stack direction="row" spacing={1} sx={{ flexWrap: "wrap" }}>
@@ -66,34 +67,24 @@ export default function GrammarCard(props: TGrammarCardProps) {
               label={`${grammar.estimatedTime} min`}
               variant="outlined"
             />
-
-            <Chip
-              size="small"
-              icon={<Icon>menu_book_rounded</Icon>}
-              label={`${grammar.lessons.length} lessons`}
-              variant="outlined"
-            />
           </Stack>
 
           {/* Footer */}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              pt: 1,
-            }}
-          >
-            <Typography variant="caption" color="text.secondary">
-              Order #{grammar.order}
-            </Typography>
-
-            <Typography variant="button" color="primary">
-              Start →
-            </Typography>
-          </Box>
         </Stack>
       </CardContent>
+      <CardActionArea>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "end",
+            alignItems: "center",
+          }}
+        >
+          <Typography variant="button" color="primary">
+            Start →
+          </Typography>
+        </Box>
+      </CardActionArea>
     </Card>
   );
 }

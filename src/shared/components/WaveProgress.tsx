@@ -54,20 +54,22 @@ export function WaveProgress ({ value, size = 64, sx }: WaveProgressProps) {
           }),
         })}
       >
-        {/* Animated wavy top edge, drawn as a repeating SVG strip twice the
-            circle's width so it can scroll left and loop seamlessly. The
-            vertical lift is done with `top` (not transform) so it doesn't get
-            clobbered by the translateX animation. */}
+        {/* Animated wavy surface, drawn as a repeating SVG strip twice the
+            circle's width so it can scroll left and loop seamlessly. It sits
+            at the top edge of the water body and is lifted by half its height
+            (via `top`, not transform, so the translateX animation isn't
+            clobbered) so the crests poke above the fill line while the SVG's
+            filled lower half blends into the solid water below. */}
         <Box
           component='svg'
           viewBox='0 0 200 20'
           preserveAspectRatio='none'
           sx={(theme) => ({
             position: 'absolute',
-            bottom: `7px`,
+            top: -10,
             left: 0,
             width: '200%',
-            height: 5,
+            height: 10,
             color: alpha(theme.palette.success.main, 1),
             animation: `${wave} 2s linear infinite`,
           })}

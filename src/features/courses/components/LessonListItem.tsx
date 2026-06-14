@@ -35,8 +35,10 @@ function LessonTimeline ({ completed, isLast }: { completed: boolean; isLast: bo
         justifyContent: 'center',
         zIndex: 1,
       }}>
-        {completed && (
+        {completed ? (
           <Icon sx={{ fontSize: 16, color: 'white' }}>check</Icon>
+        ) : (
+          <Icon sx={{ fontSize: 16, color: 'warning.main' }}>hourglass</Icon>
         )}
       </Box>
       {!isLast && (

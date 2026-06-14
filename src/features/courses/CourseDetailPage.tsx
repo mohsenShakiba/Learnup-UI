@@ -47,7 +47,7 @@ export default function CourseDetailPage () {
         <DefaultHeader header='لیست دروس'
           subtitle='12 درس'
           children={
-            <WaveProgress value={20} size={40} />
+            <WaveProgress value={40} size={40} />
           } />
       }>
       <Stack>

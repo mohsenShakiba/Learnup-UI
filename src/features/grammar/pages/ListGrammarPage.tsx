@@ -1,4 +1,4 @@
-import { Stack, Typography } from "@mui/material";
+import { Stack } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { GrammarsService } from "../../../api/Learnup";
@@ -22,19 +22,10 @@ export default function ListGrammarPage () {
   }
 
   return (
-    <Scaffold
-      header={
-        <Stack>
-          <Typography color="primary">گرامرها</Typography>
-        </Stack>
-      }
-      maxWidth="sm"
-    >
-      <Stack spacing={2}>
-        {orderedGrammars.map((i) => (
-          <GrammarCard grammar={i} key={i.id} />
-        ))}
-      </Stack>
-    </Scaffold>
+    <Stack sx={{ height: "100%", padding: 2 }} spacing={2}>
+      {orderedGrammars.map((i) => (
+        <GrammarCard grammar={i} key={i.id} />
+      ))}
+    </Stack>
   );
 }

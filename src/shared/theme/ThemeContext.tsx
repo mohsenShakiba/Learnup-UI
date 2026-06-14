@@ -1,6 +1,15 @@
 import { CssBaseline, ThemeProvider, useMediaQuery } from '@mui/material';
+import { CacheProvider } from '@emotion/react';
+import createCache from '@emotion/cache';
+import { prefixer } from 'stylis';
+import rtlPlugin from 'stylis-plugin-rtl';
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { createLearnupTheme } from './theme';
+
+const rtlCache = createCache({
+  key: 'muirtl',
+  stylisPlugins: [prefixer, rtlPlugin],
+});
 import {
   getStoredThemeMode,
   ThemeModeContext,
@@ -30,10 +39,12 @@ export function LearnupThemeProvider ({ children }: { children: ReactNode; }) {
 
   return (
     <ThemeModeContext.Provider value={{ mode, setMode, isDark }}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        {children}
-      </ThemeProvider>
+      <CacheProvider value={rtlCache}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          {children}
+        </ThemeProvider>
+      </CacheProvider>
     </ThemeModeContext.Provider>
   );
 }

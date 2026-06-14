@@ -52,10 +52,11 @@ export default function CourseDetailPage () {
       }>
       <Stack>
         <Stack spacing={2}>
-          {lessons.map((lesson) => (
+          {lessons.map((lesson, index) => (
             <LessonListItem
               key={lesson.id}
               lesson={lesson}
+              isLast={index === lessons.length - 1}
             />
           ))}
         </Stack>

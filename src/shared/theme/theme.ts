@@ -7,6 +7,7 @@ export const createLearnupTheme = (mode: PaletteMode) => {
   const paperBackgorund = mode === 'dark' ? 'rgba(25, 23, 29)' : '#ffffff';
   const dividerColor = mode === 'dark' ? 'rgba(255,255,255,0.1)' : '#e5e7eb';
   return createTheme({
+    direction: 'rtl',
     palette: {
       mode,
       primary: {

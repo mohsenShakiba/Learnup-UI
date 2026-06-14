@@ -4,6 +4,7 @@ import setupOpenApi from "./api/setup";
 import "./App.css";
 import CourseDetailPage from "./features/courses/CourseDetailPage";
 import ListCoursesPage from "./features/courses/ListCoursesPage";
+import GrammarDetailPage from "./features/grammar/pages/GrammarDetailPage";
 import ListGrammarPage from "./features/grammar/pages/ListGrammarPage";
 import LessonDetailPage from "./features/lessons/LessonDetailPage";
 import StoryDetailPage from "./features/stories/StoryDetailPage";
@@ -24,6 +25,7 @@ function App () {
                 <Route path="/stories/:id" element={<StoryDetailPage />} />
                 <Route path="/courses/:id" element={<CourseDetailPage />} />
                 <Route path="/grammar" element={<ListGrammarPage />} />
+                <Route path="/grammars/:id" element={<GrammarDetailPage />} />
                 <Route
                   path="/languages/:languageId/courses"
                   element={<ListCoursesPage />}

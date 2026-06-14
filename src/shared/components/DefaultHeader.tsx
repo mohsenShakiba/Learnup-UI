@@ -13,12 +13,13 @@ export function DefaultHeader ({ header, subtitle, children }: DefaultHeaderProp
   const navigate = useNavigate();
 
   return (
-    <Stack direction='row' spacing={1} sx={{
+    <Stack direction='row' spacing={1} sx={(theme) => ({
       alignItems: 'center', bgcolor: 'Background.paper', border: '1px solid',
       borderColor: 'divider', borderRadius: 2, px: 1, py: 1,
-      position: 'sticky', top: 16, left: 0, right: 0,
+      position: 'sticky', top: 8, left: 8, right: 8,
       zIndex: 1, backdropFilter: 'blur(20px)',
-    }}>
+      background: `color-mix(in srgb, ${theme.palette.background.default} 70%, transparent 20%)`
+    })}>
       <IconButton onClick={() => navigate(-1)}>
         <Icon sx={{ opacity: 0.5 }}>arrow_forward</Icon>
       </IconButton>

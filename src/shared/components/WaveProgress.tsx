@@ -66,7 +66,7 @@ export function WaveProgress ({ value, size = 64, sx }: WaveProgressProps) {
           preserveAspectRatio='none'
           sx={(theme) => ({
             position: 'absolute',
-            top: -10,
+            top: -9,
             left: 0,
             width: '200%',
             height: 10,
@@ -82,22 +82,18 @@ export function WaveProgress ({ value, size = 64, sx }: WaveProgressProps) {
       </Box>
       {/* Percent label centered over the wave. */}
       <Box
-        sx={(theme) => ({
+        sx={{
           position: 'absolute',
           inset: 0,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: size * 0.28,
-          fontWeight: 800,
-          letterSpacing: '0.02em',
+          fontSize: 13,
           lineHeight: 1,
-          color: theme.palette.getContrastText(theme.palette.success.main),
-          textShadow: theme.palette.mode === 'dark'
-            ? '0 1px 3px rgba(0,0,0,0.6)'
-            : '0 1px 2px rgba(0,0,0,0.35)',
+          color: 'text.primary',
           pointerEvents: 'none',
-        })}
+          fontFamily: 'arial'
+        }}
       >
         {Math.round(clamped)}%
       </Box>

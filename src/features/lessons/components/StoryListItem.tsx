@@ -32,36 +32,36 @@ export function StoryListItem ({ story }: StoryListItemProps) {
               maskImage: 'linear-gradient(to top, black 40%, transparent)',
             }}
           />
-          <Typography sx={{ position: 'absolute', bottom: 8, left: 8, color: 'common.white', fontSize: '1.1rem' }} >
+          <Typography sx={{ position: 'absolute', bottom: 8, right: 8, color: 'common.white', fontSize: '1.1rem' }} >
             {story.title}
           </Typography>
         </Box>
 
 
         {/* Status badges */}
-        <Box  >
+        <Box>
           <Stack direction='row' spacing={1} sx={{ alignItems: 'center' }}>
 
-            <Stack direction='row' spacing={0.5} sx={{ alignItems: 'center', borderRadius: 1, bgcolor: 'info.main', fontSize: '0.7rem', px: 0.8, py: 0.3 }}>
-              <Icon sx={{ fontSize: '0.8rem' }}>auto_stories</Icon>
-              <Box>داستان</Box>
-            </Stack>
+            {story.isCompleted ? (
+              <Stack direction='row' spacing={0.5} sx={{ alignItems: 'center', px: 0.8, py: 0.4, fontSize: '0.7rem', bgcolor: 'success.main', borderRadius: 1, color: 'white' }}>
+                <Icon sx={{ fontSize: '0.8rem', color: 'white' }}>check_circle</Icon>
+                <Box >کامل شده</Box>
+              </Stack>
+            ) : (
+              <Stack direction='row' spacing={0.5} sx={{ alignItems: 'center', px: 0.8, py: 0.4, fontSize: '0.7rem', bgcolor: 'warning.main', borderRadius: 1, color: 'white' }}>
+                <Icon sx={{ fontSize: '0.8rem', color: 'white' }}>hourglass_empty</Icon>
+                <Box >در انتظار</Box>
+              </Stack>
+            )}
 
             <DurationBadge minutes={5} />
 
             <Box sx={{ flex: 1 }}></Box>
 
-            {story.isCompleted ? (
-              <Stack direction='row' spacing={0.5} sx={{ alignItems: 'center', px: 0.8, py: 0.4, fontSize: '0.7rem', bgcolor: 'success.main', borderRadius: 1 }}>
-                <Icon sx={{ fontSize: '0.8rem' }}>check_circle</Icon>
-                <Box>کامل شده</Box>
-              </Stack>
-            ) : (
-              <Stack direction='row' spacing={0.5} sx={{ alignItems: 'center', px: 0.8, py: 0.4, fontSize: '0.7rem', bgcolor: 'warning.main', borderRadius: 1 }}>
-                <Icon sx={{ fontSize: '0.8rem' }}>hourglass_empty</Icon>
-                <Box>در انتظار</Box>
-              </Stack>
-            )}
+            <Stack direction='row' spacing={0.5} sx={{ alignItems: 'center', borderRadius: 1, bgcolor: 'info.main', fontSize: '0.7rem', px: 0.8, py: 0.3, color: 'white' }}>
+              <Icon sx={{ fontSize: '0.8rem' }}>auto_stories</Icon>
+              <Box>داستان</Box>
+            </Stack>
           </Stack>
 
         </Box>

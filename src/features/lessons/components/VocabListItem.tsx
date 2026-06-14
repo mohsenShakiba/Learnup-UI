@@ -20,14 +20,14 @@ export function VocabListItem ({ vocabs, lessonId }: Props) {
     };
 
     return (
-        <ActionCard sx={{ overflow: 'hidden', borderRadius: 1 }} onClick={handleNavigateToVocabPage}>
-            <Stack sx={{ alignItems: 'start' }} spacing={1}>
+        <ActionCard sx={{ overflow: 'hidden', borderRadius: 1, direction: 'rtl' }} onClick={handleNavigateToVocabPage}>
+            <Stack spacing={2}>
 
                 <Stack spacing={1} direction='column' sx={{ alignItems: 'start', justifyContent: 'space-between', width: '100%' }}>
                     <Typography sx={{ lineHeight: '15px', fontSize: '1.1rem' }}>Vocabulary Review</Typography>
-                    <Stack direction='row' spacing={1} sx={{ alignItems: 'center' }}>
+                    <Stack direction='row' sx={{ alignItems: 'center', gap: 1 }}>
 
-                        <Stack direction='row' spacing={0.5} sx={{ alignItems: 'center', borderRadius: 1, bgcolor: 'success.main', fontSize: '0.7rem', px: 0.8, py: 0.3 }}>
+                        <Stack direction='row' spacing={0.5} sx={{ alignItems: 'center', borderRadius: 1, bgcolor: 'success.main', fontSize: '0.7rem', px: 0.8, py: 0.3, color: 'white' }}>
                             <Icon sx={{ fontSize: '0.8rem' }}>translate</Icon>
                             <Box>مرور لغات</Box>
                         </Stack>
@@ -35,14 +35,9 @@ export function VocabListItem ({ vocabs, lessonId }: Props) {
                     </Stack>
                 </Stack>
 
-                <Stack direction='row' sx={{ alignItems: 'end', justifyContent: 'space-between', width: '100%' }}>
-                    <Box sx={{ color: 'rgba(255,255,255,0.2)', fontSize: '25px', lineHeight: '22px' }}>
-                        <TypeWriter words={vocabs.map(v => v.word)} />
-                    </Box>
-                    <Box sx={{ bgcolor: 'warning.main', px: 1, py: 0.5, borderRadius: 1, mt: 1.5 }}>
-                        <Typography sx={{ fontSize: '0.7rem', fontFamily: 'arial' }}>{vocabs.length} Vocabularies</Typography>
-                    </Box>
-                </Stack>
+                <Box sx={{ color: 'rgba(125,125,125,0.65)', fontSize: '25px', lineHeight: '22px', height: 25 }}>
+                    <TypeWriter words={vocabs.map(v => v.word)} />
+                </Box>
 
             </Stack>
         </ActionCard>

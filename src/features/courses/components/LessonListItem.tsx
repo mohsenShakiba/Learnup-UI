@@ -67,7 +67,7 @@ export function LessonListItem ({ lesson, isLast = false }: LessonListItemProps)
   return (
     <Stack direction="row" spacing={1.5} sx={{ alignItems: 'stretch' }}>
 
-      <ActionCard onClick={navigateToLesson} sx={{ flex: 1 }}>
+      <ActionCard onClick={navigateToLesson} sx={{ flex: 1, borderRadius: 2 }}>
 
         <Stack spacing={1} sx={{ alignItems: 'start', direction: 'rtl' }}>
 
@@ -84,9 +84,7 @@ export function LessonListItem ({ lesson, isLast = false }: LessonListItemProps)
 
       </ActionCard >
 
-
       <LessonTimeline completed={lesson.isCompleted} isLast={isLast} />
-
 
     </Stack>
   );

@@ -49,7 +49,7 @@ export const createLearnupTheme = (mode: PaletteMode) => {
     spacing: 8,
     typography: {
       fontFamily: 'IranSans, Arial, sans-serif',
-
+      fontSize: 13
     },
     components: {
       MuiCssBaseline: {

@@ -3,9 +3,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { GrammarsService } from "../../../api/Learnup";
 import { AppLoader } from "../../../shared/components/AppLoader";
+import { Scaffold } from "../../../shared/components/Scaffold";
 import GrammarCard from "../components/GrammarCard";
 
-export default function ListGrammarPage() {
+export default function ListGrammarPage () {
   const grammarQuery = useQuery({
     queryKey: ["listGrammar"],
     queryFn: () => GrammarsService.getMobileGrammars1(),

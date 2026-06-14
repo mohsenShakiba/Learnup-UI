@@ -20,7 +20,7 @@ export function PageFade ({ children }: PageFadeProps) {
       sx={{
         minHeight: '100%',
         opacity: visible ? 1 : 0,
-        transition: 'opacity 150ms ease',
+        transition: 'opacity 200ms ease',
       }}
       onTransitionEnd={(e) => {
         if (e.target !== e.currentTarget || e.propertyName !== 'opacity') return;

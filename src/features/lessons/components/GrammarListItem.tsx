@@ -17,7 +17,7 @@ export function GrammarListItem ({ grammar }: Props) {
     };
 
     return (
-        <ActionCard sx={{ overflow: 'hidden', borderRadius: 1 }} onClick={handleNavigateToGrammarPage}>
+        <ActionCard sx={{ overflow: 'hidden', borderRadius: 2, }} onClick={handleNavigateToGrammarPage}>
 
             <Stack spacing={1} sx={{}}>
 

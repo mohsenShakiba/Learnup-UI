@@ -9,7 +9,7 @@ export function DurationBadge ({ minutes }: Props) {
         <Stack direction='row' spacing={0.2} sx={{ alignItems: 'center', opacity: 0.4 }}>
             <Icon sx={{ fontSize: '0.8rem' }}>timer</Icon>
             <Typography sx={{ fontSize: '0.7rem', fontFamily: 'arial' }}>
-                {minutes} Min
+                {minutes} دقیقه
             </Typography>
         </Stack>
     );

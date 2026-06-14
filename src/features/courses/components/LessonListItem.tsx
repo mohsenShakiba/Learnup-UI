@@ -2,6 +2,7 @@ import { Box, Icon, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { LessonResponse } from '../../../api/Learnup';
 import { ActionCard } from '../../../shared/components/ActionCard';
+import { DurationBadge } from '../../../shared/components/DurationBadge';
 
 type LessonListItemProps = {
   lesson: LessonResponse;
@@ -54,39 +55,6 @@ function LessonTimeline ({ completed, isLast }: { completed: boolean; isLast: bo
   );
 }
 
-function StoryIcon ({ completed }: { completed: boolean; }) {
-  return (
-    <Box sx={{
-      bgcolor: completed ? 'success.dark' : 'rgba(255,255,255,0.1)',
-      borderRadius: '6px',
-      backdropFilter: 'blur(5px)', width: 25, height: 25, alignItems: 'center', justifyContent: 'center', display: 'flex'
-    }}>
-      <Icon sx={{
-        fontSize: 15,
-        color: completed ? 'white' : 'text.secondary',
-      }}>
-        auto_stories
-      </Icon>
-    </Box>
-  );
-}
-
-function GrammarIcon ({ completed }: { completed: boolean; }) {
-  return (
-    <Box sx={{
-      bgcolor: completed ? 'secondary.dark' : 'rgba(125,125,125,0.3)',
-      borderRadius: '6px',
-      backdropFilter: 'blur(5px)', width: 25, height: 25, alignItems: 'center', justifyContent: 'center', display: 'flex'
-    }}>
-      <Icon sx={{
-        fontSize: 15,
-        color: completed ? 'white' : 'text.secondary',
-      }}>
-        lightbulb
-      </Icon>
-    </Box>
-  );
-}
 
 export function LessonListItem ({ lesson, isLast = false }: LessonListItemProps) {
 
@@ -95,45 +63,29 @@ export function LessonListItem ({ lesson, isLast = false }: LessonListItemProps)
     navigate(`/lessons/${lesson.id}`);
   };
 
+
   return (
     <Stack direction="row" spacing={1.5} sx={{ alignItems: 'stretch' }}>
+
       <LessonTimeline completed={lesson.isCompleted} isLast={isLast} />
+
       <ActionCard onClick={navigateToLesson} sx={{ flex: 1 }}>
 
-        <Stack spacing={1} sx={{ overflow: 'hidden', alignItems: 'flex-start' }}>
+        <Stack spacing={1} sx={{ alignItems: 'start' }}>
 
-          <Stack spacing={1} sx={{ alignItems: 'start' }}>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
             <Typography >
               درس {lesson.order}
             </Typography>
-            <Typography sx={{ color: 'text.secondary', }}>
-              {lesson.title}
-            </Typography>
+            <DurationBadge minutes={5} />
           </Stack>
-
-          <Stack
-            direction="row"
-            spacing={1}
-            sx={{ alignItems: 'center' }}
-          >
-            {lesson.storiesCount > 0 && (
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                {Array.from({ length: lesson.storiesCount }).map((_, i) => (
-                  <StoryIcon key={i} completed={i < lesson.completedStoriesCount} />
-                ))}
-              </Stack>
-            )}
-
-            {lesson.grammarsCount > 0 && (
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                {Array.from({ length: lesson.grammarsCount }).map((_, i) => (
-                  <GrammarIcon key={i} completed={i < lesson.completedGrammarsCount} />
-                ))}
-              </Stack>
-            )}
-          </Stack>
+          <Typography sx={{ color: 'text.secondary', }}>
+            {lesson.title}
+          </Typography>
         </Stack>
+
       </ActionCard >
+
     </Stack>
   );
 }

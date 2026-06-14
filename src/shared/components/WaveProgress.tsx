@@ -29,7 +29,7 @@ export function WaveProgress ({ value, size = 64, sx }: WaveProgressProps) {
           position: 'relative',
           width: size,
           height: size,
-          borderRadius: '50%',
+          borderRadius: 2,
           overflow: 'hidden',
           border: `1px solid ${theme.palette.divider}`,
           backgroundColor: theme.palette.mode === 'dark'
@@ -79,6 +79,27 @@ export function WaveProgress ({ value, size = 64, sx }: WaveProgressProps) {
             d='M0 10 Q 25 0 50 10 T 100 10 T 150 10 T 200 10 V 20 H 0 Z'
           />
         </Box>
+      </Box>
+      {/* Percent label centered over the wave. */}
+      <Box
+        sx={(theme) => ({
+          position: 'absolute',
+          inset: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: size * 0.28,
+          fontWeight: 800,
+          letterSpacing: '0.02em',
+          lineHeight: 1,
+          color: theme.palette.getContrastText(theme.palette.success.main),
+          textShadow: theme.palette.mode === 'dark'
+            ? '0 1px 3px rgba(0,0,0,0.6)'
+            : '0 1px 2px rgba(0,0,0,0.35)',
+          pointerEvents: 'none',
+        })}
+      >
+        {Math.round(clamped)}%
       </Box>
     </Box>
   );

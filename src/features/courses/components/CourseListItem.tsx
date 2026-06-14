@@ -56,22 +56,20 @@ export function CourseListItem ({ course }: CourseListItemProps) {
           }}
         >
 
-          <Stack spacing={1} sx={{ alignItems: 'end', }}>
+          <Stack spacing={1} >
             <Stack direction='row' sx={{ borderRadius: 0.5, overflow: 'hidden', fontSize: '0.9rem' }}>
-              <Box sx={{ background: 'rgba(255,255,255,0.2)', color: 'white', px: 0.8, py: 0.4 }}>
-                {course.slug}
-              </Box>
               <Box sx={{ background: '#d683b9', color: 'black', px: 0.8, py: 0.4, fontFamily: 'arial' }}>
                 {course.code}
               </Box>
-
+              <Box sx={{ bgcolor: 'background.default', color: 'text.primary', px: 0.8, py: 0.4 }}>
+                {course.slug}
+              </Box>
             </Stack>
 
             <Typography
               sx={{
                 fontSize: '1.2rem',
                 color: 'text.primary',
-                textAlign: 'right'
               }}
             >
               {course.title}
@@ -79,17 +77,17 @@ export function CourseListItem ({ course }: CourseListItemProps) {
 
             <TextCarousel items={
               [
-                <Stack direction='row' sx={{ direction: 'rtl', gap: 0.5 }}>
+                <Stack direction='row' sx={{ gap: 0.5 }}>
                   <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>در این دوره</Typography>
                   <Typography sx={{ fontSize: '0.9rem', color: 'orange' }}>30 تا داستان</Typography>
                   <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>میخونی</Typography>
                 </Stack>,
-                <Stack direction='row' sx={{ direction: 'rtl', gap: 0.5 }}>
+                <Stack direction='row' sx={{ gap: 0.5 }}>
                   <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>در این دوره</Typography>
                   <Typography sx={{ fontSize: '0.9rem', color: 'orange' }}>20 تا گرامر مهم</Typography>
                   <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>یاد میگیری</Typography>
                 </Stack>,
-                <Stack direction='row' sx={{ direction: 'rtl', gap: 0.5 }}>
+                <Stack direction='row' sx={{ gap: 0.5 }}>
                   <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>در این دوره</Typography>
                   <Typography sx={{ fontSize: '0.9rem', color: 'orange' }}>300 تا کلمه</Typography>
                   <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>یاد میگیری</Typography>
@@ -100,7 +98,6 @@ export function CourseListItem ({ course }: CourseListItemProps) {
             <Typography
               sx={{
                 color: 'text.secondary',
-                textAlign: 'right'
               }}
             >
               {course.description}
@@ -113,7 +110,7 @@ export function CourseListItem ({ course }: CourseListItemProps) {
           <Stack spacing={1} sx={{ width: '100%' }}>
             <LinearProgress variant='determinate' value={progress} sx={{ borderRadius: 1 }} />
             {/* <DottedProgress value={progress} /> */}
-            <Stack direction='row' sx={{ color: 'text.secondary', fontSize: '0.8rem', gap: 1, direction: 'rtl' }}>
+            <Stack direction='row' sx={{ color: 'text.secondary', fontSize: '0.8rem', gap: 1 }}>
               <Typography sx={{ fontSize: 'inherit', color: 'primary.main' }}>
                 {course.completedLessonsCount}
               </Typography>

@@ -1,3 +1,4 @@
+import { useTheme } from '@mui/material';
 import type { CSSProperties } from 'react';
 import { useEffect, useRef, useState } from 'react';
 
@@ -15,15 +16,22 @@ type DotGridProps = {
 type Size = { width: number; height: number; };
 
 export function DotGrid ({
-  gap = 24,
+  gap = 30,
   dotSize = 3,
-  color = '#ffffff',
-  opacity = 0.1,
+  color,
   style,
   className,
 }: DotGridProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState<Size>({ width: 0, height: 0 });
+
+  const { palette } = useTheme();
+
+  let dotColor = color;
+
+  if (!dotColor) {
+    dotColor = palette.mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
+  }
 
   useEffect(() => {
     const el = containerRef.current;
@@ -72,7 +80,7 @@ export function DotGrid ({
       {size.width > 0 && size.height > 0 && (
         <svg width={size.width} height={size.height} style={{ display: 'block' }}>
           {dots.map(({ cx, cy }, i) => (
-            <circle key={i} cx={cx} cy={cy} r={dotSize / 2} fill={color} opacity={opacity} />
+            <circle key={i} cx={cx} cy={cy} r={dotSize / 2} fill={dotColor} />
           ))}
         </svg>
       )}

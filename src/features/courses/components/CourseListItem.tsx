@@ -30,13 +30,13 @@ export function CourseListItem ({ course }: CourseListItemProps) {
       mb: 2.5,
     }}>
 
+
       <Paper
         sx={
           {
             display: 'flex',
             flexDirection: 'column',
             height: 'calc(100dvh - 110px)',
-            boxShadow: '0 0 10px rgba(0,0,0,0.1)',
             p: 0,
             overflow: 'hidden'
           }

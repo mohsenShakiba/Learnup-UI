@@ -67,24 +67,26 @@ export function LessonListItem ({ lesson, isLast = false }: LessonListItemProps)
   return (
     <Stack direction="row" spacing={1.5} sx={{ alignItems: 'stretch' }}>
 
-      <LessonTimeline completed={lesson.isCompleted} isLast={isLast} />
-
       <ActionCard onClick={navigateToLesson} sx={{ flex: 1 }}>
 
-        <Stack spacing={1} sx={{ alignItems: 'start' }}>
+        <Stack spacing={1} sx={{ alignItems: 'start', direction: 'rtl' }}>
 
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-            <Typography >
-              درس {lesson.order}
+          <Stack direction="row" sx={{ gap: 1 }}>
+            <Typography sx={{ px: 0.8, py: 0.4, bgcolor: 'secondary.main', color: 'white', borderRadius: 1, fontSize: '0.7rem', fontFamily: 'arial' }} >
+              LESSON {lesson.order}
             </Typography>
             <DurationBadge minutes={5} />
           </Stack>
-          <Typography sx={{ color: 'text.secondary', }}>
+          <Typography sx={{ color: 'text.secondary' }}>
             {lesson.title}
           </Typography>
         </Stack>
 
       </ActionCard >
+
+
+      <LessonTimeline completed={lesson.isCompleted} isLast={isLast} />
+
 
     </Stack>
   );

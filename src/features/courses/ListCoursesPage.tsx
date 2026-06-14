@@ -1,3 +1,4 @@
+import { Box } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -5,6 +6,7 @@ import { Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { CoursesService } from '../../api/Learnup';
 import { AppLoader } from '../../shared/components/AppLoader';
+import { DotGrid } from '../../shared/components/DotGrid';
 import { ErrorPage } from '../../shared/components/ErrorPage';
 import { CourseListItem } from './components/CourseListItem';
 
@@ -25,17 +27,21 @@ export default function ListCoursesPage () {
   const courses = coursesQuery.data ?? [];
 
   return (
-    <Swiper
-      direction='horizontal'
-      modules={[Pagination]}
-      pagination={{ clickable: true }}
-      slidesPerView={1}
-    >
-      {courses.map((course) => (
-        <SwiperSlide key={course.id} >
-          <CourseListItem key={course.id} course={course} />
-        </SwiperSlide>
-      ))}
-    </Swiper>
+    <Box >
+      <DotGrid />
+      <Swiper
+        direction='horizontal'
+        modules={[Pagination]}
+        pagination={{ clickable: true }}
+        slidesPerView={1}
+      >
+        {courses.map((course) => (
+          <SwiperSlide key={course.id} >
+            <CourseListItem key={course.id} course={course} />
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </Box>
+
   );
 }

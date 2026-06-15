@@ -70,12 +70,12 @@ export function VocabListItem({ vocab }: Props) {
         boxShadow: "0 12px 32px rgba(15, 23, 42, 0.08)",
         transition: "transform 180ms ease, box-shadow 180ms ease",
         "&::before": {
-          content: '""',
+          content: "''",
           position: "absolute",
           insetBlockStart: 0,
           insetInlineStart: 0,
           insetInlineEnd: 0,
-          height: 4,
+          height: 2,
           background:
             "linear-gradient(90deg, rgba(25,118,210,0.95) 0%, rgba(38,166,154,0.95) 100%)",
         },

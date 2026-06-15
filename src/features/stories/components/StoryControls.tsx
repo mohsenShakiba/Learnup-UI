@@ -24,7 +24,7 @@ export function StoryControls () {
 
   const togglePlaybackSpeed = () => {
     const nextIsSlowSpeed = !isSlowSpeed;
-    const nextPlaybackRate = nextIsSlowSpeed ? 0.75 : 1;
+    const nextPlaybackRate = nextIsSlowSpeed ? 0.8 : 1;
 
     setIsSlowSpeed(nextIsSlowSpeed);
 

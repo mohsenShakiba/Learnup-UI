@@ -1,8 +1,14 @@
-import { Card, CircularProgress, Icon, IconButton, Stack, Typography } from '@mui/material';
+import { Card, Chip, CircularProgress, Divider, Icon, IconButton, Stack, Typography } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import type { VocabResponse } from '../../../api/Learnup/models/VocabResponse';
+import { VocabTransactionType } from '../../../api/Learnup/models/VocabTransactionType';
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? '';
+
+const typeLabel: Record<VocabTransactionType, string> = {
+    [VocabTransactionType.NOUN]: 'اسم',
+    [VocabTransactionType.VERB]: 'فعل',
+};
 
 type Props = {
     vocab: VocabResponse;
@@ -45,27 +51,61 @@ export function VocabListItem ({ vocab }: Props) {
     };
 
     return (
-        <Card sx={{ borderRadius: 1 }}>
-            <Stack direction='row' sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
-                <Stack spacing={0.5}>
-                    <Typography>{vocab.word}</Typography>
-                    {vocab.translation && (
-                        <Typography sx={{ color: 'text.secondary', fontSize: '0.7rem' }}>
-                            {vocab.translation}
-                        </Typography>
+        <Card sx={{ borderRadius: 1, p: 1.5 }}>
+            <Stack spacing={1}>
+                {/* Word row */}
+                <Stack direction='row' sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
+                    <Typography variant='h6'>{vocab.word}</Typography>
+                    {vocab.voiceId && (
+                        <IconButton size='small' onClick={() => void handlePlayVoice()} disabled={isLoadingVoice}>
+                            {isLoadingVoice
+                                ? <CircularProgress size={20} />
+                                : <Icon>volume_up</Icon>}
+                        </IconButton>
                     )}
-
-
-                    <Typography>{vocab.description}</Typography>
-
                 </Stack>
 
-                {vocab.voiceId && (
-                    <IconButton onClick={() => void handlePlayVoice()} disabled={isLoadingVoice}>
-                        {isLoadingVoice
-                            ? <CircularProgress size={20} />
-                            : <Icon>volume_up</Icon>}
-                    </IconButton>
+                {/* Translations */}
+                {vocab.translations.length > 0 && (
+                    <Stack spacing={1} divider={<Divider />}>
+                        {vocab.translations.map((t) => (
+                            <Stack key={t.id} spacing={0.5}>
+                                <Stack direction='row' spacing={1} sx={{ alignItems: 'center' }}>
+                                    <Typography sx={{ fontWeight: 500 }}>{t.translation}</Typography>
+                                    <Chip
+                                        label={typeLabel[t.type]}
+                                        size='small'
+                                        variant='outlined'
+                                        sx={{ fontSize: '0.65rem', height: 18 }}
+                                    />
+                                </Stack>
+
+                                {t.description && (
+                                    <Typography variant='body2' sx={{ color: 'text.secondary' }}>
+                                        {t.description}
+                                    </Typography>
+                                )}
+
+                                {t.example && (
+                                    <Stack spacing={0.25} sx={{ pl: 1, borderLeft: '2px solid', borderColor: 'divider' }}>
+                                        <Typography variant='body2' sx={{ fontStyle: 'italic' }}>{t.example}</Typography>
+                                        {t.exampleTranslation && (
+                                            <Typography variant='body2' sx={{ color: 'text.secondary', fontSize: '0.75rem' }}>
+                                                {t.exampleTranslation}
+                                            </Typography>
+                                        )}
+                                    </Stack>
+                                )}
+                            </Stack>
+                        ))}
+                    </Stack>
+                )}
+
+                {/* Fallback to flat translation if no translations array */}
+                {vocab.translations.length === 0 && vocab.translation && (
+                    <Typography variant='body2' sx={{ color: 'text.secondary' }}>
+                        {vocab.translation}
+                    </Typography>
                 )}
             </Stack>
         </Card>

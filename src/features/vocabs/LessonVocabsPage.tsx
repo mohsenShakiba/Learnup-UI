@@ -31,7 +31,7 @@ export default function LessonVocabsPage () {
   return (
     <Scaffold
       header={
-        <DefaultHeader header='کلمات' />
+        <DefaultHeader header='کلمات' subtitle={lesson.title} />
       }
     >
       <Stack spacing={1.5}>

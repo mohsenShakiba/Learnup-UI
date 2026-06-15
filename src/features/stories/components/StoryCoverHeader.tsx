@@ -1,5 +1,4 @@
-import { Box, Icon, IconButton, Stack, Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { Box, Stack, Typography } from '@mui/material';
 import type { StoryResponse } from '../../../api/Learnup';
 import { ImageLoader } from '../../../shared/components/ImageLoader';
 
@@ -8,13 +7,11 @@ type StoryCoverHeaderProps = {
 };
 
 export function StoryCoverHeader ({ story }: StoryCoverHeaderProps) {
-  const navigate = useNavigate();
 
   return (
     <Box
       sx={{
-        m: 2,
-        mb: 0,
+        direction: 'rtl',
         position: 'relative',
         height: 220,
         borderRadius: 1,
@@ -23,15 +20,7 @@ export function StoryCoverHeader ({ story }: StoryCoverHeaderProps) {
     >
 
       <ImageLoader coverId={story.coverId} />
-      <Box sx={{
-        backdropFilter: 'blur(20px)',
-        background: 'rgba(0,0,0,0.2)',
-        width: 38, height: 38, borderRadius: 999, position: 'absolute', zIndex: 1, right: 8, top: 8
-      }}>
-        <IconButton onClick={() => navigate(-1)}>
-          <Icon>arrow_forward</Icon>
-        </IconButton>
-      </Box>
+
       <Box
         sx={{
           position: 'absolute',

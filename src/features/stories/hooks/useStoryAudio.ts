@@ -200,6 +200,7 @@ function useStoryAudioState (storyItems: StoryItemResponse[]): UseStoryAudioResu
 
     try {
       await audioRef.current.play();
+      audioRef.current.playbackRate = 1;
     } catch (err) {
       setPlaybackStatus('paused');
       setActiveTimestampIndex(-1);

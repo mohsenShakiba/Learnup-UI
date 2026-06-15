@@ -11,7 +11,7 @@ type ScaffoldProps = {
 export function Scaffold ({ header, children, maxWidth }: ScaffoldProps) {
 
   return (
-    <Container maxWidth={maxWidth} sx={{ p: 1 }}>
+    <Container maxWidth={maxWidth} sx={{ p: 0 }}>
 
       {header && (
         <>
@@ -25,7 +25,7 @@ export function Scaffold ({ header, children, maxWidth }: ScaffoldProps) {
           width: '100%',
           mx: 'auto',
           py: 2,
-          px: 1,
+          px: 2,
           paddingBottom: 10,
           boxSizing: 'border-box',
         }}

@@ -35,12 +35,12 @@ export function StoryItem ({ item }: StoryItemProps) {
           }),
         })}
       >
-        <Typography >
+        <Typography sx={{ direction: 'rtl' }} >
           {item.content}
         </Typography>
 
         {
-          showTranslation && <Typography sx={{ fontSize: '0.8rem', color: 'text.secondary', textAlign: 'right', direction: 'rtl' }}>
+          showTranslation && <Typography variant='body2' sx={{ color: 'text.secondary', direction: 'ltr' }}>
             {item.translation}
           </Typography>
         }

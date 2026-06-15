@@ -51,11 +51,9 @@ export const createLearnupTheme = (mode: PaletteMode) => {
       fontFamily: 'IranSans, Arial, sans-serif',
       h1: {
         fontSize: "32px",
-        fontWeight: 600,
       },
       h2: {
         fontSize: "26px",
-        fontWeight: 600,
       },
       h3: {
         fontSize: "24px",
@@ -64,16 +62,16 @@ export const createLearnupTheme = (mode: PaletteMode) => {
         fontSize: "24px",
       },
       h5: {
-        fontSize: "18px",
+        fontSize: "20px",
       },
       h6: {
-        fontSize: "18px",
+        fontSize: "20px",
       },
       body1: {
-        fontSize: "13px",
+        fontSize: "16px",
       },
       body2: {
-        fontSize: "13px",
+        fontSize: "14px",
       },
     },
     components: {

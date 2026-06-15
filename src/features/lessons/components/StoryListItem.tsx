@@ -32,7 +32,7 @@ export function StoryListItem ({ story }: StoryListItemProps) {
               maskImage: 'linear-gradient(to top, black 40%, transparent)',
             }}
           />
-          <Typography sx={{ position: 'absolute', bottom: 8, right: 8, color: 'common.white', fontSize: '1.1rem' }} >
+          <Typography variant='h3' sx={{ position: 'absolute', bottom: 8, right: 8, color: 'common.white' }} >
             {story.title}
           </Typography>
         </Box>

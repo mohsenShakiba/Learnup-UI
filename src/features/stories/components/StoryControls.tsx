@@ -37,16 +37,18 @@ export function StoryControls () {
     <Box
       sx={{
         position: 'fixed',
-        bottom: 8,
+        bottom: 24,
         borderRadius: 2,
-        left: { xs: 8, md: 'auto' },
-        right: { xs: 8, md: '50%' },
+        left: { xs: 24, md: 'auto' },
+        right: { xs: 24, md: '50%' },
         width: 'auto',
-        px: 4,
-        py: 2,
+        px: 3,
+        py: 1.5,
         transform: { xs: 'none', md: 'translate(50%)' },
-        boxShadow: '0 2px 12px rgba(0,0,0,0.5)',
-        bgcolor: 'background.paper'
+        border: '1px solid',
+        borderColor: 'divider',
+        boxShadow: '0 0 10px rgba(0,0,0,0.15)',
+        backdropFilter: 'blur(20px)'
       }}
     >
 
@@ -69,10 +71,11 @@ export function StoryControls () {
         </IconButton>
 
         <IconButton
-          onClick={playPreviousItem}
+          onClick={playNextItem}
           sx={{ width: 30, height: 30, borderRadius: 999, border: '1px solid', borderColor: ' divider' }}>
-          <Icon sx={{ fontSize: '25px !important' }}>chevron_left</Icon>
+          <Icon sx={{ fontSize: '25px !important' }}>chevron_right</Icon>
         </IconButton>
+
 
         {
           isPlaying ?
@@ -91,10 +94,11 @@ export function StoryControls () {
         }
 
         <IconButton
-          onClick={playNextItem}
+          onClick={playPreviousItem}
           sx={{ width: 30, height: 30, borderRadius: 999, border: '1px solid', borderColor: ' divider' }}>
-          <Icon sx={{ fontSize: '25px !important' }}>chevron_right</Icon>
+          <Icon sx={{ fontSize: '25px !important' }}>chevron_left</Icon>
         </IconButton>
+
 
         <IconButton
           color={showTranslation ? "primary" : "default"}

@@ -20,7 +20,7 @@ export function VocabListItem ({ vocabs, lessonId }: Props) {
     };
 
     return (
-        <ActionCard sx={{ overflow: 'hidden', borderRadius: 1 }} onClick={handleNavigateToVocabPage}>
+        <ActionCard sx={{ overflow: 'hidden', borderRadius: 2 }} onClick={handleNavigateToVocabPage}>
             <Stack spacing={2} >
                 <Stack spacing={1} direction='column' sx={{ justifyContent: 'space-between', width: '100%' }}>
                     <Typography sx={{ lineHeight: '15px', fontSize: '1.1rem', direction: 'rtl' }}>Vocabulary Review</Typography>

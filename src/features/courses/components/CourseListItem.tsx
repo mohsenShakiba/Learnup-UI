@@ -34,6 +34,7 @@ export function CourseListItem ({ course }: CourseListItemProps) {
       <Paper
         sx={
           {
+            borderRadius: 2,
             display: 'flex',
             flexDirection: 'column',
             height: 'calc(100dvh - 110px)',

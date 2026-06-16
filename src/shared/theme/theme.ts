@@ -107,7 +107,8 @@ export const createLearnupTheme = (mode: PaletteMode) => {
             background: paperBackgorund,
             padding: 16,
             border: `1px solid ${dividerColor}`,
-            boxShadow: 'none'
+            boxShadow: 'none',
+            borderRadius: '16px'
           },
         },
       },
@@ -117,7 +118,8 @@ export const createLearnupTheme = (mode: PaletteMode) => {
             background: paperBackgorund,
             padding: 16,
             border: `1px solid ${dividerColor}`,
-            boxShadow: 'none'
+            boxShadow: 'none',
+            borderRadius: '16px'
           },
         },
       },

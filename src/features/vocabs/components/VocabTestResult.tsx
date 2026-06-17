@@ -13,11 +13,9 @@
 
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { FancyButton } from "../../../shared/components/FancyButton";
+import { ResultCard } from "../../../shared/components/ResultCard";
 import ConfettiOverlay from "./ConfettiOverlay";
 
-const PERSIAN_DIGITS = "۰۱۲۳۴۵۶۷۸۹";
-const toPersianDigits = (value) =>
-    String(value).replace(/[0-9]/g, (d) => PERSIAN_DIGITS[d]);
 
 const STYLES = `
 .ep-root{
@@ -68,52 +66,10 @@ const STYLES = `
 .ep-confetti i:nth-child(3n){ width:7px; height:7px; border-radius:50%; }
 .ep-confetti i:nth-child(4n){ width:12px; height:5px; }
 @keyframes ep-fall{
-  0%   { transform:translateY(-10vh) rotate(0deg); opacity:0; }
-  8%   { opacity:1; }
-  100% { transform:translateY(112vh) rotate(720deg); opacity:1; }
+  from{ transform:translateY(-10vh) rotate(0deg); opacity:0; }
+  to  { transform:translateY(112vh) rotate(720deg); opacity:1; }
 }
 
-.ep-card{
-  position:relative;
-  z-index:2;
-  width:min(440px, 100%);
-  background:linear-gradient(180deg, var(--ep-cream), #f7efe1);
-  border:1px solid var(--ep-cream-edge);
-  border-radius:26px;
-  padding:64px 40px 40px;
-  text-align:center;
-  box-shadow:0 40px 80px -30px rgba(0,0,0,.6), 0 2px 0 rgba(255,255,255,.7) inset;
-  animation:ep-rise .8s cubic-bezier(.2,.9,.25,1) both;
-}
-@keyframes ep-rise{
-  from{ transform:translateY(34px) scale(.96); opacity:0; }
-  to  { transform:translateY(0) scale(1); opacity:1; }
-}
-.ep-card::before{
-  content:"";
-  position:absolute;
-  inset:14px;
-  border:1.5px dashed rgba(169,120,26,.35);
-  border-radius:16px;
-  pointer-events:none;
-}
-
-.ep-emoji-wrap{ position:absolute; top:-46px; left:50%; transform:translateX(-50%); }
-.ep-emoji{
-  width:92px; height:92px;
-  display:grid;
-  place-items:center;
-  border-radius:50%;
-  background:var(--ep-cream);
-  box-shadow:0 0 0 6px var(--ep-cream), 0 0 0 8px rgba(169,120,26,.25);
-  font-size:3rem;
-  animation:ep-stamp .7s cubic-bezier(.18,1.4,.4,1) .35s both;
-}
-@keyframes ep-stamp{
-  0%  { transform:scale(2.4) rotate(-22deg); opacity:0; }
-  60% { opacity:1; }
-  100%{ transform:scale(1) rotate(0deg); opacity:1; }
-}
 
 .ep-title{
   font-weight:700;
@@ -162,7 +118,6 @@ const STYLES = `
 }
 
 @media (max-width:420px){
-  .ep-card{ padding:58px 22px 32px; }
   .ep-title{ font-size:2.1rem; }
 }
 
@@ -221,12 +176,7 @@ export default function ExamPassedCard ({
 
             <ConfettiOverlay />
 
-            {/* card */}
-            <Box component="main" className="ep-card" role="status" aria-live="polite">
-                <Box className="ep-emoji-wrap">
-                    <Box className="ep-emoji" aria-label={tier.label}>{tier.emoji}</Box>
-                </Box>
-
+            <ResultCard component="main" role="status" aria-live="polite" icon={tier.emoji} iconLabel={tier.label}>
                 <Typography component="h1" className="ep-title">
                     {tier.title}
                 </Typography>
@@ -235,7 +185,7 @@ export default function ExamPassedCard ({
                 </Typography>
 
                 <Box className="ep-score">
-                    <Typography component="b">{toPersianDigits(score)}٪</Typography>
+                    <Typography component="b">{score}٪</Typography>
                     <Typography component="span">نمره</Typography>
                 </Box>
 
@@ -247,7 +197,7 @@ export default function ExamPassedCard ({
                         بازگشت
                     </FancyButton>
                 </Stack>
-            </Box>
+            </ResultCard>
         </Box>
     );
 }

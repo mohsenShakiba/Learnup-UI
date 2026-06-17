@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -72,9 +72,10 @@ export default function LessonVocabTestsPage () {
   }
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-      <DefaultHeader header='آزمون لغات'>
-      </DefaultHeader>
+    <Stack sx={{ height: '100%' }}>
+
+      <DefaultHeader header='آزمون لغات' />
+
       <Box sx={{ flex: 1, overflow: 'hidden' }}>
         <Swiper
           style={{ height: '100%' }}
@@ -94,6 +95,6 @@ export default function LessonVocabTestsPage () {
           </SwiperSlide>
         </Swiper>
       </Box>
-    </Box>
+    </Stack>
   );
 }

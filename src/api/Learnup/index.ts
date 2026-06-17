@@ -31,7 +31,9 @@ export type { StoryResponse } from './models/StoryResponse';
 export type { TestOptionResponse } from './models/TestOptionResponse';
 export { VocabLevel } from './models/VocabLevel';
 export type { VocabResponse } from './models/VocabResponse';
+export { VocabStatus } from './models/VocabStatus';
 export type { VocabTestResponse } from './models/VocabTestResponse';
+export { VocabType } from './models/VocabType';
 
 export { CoursesService } from './services/CoursesService';
 export { FilesService } from './services/FilesService';

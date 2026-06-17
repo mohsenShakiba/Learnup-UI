@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export enum VocabTransactionType {
-    NOUN = 1,
-    VERB = 2,
-}
+export type TestOptionResponse = {
+    id: number;
+    text: string;
+};

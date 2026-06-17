@@ -48,7 +48,7 @@ export const createLearnupTheme = (mode: PaletteMode) => {
     },
     spacing: 8,
     typography: {
-      fontFamily: 'IranSans, Arial, sans-serif',
+      fontFamily: 'IranSans, Roboto, sans-serif',
       h1: {
         fontSize: "32px",
       },
@@ -122,6 +122,13 @@ export const createLearnupTheme = (mode: PaletteMode) => {
             borderRadius: '16px'
           },
         },
+      },
+      MuiChip: {
+        styleOverrides: {
+          root: {
+            borderRadius: '4px',
+          }
+        }
       },
       MuiBottomNavigation: {
         styleOverrides: {

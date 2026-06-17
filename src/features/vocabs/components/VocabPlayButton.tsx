@@ -23,28 +23,7 @@ export function VocabPlayButton ({ voiceId }: Props) {
   };
 
   return (
-    <IconButton
-      onClick={() => void handlePlay()}
-      disabled={isLoading}
-      sx={{
-        flexShrink: 0,
-        alignSelf: "center",
-        width: 44,
-        height: 44,
-        p: 0,
-        marginRight: "auto",
-        borderRadius: 3,
-        border: "1px solid",
-        borderColor: "divider",
-        bgcolor: "grey.50",
-        color: "primary.main",
-        "&:hover": {
-          bgcolor: "primary.main",
-          color: "primary.contrastText",
-          borderColor: "primary.main",
-        },
-      }}
-    >
+    <IconButton size="small" onClick={handlePlay}>
       {isLoading ? <CircularProgress size={20} /> : <Icon>volume_up</Icon>}
     </IconButton>
   );

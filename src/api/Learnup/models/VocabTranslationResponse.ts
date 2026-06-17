@@ -3,13 +3,13 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { VocabTransactionType } from './VocabTransactionType';
+import type { VocabTranslationType } from './VocabTranslationType';
 
 export type VocabTranslationResponse = {
     id: number;
     translation: string;
     description: string | null;
-    type: VocabTransactionType;
+    type: VocabTranslationType;
     example: string;
     exampleTranslation: string;
 };

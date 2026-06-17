@@ -9,6 +9,7 @@ import { Scaffold } from '../../shared/components/Scaffold';
 import { GrammarListItem } from './components/GrammarListItem';
 import { StoryListItem } from './components/StoryListItem';
 import { VocabListItem } from './components/VocabListItem';
+import { VocabTestListItem } from './components/VocabTestListItem';
 
 export default function LessonDetailPage () {
   const { id: lessonId } = useParams<{ id: string; }>();
@@ -54,6 +55,8 @@ export default function LessonDetailPage () {
 
 
         <VocabListItem lessonId={lesson.id} vocabs={lesson.vocabs} />
+
+        <VocabTestListItem lessonId={lesson.id} vocabCount={lesson.vocabs.length} />
 
       </Stack>
     </Scaffold>

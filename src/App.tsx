@@ -10,6 +10,7 @@ import LessonDetailPage from "./features/lessons/LessonDetailPage";
 import SettingsPage from "./features/settings/SettingsPage";
 import StoryDetailPage from "./features/stories/StoryDetailPage";
 import LessonVocabsPage from "./features/vocabs/LessonVocabsPage";
+import LessonVocabTestsPage from "./features/vocabs/LessonVocabTestsPage";
 import { BottomNav } from "./shared/components/BottomNav";
 import { PageFade } from "./shared/components/PageFade";
 setupOpenApi();
@@ -32,6 +33,7 @@ function App () {
                 />
                 <Route path="/lessons/:id" element={<LessonDetailPage />} />
                 <Route path="/lessons/:id/vocabs" element={<LessonVocabsPage />} />
+                <Route path="/lessons/:id/vocab-tests" element={<LessonVocabTestsPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
                 <Route path="/" element={<ListCoursesPage />} />
                 <Route path="*" element={<h1>404 - Not Found</h1>} />

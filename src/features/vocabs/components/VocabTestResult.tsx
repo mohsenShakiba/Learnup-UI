@@ -54,7 +54,7 @@ const STYLES = `
   --ep-muted:      #6b7488;
 
   direction:rtl;
-  min-height:100vh;
+  min-height:100%;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -227,33 +227,33 @@ const SCORE_TIERS = [
         min: 90,
         emoji: "🏆",
         label: "trophy",
-        title: <>عالی! <em>نمرهٔ بی‌نظیر!</em></>,
-        sub: "شما در سطح ممتاز هستید. این یک عملکرد فوق‌العاده بود!",
+        title: <>عالی!</>,
+        sub: "واقعا کارت فوق‌العاده بود.",
     },
     {
         min: 75,
         emoji: "🎉",
         label: "confetti",
-        title: <>در آزمون <em>قبول شدید!</em></>,
-        sub: "آفرین! همهٔ بخش‌ها را با موفقیت پشت سر گذاشتید.",
+        title: <>خیلی خوب بود!</>,
+        sub: "آفرین! بیشتر سوالات رو درست جواب دادی.",
     },
     {
         min: 50,
         emoji: "👍",
         label: "thumbs up",
-        title: <>نزدیک بود، <em>تقریباً موفق!</em></>,
-        sub: "پیشرفت خوبی داشتید. یک بار دیگر تلاش کنید تا بهتر شوید.",
+        title: <>بد نبود!</>,
+        sub: "میتونی یک بار دیگر تلاش کنی تا بهتر بشی.",
     },
     {
         min: 0,
         emoji: "💪",
         label: "muscle",
-        title: <>ادامه بده، <em>تمرین لازم است!</em></>,
-        sub: "نگران نباشید! با تمرین بیشتر حتماً پیشرفت خواهید کرد.",
+        title: <>متاسفانه خیلی خوب نبود!</>,
+        sub: "نگران نباش! با تمرین بیشتر حتماً پیشرفت می کنی.",
     },
 ];
 
-function getTier(score: number) {
+function getTier (score: number) {
     return SCORE_TIERS.find((t) => score >= t.min)!;
 }
 

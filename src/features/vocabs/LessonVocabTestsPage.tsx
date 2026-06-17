@@ -1,11 +1,9 @@
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import type { Swiper as SwiperType } from 'swiper';
 import 'swiper/css';
-import 'swiper/css/pagination';
-import { Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { VocabTestsService } from '../../api/Learnup';
 import { AppLoader } from '../../shared/components/AppLoader';
@@ -13,64 +11,6 @@ import { DefaultHeader } from '../../shared/components/DefaultHeader';
 import { ErrorPage } from '../../shared/components/ErrorPage';
 import { VocabTestCard } from './components/VocabTestCard';
 import VocabTestResult from './components/VocabTestResult';
-
-function TestsHeader ({ results }: { results: (boolean | null)[]; }) {
-  const answered = results.filter((r) => r !== null).length;
-  const total = results.length;
-
-  return (
-    <Box>
-      <DefaultHeader header='آزمون لغات'>
-        <Typography variant='caption' sx={{ color: 'text.disabled', fontVariantNumeric: 'tabular-nums' }}>
-          {answered} / {total}
-        </Typography>
-      </DefaultHeader>
-
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          flexWrap: 'wrap',
-          alignItems: 'center',
-          gap: 1,
-          mx: 2,
-          my: 1,
-          px: 2,
-          py: 1,
-          borderRadius: 3,
-          bgcolor: 'action.hover',
-          border: '1px solid',
-          borderColor: 'divider',
-          minHeight: 36,
-        }}
-      >
-        {results.map((result, i) => (
-          <Box
-            key={i}
-            sx={{
-              width: result !== null ? 12 : 8,
-              height: result !== null ? 12 : 8,
-              borderRadius: '50%',
-              bgcolor:
-                result === true
-                  ? 'success.light'
-                  : result === false
-                    ? 'error.main'
-                    : 'action.disabled',
-              boxShadow:
-                result === true
-                  ? '0 0 8px 2px rgba(52, 211, 153, 0.55)'
-                  : result === false
-                    ? '0 0 8px 2px rgba(220, 38, 38, 0.5)'
-                    : 'none',
-              transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
-            }}
-          />
-        ))}
-      </Box>
-    </Box>
-  );
-}
 
 export default function LessonVocabTestsPage () {
   const { id: lessonId } = useParams<{ id: string; }>();
@@ -133,13 +73,13 @@ export default function LessonVocabTestsPage () {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-      <TestsHeader results={results} />
+      <DefaultHeader header='آزمون لغات'>
+      </DefaultHeader>
       <Box sx={{ flex: 1, overflow: 'hidden' }}>
         <Swiper
           style={{ height: '100%' }}
           direction='horizontal'
-          modules={[Pagination]}
-          pagination={{ clickable: true }}
+          allowTouchMove={false}
           slidesPerView={1}
           initialSlide={isAlreadyPassed ? testsQuery.data.length : 0}
           onSwiper={(swiper) => { swiperRef.current = swiper; }}

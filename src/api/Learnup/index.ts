@@ -29,12 +29,9 @@ export type { StoryItemTimestampResponse } from './models/StoryItemTimestampResp
 export type { StoryRequest } from './models/StoryRequest';
 export type { StoryResponse } from './models/StoryResponse';
 export type { TestOptionResponse } from './models/TestOptionResponse';
-export type { VocabDetailResponse } from './models/VocabDetailResponse';
 export { VocabLevel } from './models/VocabLevel';
 export type { VocabResponse } from './models/VocabResponse';
 export type { VocabTestResponse } from './models/VocabTestResponse';
-export type { VocabTranslationResponse } from './models/VocabTranslationResponse';
-export { VocabTranslationType } from './models/VocabTranslationType';
 
 export { CoursesService } from './services/CoursesService';
 export { FilesService } from './services/FilesService';

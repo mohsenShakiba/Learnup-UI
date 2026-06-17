@@ -11,4 +11,5 @@ export enum VocabLevel {
     B2 = 4,
     C1 = 5,
     C2 = 6,
+    UNKNOWN = -1,
 }

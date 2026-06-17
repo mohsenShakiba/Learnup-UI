@@ -21,7 +21,7 @@ const CONFETTI = [
     { x: "82%", c: "var(--ep-green)", dur: "5.3s", delay: "3.6s" },
 ];
 
-export default function ConfettiOverlay() {
+export default function ConfettiOverlay () {
     return (
         <div className="ep-confetti" aria-hidden="true">
             {CONFETTI.map((p, i) => (

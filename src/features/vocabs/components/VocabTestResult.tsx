@@ -11,7 +11,8 @@
  *   <ExamPassedCard score={92} onBack={goHome} onRestart={retakeExam} />
  */
 
-import { Box } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
+import { FancyButton } from "../../../shared/components/FancyButton";
 import ConfettiOverlay from "./ConfettiOverlay";
 
 const PERSIAN_DIGITS = "۰۱۲۳۴۵۶۷۸۹";
@@ -159,37 +160,10 @@ const STYLES = `
   margin-top:26px;
   flex-wrap:wrap;
 }
-.ep-btn{
-  padding:13px 26px;
-  border-radius:999px;
-  font-family:inherit;
-  font-size:1rem;
-  font-weight:600;
-  cursor:pointer;
-  transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
-}
-.ep-btn:active{ transform:translateY(0); }
-.ep-btn:focus-visible{ outline:3px solid var(--ep-gold); outline-offset:3px; }
-
-.ep-btn--primary{
-  border:none;
-  color:var(--ep-cream);
-  background:linear-gradient(180deg, var(--ep-green), var(--ep-green-deep));
-  box-shadow:0 10px 20px -8px rgba(31,122,81,.7);
-}
-.ep-btn--primary:hover{ transform:translateY(-2px); box-shadow:0 16px 26px -10px rgba(31,122,81,.7); }
-
-.ep-btn--ghost{
-  border:1.5px solid var(--ep-cream-edge);
-  background:transparent;
-  color:var(--ep-ink);
-}
-.ep-btn--ghost:hover{ transform:translateY(-2px); background:rgba(0,0,0,.03); }
 
 @media (max-width:420px){
   .ep-card{ padding:58px 22px 32px; }
   .ep-title{ font-size:2.1rem; }
-  .ep-btn{ flex:1 1 auto; }
 }
 
 @media (prefers-reduced-motion:reduce){
@@ -248,32 +222,32 @@ export default function ExamPassedCard ({
             <ConfettiOverlay />
 
             {/* card */}
-            <main className="ep-card" role="status" aria-live="polite">
-                <div className="ep-emoji-wrap">
-                    <div className="ep-emoji" aria-label={tier.label}>{tier.emoji}</div>
-                </div>
+            <Box component="main" className="ep-card" role="status" aria-live="polite">
+                <Box className="ep-emoji-wrap">
+                    <Box className="ep-emoji" aria-label={tier.label}>{tier.emoji}</Box>
+                </Box>
 
-                <h1 className="ep-title">
+                <Typography component="h1" className="ep-title">
                     {tier.title}
-                </h1>
-                <p className="ep-sub">
+                </Typography>
+                <Typography component="p" className="ep-sub">
                     {tier.sub}
-                </p>
+                </Typography>
 
-                <div className="ep-score">
-                    <b>{toPersianDigits(score)}٪</b>
-                    <span>نمره</span>
-                </div>
+                <Box className="ep-score">
+                    <Typography component="b">{toPersianDigits(score)}٪</Typography>
+                    <Typography component="span">نمره</Typography>
+                </Box>
 
-                <div className="ep-actions">
-                    <button type="button" className="ep-btn ep-btn--primary" onClick={onRestart}>
+                <Stack direction="column" className="ep-actions">
+                    <Button variant="outlined" onClick={onRestart}>
                         شروع دوباره آزمون
-                    </button>
-                    <button type="button" className="ep-btn ep-btn--ghost" onClick={onBack}>
+                    </Button>
+                    <FancyButton onClick={onBack}>
                         بازگشت
-                    </button>
-                </div>
-            </main>
+                    </FancyButton>
+                </Stack>
+            </Box>
         </Box>
     );
 }

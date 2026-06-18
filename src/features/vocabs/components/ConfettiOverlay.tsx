@@ -1,3 +1,4 @@
+import { Box } from "@mui/material";
 import { alpha, useTheme } from "@mui/material/styles";
 
 const CONFETTI = [
@@ -23,6 +24,25 @@ const CONFETTI = [
     { x: "82%", c: "var(--confetti-success)", dur: "5.3s", delay: "3.6s" },
 ];
 
+const PIECE_STYLES = `
+@keyframes ep-fall {
+    from { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
+    to   { transform: translateY(112vh) rotate(720deg); opacity: 1; }
+}
+.ep-confetti-piece {
+    position: absolute;
+    top: -12vh;
+    left: var(--x);
+    width: 9px; height: 14px;
+    background: var(--c);
+    opacity: 0;
+    border-radius: 1px;
+    animation: ep-fall var(--dur) linear var(--delay) infinite;
+}
+.ep-confetti-piece:nth-child(3n) { width: 7px; height: 7px; border-radius: 50%; }
+.ep-confetti-piece:nth-child(4n) { width: 12px; height: 5px; }
+`;
+
 export default function ConfettiOverlay () {
     const theme = useTheme();
     const isDark = theme.palette.mode === "dark";
@@ -35,13 +55,25 @@ export default function ConfettiOverlay () {
     } as React.CSSProperties;
 
     return (
-        <div className="ep-confetti" style={colors} aria-hidden="true">
+        <Box
+            aria-hidden="true"
+            style={colors}
+            sx={{
+                position: "absolute",
+                inset: 0,
+                overflow: "hidden",
+                zIndex: 1,
+                pointerEvents: "none",
+            }}
+        >
+            <style>{PIECE_STYLES}</style>
             {CONFETTI.map((p, i) => (
                 <i
                     key={i}
+                    className="ep-confetti-piece"
                     style={{ "--x": p.x, "--c": p.c, "--dur": p.dur, "--delay": p.delay } as React.CSSProperties}
                 />
             ))}
-        </div>
+        </Box>
     );
 }

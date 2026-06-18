@@ -11,29 +11,26 @@ export function ResultCard ({ icon, iconLabel, sx, children, ...props }: ResultC
             {...props}
             sx={[
                 {
+                    border: '1px solid',
+                    borderColor: 'divider',
                     '@keyframes resultCardRise': {
-                        from: { transform: 'translateY(34px) scale(.96)', opacity: 0 },
+                        from: { transform: 'scale(1.10)', opacity: 0 },
                         to: { transform: 'none', opacity: 1 },
                     },
-                    '@keyframes resultCardStamp': {
-                        from: { transform: 'scale(2.4) rotate(-22deg)', opacity: 0 },
-                        to: { transform: 'none', opacity: 1 },
-                    },
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
                     position: 'relative',
                     zIndex: 2,
-                    width: 'min(440px, 100%)',
-                    background: 'linear-gradient(180deg, #fbf7ef, #f7efe1)',
-                    border: '1px solid #f0e7d6',
+                    backdropFilter: 'blur(10px)',
                     borderRadius: '26px',
                     padding: '64px 40px 40px',
                     textAlign: 'center',
-                    boxShadow: '0 40px 80px -30px rgba(0,0,0,.6), 0 2px 0 rgba(255,255,255,.7) inset',
                     animation: 'resultCardRise .8s cubic-bezier(.2,.9,.25,1) both',
                     '&::before': {
                         content: '""',
                         position: 'absolute',
                         inset: '14px',
-                        border: '1.5px dashed rgba(169,120,26,.35)',
+                        border: '1.5px dashed',
+                        borderColor: 'divider',
                         borderRadius: '16px',
                         pointerEvents: 'none',
                     },
@@ -46,24 +43,20 @@ export function ResultCard ({ icon, iconLabel, sx, children, ...props }: ResultC
         >
             {icon && (
                 <Box
-                    aria-label={iconLabel}
                     sx={{
                         position: 'absolute',
-                        top: '-46px',
+                        top: '-50px',
                         left: '50%',
                         transform: 'translateX(-50%)',
-                        width: '92px',
-                        height: '92px',
+                        width: '100px',
+                        height: '100px',
                         display: 'grid',
                         placeItems: 'center',
                         borderRadius: '50%',
-                        background: '#fbf7ef',
-                        boxShadow: '0 0 0 6px #fbf7ef, 0 0 0 8px rgba(169,120,26,.25)',
+                        bgcolor: 'background.paper',
                         fontSize: '3rem',
-                        animation: 'resultCardStamp .7s cubic-bezier(.18,1.4,.4,1) .35s both',
-                        '@media (prefers-reduced-motion: reduce)': {
-                            animation: 'none',
-                        },
+                        border: '1px solid',
+                        borderColor: 'divider'
                     }}
                 >
                     {icon}

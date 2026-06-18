@@ -1,17 +1,15 @@
 import { Box, Card, Typography } from "@mui/material";
-import { useState } from "react";
 import type { StoryItemResponse } from "../../../api/Learnup";
-import { VocabSwipeableDrawer } from "../../vocabs/components/VocabSwipeableDrawer";
 import { useStoryAudio } from "../hooks/useStoryAudio";
 
 type StoryItemProps = {
   item: StoryItemResponse;
 };
 
-export function StoryItem({ item }: StoryItemProps) {
+export function StoryItem ({ item }: StoryItemProps) {
   const { activeItemId, playbackStatus, showTranslation, playItemAudio } =
     useStoryAudio();
-  const [selectedWord, setSelectedWord] = useState<string | null>(null);
+  // const [selectedWord, setSelectedWord] = useState<string | null>(null);
 
   const isActive = playbackStatus === "playing" && activeItemId === item.id;
 
@@ -46,7 +44,7 @@ export function StoryItem({ item }: StoryItemProps) {
                   component="span"
                   onClick={(event) => {
                     event.stopPropagation();
-                    setSelectedWord(word);
+                    // setSelectedWord(word);
                   }}
                   sx={{
                     cursor: "pointer",
@@ -71,13 +69,13 @@ export function StoryItem({ item }: StoryItemProps) {
         </Card>
       </Box>
 
-      <VocabSwipeableDrawer
+      {/* <VocabSwipeableDrawer
         open={selectedWord != null}
         selectedWord={selectedWord}
         onClose={() => setSelectedWord(null)}
         hideTriggerList
         vocabs={selectedWord ? [{ id: 0, word: selectedWord }] : []}
-      />
+      /> */}
     </>
   );
 }

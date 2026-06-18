@@ -1,6 +1,6 @@
 import { Box, Stack } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import type { Swiper as SwiperType } from 'swiper';
 import 'swiper/css';
@@ -35,6 +35,16 @@ export default function LessonVocabTestsPage () {
     }
   }, []);
 
+  const resetMutation = useMutation({
+    mutationFn: (testIds: number[]) =>
+      Promise.all(testIds.map((id) => VocabTestsService.resetVocabTestResult(id))),
+    onSuccess: () => {
+      void testsQuery.refetch();
+      setAnswers({});
+      swiperRef.current?.slideTo(0);
+    },
+  });
+
   const results = useMemo<(boolean | null)[]>(() => {
     return (testsQuery.data ?? []).map((test) =>
       answers[test.id] !== undefined ? answers[test.id] : test.isCorrect ?? null
@@ -46,22 +56,18 @@ export default function LessonVocabTestsPage () {
     [testsQuery.data],
   );
 
-  const allAnsweredInSession = useMemo(
-    () => (testsQuery.data ?? []).length > 0 && (testsQuery.data ?? []).every((t) => answers[t.id] !== undefined),
-    [testsQuery.data, answers],
-  );
-
   const score = results.length > 0
     ? Math.round((results.filter((r) => r === true).length / results.length) * 100)
     : 0;
 
-  useEffect(() => {
-    if (allAnsweredInSession && swiperRef.current) {
-      setTimeout(() => {
-        swiperRef.current?.slideTo(results.length);
-      }, 600);
-    }
-  }, [allAnsweredInSession, results.length]);
+  const handleBack = () => {
+    navigate(-1);
+  };
+
+  const handleRestart = () => {
+    const testIds = (testsQuery.data ?? []).map((t) => t.id);
+    resetMutation.mutate(testIds);
+  };
 
   if (testsQuery.isLoading) {
     return <AppLoader />;
@@ -77,24 +83,37 @@ export default function LessonVocabTestsPage () {
       <DefaultHeader header='آزمون لغات' />
 
       <Box sx={{ flex: 1, overflow: 'hidden' }}>
-        <Swiper
-          style={{ height: '100%' }}
-          direction='horizontal'
-          allowTouchMove={false}
-          slidesPerView={1}
-          initialSlide={isAlreadyPassed ? testsQuery.data.length : 0}
-          onSwiper={(swiper) => { swiperRef.current = swiper; }}
-        >
-          {testsQuery.data.map((test) => (
-            <SwiperSlide key={test.id} style={{ height: '100%' }}>
-              <VocabTestCard test={test} onAnswer={handleAnswer} />
-            </SwiperSlide>
-          ))}
-          <SwiperSlide style={{ height: '100%' }}>
-            <VocabTestResult score={score} onBack={() => navigate(-1)} onRestart={() => { setAnswers({}); swiperRef.current?.slideTo(0); }} />
-          </SwiperSlide>
-        </Swiper>
+
+        {
+          !isAlreadyPassed &&
+          <Swiper
+            style={{ height: '100%' }}
+            direction='horizontal'
+            allowTouchMove={false}
+            slidesPerView={1}
+            initialSlide={isAlreadyPassed ? testsQuery.data.length : 0}
+            onSwiper={(swiper) => { swiperRef.current = swiper; }}
+          >
+            {/* questions */}
+            {testsQuery.data.map((test) => (
+              <SwiperSlide key={test.id} style={{ height: '100%' }}>
+                <VocabTestCard test={test} onAnswer={handleAnswer} />
+              </SwiperSlide>
+            ))}
+
+          </Swiper>
+        }
+
+        {
+          isAlreadyPassed &&
+          <VocabTestResult
+            isLoading={resetMutation.isPending}
+            score={score}
+            onBack={handleBack}
+            onRestart={handleRestart} />
+        }
+
       </Box>
-    </Stack>
+    </Stack >
   );
 }

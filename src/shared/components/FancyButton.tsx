@@ -31,7 +31,7 @@ export function FancyButton ({ sx, children, ...props }: ButtonProps) {
           position: 'relative',
           overflow: 'hidden',
           color: theme.palette.primary.contrastText,
-          background: `linear-gradient(90deg, #2578b0, #2e63e8)`,
+          background: `linear-gradient(0deg, #778873, #8db384)`,
           backgroundSize: '200% 200%',
           animation: 'fancyButtonGradient 5s ease infinite',
           transition: theme.transitions.create(['box-shadow', 'transform'], {
@@ -48,15 +48,7 @@ export function FancyButton ({ sx, children, ...props }: ButtonProps) {
             pointerEvents: 'none',
             background:
               'linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent)',
-            animation: 'fancyButtonShine 2.8s ease-in-out infinite',
-          },
-          '&:hover': {
-            boxShadow: '0 6px 26px rgba(96, 165, 250, 0.55)',
-            transform: 'translateY(-1px)',
-          },
-          '&:active': {
-            transform: 'translateY(1px) scale(0.98)',
-            boxShadow: '0 2px 10px rgba(96, 165, 250, 0.35)',
+            animation: 'fancyButtonShine 1.5s ease-in-out infinite',
           },
           '@media (prefers-reduced-motion: reduce)': {
             animation: 'none',

@@ -50,4 +50,21 @@ requestBody?: AnswerTestRequest,
         });
     }
 
+    /**
+     * @param id 
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static resetGrammarTestResult(
+id: number,
+): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/Mobile/GrammarTests/{id}/reset',
+            path: {
+                'id': id,
+            },
+        });
+    }
+
 }

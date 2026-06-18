@@ -51,18 +51,18 @@ requestBody?: AnswerTestRequest,
     }
 
     /**
-     * @param id 
+     * @param lessonId 
      * @returns any OK
      * @throws ApiError
      */
     public static resetVocabTestResult(
-id: number,
+lessonId: number,
 ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/Mobile/VocabTests/{id}/reset',
+            url: '/Mobile/VocabTests/{lessonId}/reset',
             path: {
-                'id': id,
+                'lessonId': lessonId,
             },
         });
     }

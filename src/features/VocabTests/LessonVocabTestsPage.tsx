@@ -1,6 +1,6 @@
-import { Box, Stack } from '@mui/material';
+import { Box, Button, LinearProgress, Stack, Typography } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import type { Swiper as SwiperType } from 'swiper';
 import 'swiper/css';
@@ -24,23 +24,29 @@ export default function LessonVocabTestsPage () {
   });
 
   const [answers, setAnswers] = useState<Record<number, boolean>>({});
+  const [currentSlide, setCurrentSlide] = useState(0);
   const swiperRef = useRef<SwiperType | null>(null);
+  const slideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const initialSlide = useMemo(() => {
+    if (!testsQuery.data) return 0;
+    const firstUnanswered = testsQuery.data.findIndex((t) => t.isCorrect === null);
+    return firstUnanswered === -1 ? 0 : firstUnanswered;
+  }, [testsQuery.data]);
 
   const handleAnswer = useCallback((testId: number, isCorrect: boolean) => {
     setAnswers((prev) => ({ ...prev, [testId]: isCorrect }));
-    if (isCorrect) {
-      setTimeout(() => {
-        swiperRef.current?.slideNext();
-      }, 1000);
-    }
+    slideTimerRef.current = setTimeout(() => {
+      swiperRef.current?.slideNext();
+    }, 500);
   }, []);
 
   const resetMutation = useMutation({
-    mutationFn: (testIds: number[]) =>
-      Promise.all(testIds.map((id) => VocabTestsService.resetVocabTestResult(id))),
+    mutationFn: (lessonId: number) => VocabTestsService.resetVocabTestResult(lessonId),
     onSuccess: () => {
       void testsQuery.refetch();
       setAnswers({});
+      setCurrentSlide(0);
       swiperRef.current?.slideTo(0);
     },
   });
@@ -56,17 +62,42 @@ export default function LessonVocabTestsPage () {
     [testsQuery.data],
   );
 
+  // Refetch when all tests answered in this session to transition to results screen
+  useEffect(() => {
+    if (!testsQuery.data || testsQuery.data.length === 0 || isAlreadyPassed) return;
+    const allAnswered = testsQuery.data.every(
+      (t) => answers[t.id] !== undefined || t.isCorrect !== null
+    );
+    if (allAnswered) {
+      void testsQuery.refetch();
+    }
+  }, [answers, testsQuery, isAlreadyPassed]);
+
   const score = results.length > 0
     ? Math.round((results.filter((r) => r === true).length / results.length) * 100)
     : 0;
+
+  const totalTests = testsQuery.data?.length ?? 0;
+  const currentTest = testsQuery.data?.[currentSlide];
+  const isCurrentAnswered = currentTest
+    ? answers[currentTest.id] !== undefined || currentTest.isCorrect !== null
+    : false;
+  const isLastSlide = currentSlide === totalTests - 1;
 
   const handleBack = () => {
     navigate(-1);
   };
 
   const handleRestart = () => {
-    const testIds = (testsQuery.data ?? []).map((t) => t.id);
-    resetMutation.mutate(testIds);
+    resetMutation.mutate(lessonIdNumber);
+  };
+
+  const handleNext = () => {
+    if (slideTimerRef.current) {
+      clearTimeout(slideTimerRef.current);
+      slideTimerRef.current = null;
+    }
+    swiperRef.current?.slideNext();
   };
 
   if (testsQuery.isLoading) {
@@ -82,38 +113,65 @@ export default function LessonVocabTestsPage () {
 
       <DefaultHeader header='آزمون لغات' />
 
-      <Box sx={{ flex: 1, overflow: 'hidden' }}>
+      <Box sx={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
 
-        {
-          !isAlreadyPassed &&
-          <Swiper
-            style={{ height: '100%' }}
-            direction='horizontal'
-            allowTouchMove={false}
-            slidesPerView={1}
-            initialSlide={isAlreadyPassed ? testsQuery.data.length : 0}
-            onSwiper={(swiper) => { swiperRef.current = swiper; }}
-          >
-            {/* questions */}
-            {testsQuery.data.map((test) => (
-              <SwiperSlide key={test.id} style={{ height: '100%' }}>
-                <VocabTestCard test={test} onAnswer={handleAnswer} />
-              </SwiperSlide>
-            ))}
+        {!isAlreadyPassed && (
+          <>
+            <Box sx={{ flex: 1, overflow: 'hidden' }}>
+              <Swiper
+                style={{ height: '100%' }}
+                direction='horizontal'
+                allowTouchMove={false}
+                slidesPerView={1}
+                initialSlide={initialSlide}
+                onSwiper={(swiper) => {
+                  swiperRef.current = swiper;
+                  setCurrentSlide(swiper.activeIndex);
+                }}
+                onSlideChange={(swiper) => setCurrentSlide(swiper.activeIndex)}
+              >
+                {testsQuery.data.map((test) => (
+                  <SwiperSlide key={test.id} style={{ height: '100%' }}>
+                    <VocabTestCard test={test} onAnswer={handleAnswer} />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </Box>
 
-          </Swiper>
-        }
+            <Box sx={{ p: 2, borderTop: '1px solid', borderColor: 'divider' }}>
+              <LinearProgress
+                variant="determinate"
+                value={totalTests > 0 ? ((currentSlide + 1) / totalTests) * 100 : 0}
+                sx={{ mb: 1.5, borderRadius: 1 }}
+              />
+              <Stack direction="row" sx={{ direction: 'rtl' }}>
+                <Button
+                  variant="contained"
+                  size="small"
+                  disabled={!isCurrentAnswered || isLastSlide}
+                  onClick={handleNext}
+                >
+                  بعدی
+                </Button>
+                <Box sx={{ flex: 1 }} />
+                <Typography sx={{ direction: 'ltr', color: 'text.secondary' }} variant="caption">
+                  سوال {currentSlide + 1} از {totalTests}
+                </Typography>
+              </Stack>
+            </Box>
+          </>
+        )}
 
-        {
-          isAlreadyPassed &&
+        {isAlreadyPassed && (
           <VocabTestResult
             isLoading={resetMutation.isPending}
             score={score}
             onBack={handleBack}
-            onRestart={handleRestart} />
-        }
+            onRestart={handleRestart}
+          />
+        )}
 
       </Box>
-    </Stack >
+    </Stack>
   );
 }

@@ -23,9 +23,9 @@ export const createLearnupTheme = (mode: PaletteMode) => {
         contrastText: '#ffffff',
       },
       success: {
-        light: '#34d399',
-        main: '#059669',
-        dark: '#047857',
+        light: '#587a50',
+        main: '#587a50',
+        dark: '#587a50',
       },
       warning: {
         main: '#d97706',
@@ -39,7 +39,7 @@ export const createLearnupTheme = (mode: PaletteMode) => {
       },
       text: {
         primary: mode === 'dark' ? '#f9fafb' : '#111827',
-        secondary: mode === 'dark' ? 'rgba(255,255,255,0.6)' : '#4b5563',
+        secondary: mode === 'dark' ? '#747d78' : '#747d78',
       },
       divider: dividerColor,
     },

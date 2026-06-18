@@ -52,7 +52,7 @@ export default function ExamPassedCard ({
   const tier = getTier(score);
 
   return (
-    <Stack sx={{ height: '100%', alignItems: 'center', justifyContent: 'center' }}>
+    <Stack sx={{ height: '100%', alignItems: 'stretch', m: 4, justifyContent: 'center' }}>
       <ConfettiOverlay />
 
       <ResultCard sx={{ position: 'relative' }} icon={tier.emoji} iconLabel={tier.label}>

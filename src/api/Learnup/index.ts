@@ -33,6 +33,7 @@ export { VocabLevel } from './models/VocabLevel';
 export type { VocabResponse } from './models/VocabResponse';
 export { VocabStatus } from './models/VocabStatus';
 export type { VocabTestResponse } from './models/VocabTestResponse';
+export { VocabTestType } from './models/VocabTestType';
 export { VocabType } from './models/VocabType';
 
 export { CoursesService } from './services/CoursesService';

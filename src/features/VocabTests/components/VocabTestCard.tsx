@@ -1,8 +1,14 @@
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Divider, Stack, Typography } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
-import { AnswerTestResponse, VocabTestsService } from '../../../api/Learnup';
+import { AnswerTestResponse, VocabTestsService, VocabTestType } from '../../../api/Learnup';
 import type { VocabTestResponse } from '../../../api/Learnup/models/VocabTestResponse';
+
+const typeMessages: Record<VocabTestType, string> = {
+  [VocabTestType.FIND_THE_RIGHT_WORD]: 'کلمه مناسب را برای لغت زیر پیدا کنید',
+  [VocabTestType.FIND_THE_RIGHT_TRANSLATION]: 'ترجمه درست را برای کلمه زیر پیدا کنید',
+  [VocabTestType.FILL_IN_THE_BLANKS]: 'جای خالی را پر کنید',
+};
 
 type Props = {
   test: VocabTestResponse;
@@ -51,51 +57,48 @@ export function VocabTestCard ({ test, onAnswer }: Props) {
   }
 
   return (
-    <Box sx={{ p: 2, height: '100%', boxSizing: 'border-box', overflow: 'auto' }}>
-      <Stack spacing={2}>
+    <Box sx={{ p: 2, m: 2, height: '100%', boxSizing: 'border-box', overflow: 'auto', }}>
+      <Stack spacing={2} sx={{ alignItems: 'center' }}>
+
+        <Typography variant="caption" sx={{ direction: 'rtl', color: "text.secondary" }}>
+          {typeMessages[test.type]}
+        </Typography>
         <Typography variant="body1" sx={{ fontWeight: '500', direction: 'rtl' }}>
           {test.question}
         </Typography>
 
-        <Box sx={{ flex: 1 }} />
+        <Divider sx={{ width: '100%' }} />
 
-        <Stack spacing={1}>
-          {test.options.map((option) => (
-            <Box
-              key={option.id}
-              onClick={() => handleSelect(option.id)}
-              sx={{
-                px: 2,
-                py: 1.5,
-                borderRadius: 2,
-                border: '1px solid',
-                borderColor: 'divider',
-                bgcolor: getOptionColor(option.id),
-                cursor: answered ? 'default' : 'pointer',
-                transition: 'background-color 0.2s, border-color 0.2s',
-                '&:hover': !answered
-                  ? { borderColor: 'primary.main', bgcolor: 'action.hover' }
-                  : undefined,
-              }}
-            >
-              <Typography
-                variant="body2"
-                sx={{ direction: 'rtl', color: getOptionTextColor(option.id) }}
-              >
-                {option.text}
-              </Typography>
-            </Box>
-          ))}
-        </Stack>
+        {test.options.map((option) => (
+          <Box
 
-        {answered && (
-          <Typography
-            variant="caption"
-            sx={{ color: result.isCorrect ? 'success.main' : 'error.main', direction: 'rtl' }}
+            key={option.id}
+            onClick={() => handleSelect(option.id)}
+            sx={{
+              width: '100%',
+              textAlign: 'center',
+              px: 2,
+              py: 1.5,
+              borderRadius: 2,
+              border: '1px solid',
+              borderColor: 'divider',
+              bgcolor: getOptionColor(option.id),
+              cursor: answered ? 'default' : 'pointer',
+              transition: 'background-color 0.2s, border-color 0.2s',
+              '&:hover': !answered
+                ? { borderColor: 'primary.main', bgcolor: 'action.hover' }
+                : undefined,
+            }}
           >
-            {result.isCorrect ? 'آفرین! پاسخ درست است.' : 'پاسخ اشتباه است.'}
-          </Typography>
-        )}
+            <Typography
+              variant="body2"
+              sx={{ direction: 'rtl', color: getOptionTextColor(option.id) }}
+            >
+              {option.text}
+            </Typography>
+          </Box>
+        ))}
+
       </Stack>
     </Box>
   );

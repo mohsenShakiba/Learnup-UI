@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { VocabsService } from '../../api/Learnup';
 import { AppLoader } from '../../shared/components/AppLoader';
 import { DefaultHeader } from '../../shared/components/DefaultHeader';
+import { RadarPulse } from '../../shared/components/RadarPulse';
 import { Scaffold } from '../../shared/components/Scaffold';
 import { VocabListItem } from './components/VocabListItem';
 
@@ -24,7 +25,9 @@ export default function VocabSearchPage () {
 
   return (
     <Scaffold header={<DefaultHeader header='جستجوی لغت' />}>
-      <Stack spacing={2}>
+
+      <Stack spacing={2} >
+
         <TextField
           fullWidth
           placeholder='جستجوی کلمات و لغات'
@@ -42,6 +45,8 @@ export default function VocabSearchPage () {
           }}
         />
 
+        <RadarPulse size={300} offset={0} />
+
         {input.length === 0 && (
           <Card sx={{ p: 3, textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
             <Box
@@ -53,6 +58,8 @@ export default function VocabSearchPage () {
               }}
             >
             </Box>
+
+
             <Typography variant="body1" sx={{ fontWeight: 500, position: 'relative' }}>
               جستجوی کلمات
             </Typography>

@@ -11,6 +11,7 @@ import SettingsPage from "./features/settings/SettingsPage";
 import StoryDetailPage from "./features/stories/StoryDetailPage";
 import LessonVocabsPage from "./features/vocabs/LessonVocabsPage";
 import VocabSearchPage from "./features/vocabs/VocabSearchPage";
+import LessonGrammarTestsPage from "./features/GrammarTests/LessonGrammarTestsPage";
 import LessonVocabTestsPage from "./features/VocabTests/LessonVocabTestsPage";
 import { BottomNav } from "./shared/components/BottomNav";
 import { PageFade } from "./shared/components/PageFade";
@@ -35,6 +36,7 @@ function App () {
                 <Route path="/lessons/:id" element={<LessonDetailPage />} />
                 <Route path="/lessons/:id/vocabs" element={<LessonVocabsPage />} />
                 <Route path="/lessons/:id/vocab-tests" element={<LessonVocabTestsPage />} />
+                <Route path="/lessons/:id/grammar-tests" element={<LessonGrammarTestsPage />} />
                 <Route path="/vocab" element={<VocabSearchPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
                 <Route path="/" element={<ListCoursesPage />} />

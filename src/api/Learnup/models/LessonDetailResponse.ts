@@ -4,6 +4,7 @@
 /* eslint-disable */
 
 import type { GrammarResponse } from './GrammarResponse';
+import type { LessonVocabTestResponse } from './LessonVocabTestResponse';
 import type { StoryResponse } from './StoryResponse';
 import type { VocabResponse } from './VocabResponse';
 
@@ -15,4 +16,5 @@ export type LessonDetailResponse = {
     stories: Array<StoryResponse>;
     grammars: Array<GrammarResponse>;
     vocabs: Array<VocabResponse>;
+    vocabTest: LessonVocabTestResponse;
 };

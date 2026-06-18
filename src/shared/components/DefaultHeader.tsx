@@ -13,7 +13,7 @@ export function DefaultHeader ({ header, subtitle, children }: DefaultHeaderProp
   const navigate = useNavigate();
 
   return (
-    <Stack direction='row' spacing={1} sx={{
+    <Box sx={{
       alignItems: 'center',
       position: 'sticky', top: 0, left: 0, right: 0,
       zIndex: 1,
@@ -23,6 +23,7 @@ export function DefaultHeader ({ header, subtitle, children }: DefaultHeaderProp
       px: 2,
       bgcolor: 'background.default'
     }}>
+    <Stack direction='row' spacing={1} sx={{maxWidth: '500px', margin: '0 auto'}} >
       <IconButton onClick={() => navigate(-1)}>
         <Icon sx={{ opacity: 0.5 }}>arrow_forward</Icon>
       </IconButton>
@@ -37,5 +38,6 @@ export function DefaultHeader ({ header, subtitle, children }: DefaultHeaderProp
       <Box sx={{ flex: 1 }}></Box>
       {children}
     </Stack>
+    </Box>
   );
 }

@@ -9,8 +9,9 @@ import { AppLoader } from '../../shared/components/AppLoader';
 import { DotGrid } from '../../shared/components/DotGrid';
 import { ErrorPage } from '../../shared/components/ErrorPage';
 import { CourseListItem } from './components/CourseListItem';
+import { Scaffold } from '../../shared/components/Scaffold';
 
-export default function ListCoursesPage () {
+export default function ListCoursesPage() {
   const coursesQuery = useQuery({
     queryKey: ['courses', 'language'],
     queryFn: () => CoursesService.getCoursesByLanguageId(1),
@@ -27,8 +28,7 @@ export default function ListCoursesPage () {
   const courses = coursesQuery.data ?? [];
 
   return (
-    <Box >
-      <DotGrid />
+    <Scaffold disablePadding>
       <Swiper
         direction='horizontal'
         modules={[Pagination]}
@@ -41,7 +41,7 @@ export default function ListCoursesPage () {
           </SwiperSlide>
         ))}
       </Swiper>
-    </Box>
+    </Scaffold>
 
   );
 }

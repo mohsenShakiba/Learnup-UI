@@ -6,6 +6,7 @@ import {
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const tabs = [
+  { label: 'Dashboard', icon: 'dashboard', path: '/dashboard' },
   { label: 'Courses', icon: 'school', path: '/' },
   { label: 'Vocab', icon: 'menu_book', path: '/vocab' },
   { label: 'Chat', icon: 'chat', path: '/chat' },
@@ -14,7 +15,7 @@ const tabs = [
 
 const hiddenPaths = ['/stories/'];
 
-export function BottomNav () {
+export function BottomNav() {
   const location = useLocation();
   const navigate = useNavigate();
 

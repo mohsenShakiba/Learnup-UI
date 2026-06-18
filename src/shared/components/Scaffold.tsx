@@ -5,34 +5,32 @@ import { DotGrid } from './DotGrid';
 type ScaffoldProps = {
   header?: ReactNode;
   children: ReactNode;
-  maxWidth?: 'sm' | 'md';
+  disablePadding?: boolean
 };
 
-export function Scaffold ({ header, children, maxWidth }: ScaffoldProps) {
+export function Scaffold({ header, children, disablePadding }: ScaffoldProps) {
 
   return (
-    <Container maxWidth={maxWidth} sx={{ p: 0 }}>
+    <Box sx={{ p: 0, position: 'relative', minHeight: 'calc(100vh - 56px)' }}>
 
       {header && (
         <>
           {header}
         </>
       )}
-
+      <DotGrid />
       <Box
         component="main"
         sx={{
-          width: '100%',
+          maxWidth: '500px',
           mx: 'auto',
-          py: 2,
-          px: 2,
-          paddingBottom: 10,
+          py: disablePadding ? 0 : 2,
+          px: disablePadding ? 0 : 2,
           boxSizing: 'border-box',
         }}
       >
-        <DotGrid />
         <Box>{children}</Box>
       </Box>
-    </Container>
+    </Box>
   );
 }

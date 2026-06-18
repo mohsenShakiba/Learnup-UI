@@ -7,6 +7,7 @@ import { DefaultHeader } from '../../shared/components/DefaultHeader';
 import { ErrorPage } from '../../shared/components/ErrorPage';
 import { Scaffold } from '../../shared/components/Scaffold';
 import { GrammarListItem } from './components/GrammarListItem';
+import { GrammarTestListItem } from './components/GrammarTestListItem';
 import { StoryListItem } from './components/StoryListItem';
 import { VocabListItem } from './components/VocabListItem';
 import { VocabTestListItem } from './components/VocabTestListItem';
@@ -57,6 +58,9 @@ export default function LessonDetailPage () {
         <VocabListItem lessonId={lesson.id} vocabs={lesson.vocabs} />
 
         <VocabTestListItem lessonId={lesson.id} vocabCount={lesson.vocabs.length} vocabTest={lesson.vocabTest} />
+
+        <GrammarTestListItem lessonId={lesson.id} grammarCount={lesson.grammars.length} />
+
 
       </Stack>
     </Scaffold>

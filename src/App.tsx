@@ -17,7 +17,7 @@ import { BottomNav } from "./shared/components/BottomNav";
 import { PageFade } from "./shared/components/PageFade";
 setupOpenApi();
 
-function App () {
+function App() {
   return (
     <BrowserRouter>
       <Stack sx={{ height: '100dvh', overflow: 'hidden', }}>

@@ -1,4 +1,5 @@
-import { Box, Card, Icon, InputAdornment, Stack, TextField, Typography } from '@mui/material';
+import { Card, Icon, InputAdornment, Stack, TextField, Typography } from '@mui/material';
+import { PixelSearchIcon } from '../../shared/components/PixelSearchIcon';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { VocabsService } from '../../api/Learnup';
@@ -24,7 +25,7 @@ export default function VocabSearchPage () {
   });
 
   return (
-    <Scaffold header={<DefaultHeader header='جستجوی لغت' />}>
+    <Scaffold >
 
       <Stack spacing={2} >
 
@@ -48,24 +49,16 @@ export default function VocabSearchPage () {
         <RadarPulse size={300} offset={0} />
 
         {input.length === 0 && (
-          <Card sx={{ p: 3, textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
-            <Box
-              sx={{
-                position: 'absolute',
-                inset: 0,
-                pointerEvents: 'none',
-                overflow: 'hidden',
-              }}
-            >
-            </Box>
-
-
-            <Typography variant="body1" sx={{ fontWeight: 500, position: 'relative' }}>
-              جستجوی کلمات
-            </Typography>
-            <Typography variant="caption" sx={{ color: 'text.secondary', position: 'relative' }}>
-              می‌توانید لغات را به فارسی یا انگلیسی جستجو کنید
-            </Typography>
+          <Card sx={{ p: 3, textAlign: 'center' }}>
+            <Stack sx={{ alignItems: 'center' }} spacing={1}>
+              <PixelSearchIcon size={72} />
+              <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                جستجوی کلمات
+              </Typography>
+              <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                می‌توانید لغات را به فارسی یا انگلیسی جستجو کنید
+              </Typography>
+            </Stack>
           </Card>
         )}
 

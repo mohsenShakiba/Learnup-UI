@@ -9,7 +9,7 @@ import { Scaffold } from '../../shared/components/Scaffold';
 import { WaveProgress } from '../../shared/components/WaveProgress';
 import { LessonListItem } from './components/LessonListItem';
 
-export default function CourseDetailPage () {
+export default function CourseDetailPage() {
 
   const { id: courseId } = useParams<{ id: string; }>();
   const courseIdNumber = Number(courseId);
@@ -42,7 +42,7 @@ export default function CourseDetailPage () {
   const lessons = lessonsQuery.data ?? [];
 
   return (
-    <Scaffold maxWidth='sm'
+    <Scaffold
       header={
         <DefaultHeader header='لیست دروس'
           subtitle='12 درس'

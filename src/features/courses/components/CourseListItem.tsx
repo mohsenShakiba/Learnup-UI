@@ -11,7 +11,7 @@ type CourseListItemProps = {
   sx?: SxProps<Theme>;
 };
 
-export function CourseListItem ({ course }: CourseListItemProps) {
+export function CourseListItem({ course }: CourseListItemProps) {
 
   const navigate = useNavigate();
 
@@ -27,18 +27,14 @@ export function CourseListItem ({ course }: CourseListItemProps) {
   return (
     <Box sx={{
       p: 2,
-      mb: 2.5,
+      display: 'flex',
+      height: 'calc(100vh - 90px)',
     }}>
-
-
       <Paper
         sx={
           {
             borderRadius: 2,
-            display: 'flex',
             flexDirection: 'column',
-            height: 'calc(100dvh - 110px)',
-            p: 0,
             overflow: 'hidden'
           }
         }

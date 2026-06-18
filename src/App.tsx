@@ -10,7 +10,7 @@ import LessonDetailPage from "./features/lessons/LessonDetailPage";
 import SettingsPage from "./features/settings/SettingsPage";
 import StoryDetailPage from "./features/stories/StoryDetailPage";
 import LessonVocabsPage from "./features/vocabs/LessonVocabsPage";
-import LessonVocabTestsPage from "./features/vocabs/LessonVocabTestsPage";
+import LessonVocabTestsPage from "./features/VocabTests/LessonVocabTestsPage";
 import { BottomNav } from "./shared/components/BottomNav";
 import { PageFade } from "./shared/components/PageFade";
 setupOpenApi();

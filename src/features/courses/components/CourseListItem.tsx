@@ -129,7 +129,7 @@ export function CourseListItem ({ course }: CourseListItemProps) {
           </Stack>
 
           <FancyButton
-            sx={{ py: 1.5, borderRadius: 99 }}
+            sx={{ borderRadius: 99 }}
             fullWidth
             onClick={handleNavigateToCourseDetail}
             variant='contained' >

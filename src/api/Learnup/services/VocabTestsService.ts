@@ -50,4 +50,21 @@ requestBody?: AnswerTestRequest,
         });
     }
 
+    /**
+     * @param lessonId 
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static resetVocabTestResult(
+lessonId: number,
+): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/Mobile/VocabTests/{lessonId}/reset',
+            path: {
+                'lessonId': lessonId,
+            },
+        });
+    }
+
 }

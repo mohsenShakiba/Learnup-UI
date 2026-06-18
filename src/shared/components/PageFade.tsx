@@ -12,12 +12,16 @@ export function PageFade ({ children }: PageFadeProps) {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    if (location.key !== displayedLocation.key) setVisible(false);
+    if (location.key !== displayedLocation.key) {
+      const id = setTimeout(() => setVisible(false), 0);
+      return () => clearTimeout(id);
+    }
   }, [location, displayedLocation]);
 
   return (
     <Box
       sx={{
+        height: '100%',
         minHeight: '100%',
         opacity: visible ? 1 : 0,
         transition: 'opacity 200ms ease',

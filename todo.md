@@ -1,0 +1,1 @@
+[] in lesson detail page, if the test has been passed, show the test score and show a completed badge

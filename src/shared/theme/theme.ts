@@ -3,17 +3,17 @@ import { createTheme } from '@mui/material';
 
 
 export const createLearnupTheme = (mode: PaletteMode) => {
-  const sufaceBackground = mode === 'dark' ? 'rgba(23, 20, 25)' : 'rgba(233, 230, 235)';
-  const paperBackgorund = mode === 'dark' ? 'rgba(25, 23, 29)' : 'rgba(235, 233, 239)';
-  const dividerColor = mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+  const sufaceBackground = mode === 'dark' ? 'rgba(23, 20, 25)' : 'rgba(250, 244, 235)';
+  const paperBackgorund = mode === 'dark' ? 'rgba(25, 23, 29)' : 'rgba(247, 239, 225)';
+  const dividerColor = mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(230, 226, 218)';
   return createTheme({
     direction: 'rtl',
     palette: {
       mode,
       primary: {
-        main: '#60a5fa',
-        light: '#60a5fa',
-        dark: '#60a5fa',
+        main: '#778873',
+        light: '#A1BC98',
+        dark: '#778873',
         contrastText: '#ffffff',
       },
       secondary: {
@@ -23,9 +23,9 @@ export const createLearnupTheme = (mode: PaletteMode) => {
         contrastText: '#ffffff',
       },
       success: {
-        light: '#34d399',
-        main: '#059669',
-        dark: '#047857',
+        light: '#587a50',
+        main: '#587a50',
+        dark: '#587a50',
       },
       warning: {
         main: '#d97706',
@@ -39,7 +39,7 @@ export const createLearnupTheme = (mode: PaletteMode) => {
       },
       text: {
         primary: mode === 'dark' ? '#f9fafb' : '#111827',
-        secondary: mode === 'dark' ? 'rgba(255,255,255,0.6)' : '#4b5563',
+        secondary: mode === 'dark' ? '#747d78' : '#747d78',
       },
       divider: dividerColor,
     },

@@ -23,6 +23,7 @@ export type { LeitnerBoxItemResponse } from './models/LeitnerBoxItemResponse';
 export type { LeitnerBoxResponse } from './models/LeitnerBoxResponse';
 export type { LessonDetailResponse } from './models/LessonDetailResponse';
 export type { LessonResponse } from './models/LessonResponse';
+export type { LessonVocabTestResponse } from './models/LessonVocabTestResponse';
 export { Level } from './models/Level';
 export type { StoryItemRequest } from './models/StoryItemRequest';
 export type { StoryItemResponse } from './models/StoryItemResponse';
@@ -32,7 +33,10 @@ export type { StoryResponse } from './models/StoryResponse';
 export type { TestOptionResponse } from './models/TestOptionResponse';
 export { VocabLevel } from './models/VocabLevel';
 export type { VocabResponse } from './models/VocabResponse';
+export { VocabStatus } from './models/VocabStatus';
 export type { VocabTestResponse } from './models/VocabTestResponse';
+export { VocabTestType } from './models/VocabTestType';
+export { VocabType } from './models/VocabType';
 
 export { CoursesService } from './services/CoursesService';
 export { FilesService } from './services/FilesService';
@@ -44,3 +48,4 @@ export { LessonsService } from './services/LessonsService';
 export { StoriesService } from './services/StoriesService';
 export { VocabsService } from './services/VocabsService';
 export { VocabTestsService } from './services/VocabTestsService';
+

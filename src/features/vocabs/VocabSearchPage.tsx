@@ -1,4 +1,4 @@
-import { Card, Icon, InputAdornment, Stack, TextField, Typography } from '@mui/material';
+import { Box, Card, Icon, InputAdornment, Stack, TextField, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { VocabsService } from '../../api/Learnup';
@@ -43,10 +43,20 @@ export default function VocabSearchPage () {
         />
 
         {input.length === 0 && (
-          <Card sx={{ p: 3, textAlign: 'center' }}>
-            <Icon sx={{ fontSize: 40, color: 'text.secondary', mb: 1 }}>search</Icon>
-            <Typography variant="body1" sx={{ fontWeight: 500 }}>جستجوی لغت</Typography>
-            <Typography variant="body2" color="text.secondary">
+          <Card sx={{ p: 3, textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+            <Box
+              sx={{
+                position: 'absolute',
+                inset: 0,
+                pointerEvents: 'none',
+                overflow: 'hidden',
+              }}
+            >
+            </Box>
+            <Typography variant="body1" sx={{ fontWeight: 500, position: 'relative' }}>
+              جستجوی کلمات
+            </Typography>
+            <Typography variant="caption" sx={{ color: 'text.secondary', position: 'relative' }}>
               می‌توانید لغات را به فارسی یا انگلیسی جستجو کنید
             </Typography>
           </Card>

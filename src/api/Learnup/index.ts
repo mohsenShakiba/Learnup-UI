@@ -9,6 +9,8 @@ export type { OpenAPIConfig } from './core/OpenAPI';
 
 export type { AnswerTestRequest } from './models/AnswerTestRequest';
 export type { AnswerTestResponse } from './models/AnswerTestResponse';
+export type { BoxLevelInfoResponse } from './models/BoxLevelInfoResponse';
+export type { BoxLevelResponse } from './models/BoxLevelResponse';
 export type { CourseResponse } from './models/CourseResponse';
 export type { GrammarLessonRequest } from './models/GrammarLessonRequest';
 export type { GrammarLessonResponse } from './models/GrammarLessonResponse';
@@ -48,4 +50,3 @@ export { LessonsService } from './services/LessonsService';
 export { StoriesService } from './services/StoriesService';
 export { VocabsService } from './services/VocabsService';
 export { VocabTestsService } from './services/VocabTestsService';
-

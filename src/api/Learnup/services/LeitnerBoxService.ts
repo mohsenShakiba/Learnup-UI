@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { BoxLevelResponse } from '../models/BoxLevelResponse';
 import type { LeitnerBoxResponse } from '../models/LeitnerBoxResponse';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -35,6 +36,17 @@ vocabId: number,
             path: {
                 'vocabId': vocabId,
             },
+        });
+    }
+
+    /**
+     * @returns BoxLevelResponse OK
+     * @throws ApiError
+     */
+    public static getBoxLevelsInfo(): CancelablePromise<BoxLevelResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/Mobile/LeitnerBox/box-level',
         });
     }
 

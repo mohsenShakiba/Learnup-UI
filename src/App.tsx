@@ -6,6 +6,8 @@ import CourseDetailPage from "./features/courses/CourseDetailPage";
 import ListCoursesPage from "./features/courses/ListCoursesPage";
 import GrammarDetailPage from "./features/grammar/pages/GrammarDetailPage";
 import ListGrammarPage from "./features/grammar/pages/ListGrammarPage";
+import BoxLevelReviewPage from "./features/leitnerBox/BoxLevelReviewPage";
+import LeitnerBoxPage from "./features/leitnerBox/LeitnerBoxPage";
 import LessonDetailPage from "./features/lessons/LessonDetailPage";
 import SettingsPage from "./features/settings/SettingsPage";
 import StoryDetailPage from "./features/stories/StoryDetailPage";
@@ -34,6 +36,9 @@ function App () {
                 <Route path="/lessons/:id" element={<LessonDetailPage />} />
                 <Route path="/lessons/:id/vocabs" element={<LessonVocabsPage />} />
                 <Route path="/lessons/:id/vocab-tests" element={<LessonVocabTestsPage />} />
+                <Route path="/leitner-box" element={<LeitnerBoxPage />} />
+                <Route path="/boxlevel/:level" element={<BoxLevelReviewPage />} />
+                <Route path="/vocab" element={<LeitnerBoxPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
                 <Route path="/" element={<ListCoursesPage />} />
                 <Route path="*" element={<h1>404 - Not Found</h1>} />

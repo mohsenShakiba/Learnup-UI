@@ -17,7 +17,7 @@ export class VocabsService {
      */
     public static getVocabByWord(
 word: string,
-): CancelablePromise<VocabResponse> {
+): CancelablePromise<Array<VocabResponse>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/Mobile/Vocabs/{word}',

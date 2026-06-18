@@ -24,6 +24,7 @@ export type { LeitnerBoxResponse } from './models/LeitnerBoxResponse';
 export type { LessonDetailResponse } from './models/LessonDetailResponse';
 export type { LessonResponse } from './models/LessonResponse';
 export type { LessonVocabTestResponse } from './models/LessonVocabTestResponse';
+export { Level } from './models/Level';
 export type { StoryItemRequest } from './models/StoryItemRequest';
 export type { StoryItemResponse } from './models/StoryItemResponse';
 export type { StoryItemTimestampResponse } from './models/StoryItemTimestampResponse';

@@ -3,11 +3,13 @@
 /* tslint:disable */
 /* eslint-disable */
 
+import type { Level } from './Level';
+
 export type LeitnerBoxItemResponse = {
     id: number;
     vocabId: number;
     word: string;
     translation: string | null;
-    boxLevel: number;
+    boxLevel: Level;
     addedAt: string;
 };

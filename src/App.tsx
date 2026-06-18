@@ -6,6 +6,7 @@ import CourseDetailPage from "./features/courses/CourseDetailPage";
 import ListCoursesPage from "./features/courses/ListCoursesPage";
 import GrammarDetailPage from "./features/grammar/pages/GrammarDetailPage";
 import ListGrammarPage from "./features/grammar/pages/ListGrammarPage";
+import LessonGrammarTestsPage from "./features/GrammarTests/LessonGrammarTestsPage";
 import BoxLevelReviewPage from "./features/leitnerBox/BoxLevelReviewPage";
 import LeitnerBoxPage from "./features/leitnerBox/LeitnerBoxPage";
 import LessonDetailPage from "./features/lessons/LessonDetailPage";
@@ -13,7 +14,6 @@ import SettingsPage from "./features/settings/SettingsPage";
 import StoryDetailPage from "./features/stories/StoryDetailPage";
 import LessonVocabsPage from "./features/vocabs/LessonVocabsPage";
 import VocabSearchPage from "./features/vocabs/VocabSearchPage";
-import LessonGrammarTestsPage from "./features/GrammarTests/LessonGrammarTestsPage";
 import LessonVocabTestsPage from "./features/VocabTests/LessonVocabTestsPage";
 import { BottomNav } from "./shared/components/BottomNav";
 import { PageFade } from "./shared/components/PageFade";
@@ -54,7 +54,6 @@ function App() {
                   path="/boxlevel/:level"
                   element={<BoxLevelReviewPage />}
                 />
-                <Route path="/vocab" element={<LeitnerBoxPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
                 <Route path="/" element={<ListCoursesPage />} />
                 <Route path="*" element={<h1>404 - Not Found</h1>} />

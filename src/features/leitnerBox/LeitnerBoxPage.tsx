@@ -29,7 +29,6 @@ export default function LeitnerBoxPage() {
 
   return (
     <Scaffold
-      maxWidth="sm"
       header={
         <DefaultHeader header="Leitner Box" subtitle={`${totalItems} words`} />
       }

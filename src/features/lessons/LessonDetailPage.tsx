@@ -56,7 +56,7 @@ export default function LessonDetailPage () {
 
         <VocabListItem lessonId={lesson.id} vocabs={lesson.vocabs} />
 
-        <VocabTestListItem lessonId={lesson.id} vocabCount={lesson.vocabs.length} />
+        <VocabTestListItem lessonId={lesson.id} vocabCount={lesson.vocabs.length} vocabTest={lesson.vocabTest} />
 
       </Stack>
     </Scaffold>

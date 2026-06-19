@@ -2,6 +2,7 @@ import { Box, Stack } from "@mui/material";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import setupOpenApi from "./api/setup";
 import "./App.css";
+import DashboardPage from "./features/dashboard/DashboardPage";
 import CourseDetailPage from "./features/courses/CourseDetailPage";
 import ListCoursesPage from "./features/courses/ListCoursesPage";
 import GrammarDetailPage from "./features/grammar/pages/GrammarDetailPage";
@@ -57,6 +58,7 @@ function App() {
                 />
                 <Route path="/settings" element={<SettingsPage />} />
                 <Route path="/settings/subscriptions" element={<SubscriptionsPage />} />
+                <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/" element={<ListCoursesPage />} />
                 <Route path="*" element={<h1>404 - Not Found</h1>} />
               </Routes>

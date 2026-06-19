@@ -18,7 +18,7 @@ export default function SettingsPage () {
   const navigate = useNavigate();
 
   return (
-    <Scaffold header={<DefaultHeader header="Settings" />} maxWidth="sm">
+    <Scaffold header={<DefaultHeader header="Settings" />}>
       <Paper sx={{ p: 0, overflow: 'hidden' }}>
         <ListItem
           secondaryAction={

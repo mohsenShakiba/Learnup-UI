@@ -35,6 +35,7 @@ export type { SubscriptionFeatureResponse } from './models/SubscriptionFeatureRe
 export type { SubscriptionResponse } from './models/SubscriptionResponse';
 export { SubscriptionType } from './models/SubscriptionType';
 export type { TestOptionResponse } from './models/TestOptionResponse';
+export type { UserStreakDayResponse } from './models/UserStreakDayResponse';
 export type { UserStreakResponse } from './models/UserStreakResponse';
 export type { UserSubscriptionResponse } from './models/UserSubscriptionResponse';
 export { UserSubscriptionStatus } from './models/UserSubscriptionStatus';

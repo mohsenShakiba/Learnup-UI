@@ -4,15 +4,8 @@ import {
   Stack,
   Typography
 } from "@mui/material";
-
-
-interface StreakCardBlazeProps {
-  streakCount?: number;
-  weekActivity?: boolean[];
-  weekLabels?: string[];
-  weekDates?: number[];
-  todayIndex?: number;
-}
+import { useQuery } from "@tanstack/react-query";
+import { UsersService } from "../../../api/Learnup";
 
 function getStreakIcon (streakCount: number): string {
   if (streakCount === 0) return "🎓";
@@ -21,7 +14,7 @@ function getStreakIcon (streakCount: number): string {
   if (streakCount <= 3) return "👌";
   if (streakCount <= 4) return "👏";
   if (streakCount <= 5) return "🍾";
-  if (streakCount <= 5) return "🥳";
+  if (streakCount <= 6) return "🥳";
   return "🎉";
 }
 
@@ -35,27 +28,57 @@ function getStreakCaption (streakCount: number): string {
   return "یه ماه! افسانه‌ای!";
 }
 
-export function StreakCardBlaze ({
-  streakCount = 12,
-  weekActivity,
-  weekLabels = ["شنبه", "یک‌شنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنج‌شنبه", "جمعه"],
-  weekDates,
-  todayIndex,
-}: StreakCardBlazeProps) {
-  const resolvedTodayIndex = todayIndex ?? weekLabels.length - 1;
-  const activeCount = Math.min(7, streakCount);
-  const days = weekLabels.map((d, i) => ({
-    d,
-    active: weekActivity ? !!weekActivity[i] : i >= 7 - activeCount,
-    today: i === resolvedTodayIndex,
-    isPast: i < resolvedTodayIndex,
-    date: weekDates?.[i],
-  }));
+// Persian week: Saturday (index 0) → Friday (index 6)
+const WEEK_LABELS = ["شنبه", "یک‌شنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنج‌شنبه", "جمعه"];
+
+// JS getDay(): 0=Sun,1=Mon,...,6=Sat → Persian index: Sat=0,Sun=1,...,Fri=6
+function jsDayToPersianIndex (jsDay: number): number {
+  return (jsDay + 1) % 7;
+}
+
+export function StreakCardBlaze () {
+
+  const { data: streak, isLoading } = useQuery({
+    queryKey: ['user', 'streak'],
+    queryFn: () => UsersService.getUserStreaks(),
+    retry: false,
+  });
+
+  if (isLoading) return null;
+
+  const currentStreak = streak?.currentStreak ?? 0;
+
+  // Build lookup: "YYYY-MM-DD" -> isCheckedIn
+  const checkinMap = new Map<string, boolean>();
+  for (const day of streak?.lastSevenDays ?? []) {
+    checkinMap.set(day.date.split('T')[0], day.isCheckedIn);
+  }
+
+  // Find Saturday of the current Persian week
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const todayPersianIndex = jsDayToPersianIndex(today.getDay());
+  const saturday = new Date(today);
+  saturday.setDate(today.getDate() - todayPersianIndex);
+
+  const days = WEEK_LABELS.map((label, i) => {
+    const date = new Date(saturday);
+    date.setDate(saturday.getDate() + i);
+    const dateStr = date.toISOString().split('T')[0];
+    return {
+      label,
+      active: checkinMap.get(dateStr) ?? false,
+      today: i === todayPersianIndex,
+      isPast: i < todayPersianIndex,
+      isFuture: i > todayPersianIndex,
+      dayNumber: date.getDate(),
+    };
+  });
 
   function getCellContent (day: typeof days[0]): string {
     if (day.active) return "🔥";
     if (day.isPast) return "❄️";
-    return day.date != null ? String(day.date) : "";
+    return String(day.dayNumber);
   }
 
   return (
@@ -71,7 +94,7 @@ export function StreakCardBlaze ({
       <Stack spacing={3}>
 
         {/* Header */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
 
           <Typography sx={{
             fontSize: 30,
@@ -82,7 +105,7 @@ export function StreakCardBlaze ({
             lineHeight: '50px',
             textAlign: 'center'
           }}>
-            {getStreakIcon(streakCount)}
+            {getStreakIcon(currentStreak)}
           </Typography>
 
           <Stack>
@@ -96,7 +119,7 @@ export function StreakCardBlaze ({
                 opacity: '0.8'
               }}
             >
-              {getStreakCaption(streakCount)}
+              {getStreakCaption(currentStreak)}
             </Typography>
           </Stack>
         </Box>
@@ -111,7 +134,7 @@ export function StreakCardBlaze ({
               textShadow: '0 0 10px rgba(0,0,0,0.4)',
             }}
           >
-            {streakCount}
+            {currentStreak}
           </Typography>
           <Typography sx={{
             fontFamily: "FredokaOne",
@@ -145,7 +168,7 @@ export function StreakCardBlaze ({
               >
                 {getCellContent(b)}
               </Box>
-              <Typography sx={{ fontSize: 11, fontWeight: 700, opacity: 0.6 }}>{b.d[0]}</Typography>
+              <Typography sx={{ fontSize: 11, fontWeight: 700, opacity: 0.6 }}>{b.label[0]}</Typography>
             </Box>
           ))}
         </Box>

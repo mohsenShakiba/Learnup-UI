@@ -1,4 +1,4 @@
-import { Box, Button, Card, Chip, Divider, Stack, Typography } from '@mui/material';
+import { Box, Card, Chip, Stack, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import type { UserSubscriptionResponse } from '../../../api/Learnup';
@@ -7,12 +7,13 @@ import {
   SubscriptionsService,
   UserSubscriptionStatus,
 } from '../../../api/Learnup';
+import { FancyButton } from '../../../shared/components/FancyButton';
 
 function durationLabel (duration: SubscriptionDuration): string {
   switch (duration) {
-    case SubscriptionDuration.LIFETIME: return 'Lifetime';
-    case SubscriptionDuration.ONE_MONTH: return '1 Month';
-    case SubscriptionDuration.TWELVE_MONTHS: return '12 Months';
+    case SubscriptionDuration.LIFETIME: return 'برای همیشه';
+    case SubscriptionDuration.ONE_MONTH: return 'یک ماه';
+    case SubscriptionDuration.TWELVE_MONTHS: return 'یک ساله';
   }
 }
 
@@ -26,18 +27,10 @@ function statusColor (status: UserSubscriptionStatus): 'success' | 'error' | 'de
 
 function statusLabel (status: UserSubscriptionStatus): string {
   switch (status) {
-    case UserSubscriptionStatus.ACTIVE: return 'Active';
-    case UserSubscriptionStatus.EXPIRED: return 'Expired';
-    case UserSubscriptionStatus.CANCELLED: return 'Cancelled';
+    case UserSubscriptionStatus.ACTIVE: return 'اشتراک فعال';
+    case UserSubscriptionStatus.EXPIRED: return 'منقضی شده';
+    case UserSubscriptionStatus.CANCELLED: return 'کنسل شده';
   }
-}
-
-function formatDate (dateStr: string): string {
-  return new Date(dateStr).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  });
 }
 
 function timeUntilExpiry (expiresAt: string, status: UserSubscriptionStatus): string | null {
@@ -58,39 +51,48 @@ function timeUntilExpiry (expiresAt: string, status: UserSubscriptionStatus): st
 function SubscriptionCardContent ({ sub }: { sub: UserSubscriptionResponse; }) {
   const remaining = timeUntilExpiry(sub.expiresAt, sub.status);
 
+  console.log('duration', sub.duration);
+
   return (
-    <Card>
-      <Box sx={{ p: 2 }}>
-        <Stack direction="row">
-          <Stack>
-            <Typography variant="h6" >{sub.subscriptionTitle}</Typography>
-          </Stack>
-          <Stack spacing={0.5}>
-            <Chip
-              label={statusLabel(sub.status)}
-              size="small"
-              color={statusColor(sub.status)}
-            />
-            <Chip label={durationLabel(sub.duration)} size="small" variant="outlined" />
-          </Stack>
-        </Stack>
-        <Divider sx={{ mb: 1.5 }} />
-        <Stack direction="row" spacing={3}>
-          <Stack>
-            <Typography variant="caption" color="text.secondary">Started</Typography>
-            <Typography variant="body2">{formatDate(sub.startedAt)}</Typography>
-          </Stack>
-          <Stack>
-            <Typography variant="caption" color="text.secondary">Expires</Typography>
-            <Typography variant="body2">{formatDate(sub.expiresAt)}</Typography>
-          </Stack>
-          {remaining && (
-            <Stack>
-              <Typography variant="caption" color="text.secondary">زمان باقی‌مانده</Typography>
-              <Typography variant="body2" color="success.main">{remaining}</Typography>
+    <Card sx={{ overflow: 'hidden', position: 'relative' }}>
+      <Box sx={{ display: 'flex' }}>
+        <Box sx={{ flex: 1 }}>
+          <Stack direction="column" spacing={1} >
+
+            <Typography variant="h6" sx={{ height: 30 }}>{sub.subscriptionTitle}</Typography>
+
+            <Stack direction='row' spacing={0.5} >
+              <Chip
+                label={statusLabel(sub.status)}
+                size="small"
+                color={statusColor(sub.status)}
+              />
+              <Chip label={durationLabel(sub.duration)} size="small" variant="outlined" />
             </Stack>
-          )}
-        </Stack>
+
+            {remaining && (
+              <Stack direction="row" spacing={0.5} >
+                <Typography variant="caption" sx={{ color: 'text.secondary' }}>زمان باقی‌مانده</Typography>
+                <Typography variant="caption" color="success">{remaining}</Typography>
+              </Stack>
+            )}
+          </Stack>
+
+        </Box>
+        <Box
+          component="img"
+          src="/images/subscriptions/plant.png"
+          sx={{
+            position: 'absolute',
+            bottom: -10,
+            right: 25,
+            alignSelf: 'end',
+            width: 85,
+            objectFit: 'contain',
+            mr: 1,
+            opacity: 0.1
+          }}
+        />
       </Box>
     </Card>
   );
@@ -99,22 +101,33 @@ function SubscriptionCardContent ({ sub }: { sub: UserSubscriptionResponse; }) {
 function NoSubscriptionCard () {
   const navigate = useNavigate();
   return (
-    <Card>
-      <Box sx={{ p: 2, textAlign: 'center' }}>
+    <Card sx={{ overflow: 'hidden', position: 'relative' }}>
+      <Box sx={{ flex: 1, textAlign: 'start' }}>
         <Typography variant="body2" gutterBottom>
           اشتراک پایه
         </Typography>
-
-        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-          با اشتراک پایه میتونی روزی
-        </Typography>
-        <Button
+        <FancyButton
           variant="contained"
           size="small"
           onClick={() => navigate('/settings/subscriptions')}
         >
           مشاهده لیست اشتراک ها
-        </Button>
+        </FancyButton>
+
+        <Box
+          component="img"
+          src="/images/subscriptions/book.png"
+          sx={{
+            position: 'absolute',
+            bottom: -25,
+            right: -25,
+            alignSelf: 'end',
+            width: 135,
+            objectFit: 'contain',
+            mr: 1,
+            opacity: 0.2
+          }}
+        />
       </Box>
     </Card>
   );
@@ -129,6 +142,7 @@ export function UserSubscriptionCard () {
 
   if (isLoading) return null;
   if (!sub) return <NoSubscriptionCard />;
+
 
   return <SubscriptionCardContent sub={sub} />;
 }

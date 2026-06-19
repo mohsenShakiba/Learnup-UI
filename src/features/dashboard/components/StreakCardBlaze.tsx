@@ -21,8 +21,11 @@ function getStreakIcon (streakCount: number): string {
 function getStreakCaption (streakCount: number): string {
   if (streakCount === 0) return "هنوز شروع نکردی!";
   if (streakCount <= 1) return "شروع خوبیه!";
-  if (streakCount <= 2) return "داری خوب ادامه میدی!";
-  if (streakCount <= 6) return "داری پیشرفت می‌کنی!";
+  if (streakCount <= 2) return "همینجوری ادامه بده!";
+  if (streakCount <= 3) return "داری خوب ادامه میدی!";
+  if (streakCount <= 4) return "داری خیلی خوب ادامه میدی!";
+  if (streakCount <= 5) return "داری خیلی خیلی خوب ادامه میدی";
+  if (streakCount <= 6) return "داری عالی ادامه میده!";
   if (streakCount <= 13) return "یک هفته کامل!";
   if (streakCount <= 29) return "دو هفته، محشره!";
   return "یه ماه! افسانه‌ای!";

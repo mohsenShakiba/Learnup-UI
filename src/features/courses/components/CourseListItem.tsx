@@ -11,7 +11,7 @@ type CourseListItemProps = {
   sx?: SxProps<Theme>;
 };
 
-export function CourseListItem({ course }: CourseListItemProps) {
+export function CourseListItem ({ course }: CourseListItemProps) {
 
   const navigate = useNavigate();
 
@@ -30,10 +30,13 @@ export function CourseListItem({ course }: CourseListItemProps) {
       display: 'flex',
       height: 'calc(100vh - 90px)',
     }}>
+
       <Paper
         sx={
           {
             borderRadius: 2,
+            p: 0,
+            display: 'flex',
             flexDirection: 'column',
             overflow: 'hidden'
           }
@@ -41,7 +44,7 @@ export function CourseListItem({ course }: CourseListItemProps) {
       >
 
         <Box sx={{
-          flex: 1, mb: 2
+          flex: 1, mb: 2,
         }}>
           <ImageLoader coverId={course.coverId} />
         </Box>
@@ -52,7 +55,6 @@ export function CourseListItem({ course }: CourseListItemProps) {
             gap: 2,
           }}
         >
-
           <Stack spacing={1} >
             <Stack direction='row' sx={{ borderRadius: 0.5, overflow: 'hidden', fontSize: '0.9rem' }}>
               <Box sx={{ background: '#d683b9', color: 'black', px: 0.8, py: 0.4, fontFamily: 'arial' }}>
@@ -100,9 +102,6 @@ export function CourseListItem({ course }: CourseListItemProps) {
               {course.description}
             </Typography>
           </Stack>
-
-
-
 
           <Stack spacing={1} sx={{ width: '100%' }}>
             <LinearProgress variant='determinate' value={progress} sx={{ borderRadius: 1 }} />

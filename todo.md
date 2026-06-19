@@ -1,1 +1,1 @@
-[] in lesson detail page, if the test has been passed, show the test score and show a completed badge
+[] update UserSubscriptionCard, show a timespan for when the subscription will end, for example 4 month, 10 days and so on.

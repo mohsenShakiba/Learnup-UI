@@ -15,7 +15,7 @@ const tabs = [
 
 const hiddenPaths = ['/stories/'];
 
-export function BottomNav() {
+export function BottomNav () {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -37,6 +37,18 @@ export function BottomNav() {
     >
       {tabs.map((tab) => (
         <BottomNavigationAction
+          sx={{
+            minWidth: 0,
+            px: 0.5,
+            '& .MuiBottomNavigationAction-label': {
+              fontSize: '10px',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              width: '100%',
+              textAlign: 'center',
+            },
+          }}
           key={tab.path}
           label={tab.label}
           icon={<Icon>{tab.icon}</Icon>}

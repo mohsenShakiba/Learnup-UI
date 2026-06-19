@@ -2,7 +2,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { BoxLevelResponse } from '../models/BoxLevelResponse';
 import type { LeitnerBoxResponse } from '../models/LeitnerBoxResponse';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -23,30 +22,19 @@ export class LeitnerBoxService {
     }
 
     /**
-     * @param vocabId
+     * @param vocabId 
      * @returns any OK
      * @throws ApiError
      */
     public static addVocabToLeitnerBox(
-        vocabId: number,
-    ): CancelablePromise<any> {
+vocabId: number,
+): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/Mobile/LeitnerBox/vocab/{vocabId}',
             path: {
                 'vocabId': vocabId,
             },
-        });
-    }
-
-    /**
-     * @returns BoxLevelResponse OK
-     * @throws ApiError
-     */
-    public static getBoxLevelsInfo(): CancelablePromise<BoxLevelResponse> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/Mobile/LeitnerBox/box-level',
         });
     }
 

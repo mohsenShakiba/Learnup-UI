@@ -11,4 +11,3 @@ export type ImportStoryRequest = {
     grammarIds: Array<number>;
     story: StoryRequest;
 };
-

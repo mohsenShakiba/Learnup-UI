@@ -4,7 +4,7 @@
 /* eslint-disable */
 
 export enum UserSubscriptionStatus {
-    ACTIVE = 0,
-    EXPIRED = 1,
-    CANCELLED = 2,
+    ACTIVE = 1,
+    CANCELLED = -2,
+    EXPIRED = -1,
 }

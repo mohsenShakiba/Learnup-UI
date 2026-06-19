@@ -1,5 +1,6 @@
-import { Box, Card, Chip, Divider, Stack, Typography } from '@mui/material';
+import { Box, Button, Card, Chip, Divider, Stack, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import type { UserSubscriptionResponse } from '../../../api/Learnup';
 import {
   SubscriptionDuration,
@@ -39,13 +40,29 @@ function formatDate (dateStr: string): string {
   });
 }
 
+function timeUntilExpiry (expiresAt: string, status: UserSubscriptionStatus): string | null {
+  if (status !== UserSubscriptionStatus.ACTIVE) return null;
+  const now = new Date();
+  const expiry = new Date(expiresAt);
+  const diffMs = expiry.getTime() - now.getTime();
+  if (diffMs <= 0) return null;
+  const totalDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  const months = Math.floor(totalDays / 30);
+  const days = totalDays % 30;
+  const parts: string[] = [];
+  if (months > 0) parts.push(`${months} ماه`);
+  if (days > 0 || parts.length === 0) parts.push(`${days} روز`);
+  return parts.join(' و ');
+}
+
 function SubscriptionCardContent ({ sub }: { sub: UserSubscriptionResponse; }) {
+  const remaining = timeUntilExpiry(sub.expiresAt, sub.status);
+
   return (
     <Card>
       <Box sx={{ p: 2 }}>
         <Stack direction="row">
           <Stack>
-            <Typography variant="body2" color="text.secondary">Your Plan</Typography>
             <Typography variant="h6" >{sub.subscriptionTitle}</Typography>
           </Stack>
           <Stack spacing={0.5}>
@@ -67,20 +84,51 @@ function SubscriptionCardContent ({ sub }: { sub: UserSubscriptionResponse; }) {
             <Typography variant="caption" color="text.secondary">Expires</Typography>
             <Typography variant="body2">{formatDate(sub.expiresAt)}</Typography>
           </Stack>
+          {remaining && (
+            <Stack>
+              <Typography variant="caption" color="text.secondary">زمان باقی‌مانده</Typography>
+              <Typography variant="body2" color="success.main">{remaining}</Typography>
+            </Stack>
+          )}
         </Stack>
       </Box>
     </Card>
   );
 }
 
+function NoSubscriptionCard () {
+  const navigate = useNavigate();
+  return (
+    <Card>
+      <Box sx={{ p: 2, textAlign: 'center' }}>
+        <Typography variant="body2" gutterBottom>
+          اشتراک پایه
+        </Typography>
+
+        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+          با اشتراک پایه میتونی روزی
+        </Typography>
+        <Button
+          variant="contained"
+          size="small"
+          onClick={() => navigate('/settings/subscriptions')}
+        >
+          مشاهده لیست اشتراک ها
+        </Button>
+      </Box>
+    </Card>
+  );
+}
+
 export function UserSubscriptionCard () {
-  const { data: sub } = useQuery({
+  const { data: sub, isLoading } = useQuery({
     queryKey: ['subscription', 'me'],
     queryFn: () => SubscriptionsService.getUserCurrentSubscription(),
     retry: false,
   });
 
-  if (!sub) return null;
+  if (isLoading) return null;
+  if (!sub) return <NoSubscriptionCard />;
 
   return <SubscriptionCardContent sub={sub} />;
 }

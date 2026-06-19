@@ -2,28 +2,22 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { VocabResponse } from '../models/VocabResponse';
+import type { UserStreakResponse } from '../models/UserStreakResponse';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 
-export class VocabsService {
+export class UsersService {
 
     /**
-     * @param word 
-     * @returns VocabResponse OK
+     * @returns UserStreakResponse OK
      * @throws ApiError
      */
-    public static getVocabByWord(
-word: string,
-): CancelablePromise<Array<VocabResponse>> {
+    public static getUserStreaks(): CancelablePromise<UserStreakResponse> {
         return __request(OpenAPI, {
-            method: 'GET',
-            url: '/Mobile/Vocabs/{word}',
-            path: {
-                'word': word,
-            },
+            method: 'POST',
+            url: '/Mobile/Users/streak',
         });
     }
 

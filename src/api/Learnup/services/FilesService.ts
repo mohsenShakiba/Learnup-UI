@@ -9,13 +9,13 @@ import { request as __request } from '../core/request';
 export class FilesService {
 
     /**
-     * @param id
+     * @param id 
      * @returns any OK
      * @throws ApiError
      */
     public static getFileById(
-        id: string,
-    ): CancelablePromise<any> {
+id: string,
+): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/Mobile/Files/{id}',

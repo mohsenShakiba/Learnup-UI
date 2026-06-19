@@ -9,7 +9,12 @@ export default function DashboardPage () {
     <Scaffold header={<DefaultHeader header="Dashboard" />}>
       <Stack spacing={2}>
         {/* <StreakCard /> */}
-        <StreakCardBlaze streakCount={2} />
+        <StreakCardBlaze
+          streakCount={0}
+          weekDates={[14, 15, 16, 17, 18, 19, 20]}
+          todayIndex={5}
+          weekActivity={[false, false, false, false, true, true, false]}
+        />
         <UserSubscriptionCard />
       </Stack>
     </Scaffold>

@@ -7,3 +7,4 @@ export type ImportVocabsResponse = {
     parsedCount: number;
     importedCount: number;
 };
+

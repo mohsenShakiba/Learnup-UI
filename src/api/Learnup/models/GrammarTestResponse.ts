@@ -13,3 +13,4 @@ export type GrammarTestResponse = {
     userSelectedOptionId: number | null;
     isCorrect: boolean | null;
 };
+

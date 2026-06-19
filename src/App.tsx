@@ -8,6 +8,7 @@ import GrammarDetailPage from "./features/grammar/pages/GrammarDetailPage";
 import ListGrammarPage from "./features/grammar/pages/ListGrammarPage";
 import LessonDetailPage from "./features/lessons/LessonDetailPage";
 import SettingsPage from "./features/settings/SettingsPage";
+import SubscriptionsPage from "./features/settings/SubscriptionsPage";
 import StoryDetailPage from "./features/stories/StoryDetailPage";
 import LessonVocabsPage from "./features/vocabs/LessonVocabsPage";
 import VocabSearchPage from "./features/vocabs/VocabSearchPage";
@@ -39,6 +40,7 @@ function App() {
                 <Route path="/lessons/:id/grammar-tests" element={<LessonGrammarTestsPage />} />
                 <Route path="/vocab" element={<VocabSearchPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
+                <Route path="/settings/subscriptions" element={<SubscriptionsPage />} />
                 <Route path="/" element={<ListCoursesPage />} />
                 <Route path="*" element={<h1>404 - Not Found</h1>} />
               </Routes>

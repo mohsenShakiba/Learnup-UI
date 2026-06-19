@@ -7,3 +7,4 @@ export type AnswerTestResponse = {
     isCorrect: boolean;
     correctOptionId: number;
 };
+

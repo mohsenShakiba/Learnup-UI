@@ -17,3 +17,4 @@ export type GrammarResponse = {
     prerequisiteGrammarIds: Array<number>;
     lessons: Array<GrammarLessonResponse>;
 };
+

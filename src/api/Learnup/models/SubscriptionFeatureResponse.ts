@@ -3,8 +3,10 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type LessonVocabTestResponse = {
-    isPassed: boolean;
-    score: number;
+export type SubscriptionFeatureResponse = {
+    id: number;
+    description: string;
+    isIncluded: boolean;
+    order: number;
 };
 

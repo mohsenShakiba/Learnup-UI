@@ -22,13 +22,13 @@ export class LeitnerBoxService {
     }
 
     /**
-     * @param vocabId 
+     * @param vocabId
      * @returns any OK
      * @throws ApiError
      */
     public static addVocabToLeitnerBox(
-vocabId: number,
-): CancelablePromise<any> {
+        vocabId: number,
+    ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/Mobile/LeitnerBox/vocab/{vocabId}',

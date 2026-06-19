@@ -9,6 +9,8 @@ export type { OpenAPIConfig } from './core/OpenAPI';
 
 export type { AnswerTestRequest } from './models/AnswerTestRequest';
 export type { AnswerTestResponse } from './models/AnswerTestResponse';
+export type { BoxLevelInfoResponse } from './models/BoxLevelInfoResponse';
+export type { BoxLevelResponse } from './models/BoxLevelResponse';
 export type { CourseResponse } from './models/CourseResponse';
 export type { DueLeitnerBoxItemResponse } from './models/DueLeitnerBoxItemResponse';
 export type { GrammarLessonRequest } from './models/GrammarLessonRequest';

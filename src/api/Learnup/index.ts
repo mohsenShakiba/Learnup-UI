@@ -12,6 +12,7 @@ export type { AnswerTestResponse } from './models/AnswerTestResponse';
 export type { BoxLevelInfoResponse } from './models/BoxLevelInfoResponse';
 export type { BoxLevelResponse } from './models/BoxLevelResponse';
 export type { CourseResponse } from './models/CourseResponse';
+export type { DueLeitnerBoxItemResponse } from './models/DueLeitnerBoxItemResponse';
 export type { GrammarLessonRequest } from './models/GrammarLessonRequest';
 export type { GrammarLessonResponse } from './models/GrammarLessonResponse';
 export type { GrammarRequest } from './models/GrammarRequest';
@@ -37,6 +38,7 @@ export type { SubscriptionFeatureResponse } from './models/SubscriptionFeatureRe
 export type { SubscriptionResponse } from './models/SubscriptionResponse';
 export { SubscriptionType } from './models/SubscriptionType';
 export type { TestOptionResponse } from './models/TestOptionResponse';
+export type { UpdateBoxLevelReviewIntervalRequest } from './models/UpdateBoxLevelReviewIntervalRequest';
 export type { UserSubscriptionResponse } from './models/UserSubscriptionResponse';
 export { UserSubscriptionStatus } from './models/UserSubscriptionStatus';
 export { VocabLevel } from './models/VocabLevel';

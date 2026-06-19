@@ -18,16 +18,17 @@ const qualityChoices = [
 ];
 
 export default function BoxLevelReviewPage() {
-  const { level } = useParams<{ level: string }>();
-  const levelNumber = Number(level);
+  const { id } = useParams<{ id: string }>();
+  const boxLevelId = Number(id);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnswerVisible, setIsAnswerVisible] = useState(false);
   const [reviews, setReviews] = useState<Record<number, string>>({});
 
-  const leitnerBoxQuery = useQuery({
-    queryKey: ["leitner-box-items"],
-    queryFn: () => LeitnerBoxService.getLeitnerBox(),
+  const dueCardsQuery = useQuery({
+    queryKey: ["leitner-box-level-due-cards", boxLevelId],
+    queryFn: () => LeitnerBoxService.getDueWordsByBoxLevelId(boxLevelId),
+    enabled: Number.isFinite(boxLevelId) && boxLevelId > 0,
   });
 
   const boxLevelsQuery = useQuery({
@@ -35,17 +36,14 @@ export default function BoxLevelReviewPage() {
     queryFn: () => LeitnerBoxService.getBoxLevelsInfo(),
   });
 
-  const cards = useMemo(() => {
-    return (leitnerBoxQuery.data?.items ?? []).filter(
-      (item) => Number(item.boxLevel) === levelNumber,
-    );
-  }, [leitnerBoxQuery.data?.items, levelNumber]);
-
   const levelInfo = useMemo(() => {
     return (boxLevelsQuery.data?.levels ?? []).find(
-      (item) => Number(item.level) === levelNumber,
+      (item) => item.id === boxLevelId,
     );
-  }, [boxLevelsQuery.data?.levels, levelNumber]);
+  }, [boxLevelId, boxLevelsQuery.data?.levels]);
+
+  const cards = dueCardsQuery.data ?? [];
+  const levelNumber = levelInfo ? Number(levelInfo.level) : null;
 
   const reviewedCount = Object.keys(reviews).length;
   const activeCard = cards[currentIndex] ?? null;
@@ -64,7 +62,7 @@ export default function BoxLevelReviewPage() {
     setIsAnswerVisible(false);
   }
 
-  if (!Number.isFinite(levelNumber) || levelNumber <= 0) {
+  if (!Number.isFinite(boxLevelId) || boxLevelId <= 0) {
     return (
       <Scaffold header={<DefaultHeader header="Box Level" />} maxWidth="sm">
         <EmptyList message="Invalid box level." />
@@ -72,20 +70,19 @@ export default function BoxLevelReviewPage() {
     );
   }
 
-  if (leitnerBoxQuery.isLoading || boxLevelsQuery.isLoading) {
+  if (dueCardsQuery.isLoading || boxLevelsQuery.isLoading) {
     return <AppLoader />;
   }
 
   if (
-    leitnerBoxQuery.isError ||
+    dueCardsQuery.isError ||
     boxLevelsQuery.isError ||
-    !leitnerBoxQuery.data ||
     !boxLevelsQuery.data
   ) {
     return (
       <ErrorPage
         onAction={() => {
-          void leitnerBoxQuery.refetch();
+          void dueCardsQuery.refetch();
           void boxLevelsQuery.refetch();
         }}
       />
@@ -97,13 +94,13 @@ export default function BoxLevelReviewPage() {
       maxWidth="sm"
       header={
         <DefaultHeader
-          header={`Box Level ${levelNumber}`}
+          header={`Box Level ${levelNumber ?? boxLevelId}`}
           subtitle={`${levelInfo?.dueItemsCount ?? cards.length} ready cards`}
         />
       }
     >
       {cards.length === 0 ? (
-        <EmptyList message="No cards found in this box level yet." />
+        <EmptyList message="No cards are due for review in this box level right now." />
       ) : isCompleted ? (
         <FancyCard sx={{ borderRadius: 4 }}>
           <Stack spacing={2} sx={{ p: 3, textAlign: "center" }}>

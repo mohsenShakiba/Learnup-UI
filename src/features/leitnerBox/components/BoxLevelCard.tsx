@@ -3,12 +3,14 @@ import { useNavigate } from "react-router-dom";
 import FormatNumber from "../../../utils/NumberFmt";
 
 type BoxLevelCardProps = {
+  levelId: number;
   level: number;
   totalItems: number;
   readyToReview: number;
 };
 
 export function BoxLevelCard({
+  levelId,
   level,
   totalItems,
   readyToReview,
@@ -17,18 +19,25 @@ export function BoxLevelCard({
   const formattedLevel = FormatNumber(level);
   const formattedReady = FormatNumber(readyToReview);
   const formattedTotal = FormatNumber(totalItems);
+  const canReview = readyToReview > 0;
 
   return (
     <Card
-      onClick={() => navigate(`/boxlevel/${level}`)}
+      onClick={() => {
+        if (!canReview) return;
+        navigate(`/boxlevel/${levelId}`);
+      }}
       sx={{
         p: 2.25,
-        cursor: "pointer",
+        cursor: canReview ? "pointer" : "default",
         transition: "transform 160ms ease, box-shadow 160ms ease",
-        "&:hover": {
-          transform: "translateY(-2px)",
-          boxShadow: 4,
-        },
+        "&:hover": canReview
+          ? {
+              transform: "translateY(-2px)",
+              boxShadow: 4,
+            }
+          : undefined,
+        opacity: canReview ? 1 : 0.8,
       }}
     >
       <Stack spacing={2}>

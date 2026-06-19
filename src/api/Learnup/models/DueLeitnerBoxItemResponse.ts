@@ -3,7 +3,10 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type TestOptionResponse = {
+export type DueLeitnerBoxItemResponse = {
     id: number;
-    text: string;
+    vocabId: number;
+    word: string;
+    translation: string | null;
+    nextReviewAt: string | null;
 };

@@ -13,4 +13,3 @@ export type GrammarLessonRequest = {
     language: string;
     voiceId: number | null;
 };
-

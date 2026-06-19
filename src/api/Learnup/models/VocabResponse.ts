@@ -20,4 +20,3 @@ export type VocabResponse = {
     type: VocabType;
     languageId: number;
 };
-

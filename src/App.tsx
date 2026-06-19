@@ -52,7 +52,7 @@ function App() {
                 <Route path="/vocab" element={<VocabSearchPage />} />
                 <Route path="/leitner-box" element={<LeitnerBoxPage />} />
                 <Route
-                  path="/boxlevel/:level"
+                  path="/boxlevel/:id"
                   element={<BoxLevelReviewPage />}
                 />
                 <Route path="/settings" element={<SettingsPage />} />

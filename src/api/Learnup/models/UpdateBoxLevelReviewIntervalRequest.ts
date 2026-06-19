@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type TestOptionResponse = {
-    id: number;
-    text: string;
+export type UpdateBoxLevelReviewIntervalRequest = {
+    levelId: number;
+    number: number;
 };

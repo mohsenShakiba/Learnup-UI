@@ -9,4 +9,3 @@ export type SubscriptionFeatureResponse = {
     isIncluded: boolean;
     order: number;
 };
-

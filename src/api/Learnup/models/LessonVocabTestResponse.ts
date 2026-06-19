@@ -7,4 +7,3 @@ export type LessonVocabTestResponse = {
     isPassed: boolean;
     score: number;
 };
-

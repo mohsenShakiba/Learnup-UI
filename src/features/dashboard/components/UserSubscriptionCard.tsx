@@ -1,10 +1,8 @@
 import { Box, Card, Chip, Stack, Typography } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import type { UserSubscriptionResponse } from '../../../api/Learnup';
 import {
   SubscriptionDuration,
-  SubscriptionsService,
   UserSubscriptionStatus,
 } from '../../../api/Learnup';
 import { FancyButton } from '../../../shared/components/FancyButton';
@@ -133,16 +131,12 @@ function NoSubscriptionCard () {
   );
 }
 
-export function UserSubscriptionCard () {
-  const { data: sub, isLoading } = useQuery({
-    queryKey: ['subscription', 'me'],
-    queryFn: () => SubscriptionsService.getUserCurrentSubscription(),
-    retry: false,
-  });
+interface Props {
+  subscription: UserSubscriptionResponse | undefined;
+}
 
-  if (isLoading) return null;
-  if (!sub) return <NoSubscriptionCard />;
+export function UserSubscriptionCard ({ subscription }: Props) {
+  if (!subscription) return <NoSubscriptionCard />;
 
-
-  return <SubscriptionCardContent sub={sub} />;
+  return <SubscriptionCardContent sub={subscription} />;
 }

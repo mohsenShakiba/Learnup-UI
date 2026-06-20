@@ -1,3 +1,2 @@
-[x] update dashboard page, the cards should appear with a fade in animation.
-[x] the introduction card in leitner box should be in farsi.
+[] update the lesson detail page-> vocab tests and grammer tests should be merged with the vocab/grammar card. 
 

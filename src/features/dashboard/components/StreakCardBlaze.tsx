@@ -4,8 +4,11 @@ import {
   Stack,
   Typography
 } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
-import { UsersService } from "../../../api/Learnup";
+import type { UserStreakResponse } from "../../../api/Learnup";
+
+interface Props {
+  streak: UserStreakResponse | undefined;
+}
 
 function getStreakIcon (streakCount: number): string {
   if (streakCount === 0) return "🎓";
@@ -39,16 +42,7 @@ function jsDayToPersianIndex (jsDay: number): number {
   return (jsDay + 1) % 7;
 }
 
-export function StreakCardBlaze () {
-
-  const { data: streak, isLoading } = useQuery({
-    queryKey: ['user', 'streak'],
-    queryFn: () => UsersService.getUserStreaks(),
-    retry: false,
-  });
-
-  if (isLoading) return null;
-
+export function StreakCardBlaze ({ streak }: Props) {
   const currentStreak = streak?.currentStreak ?? 0;
 
   // Build lookup: "YYYY-MM-DD" -> isCheckedIn

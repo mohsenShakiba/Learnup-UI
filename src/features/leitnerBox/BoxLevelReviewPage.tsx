@@ -17,8 +17,8 @@ const qualityChoices = [
   { id: "easy", label: "ساده", color: "info" as const },
 ];
 
-export default function BoxLevelReviewPage() {
-  const { level } = useParams<{ level: string }>();
+export default function BoxLevelReviewPage () {
+  const { level } = useParams<{ level: string; }>();
   const levelNumber = Number(level);
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -51,12 +51,12 @@ export default function BoxLevelReviewPage() {
   const activeCard = cards[currentIndex] ?? null;
   const isCompleted = cards.length > 0 && currentIndex >= cards.length;
 
-  function handleReveal() {
+  function handleReveal () {
     if (!activeCard) return;
     setIsAnswerVisible((prev) => !prev);
   }
 
-  function handleQualitySelect(choice: string) {
+  function handleQualitySelect (choice: string) {
     if (!activeCard) return;
 
     setReviews((prev) => ({ ...prev, [activeCard.id]: choice }));
@@ -66,7 +66,7 @@ export default function BoxLevelReviewPage() {
 
   if (!Number.isFinite(levelNumber) || levelNumber <= 0) {
     return (
-      <Scaffold header={<DefaultHeader header="Box Level" />} maxWidth="sm">
+      <Scaffold header={<DefaultHeader header="Box Level" />} >
         <EmptyList message="Invalid box level." />
       </Scaffold>
     );
@@ -94,7 +94,6 @@ export default function BoxLevelReviewPage() {
 
   return (
     <Scaffold
-      maxWidth="sm"
       header={
         <DefaultHeader
           header={`Box Level ${levelNumber}`}

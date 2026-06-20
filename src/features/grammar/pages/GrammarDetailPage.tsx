@@ -8,8 +8,8 @@ import { ErrorPage } from '../../../shared/components/ErrorPage';
 import { Scaffold } from '../../../shared/components/Scaffold';
 import { GrammarContentRenderer } from '../components/GrammarContentRenderer';
 
-export default function GrammarDetailPage() {
-  const { id: grammarId } = useParams<{ id: string }>();
+export default function GrammarDetailPage () {
+  const { id: grammarId } = useParams<{ id: string; }>();
   const grammarIdNumber = Number(grammarId);
 
   const grammarQuery = useQuery({
@@ -30,7 +30,6 @@ export default function GrammarDetailPage() {
 
   return (
     <Scaffold
-      maxWidth="sm"
       header={(
         <DefaultHeader
           header={grammar.name}

@@ -6,11 +6,9 @@ import { AppLoader } from '../../shared/components/AppLoader';
 import { DefaultHeader } from '../../shared/components/DefaultHeader';
 import { ErrorPage } from '../../shared/components/ErrorPage';
 import { Scaffold } from '../../shared/components/Scaffold';
-import { GrammarListItem } from './components/GrammarListItem';
-import { GrammarTestListItem } from './components/GrammarTestListItem';
+import { GrammarSection } from './components/GrammarSection';
 import { StoryListItem } from './components/StoryListItem';
-import { VocabListItem } from './components/VocabListItem';
-import { VocabTestListItem } from './components/VocabTestListItem';
+import { VocabSection } from './components/VocabSection';
 
 export default function LessonDetailPage () {
   const { id: lessonId } = useParams<{ id: string; }>();
@@ -40,27 +38,15 @@ export default function LessonDetailPage () {
     >
       <Stack spacing={2}>
 
-
         <Stack spacing={2}>
           {lesson.stories.map((story) => (
             <StoryListItem key={story.id} story={story} />
           ))}
         </Stack>
 
+        <GrammarSection grammars={lesson.grammars} lessonId={lesson.id} />
 
-        <Stack spacing={2}>
-          {lesson.grammars.map((grammar) => (
-            <GrammarListItem key={grammar.id} grammar={grammar} />
-          ))}
-        </Stack>
-
-
-        <VocabListItem lessonId={lesson.id} vocabs={lesson.vocabs} />
-
-        <VocabTestListItem lessonId={lesson.id} vocabCount={lesson.vocabs.length} vocabTest={lesson.vocabTest} />
-
-        <GrammarTestListItem lessonId={lesson.id} grammarCount={lesson.grammars.length} />
-
+        <VocabSection vocabs={lesson.vocabs} lessonId={lesson.id} vocabTest={lesson.vocabTest} />
 
       </Stack>
     </Scaffold>

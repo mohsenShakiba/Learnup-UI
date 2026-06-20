@@ -6,7 +6,7 @@ import { UserSubscriptionCard } from './components/UserSubscriptionCard';
 import { useDashboardData } from './hooks/useDashboardData';
 
 export default function DashboardPage () {
-  const { streak, subscription, isLoading } = useDashboardData();
+  const { streak, subscription, currentLesson, isLoading } = useDashboardData();
 
   if (isLoading) return null;
 
@@ -14,7 +14,7 @@ export default function DashboardPage () {
     <Scaffold >
       <Stack spacing={2}>
         <Fade in timeout={600}>
-          <div><ContinueCard /></div>
+          <div><ContinueCard lesson={currentLesson} /></div>
         </Fade>
         <Fade in timeout={600} style={{ transitionDelay: '300ms' }}>
           <div><StreakCardBlaze streak={streak} /></div>

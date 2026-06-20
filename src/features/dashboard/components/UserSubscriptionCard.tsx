@@ -1,4 +1,4 @@
-import { Box, Card, Chip, Stack, Typography } from '@mui/material';
+import { Box, Card, Chip, Icon, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { UserSubscriptionResponse } from '../../../api/Learnup';
 import {
@@ -7,7 +7,7 @@ import {
 } from '../../../api/Learnup';
 import { FancyButton } from '../../../shared/components/FancyButton';
 
-function durationLabel (duration: SubscriptionDuration): string {
+function durationLabel(duration: SubscriptionDuration): string {
   switch (duration) {
     case SubscriptionDuration.LIFETIME: return 'برای همیشه';
     case SubscriptionDuration.ONE_MONTH: return 'یک ماه';
@@ -15,7 +15,7 @@ function durationLabel (duration: SubscriptionDuration): string {
   }
 }
 
-function statusColor (status: UserSubscriptionStatus): 'success' | 'error' | 'default' {
+function statusColor(status: UserSubscriptionStatus): 'success' | 'error' | 'default' {
   switch (status) {
     case UserSubscriptionStatus.ACTIVE: return 'success';
     case UserSubscriptionStatus.EXPIRED: return 'error';
@@ -23,7 +23,7 @@ function statusColor (status: UserSubscriptionStatus): 'success' | 'error' | 'de
   }
 }
 
-function statusLabel (status: UserSubscriptionStatus): string {
+function statusLabel(status: UserSubscriptionStatus): string {
   switch (status) {
     case UserSubscriptionStatus.ACTIVE: return 'اشتراک فعال';
     case UserSubscriptionStatus.EXPIRED: return 'منقضی شده';
@@ -31,7 +31,7 @@ function statusLabel (status: UserSubscriptionStatus): string {
   }
 }
 
-function timeUntilExpiry (expiresAt: string, status: UserSubscriptionStatus): string | null {
+function timeUntilExpiry(expiresAt: string, status: UserSubscriptionStatus): string | null {
   if (status !== UserSubscriptionStatus.ACTIVE) return null;
   const now = new Date();
   const expiry = new Date(expiresAt);
@@ -46,7 +46,7 @@ function timeUntilExpiry (expiresAt: string, status: UserSubscriptionStatus): st
   return parts.join(' و ');
 }
 
-function SubscriptionCardContent ({ sub }: { sub: UserSubscriptionResponse; }) {
+function SubscriptionCardContent({ sub }: { sub: UserSubscriptionResponse; }) {
   const remaining = timeUntilExpiry(sub.expiresAt, sub.status);
 
   console.log('duration', sub.duration);
@@ -57,7 +57,7 @@ function SubscriptionCardContent ({ sub }: { sub: UserSubscriptionResponse; }) {
         <Box sx={{ flex: 1 }}>
           <Stack direction="column" spacing={1} >
 
-            <Typography variant="h6" sx={{ height: 30 }}>{sub.subscriptionTitle}</Typography>
+            <Typography sx={{ height: 30 }}>{sub.subscriptionTitle}</Typography>
 
             <Stack direction='row' spacing={0.5} >
               <Chip
@@ -96,17 +96,23 @@ function SubscriptionCardContent ({ sub }: { sub: UserSubscriptionResponse; }) {
   );
 }
 
-function NoSubscriptionCard () {
+function NoSubscriptionCard() {
   const navigate = useNavigate();
   return (
     <Card sx={{ overflow: 'hidden', position: 'relative' }}>
-      <Box sx={{ flex: 1, textAlign: 'start' }}>
-        <Typography variant="body2" gutterBottom>
+      <Stack spacing={1} sx={{ flex: 1, alignItems: 'start' }}>
+        <Typography gutterBottom>
           اشتراک پایه
         </Typography>
+
+        <Typography variant='caption' sx={{ color: 'text.secondary' }}>
+          شما به اشتراک پایه دسترسی دارید.
+        </Typography>
+
         <FancyButton
           variant="contained"
           size="small"
+          endIcon={<Icon>arrow_backward</Icon>}
           onClick={() => navigate('/settings/subscriptions')}
         >
           مشاهده لیست اشتراک ها
@@ -126,7 +132,7 @@ function NoSubscriptionCard () {
             opacity: 0.2
           }}
         />
-      </Box>
+      </Stack>
     </Card>
   );
 }
@@ -135,7 +141,7 @@ interface Props {
   subscription: UserSubscriptionResponse | undefined;
 }
 
-export function UserSubscriptionCard ({ subscription }: Props) {
+export function UserSubscriptionCard({ subscription }: Props) {
   if (!subscription) return <NoSubscriptionCard />;
 
   return <SubscriptionCardContent sub={subscription} />;

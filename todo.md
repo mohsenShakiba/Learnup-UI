@@ -1,1 +1,3 @@
-[] update UserSubscriptionCard, show a timespan for when the subscription will end, for example 4 month, 10 days and so on.
+[x] update dashboard page, the cards should appear with a fade in animation.
+[x] the introduction card in leitner box should be in farsi.
+

@@ -9,7 +9,7 @@ const tabs = [
   { label: 'Dashboard', icon: 'dashboard', path: '/dashboard' },
   { label: 'Courses', icon: 'school', path: '/' },
   { label: 'Vocab', icon: 'menu_book', path: '/vocab' },
-  { label: 'Chat', icon: 'chat', path: '/chat' },
+  { label: 'Leitner', icon: 'layers', path: '/leitner-box' },
   { label: 'Settings', icon: 'settings', path: '/settings' },
 ];
 

@@ -7,7 +7,7 @@ import { StreakCardBlaze } from './components/StreakCardBlaze';
 import { UserSubscriptionCard } from './components/UserSubscriptionCard';
 import { useDashboardData } from './hooks/useDashboardData';
 
-export default function DashboardPage () {
+export default function DashboardPage() {
   const { profileName, streak, subscription, currentLesson, motivationalSentence, leitnerTotalItems, leitnerDueItems, isLoading } = useDashboardData();
 
   if (isLoading) return null;
@@ -15,19 +15,19 @@ export default function DashboardPage () {
   return (
     <Scaffold >
       <Stack spacing={2}>
-        <Fade in timeout={400}>
+        <Fade in timeout={500}>
           <div><Greeting name={profileName} motivationalSentence={motivationalSentence} /></div>
         </Fade>
-        <Fade in timeout={600} style={{ transitionDelay: '150ms' }}>
+        <Fade in timeout={500} style={{ transitionDelay: '200ms' }}>
           <div><ContinueCard lesson={currentLesson} /></div>
         </Fade>
-        <Fade in timeout={600} style={{ transitionDelay: '300ms' }}>
+        <Fade in timeout={500} style={{ transitionDelay: '300ms' }}>
           <div><StreakCardBlaze streak={streak} /></div>
         </Fade>
-        <Fade in timeout={600} style={{ transitionDelay: '450ms' }}>
+        <Fade in timeout={500} style={{ transitionDelay: '400ms' }}>
           <div><LeitnerStatsCard totalItems={leitnerTotalItems} dueItems={leitnerDueItems} /></div>
         </Fade>
-        <Fade in timeout={600} style={{ transitionDelay: '600ms' }}>
+        <Fade in timeout={500} style={{ transitionDelay: '500ms' }}>
           <div><UserSubscriptionCard subscription={subscription} /></div>
         </Fade>
       </Stack>

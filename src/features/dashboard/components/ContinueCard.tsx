@@ -1,12 +1,12 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Box, Card, Icon, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import type { LessonResponse } from '../../../api/Learnup';
+import type { CurrentLessonProgressResponse } from '../../../api/Learnup';
 import { FancyButton } from '../../../shared/components/FancyButton';
 import { RadarPulse } from '../../../shared/components/RadarPulse';
 
 type Props = {
-  lesson?: LessonResponse;
+  lesson?: CurrentLessonProgressResponse;
 };
 
 type CompletionBoxProps = {
@@ -15,7 +15,7 @@ type CompletionBoxProps = {
   done: boolean;
 };
 
-function CompletionBox ({ label, icon, done }: CompletionBoxProps) {
+function CompletionBox({ label, icon, done }: CompletionBoxProps) {
   return (
     <Box
       sx={{
@@ -34,12 +34,12 @@ function CompletionBox ({ label, icon, done }: CompletionBoxProps) {
   );
 }
 
-export function ContinueCard ({ lesson }: Props) {
+export function ContinueCard({ lesson }: Props) {
   const navigate = useNavigate();
 
-  const storyDone = lesson != null && lesson.storiesCount > 0 && lesson.completedStoriesCount >= lesson.storiesCount;
-  const grammarDone = lesson != null && lesson.grammarsCount > 0 && lesson.completedGrammarsCount >= lesson.grammarsCount;
-  const vocabDone = lesson != null && lesson.vocabsCount > 0 && lesson.completedVocabsCount >= lesson.vocabsCount;
+  const storyDone = lesson?.isStoryCompleted ?? false;
+  const grammarDone = lesson?.isGrammarCompleted ?? false;
+  const vocabDone = lesson?.isVocabCompleted ?? false;
 
   return (
     <Card
@@ -49,8 +49,6 @@ export function ContinueCard ({ lesson }: Props) {
         position: 'relative',
       }}
     >
-
-      <RadarPulse />
 
       <Stack spacing={2} sx={{ position: 'relative', zIndex: 1 }}>
 
@@ -91,14 +89,12 @@ export function ContinueCard ({ lesson }: Props) {
           </Stack>
         </Box>
 
-
-
         {/* CTA */}
         <FancyButton
           fullWidth
           variant="contained"
           endIcon={<ArrowBackIcon />}
-          onClick={() => lesson && navigate(`/lessons/${lesson.id}`)}
+          onClick={() => lesson && navigate(`/lessons/${lesson.lessonId}`)}
         >
           ادامه درس
         </FancyButton>

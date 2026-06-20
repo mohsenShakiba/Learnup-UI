@@ -1,4 +1,4 @@
-import { Box, Card, Chip, Icon, Stack, Typography } from '@mui/material';
+import { Box, Button, Card, Chip, Icon, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { UserSubscriptionResponse } from '../../../api/Learnup';
 import {
@@ -109,14 +109,13 @@ function NoSubscriptionCard() {
           شما به اشتراک پایه دسترسی دارید.
         </Typography>
 
-        <FancyButton
+        <Button
           variant="contained"
-          size="small"
           endIcon={<Icon>arrow_backward</Icon>}
           onClick={() => navigate('/settings/subscriptions')}
         >
           مشاهده لیست اشتراک ها
-        </FancyButton>
+        </Button>
 
         <Box
           component="img"

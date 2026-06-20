@@ -25,13 +25,13 @@ export class LeitnerBoxService {
     }
 
     /**
-     * @param vocabId 
+     * @param vocabId
      * @returns any OK
      * @throws ApiError
      */
     public static addVocabToLeitnerBox(
-vocabId: number,
-): CancelablePromise<any> {
+        vocabId: number,
+    ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/Mobile/LeitnerBox/vocab/{vocabId}',
@@ -53,13 +53,13 @@ vocabId: number,
     }
 
     /**
-     * @param id 
+     * @param id
      * @returns DueLeitnerBoxItemResponse OK
      * @throws ApiError
      */
     public static getDueWordsByBoxLevelId(
-id: number,
-): CancelablePromise<Array<DueLeitnerBoxItemResponse>> {
+        id: number,
+    ): CancelablePromise<Array<DueLeitnerBoxItemResponse>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/Mobile/LeitnerBox/box-level/{id}',
@@ -70,15 +70,15 @@ id: number,
     }
 
     /**
-     * @param boxId 
-     * @param requestBody 
+     * @param boxId
+     * @param requestBody
      * @returns any OK
      * @throws ApiError
      */
     public static updateBoxLevelReviewIntervals(
-boxId: number,
-requestBody?: Array<UpdateBoxLevelReviewIntervalRequest>,
-): CancelablePromise<any> {
+        boxId: number,
+        requestBody?: Array<UpdateBoxLevelReviewIntervalRequest>,
+    ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/Mobile/LeitnerBox/box-level/review-interval/{boxId}',

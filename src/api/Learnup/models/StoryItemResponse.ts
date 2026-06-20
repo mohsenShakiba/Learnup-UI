@@ -13,3 +13,4 @@ export type StoryItemResponse = {
     voiceId: string | null;
     timestamps: Array<StoryItemTimestampResponse>;
 };
+

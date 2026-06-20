@@ -3,8 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type LessonVocabTestResponse = {
-    isPassed: boolean;
-    score: number;
-};
-
+export enum UserLessonEntityType {
+    STORY = 1,
+    GRAMMAR = 2,
+    VOCAB = 3,
+}

@@ -16,3 +16,4 @@ export type CourseResponse = {
     coverId: string | null;
     lastVisitedAt: string | null;
 };
+

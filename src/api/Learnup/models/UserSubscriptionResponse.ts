@@ -17,3 +17,4 @@ export type UserSubscriptionResponse = {
     expiresAt: string;
     status: UserSubscriptionStatus;
 };
+

@@ -16,6 +16,8 @@ export function LeitnerStatsCard({ totalItems, dueItems }: Props) {
   const isTodayEmpty = dueItems === 0;
   const isTotalEmpty = totalItems === 0;
 
+  const vocabs = isTodayEmpty ? ['you', 'are', 'the', 'best'] : [`${dueItems} due`, `${totalItems} total`]
+
   return (
     <Card sx={{ position: 'relative' }}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
@@ -29,20 +31,19 @@ export function LeitnerStatsCard({ totalItems, dueItems }: Props) {
             onClick={() => navigate('/leitner-box')}
             sx={{ bgcolor: 'common.black' }}
           >
-            مرور لغات امروز
+            {isTotalEmpty ? 'آشنایی با لاینتر' : 'بریم مرور کنیم'}
           </Button>
         </Stack>
 
         <TypeWriter sx={{
-          fontSize: '30px',
+          fontSize: '45px',
           opacity: 0.15,
           position: 'absolute',
           direction: 'rtl',
           right: 10,
-          bottom: 8
+          bottom: 0
         }}
-
-          words={[`${dueItems} due`, `${totalItems} total`]} />
+          words={vocabs} />
       </Box>
     </Card>
   );

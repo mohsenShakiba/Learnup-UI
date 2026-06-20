@@ -19,19 +19,17 @@ function CompletionBox ({ label, icon, done }: CompletionBoxProps) {
   return (
     <Box
       sx={{
-        flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: 0.5,
-        py: 1,
-        borderRadius: 2,
-        bgcolor: done ? 'success.main' : 'rgba(0,0,0,0.15)',
-        transition: 'background-color 0.3s ease',
+
       }}
     >
-      <Icon sx={{ fontSize: '1.1rem', color: done ? 'white' : 'rgba(255,255,255,0.5)' }}>{done ? 'check_circle' : icon}</Icon>
-      <Typography sx={{ fontSize: '0.65rem', color: done ? 'white' : 'rgba(255,255,255,0.5)' }}>{label}</Typography>
+      <Icon sx={{
+        bgcolor: done ? 'success.main' : 'rgba(0,0,0,0.15)',
+        width: 25,
+        height: 25,
+        lineHeight: '25px',
+        borderRadius: 1,
+        fontSize: '1rem', color: done ? 'white' : 'rgba(255,255,255,0.5)'
+      }}>{icon}</Icon>
     </Box>
   );
 }
@@ -57,13 +55,13 @@ export function ContinueCard ({ lesson }: Props) {
       <Stack spacing={2} sx={{ position: 'relative', zIndex: 1 }}>
 
         {/* Lesson info */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+        <Box sx={{ display: 'flex', alignItems: 'start', gap: 1.5 }}>
           <Box
             sx={{
               fontSize: 26,
-              width: 48,
-              height: 48,
-              borderRadius: 2,
+              width: 40,
+              height: 40,
+              borderRadius: 1,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -82,14 +80,18 @@ export function ContinueCard ({ lesson }: Props) {
               {lesson?.title ?? ''}
             </Typography>
           </Stack>
+
+          <Box sx={{ flex: 1 }} />
+
+          {/* Completion boxes */}
+          <Stack direction="row" spacing={1}>
+            <CompletionBox label="داستان" icon="menu_book" done={storyDone} />
+            <CompletionBox label="گرامر" icon="spellcheck" done={grammarDone} />
+            <CompletionBox label="لغات" icon="translate" done={vocabDone} />
+          </Stack>
         </Box>
 
-        {/* Completion boxes */}
-        <Stack direction="row" spacing={1}>
-          <CompletionBox label="داستان" icon="menu_book" done={storyDone} />
-          <CompletionBox label="گرامر" icon="spellcheck" done={grammarDone} />
-          <CompletionBox label="لغات" icon="translate" done={vocabDone} />
-        </Stack>
+
 
         {/* CTA */}
         <FancyButton

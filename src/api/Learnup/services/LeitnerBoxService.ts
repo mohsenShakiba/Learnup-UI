@@ -5,6 +5,7 @@
 import type { BoxLevelResponse } from '../models/BoxLevelResponse';
 import type { DueLeitnerBoxItemResponse } from '../models/DueLeitnerBoxItemResponse';
 import type { LeitnerBoxResponse } from '../models/LeitnerBoxResponse';
+import type { ReviewLeitnerBoxItemRequest } from '../models/ReviewLeitnerBoxItemRequest';
 import type { UpdateBoxLevelReviewIntervalRequest } from '../models/UpdateBoxLevelReviewIntervalRequest';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -38,6 +39,27 @@ vocabId: number,
             path: {
                 'vocabId': vocabId,
             },
+        });
+    }
+
+    /**
+     * @param id 
+     * @param requestBody 
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static reviewLeitnerBoxItem(
+id: number,
+requestBody?: ReviewLeitnerBoxItemRequest,
+): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/Mobile/LeitnerBox/item/{id}/review',
+            path: {
+                'id': id,
+            },
+            body: requestBody,
+            mediaType: 'application/json',
         });
     }
 

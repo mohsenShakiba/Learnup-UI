@@ -7,6 +7,7 @@ export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
+export { AnswerQuality } from './models/AnswerQuality';
 export type { AnswerTestRequest } from './models/AnswerTestRequest';
 export type { AnswerTestResponse } from './models/AnswerTestResponse';
 export type { BoxLevelInfoResponse } from './models/BoxLevelInfoResponse';
@@ -28,6 +29,7 @@ export type { LessonDetailResponse } from './models/LessonDetailResponse';
 export type { LessonResponse } from './models/LessonResponse';
 export type { LessonVocabTestResponse } from './models/LessonVocabTestResponse';
 export { Level } from './models/Level';
+export type { ReviewLeitnerBoxItemRequest } from './models/ReviewLeitnerBoxItemRequest';
 export type { StoryItemRequest } from './models/StoryItemRequest';
 export type { StoryItemResponse } from './models/StoryItemResponse';
 export type { StoryItemTimestampResponse } from './models/StoryItemTimestampResponse';

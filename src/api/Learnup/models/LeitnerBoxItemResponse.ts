@@ -13,3 +13,4 @@ export type LeitnerBoxItemResponse = {
     boxLevel: Level;
     addedAt: string;
 };
+

@@ -1,6 +1,6 @@
 import { Button, type ButtonProps } from '@mui/material';
 
-export function FancyButton ({ sx, children, ...props }: ButtonProps) {
+export function FancyButton({ sx, children, ...props }: ButtonProps) {
   return (
     <Button
       {...props}

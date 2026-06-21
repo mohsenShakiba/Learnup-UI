@@ -4,10 +4,13 @@ import {
   Stack,
   Typography
 } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
-import { UsersService } from "../../../api/Learnup";
+import type { UserStreakResponse } from "../../../api/Learnup";
 
-function getStreakIcon (streakCount: number): string {
+interface Props {
+  streak: UserStreakResponse | undefined;
+}
+
+function getStreakIcon(streakCount: number): string {
   if (streakCount === 0) return "🎓";
   if (streakCount <= 1) return "👍";
   if (streakCount <= 2) return "⚡";
@@ -18,7 +21,7 @@ function getStreakIcon (streakCount: number): string {
   return "🎉";
 }
 
-function getStreakCaption (streakCount: number): string {
+function getStreakCaption(streakCount: number): string {
   if (streakCount === 0) return "هنوز شروع نکردی!";
   if (streakCount <= 1) return "شروع خوبیه!";
   if (streakCount <= 2) return "همینجوری ادامه بده!";
@@ -35,20 +38,11 @@ function getStreakCaption (streakCount: number): string {
 const WEEK_LABELS = ["شنبه", "یک‌شنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنج‌شنبه", "جمعه"];
 
 // JS getDay(): 0=Sun,1=Mon,...,6=Sat → Persian index: Sat=0,Sun=1,...,Fri=6
-function jsDayToPersianIndex (jsDay: number): number {
+function jsDayToPersianIndex(jsDay: number): number {
   return (jsDay + 1) % 7;
 }
 
-export function StreakCardBlaze () {
-
-  const { data: streak, isLoading } = useQuery({
-    queryKey: ['user', 'streak'],
-    queryFn: () => UsersService.getUserStreaks(),
-    retry: false,
-  });
-
-  if (isLoading) return null;
-
+export function StreakCardBlaze({ streak }: Props) {
   const currentStreak = streak?.currentStreak ?? 0;
 
   // Build lookup: "YYYY-MM-DD" -> isCheckedIn
@@ -78,7 +72,7 @@ export function StreakCardBlaze () {
     };
   });
 
-  function getCellContent (day: typeof days[0]): string {
+  function getCellContent(day: typeof days[0]): string {
     if (day.active) return "🔥";
     if (day.isPast) return "❄️";
     return String(day.dayNumber);

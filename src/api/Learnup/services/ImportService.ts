@@ -13,17 +13,17 @@ import { request as __request } from '../core/request';
 export class ImportService {
 
     /**
-     * @param formData 
+     * @param formData
      * @returns ImportVocabsResponse OK
      * @throws ApiError
      */
     public static importVocabs(
-formData?: {
-File?: Blob;
-LevelId?: number;
-LanguageId?: number;
-},
-): CancelablePromise<ImportVocabsResponse> {
+        formData?: {
+            File?: Blob;
+            LevelId?: number;
+            LanguageId?: number;
+        },
+    ): CancelablePromise<ImportVocabsResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/Admin/Import/vocabs',
@@ -33,13 +33,13 @@ LanguageId?: number;
     }
 
     /**
-     * @param requestBody 
+     * @param requestBody
      * @returns number OK
      * @throws ApiError
      */
     public static importStory(
-requestBody?: ImportStoryRequest,
-): CancelablePromise<number> {
+        requestBody?: ImportStoryRequest,
+    ): CancelablePromise<number> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/Admin/Import/stories',
@@ -49,13 +49,13 @@ requestBody?: ImportStoryRequest,
     }
 
     /**
-     * @param requestBody 
+     * @param requestBody
      * @returns number OK
      * @throws ApiError
      */
     public static postAdminImportGrammars(
-requestBody?: ImportGrammarRequest,
-): CancelablePromise<number> {
+        requestBody?: ImportGrammarRequest,
+    ): CancelablePromise<number> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/Admin/Import/grammars',

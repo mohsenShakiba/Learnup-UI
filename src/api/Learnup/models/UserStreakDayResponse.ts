@@ -7,3 +7,4 @@ export type UserStreakDayResponse = {
     date: string;
     isCheckedIn: boolean;
 };
+

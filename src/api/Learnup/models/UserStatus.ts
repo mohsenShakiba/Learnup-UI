@@ -3,8 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type LessonVocabTestResponse = {
-    isPassed: boolean;
-    score: number;
-};
-
+export enum UserStatus {
+    ACTIVE = 0,
+    DISABLED = -1,
+}

@@ -18,3 +18,4 @@ export type LessonDetailResponse = {
     vocabs: Array<VocabResponse>;
     vocabTest: LessonVocabTestResponse;
 };
+

@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material';
+import { Typography, SxProps, Theme } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 type TypeWriterProps = {
@@ -6,6 +6,7 @@ type TypeWriterProps = {
   typeSpeed?: number;
   eraseSpeed?: number;
   pauseMs?: number;
+  sx?: SxProps<Theme>;
 };
 
 export function TypeWriter ({
@@ -13,6 +14,7 @@ export function TypeWriter ({
   typeSpeed = 120,
   eraseSpeed = 50,
   pauseMs = 2000,
+  sx,
 }: TypeWriterProps) {
   const [displayed, setDisplayed] = useState('');
   const [wordIndex, setWordIndex] = useState(0);
@@ -51,6 +53,6 @@ export function TypeWriter ({
   }, [displayed, phase, wordIndex, words, typeSpeed, eraseSpeed, pauseMs]);
 
   return (
-    <Typography component='span' sx={{ fontSize: 'inherit', color: 'inherit', lineHeight: 'inherit' }}>{displayed}</Typography>
+    <Typography component='span' sx={[{ fontSize: 'inherit', color: 'inherit', lineHeight: 'inherit' }, ...(Array.isArray(sx) ? sx : [sx])]}>{displayed}</Typography>
   );
 }

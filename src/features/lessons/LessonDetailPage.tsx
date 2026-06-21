@@ -1,4 +1,3 @@
-import { Stack } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { LessonsService } from '../../api/Learnup';
@@ -6,11 +5,7 @@ import { AppLoader } from '../../shared/components/AppLoader';
 import { DefaultHeader } from '../../shared/components/DefaultHeader';
 import { ErrorPage } from '../../shared/components/ErrorPage';
 import { Scaffold } from '../../shared/components/Scaffold';
-import { GrammarListItem } from './components/GrammarListItem';
-import { GrammarTestListItem } from './components/GrammarTestListItem';
-import { StoryListItem } from './components/StoryListItem';
-import { VocabListItem } from './components/VocabListItem';
-import { VocabTestListItem } from './components/VocabTestListItem';
+import { LessonTimeline } from './components/LessonTimeline';
 
 export default function LessonDetailPage () {
   const { id: lessonId } = useParams<{ id: string; }>();
@@ -38,31 +33,13 @@ export default function LessonDetailPage () {
         <DefaultHeader header='درس اول' subtitle='12 درس' />
       }
     >
-      <Stack spacing={2}>
-
-
-        <Stack spacing={2}>
-          {lesson.stories.map((story) => (
-            <StoryListItem key={story.id} story={story} />
-          ))}
-        </Stack>
-
-
-        <Stack spacing={2}>
-          {lesson.grammars.map((grammar) => (
-            <GrammarListItem key={grammar.id} grammar={grammar} />
-          ))}
-        </Stack>
-
-
-        <VocabListItem lessonId={lesson.id} vocabs={lesson.vocabs} />
-
-        <VocabTestListItem lessonId={lesson.id} vocabCount={lesson.vocabs.length} vocabTest={lesson.vocabTest} />
-
-        <GrammarTestListItem lessonId={lesson.id} grammarCount={lesson.grammars.length} />
-
-
-      </Stack>
+      <LessonTimeline
+        stories={lesson.stories}
+        grammars={lesson.grammars}
+        vocabs={lesson.vocabs}
+        vocabTest={lesson.vocabTest}
+        lessonId={lesson.id}
+      />
     </Scaffold>
   );
 }

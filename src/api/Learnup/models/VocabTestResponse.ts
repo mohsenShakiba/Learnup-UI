@@ -15,3 +15,4 @@ export type VocabTestResponse = {
     userSelectedOptionId: number | null;
     isCorrect: boolean | null;
 };
+

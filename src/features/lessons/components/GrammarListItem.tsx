@@ -1,4 +1,4 @@
-import { Box, Divider, Icon, Stack, Typography } from '@mui/material';
+import { Box, Button, Divider, Icon, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { GrammarResponse } from '../../../api/Learnup/models/GrammarResponse';
 import { ActionCard } from '../../../shared/components/ActionCard';
@@ -45,7 +45,19 @@ export function GrammarListItem ({ grammar }: Props) {
 
                 </Stack>
 
+                <Divider />
+
+                <Stack direction='row'>
+                    <Typography>شروع تست</Typography>
+                    <Box sx={{ flex: 1 }} />
+                    <Button >شروع تست</Button>
+                </Stack>
+
+
             </Stack>
+
+
+
 
         </ActionCard>
     );

@@ -21,7 +21,6 @@ import LessonVocabsPage from "./features/vocabs/LessonVocabsPage";
 import VocabSearchPage from "./features/vocabs/VocabSearchPage";
 import LessonVocabTestsPage from "./features/VocabTests/LessonVocabTestsPage";
 import { BottomNav } from "./shared/components/BottomNav";
-import { PageFade } from "./shared/components/PageFade";
 setupOpenApi();
 
 function App () {
@@ -29,50 +28,47 @@ function App () {
     <BrowserRouter>
       <Stack sx={{ height: "100dvh", overflow: "hidden" }}>
         <Box sx={{ flex: 1, overflowY: "auto", position: "relative" }}>
-          <PageFade>
-            {(location) => (
-              <Routes location={location}>
-                <Route path="/stories/:id" element={<StoryDetailPage />} />
-                <Route path="/courses/:id" element={<CourseDetailPage />} />
-                <Route path="/grammar" element={<ListGrammarPage />} />
-                <Route path="/grammars/:id" element={<GrammarDetailPage />} />
-                <Route
-                  path="/languages/:languageId/courses"
-                  element={<ListCoursesPage />}
-                />
-                <Route path="/lessons/:id" element={<LessonDetailPage />} />
-                <Route
-                  path="/lessons/:id/vocabs"
-                  element={<LessonVocabsPage />}
-                />
-                <Route
-                  path="/lessons/:id/vocab-tests"
-                  element={<LessonVocabTestsPage />}
-                />
-                <Route
-                  path="/lessons/:id/grammar-tests"
-                  element={<LessonGrammarTestsPage />}
-                />
-                <Route path="/vocab" element={<VocabSearchPage />} />
-                <Route path="/leitner-box" element={<LeitnerBoxPage />} />
-                <Route
-                  path="/boxlevel/:id"
-                  element={<BoxLevelReviewPage />}
-                />
-                <Route path="/settings" element={<SettingsPage />} />
-                <Route path="/settings/subscriptions" element={<SubscriptionsPage />} />
-                <Route path="/dashboard" element={<DashboardPage />} />
-                <Route path="/library/book/:fileName" element={<BookDetailPage />} />
-                <Route path="/library" element={<UserBooksPage />} />
-                <Route
-                  path="/library/user-books/upload"
-                  element={<UploadUserBookPage />}
-                />
-                <Route path="/" element={<ListCoursesPage />} />
-                <Route path="*" element={<h1>404 - Not Found</h1>} />
-              </Routes>
-            )}
-          </PageFade>
+
+          <Routes location={location}>
+            <Route path="/stories/:id" element={<StoryDetailPage />} />
+            <Route path="/courses/:id" element={<CourseDetailPage />} />
+            <Route path="/grammar" element={<ListGrammarPage />} />
+            <Route path="/grammars/:id" element={<GrammarDetailPage />} />
+            <Route
+              path="/languages/:languageId/courses"
+              element={<ListCoursesPage />}
+            />
+            <Route path="/lessons/:id" element={<LessonDetailPage />} />
+            <Route
+              path="/lessons/:id/vocabs"
+              element={<LessonVocabsPage />}
+            />
+            <Route
+              path="/lessons/:id/vocab-tests"
+              element={<LessonVocabTestsPage />}
+            />
+            <Route
+              path="/lessons/:id/grammar-tests"
+              element={<LessonGrammarTestsPage />}
+            />
+            <Route path="/vocab" element={<VocabSearchPage />} />
+            <Route path="/leitner-box" element={<LeitnerBoxPage />} />
+            <Route
+              path="/boxlevel/:id"
+              element={<BoxLevelReviewPage />}
+            />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/settings/subscriptions" element={<SubscriptionsPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/library/book/:fileName" element={<BookDetailPage />} />
+            <Route path="/library" element={<UserBooksPage />} />
+            <Route
+              path="/library/user-books/upload"
+              element={<UploadUserBookPage />}
+            />
+            <Route path="/" element={<ListCoursesPage />} />
+            <Route path="*" element={<h1>404 - Not Found</h1>} />
+          </Routes>
         </Box>
 
         <BottomNav />

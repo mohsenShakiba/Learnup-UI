@@ -9,7 +9,7 @@ type ScaffoldProps = {
   maxWidth?: string | number;
 };
 
-export function Scaffold({
+export function Scaffold ({
   header,
   children,
   disablePadding,

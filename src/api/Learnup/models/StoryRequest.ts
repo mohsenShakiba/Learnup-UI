@@ -10,4 +10,3 @@ export type StoryRequest = {
     words: Array<string>;
     sentences: Array<StoryItemRequest>;
 };
-

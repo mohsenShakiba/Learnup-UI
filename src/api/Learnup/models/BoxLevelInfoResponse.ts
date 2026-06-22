@@ -13,4 +13,3 @@ export type BoxLevelInfoResponse = {
     dueItemsCount: number;
     nextReviewAt: string | null;
 };
-

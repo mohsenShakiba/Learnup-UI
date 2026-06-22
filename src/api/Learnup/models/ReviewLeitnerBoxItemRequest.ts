@@ -8,4 +8,3 @@ import type { AnswerQuality } from './AnswerQuality';
 export type ReviewLeitnerBoxItemRequest = {
     answerQuality: AnswerQuality;
 };
-

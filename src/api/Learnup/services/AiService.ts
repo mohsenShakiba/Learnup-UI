@@ -9,13 +9,13 @@ import { request as __request } from '../core/request';
 export class AiService {
 
     /**
-     * @param requestBody
+     * @param requestBody 
      * @returns string OK
      * @throws ApiError
      */
     public static postMobileAiSend(
-        requestBody?: string,
-    ): CancelablePromise<string> {
+requestBody?: string,
+): CancelablePromise<string> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/Mobile/Ai/send',

@@ -3,7 +3,10 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type MotivationalSentenceResponse = {
+export type UserBookResponse = {
     id: number;
-    sentence: string;
+    title: string;
+    fileName: string;
+    coverId: string | null;
+    uploadedAt: string;
 };

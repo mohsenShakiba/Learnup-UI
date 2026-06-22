@@ -13,4 +13,3 @@ export type CurrentLessonProgressResponse = {
     isVocabCompleted: boolean;
     nextLessonId: number | null;
 };
-

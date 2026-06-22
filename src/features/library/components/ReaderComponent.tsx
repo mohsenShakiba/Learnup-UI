@@ -20,11 +20,20 @@ declare global {
   }
 }
 
+// epub.js' bundled types don't expose the per-section page info we need.
+interface SectionLocation {
+  index: number;
+  cfi?: string;
+  displayed: { page: number; total: number; };
+}
+
 export function ReaderComponent ({ bookData, bookId, initialCfi }: Props) {
   const viewerRef = useRef<HTMLDivElement>(null);
   const renditionRef = useRef<Rendition | null>(null);
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastSavedRef = useRef<string | null>(initialCfi ?? null);
+  // Cumulative page count preceding each spine section, indexed by spine position.
+  const sectionOffsetsRef = useRef<number[]>([]);
   const [currentPage, setCurrentPage] = useState<number | null>(null);
   const [totalPages, setTotalPages] = useState<number | null>(null);
 
@@ -43,13 +52,6 @@ export function ReaderComponent ({ bookData, bookId, initialCfi }: Props) {
 
     renditionRef.current = rendition;
 
-    // epub.js' bundled types are incomplete: at runtime locationFromCfi returns
-    // a numeric index and length() reports the generated location count.
-    const locations = book.locations as unknown as {
-      locationFromCfi: (cfi: string) => number;
-      length: () => number;
-    };
-
     window.ePubViewer = {
       Book: {
         nextPage: () => rendition.next(),
@@ -57,16 +59,21 @@ export function ReaderComponent ({ bookData, bookId, initialCfi }: Props) {
       },
     };
 
+    // Translate a section-relative location into a whole-book page number.
+    const toGlobalPage = (start?: SectionLocation) => {
+      if (!start) return null;
+      const offset = sectionOffsetsRef.current[start.index] ?? 0;
+      return offset + start.displayed.page;
+    };
+
     // Persist the reading position whenever the page changes.
-    rendition.on('relocated', (location: { start?: { cfi?: string; }; }) => {
-      const cfi = location?.start?.cfi;
+    rendition.on('relocated', (location: { start?: SectionLocation; }) => {
+      const start = location?.start;
+      const cfi = start?.cfi;
       if (!cfi) return;
 
-      // Update the page indicator from the generated locations.
-      if (locations.length()) {
-        setCurrentPage(locations.locationFromCfi(cfi) + 1);
-        setTotalPages(locations.length());
-      }
+      const page = toGlobalPage(start);
+      if (page != null) setCurrentPage(page);
 
       if (bookId == null || cfi === lastSavedRef.current) return;
       lastSavedRef.current = cfi;
@@ -77,23 +84,72 @@ export function ReaderComponent ({ bookData, bookId, initialCfi }: Props) {
       }, 800);
     });
 
-
     // Restore the saved page on load, falling back to the start of the book.
     rendition.display(initialCfi ?? undefined);
 
-    // Generate locations so we can report page numbers. Refresh the indicator
-    // once they are ready in case the book is already displayed.
-    book.ready
-      .then(() => book.locations.generate(1000))
-      .then(() => {
-        setTotalPages(locations.length());
-        const loc = renditionRef.current?.currentLocation() as unknown as { start?: { cfi?: string; }; };
-        const currentCfi = loc?.start?.cfi;
-        if (currentCfi) setCurrentPage(locations.locationFromCfi(currentCfi) + 1);
+    // Pre-paginate every section in a hidden rendition sized like the viewer so
+    // we know how many pages each contains. This yields a stable "page X / Y"
+    // that advances by one per flip, instead of the character-based location
+    // count which can skip several numbers per page.
+    let cancelled = false;
+    let measureContainer: HTMLDivElement | null = null;
+    let measureRendition: Rendition | null = null;
+
+    book.ready.then(async () => {
+      if (cancelled || !viewerRef.current) return;
+      const width = viewerRef.current.clientWidth;
+      const height = viewerRef.current.clientHeight;
+      if (!width || !height) return;
+
+      measureContainer = document.createElement('div');
+      measureContainer.style.cssText =
+        `position:absolute;top:0;left:0;visibility:hidden;pointer-events:none;` +
+        `width:${width}px;height:${height}px;overflow:hidden;opacity: 0`;
+      document.body.appendChild(measureContainer);
+
+      measureRendition = book.renderTo(measureContainer, {
+        flow: 'paginated',
+        manager: 'continuous',
+        width,
+        height,
       });
 
+      const spineItems = (book.spine as unknown as {
+        spineItems: Array<{ href: string; index: number; }>;
+      }).spineItems;
+
+      const offsets: number[] = [];
+      let cumulative = 0;
+
+      for (const item of spineItems) {
+        if (cancelled) break;
+        await measureRendition.display(item.href);
+        const start = (measureRendition.location as unknown as { start?: SectionLocation; })?.start;
+        offsets[item.index] = cumulative;
+        cumulative += start?.displayed.total ?? 1;
+      }
+
+      if (cancelled) return;
+
+      sectionOffsetsRef.current = offsets;
+      setTotalPages(cumulative);
+
+      // Reflect the page for the position the visible rendition already shows.
+      const current = (renditionRef.current?.currentLocation() as unknown as { start?: SectionLocation; })?.start;
+      const page = toGlobalPage(current);
+      if (page != null) setCurrentPage(page);
+
+      // measureRendition.destroy();
+      // measureContainer.remove();
+      measureRendition = null;
+      measureContainer = null;
+    });
+
     return () => {
+      cancelled = true;
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+      measureRendition?.destroy();
+      measureContainer?.remove();
       rendition.destroy();
       book.destroy();
       renditionRef.current = null;

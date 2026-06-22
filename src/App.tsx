@@ -17,6 +17,7 @@ import StoryDetailPage from "./features/stories/StoryDetailPage";
 import LessonVocabsPage from "./features/vocabs/LessonVocabsPage";
 import VocabSearchPage from "./features/vocabs/VocabSearchPage";
 import LessonVocabTestsPage from "./features/VocabTests/LessonVocabTestsPage";
+import LibraryPage from "./features/library/LibraryPage";
 import { BottomNav } from "./shared/components/BottomNav";
 import { PageFade } from "./shared/components/PageFade";
 setupOpenApi();
@@ -59,6 +60,7 @@ function App() {
                 <Route path="/settings" element={<SettingsPage />} />
                 <Route path="/settings/subscriptions" element={<SubscriptionsPage />} />
                 <Route path="/dashboard" element={<DashboardPage />} />
+                <Route path="/library" element={<LibraryPage />} />
                 <Route path="/" element={<ListCoursesPage />} />
                 <Route path="*" element={<h1>404 - Not Found</h1>} />
               </Routes>

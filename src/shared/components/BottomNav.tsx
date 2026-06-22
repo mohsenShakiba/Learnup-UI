@@ -10,6 +10,7 @@ const tabs = [
   { label: 'Courses', icon: 'school', path: '/' },
   { label: 'Vocab', icon: 'menu_book', path: '/vocab' },
   { label: 'Leitner', icon: 'layers', path: '/leitner-box' },
+  { label: 'Library', icon: 'local_library', path: '/library' },
   { label: 'Settings', icon: 'settings', path: '/settings' },
 ];
 

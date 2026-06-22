@@ -7,6 +7,7 @@ export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
+export { AnswerQuality } from './models/AnswerQuality';
 export type { AnswerTestRequest } from './models/AnswerTestRequest';
 export type { AnswerTestResponse } from './models/AnswerTestResponse';
 export type { BoxLevelInfoResponse } from './models/BoxLevelInfoResponse';
@@ -30,6 +31,7 @@ export type { LessonResponse } from './models/LessonResponse';
 export type { LessonVocabTestResponse } from './models/LessonVocabTestResponse';
 export { Level } from './models/Level';
 export type { MotivationalSentenceResponse } from './models/MotivationalSentenceResponse';
+export type { ReviewLeitnerBoxItemRequest } from './models/ReviewLeitnerBoxItemRequest';
 export type { StoryItemRequest } from './models/StoryItemRequest';
 export type { StoryItemResponse } from './models/StoryItemResponse';
 export type { StoryItemTimestampResponse } from './models/StoryItemTimestampResponse';
@@ -55,6 +57,7 @@ export type { VocabTestResponse } from './models/VocabTestResponse';
 export { VocabTestType } from './models/VocabTestType';
 export { VocabType } from './models/VocabType';
 
+export { AiService } from './services/AiService';
 export { CoursesService } from './services/CoursesService';
 export { FilesService } from './services/FilesService';
 export { GrammarsService } from './services/GrammarsService';

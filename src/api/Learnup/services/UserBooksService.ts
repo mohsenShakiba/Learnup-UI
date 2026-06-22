@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { UpdateUserBookCurrentPageRequest } from '../models/UpdateUserBookCurrentPageRequest';
 import type { UserBookResponse } from '../models/UserBookResponse';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -55,6 +56,27 @@ name: string,
             path: {
                 'name': name,
             },
+        });
+    }
+
+    /**
+     * @param id 
+     * @param requestBody 
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static updateUserBookCurrentPage(
+id: number,
+requestBody?: UpdateUserBookCurrentPageRequest,
+): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'PUT',
+            url: '/Mobile/UserBooks/book/{id}',
+            path: {
+                'id': id,
+            },
+            body: requestBody,
+            mediaType: 'application/json',
         });
     }
 

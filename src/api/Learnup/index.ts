@@ -43,6 +43,7 @@ export type { SubscriptionResponse } from './models/SubscriptionResponse';
 export { SubscriptionType } from './models/SubscriptionType';
 export type { TestOptionResponse } from './models/TestOptionResponse';
 export type { UpdateBoxLevelReviewIntervalRequest } from './models/UpdateBoxLevelReviewIntervalRequest';
+export type { UpdateUserBookCurrentPageRequest } from './models/UpdateUserBookCurrentPageRequest';
 export type { UserBookResponse } from './models/UserBookResponse';
 export { UserLessonEntityType } from './models/UserLessonEntityType';
 export type { UserProfileResponse } from './models/UserProfileResponse';

@@ -57,7 +57,7 @@ export function ReaderComponent ({ bookData }: Props) {
     bookRef.current = book;
 
     const rendition = book.renderTo(viewerRef.current, {
-      manager: 'default',
+      manager: 'continuous',
       flow: 'paginated',
       width: '100%',
       height: '100%',
@@ -94,7 +94,36 @@ export function ReaderComponent ({ bookData }: Props) {
 
       rendition.themes.default(buildThemeStyles(configRef.current));
 
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let touchStartTime = 0;
+      let swiped = false;
+
+      doc.addEventListener('touchstart', (e: TouchEvent) => {
+        const t = e.changedTouches[0];
+        touchStartX = t.clientX;
+        touchStartY = t.clientY;
+        touchStartTime = Date.now();
+        swiped = false;
+      }, { passive: true });
+
+      doc.addEventListener('touchend', (e: TouchEvent) => {
+        const t = e.changedTouches[0];
+        const dx = t.clientX - touchStartX;
+        const dy = t.clientY - touchStartY;
+        const elapsed = Date.now() - touchStartTime;
+
+        // Horizontal swipe: fast enough, long enough, mostly horizontal
+        if (elapsed < 600 && Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+          swiped = true;
+          if (dx < 0) rendition.next();
+          else rendition.prev();
+        }
+      }, { passive: true });
+
       doc.addEventListener('click', (e: MouseEvent) => {
+        if (swiped) { swiped = false; return; }
+
         if (highlightedCfi.current) {
           rendition.annotations.remove(highlightedCfi.current, 'highlight');
           highlightedCfi.current = null;

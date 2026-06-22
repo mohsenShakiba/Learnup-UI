@@ -34,7 +34,7 @@ export default function UserBooksPage () {
             {books.map((book) => (
               <Paper
                 key={book.id}
-                onClick={() => navigate(`/book/${encodeURIComponent(book.fileName)}`)}
+                onClick={() => navigate(`/library/book/${encodeURIComponent(book.fileName)}`)}
                 sx={{
                   display: 'flex',
                   alignItems: 'center',

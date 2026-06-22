@@ -2,6 +2,7 @@ import { Box, IconButton, Stack, Typography } from '@mui/material';
 import Epub, { Rendition } from 'epubjs';
 import { useEffect, useRef, useState } from 'react';
 import { UserBooksService } from '../../../api/Learnup';
+import { calculateTotalPages, SectionLocation } from '../../../utils/Calculate';
 
 interface Props {
   bookData: ArrayBuffer;
@@ -18,13 +19,6 @@ declare global {
       };
     };
   }
-}
-
-// epub.js' bundled types don't expose the per-section page info we need.
-interface SectionLocation {
-  index: number;
-  cfi?: string;
-  displayed: { page: number; total: number; };
 }
 
 export function ReaderComponent ({ bookData, bookId, initialCfi }: Props) {
@@ -92,64 +86,24 @@ export function ReaderComponent ({ bookData, bookId, initialCfi }: Props) {
     // that advances by one per flip, instead of the character-based location
     // count which can skip several numbers per page.
     let cancelled = false;
-    let measureContainer: HTMLDivElement | null = null;
-    let measureRendition: Rendition | null = null;
 
     book.ready.then(async () => {
       if (cancelled || !viewerRef.current) return;
-      const width = viewerRef.current.clientWidth;
-      const height = viewerRef.current.clientHeight;
-      if (!width || !height) return;
+      const pageCalculation = await calculateTotalPages(book, viewerRef.current, () => cancelled);
+      if (!pageCalculation) return;
 
-      measureContainer = document.createElement('div');
-      measureContainer.style.cssText =
-        `position:absolute;top:0;left:0;visibility:hidden;pointer-events:none;` +
-        `width:${width}px;height:${height}px;overflow:hidden;opacity: 0`;
-      document.body.appendChild(measureContainer);
-
-      measureRendition = book.renderTo(measureContainer, {
-        flow: 'paginated',
-        manager: 'continuous',
-        width,
-        height,
-      });
-
-      const spineItems = (book.spine as unknown as {
-        spineItems: Array<{ href: string; index: number; }>;
-      }).spineItems;
-
-      const offsets: number[] = [];
-      let cumulative = 0;
-
-      for (const item of spineItems) {
-        if (cancelled) break;
-        await measureRendition.display(item.href);
-        const start = (measureRendition.location as unknown as { start?: SectionLocation; })?.start;
-        offsets[item.index] = cumulative;
-        cumulative += start?.displayed.total ?? 1;
-      }
-
-      if (cancelled) return;
-
-      sectionOffsetsRef.current = offsets;
-      setTotalPages(cumulative);
+      sectionOffsetsRef.current = pageCalculation.offsets;
+      setTotalPages(pageCalculation.totalPages);
 
       // Reflect the page for the position the visible rendition already shows.
       const current = (renditionRef.current?.currentLocation() as unknown as { start?: SectionLocation; })?.start;
       const page = toGlobalPage(current);
       if (page != null) setCurrentPage(page);
-
-      // measureRendition.destroy();
-      // measureContainer.remove();
-      measureRendition = null;
-      measureContainer = null;
     });
 
     return () => {
       cancelled = true;
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
-      measureRendition?.destroy();
-      measureContainer?.remove();
       rendition.destroy();
       book.destroy();
       renditionRef.current = null;

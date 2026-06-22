@@ -8,7 +8,7 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { FONTS, ReaderConfig, Theme, THEMES } from './readerTypes';
+import { FONTS, ReaderConfig, Theme, THEMES } from '../readerTypes';
 
 interface Props {
   open: boolean;
@@ -17,7 +17,7 @@ interface Props {
   onConfigChange: (patch: Partial<ReaderConfig>) => void;
 }
 
-export function ReaderConfigDrawer({ open, onClose, config, onConfigChange }: Props) {
+export function ReaderConfigDrawer ({ open, onClose, config, onConfigChange }: Props) {
   return (
     <Drawer anchor="bottom" open={open} onClose={onClose}>
       <Box sx={{ width: 40, height: 4, borderRadius: 2, bgcolor: 'divider', mx: 'auto', mb: 2 }} />

@@ -1,20 +1,16 @@
 import { Box, CircularProgress, Icon, IconButton, Popover, Stack, Typography } from '@mui/material';
 import Epub, { Book, Rendition } from 'epubjs';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { UserBooksService } from '../../api/Learnup';
-import { AiService } from '../../api/Learnup/services/AiService';
-import { AppLoader } from '../../shared/components/AppLoader';
-import { Scaffold } from '../../shared/components/Scaffold';
+import { AiService } from '../../../api/Learnup/services/AiService';
+import { DEFAULT_CONFIG, NavItem, ReaderConfig, THEMES } from '../readerTypes';
 import { ReaderConfigDrawer } from './ReaderConfigDrawer';
 import { TableOfContentsDrawer } from './TableOfContentsDrawer';
-import { DEFAULT_CONFIG, NavItem, ReaderConfig, THEMES } from './readerTypes';
 
-export default function LibraryPage () {
-  const { fileName } = useParams<{ fileName: string; }>();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [bookData, setBookData] = useState<ArrayBuffer | null>(null);
-  const [loadError, setLoadError] = useState(false);
+interface Props {
+  bookData: ArrayBuffer;
+}
+
+export function ReaderComponent ({ bookData }: Props) {
   const bookRef = useRef<Book | null>(null);
   const renditionRef = useRef<Rendition | null>(null);
   const viewerRef = useRef<HTMLDivElement>(null);
@@ -52,26 +48,6 @@ export default function LibraryPage () {
       '.epubjs-hl': { fill: 'rgb(46, 103, 189)', 'fill-opacity': '0.3', 'mix-blend-mode': 'multiply' },
     };
   };
-
-  useEffect(() => {
-    if (!fileName) return;
-
-    let cancelled = false;
-
-    setBookData(null);
-    setLoadError(false);
-
-    UserBooksService.getUserBookFile(fileName).then(r => {
-      setBookData(r.data);
-      setIsLoading(false);
-    }, () => {
-      setLoadError(true);
-      setIsLoading(false);
-    });
-
-    return () => { cancelled = true; };
-
-  }, [fileName]);
 
   useEffect(() => {
     if (!viewerRef.current || !bookData) return;
@@ -222,116 +198,96 @@ export default function LibraryPage () {
   const theme = THEMES[config.theme];
 
   return (
-    <Scaffold>
+    <>
+      <Stack>
 
-      {
-        isLoading && <AppLoader />
-      }
+        <Box>
 
-      {
-        !isLoading && !loadError && (
-          <>
-            <Stack>
+          <Box sx={{ flex: 1, minWidth: 0 }}>
 
-              <Box>
+            <Typography variant="h6" sx={{ color: theme.color }}>book</Typography>
 
-                <Box sx={{ flex: 1, minWidth: 0 }}>
+            {chapter && (
+              <Typography variant="caption" noWrap sx={{ color: theme.color, opacity: 0.6 }}>
+                {chapter}
+              </Typography>
+            )}
 
-                  <Typography variant="h6" sx={{ color: theme.color }}>book</Typography>
+          </Box>
 
-                  {chapter && (
-                    <Typography variant="caption" noWrap sx={{ color: theme.color, opacity: 0.6 }}>
-                      {chapter}
-                    </Typography>
-                  )}
+          <IconButton onClick={() => setTocOpen(true)} size="small">
+            <Icon>menu_book</Icon>
+          </IconButton>
+          <IconButton onClick={() => setConfigOpen(true)} size="small">
+            <Icon>tune</Icon>
+          </IconButton>
+        </Box>
 
-                </Box>
-
-                <IconButton onClick={() => setTocOpen(true)} size="small">
-                  <Icon>menu_book</Icon>
-                </IconButton>
-                <IconButton onClick={() => setConfigOpen(true)} size="small">
-                  <Icon>tune</Icon>
-                </IconButton>
-              </Box>
-
-              <Box sx={{ flex: 1, overflow: 'hidden', position: 'relative' }}>
-                <Box ref={viewerRef} sx={{ width: '100%', height: '100%' }} />
-                {(!bookData || loadError) && (
-                  <Stack
-                    sx={{
-                      position: 'absolute',
-                      inset: 0,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      bgcolor: theme.bg,
-                      gap: 1,
-                    }}
-                  >
-                    {loadError ? (
-                      <Typography variant="body2" sx={{ color: theme.color, opacity: 0.7 }}>
-                        خطا در بارگذاری کتاب
-                      </Typography>
-                    ) : (
-                      <CircularProgress size={28} />
-                    )}
-                  </Stack>
-                )}
-              </Box>
-
-              <Stack direction="row" sx={{ px: 1, py: 0.5, borderTop: 1, borderColor: theme.border, alignItems: 'center' }}>
-                <IconButton onClick={() => renditionRef.current?.prev()} size="large" disabled={atStart}>
-                  <span className="material-icons" style={{ color: theme.color }}>chevron_left</span>
-                </IconButton>
-                <Box sx={{ flex: 1, textAlign: 'center' }}>
-                  {pageInfo.total > 1 && (
-                    <Typography variant="caption" sx={{ color: theme.color, opacity: 0.5 }}>
-                      {pageInfo.page} / {pageInfo.total}
-                    </Typography>
-                  )}
-                </Box>
-                <IconButton onClick={() => renditionRef.current?.next()} size="large" disabled={atEnd}>
-                  <span className="material-icons" style={{ color: theme.color }}>chevron_right</span>
-                </IconButton>
-              </Stack>
-            </Stack>
-
-            <TableOfContentsDrawer
-              open={tocOpen}
-              onClose={() => setTocOpen(false)}
-              toc={toc}
-              onNavigate={navigateToHref}
-            />
-
-            <ReaderConfigDrawer
-              open={configOpen}
-              onClose={() => setConfigOpen(false)}
-              config={config}
-              onConfigChange={updateConfig}
-            />
-
-            <Popover
-              open={!!popoverPos}
-              onClose={() => setPopoverPos(null)}
-              anchorReference="anchorPosition"
-              anchorPosition={popoverPos ?? { top: 0, left: 0 }}
-              transformOrigin={{ vertical: 'top', horizontal: 'center' }}
-              disableRestoreFocus
+        <Box sx={{ flex: 1, overflow: 'hidden', position: 'relative' }}>
+          <Box ref={viewerRef} sx={{ width: '100%', height: '100%' }} />
+          {!bookData && (
+            <Stack
+              sx={{
+                position: 'absolute',
+                inset: 0,
+                alignItems: 'center',
+                justifyContent: 'center',
+                bgcolor: theme.bg,
+                gap: 1,
+              }}
             >
-              <Box sx={{ p: 2, maxWidth: 320 }}>
-                {aiLoading ? (
-                  <CircularProgress size={20} />
-                ) : (
-                  <Typography>{aiResult}</Typography>
-                )}
-              </Box>
-            </Popover>
-          </>
-        )
-      }
+              <CircularProgress size={28} />
+            </Stack>
+          )}
+        </Box>
 
+        <Stack direction="row" sx={{ px: 1, py: 0.5, borderTop: 1, borderColor: theme.border, alignItems: 'center' }}>
+          <IconButton onClick={() => renditionRef.current?.prev()} size="large" disabled={atStart}>
+            <span className="material-icons" style={{ color: theme.color }}>chevron_left</span>
+          </IconButton>
+          <Box sx={{ flex: 1, textAlign: 'center' }}>
+            {pageInfo.total > 1 && (
+              <Typography variant="caption" sx={{ color: theme.color, opacity: 0.5 }}>
+                {pageInfo.page} / {pageInfo.total}
+              </Typography>
+            )}
+          </Box>
+          <IconButton onClick={() => renditionRef.current?.next()} size="large" disabled={atEnd}>
+            <span className="material-icons" style={{ color: theme.color }}>chevron_right</span>
+          </IconButton>
+        </Stack>
+      </Stack>
 
+      <TableOfContentsDrawer
+        open={tocOpen}
+        onClose={() => setTocOpen(false)}
+        toc={toc}
+        onNavigate={navigateToHref}
+      />
 
-    </Scaffold>
+      <ReaderConfigDrawer
+        open={configOpen}
+        onClose={() => setConfigOpen(false)}
+        config={config}
+        onConfigChange={updateConfig}
+      />
+
+      <Popover
+        open={!!popoverPos}
+        onClose={() => setPopoverPos(null)}
+        anchorReference="anchorPosition"
+        anchorPosition={popoverPos ?? { top: 0, left: 0 }}
+        transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+        disableRestoreFocus
+      >
+        <Box sx={{ p: 2, maxWidth: 320 }}>
+          {aiLoading ? (
+            <CircularProgress size={20} />
+          ) : (
+            <Typography>{aiResult}</Typography>
+          )}
+        </Box>
+      </Popover>
+    </>
   );
 }

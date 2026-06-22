@@ -11,7 +11,7 @@ import LessonGrammarTestsPage from "./features/GrammarTests/LessonGrammarTestsPa
 import BoxLevelReviewPage from "./features/leitnerBox/BoxLevelReviewPage";
 import LeitnerBoxPage from "./features/leitnerBox/LeitnerBoxPage";
 import LessonDetailPage from "./features/lessons/LessonDetailPage";
-import LibraryPage from "./features/library/LibraryPage";
+import BookDetailPage from "./features/library/BookDetailPage";
 import UploadUserBookPage from "./features/library/UploadUserBookPage";
 import UserBooksPage from "./features/library/UserBooksPage";
 import SettingsPage from "./features/settings/SettingsPage";
@@ -62,7 +62,7 @@ function App () {
                 <Route path="/settings" element={<SettingsPage />} />
                 <Route path="/settings/subscriptions" element={<SubscriptionsPage />} />
                 <Route path="/dashboard" element={<DashboardPage />} />
-                <Route path="/library/book/:fileName" element={<LibraryPage />} />
+                <Route path="/library/book/:fileName" element={<BookDetailPage />} />
                 <Route path="/library" element={<UserBooksPage />} />
                 <Route
                   path="/library/user-books/upload"

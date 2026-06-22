@@ -9,7 +9,7 @@ import {
   ListItemText,
   Typography,
 } from '@mui/material';
-import { NavItem } from './readerTypes';
+import { NavItem } from '../readerTypes';
 
 interface Props {
   open: boolean;
@@ -18,7 +18,7 @@ interface Props {
   onNavigate: (href: string) => void;
 }
 
-function TocItem({
+function TocItem ({
   item,
   onNavigate,
   depth = 0,
@@ -43,7 +43,7 @@ function TocItem({
   );
 }
 
-export function TableOfContentsDrawer({ open, onClose, toc, onNavigate }: Props) {
+export function TableOfContentsDrawer ({ open, onClose, toc, onNavigate }: Props) {
   const handleNavigate = (href: string) => {
     onNavigate(href);
     onClose();

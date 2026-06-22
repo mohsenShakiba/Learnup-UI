@@ -35,11 +35,6 @@ export async function getCachedBook (fileName: string): Promise<ArrayBuffer | nu
     });
 
     if (!entry) return null;
-    if (Date.now() > entry.expiry) {
-      await deleteCachedBook(fileName);
-      return null;
-    }
-
     return entry.data;
   } catch {
     return null;

@@ -6,6 +6,23 @@ interface Props {
   bookData: ArrayBuffer;
 }
 
+declare global {
+  interface Window {
+    ePubViewer?: {
+      Book: {
+        nextPage: () => void;
+        prevPage: () => void;
+      };
+    };
+  }
+}
+
+// How far (fraction of a page) you must drag before release commits to the
+// next/prev page instead of snapping back.
+const SWIPE_THRESHOLD = 0.18;
+// Snap-back / commit animation length in ms.
+const SNAP_DURATION = 240;
+
 export function ReaderComponent ({ bookData }: Props) {
   const viewerRef = useRef<HTMLDivElement>(null);
   const renditionRef = useRef<Rendition | null>(null);
@@ -18,16 +35,25 @@ export function ReaderComponent ({ bookData }: Props) {
     const book = Epub(bookData);
     const rendition = book.renderTo(viewerRef.current, {
       flow: 'paginated',
+      manager: 'continuous',
       width: '100%',
       height: '100%',
       snap: true,
     });
+
     renditionRef.current = rendition;
 
-    rendition.on('relocated', (location: { atStart: boolean; atEnd: boolean; }) => {
-      setAtStart(location.atStart);
-      setAtEnd(location.atEnd);
-    });
+    window.ePubViewer = {
+      Book: {
+        nextPage: () => rendition.next(),
+        prevPage: () => rendition.prev(),
+      },
+    };
+
+    // rendition.on('relocated', (location: { atStart: boolean; atEnd: boolean; }) => {
+    //   setAtStart(location.atStart);
+    //   setAtEnd(location.atEnd);
+    // });
 
     rendition.display();
 
@@ -35,12 +61,13 @@ export function ReaderComponent ({ bookData }: Props) {
       rendition.destroy();
       book.destroy();
       renditionRef.current = null;
+      delete window.ePubViewer;
     };
   }, [bookData]);
 
   return (
     <Stack sx={{ width: '100%', height: '100%', overflow: 'hidden' }}>
-      <Box ref={viewerRef} sx={{ flex: 1, minHeight: 0, width: '100%', }} />
+      <Box ref={viewerRef} sx={{ flex: 1, minHeight: 0, width: '100%' }} />
       <Stack
         direction="row"
         sx={{

@@ -2,27 +2,29 @@ import { Box, Stack } from "@mui/material";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import setupOpenApi from "./api/setup";
 import "./App.css";
-import DashboardPage from "./features/dashboard/DashboardPage";
 import CourseDetailPage from "./features/courses/CourseDetailPage";
 import ListCoursesPage from "./features/courses/ListCoursesPage";
+import DashboardPage from "./features/dashboard/DashboardPage";
 import GrammarDetailPage from "./features/grammar/pages/GrammarDetailPage";
 import ListGrammarPage from "./features/grammar/pages/ListGrammarPage";
 import LessonGrammarTestsPage from "./features/GrammarTests/LessonGrammarTestsPage";
 import BoxLevelReviewPage from "./features/leitnerBox/BoxLevelReviewPage";
 import LeitnerBoxPage from "./features/leitnerBox/LeitnerBoxPage";
 import LessonDetailPage from "./features/lessons/LessonDetailPage";
+import LibraryPage from "./features/library/LibraryPage";
+import UploadUserBookPage from "./features/library/UploadUserBookPage";
+import UserBooksPage from "./features/library/UserBooksPage";
 import SettingsPage from "./features/settings/SettingsPage";
 import SubscriptionsPage from "./features/settings/SubscriptionsPage";
 import StoryDetailPage from "./features/stories/StoryDetailPage";
 import LessonVocabsPage from "./features/vocabs/LessonVocabsPage";
 import VocabSearchPage from "./features/vocabs/VocabSearchPage";
 import LessonVocabTestsPage from "./features/VocabTests/LessonVocabTestsPage";
-import LibraryPage from "./features/library/LibraryPage";
 import { BottomNav } from "./shared/components/BottomNav";
 import { PageFade } from "./shared/components/PageFade";
 setupOpenApi();
 
-function App() {
+function App () {
   return (
     <BrowserRouter>
       <Stack sx={{ height: "100dvh", overflow: "hidden" }}>
@@ -60,7 +62,12 @@ function App() {
                 <Route path="/settings" element={<SettingsPage />} />
                 <Route path="/settings/subscriptions" element={<SubscriptionsPage />} />
                 <Route path="/dashboard" element={<DashboardPage />} />
-                <Route path="/library" element={<LibraryPage />} />
+                <Route path="/library/book" element={<LibraryPage />} />
+                <Route path="/library" element={<UserBooksPage />} />
+                <Route
+                  path="/library/user-books/upload"
+                  element={<UploadUserBookPage />}
+                />
                 <Route path="/" element={<ListCoursesPage />} />
                 <Route path="*" element={<h1>404 - Not Found</h1>} />
               </Routes>

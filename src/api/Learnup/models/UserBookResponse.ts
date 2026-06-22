@@ -7,6 +7,5 @@ export type UserBookResponse = {
     id: number;
     title: string;
     fileName: string;
-    coverId: string | null;
     uploadedAt: string;
 };

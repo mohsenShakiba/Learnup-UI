@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 import { LearnupThemeProvider } from "./shared/theme/ThemeContext.tsx";
+import { ToastHost } from "./shared/toast";
 
 
 const queryClient = new QueryClient();
@@ -13,6 +14,7 @@ createRoot(document.getElementById("root")!).render(
     <QueryClientProvider client={queryClient}>
       <LearnupThemeProvider>
         <App />
+        <ToastHost />
       </LearnupThemeProvider>
     </QueryClientProvider>
   </StrictMode>,

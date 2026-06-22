@@ -1,10 +1,13 @@
 import { Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { UserBooksService } from '../../api/Learnup';
+import { getFileById } from '../../services/fetchFile';
 import { AppLoader } from '../../shared/components/AppLoader';
 import { Scaffold } from '../../shared/components/Scaffold';
+import { getCachedBook, setCachedBook } from './bookCache';
 import { ReaderComponent } from './components/ReaderComponent';
+
+
 
 export default function BookDetailPage () {
   const { fileName } = useParams<{ fileName: string; }>();
@@ -15,21 +18,40 @@ export default function BookDetailPage () {
   useEffect(() => {
     if (!fileName) return;
 
+    let cancelled = false;
+
     setBookData(null);
     setLoadError(false);
+    setIsLoading(true);
 
-    UserBooksService.getUserBookFile(fileName).then(r => {
-      setBookData(r.data);
-      setIsLoading(false);
-    }, () => {
-      setLoadError(true);
-      setIsLoading(false);
-    });
+    (async () => {
+      const cached = await getCachedBook(fileName);
+      if (cancelled) return;
 
+      if (cached) {
+        setBookData(cached);
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const r = await getFileById(fileName);
+        if (cancelled) return;
+        setCachedBook(fileName, r);
+        setBookData(r);
+        setIsLoading(false);
+      } catch {
+        if (cancelled) return;
+        setLoadError(true);
+        setIsLoading(false);
+      }
+    })();
+
+    return () => { cancelled = true; };
   }, [fileName]);
 
   return (
-    <Scaffold>
+    <Scaffold >
 
       {
         isLoading && <AppLoader />
@@ -54,3 +76,5 @@ export default function BookDetailPage () {
     </Scaffold>
   );
 }
+
+

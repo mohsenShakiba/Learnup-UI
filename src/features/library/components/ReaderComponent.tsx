@@ -11,6 +11,7 @@ interface Props {
 }
 
 export function ReaderComponent ({ bookData }: Props) {
+
   const bookRef = useRef<Book | null>(null);
   const renditionRef = useRef<Rendition | null>(null);
   const viewerRef = useRef<HTMLDivElement>(null);
@@ -56,12 +57,13 @@ export function ReaderComponent ({ bookData }: Props) {
     bookRef.current = book;
 
     const rendition = book.renderTo(viewerRef.current, {
-      manager: 'continuous',
+      manager: 'default',
       flow: 'paginated',
       width: '100%',
       height: '100%',
       snap: true,
     });
+
     renditionRef.current = rendition;
 
     book.loaded.navigation.then((nav) => {
@@ -197,11 +199,14 @@ export function ReaderComponent ({ bookData }: Props) {
 
   const theme = THEMES[config.theme];
 
+
+  console.log('data', chapter);
+
   return (
     <>
-      <Stack>
+      <Stack sx={{ height: '100%' }}>
 
-        <Box>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
 
           <Box sx={{ flex: 1, minWidth: 0 }}>
 
@@ -225,20 +230,6 @@ export function ReaderComponent ({ bookData }: Props) {
 
         <Box sx={{ flex: 1, overflow: 'hidden', position: 'relative' }}>
           <Box ref={viewerRef} sx={{ width: '100%', height: '100%' }} />
-          {!bookData && (
-            <Stack
-              sx={{
-                position: 'absolute',
-                inset: 0,
-                alignItems: 'center',
-                justifyContent: 'center',
-                bgcolor: theme.bg,
-                gap: 1,
-              }}
-            >
-              <CircularProgress size={28} />
-            </Stack>
-          )}
         </Box>
 
         <Stack direction="row" sx={{ px: 1, py: 0.5, borderTop: 1, borderColor: theme.border, alignItems: 'center' }}>

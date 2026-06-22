@@ -25,13 +25,7 @@ export function AiResultDrawer ({ open, onOpen, onClose, sentence, loading, erro
       onOpen={onOpen}
       onClose={onClose}
       disableSwipeToOpen
-      PaperProps={{
-        sx: {
-          borderTopLeftRadius: 16,
-          borderTopRightRadius: 16,
-          maxHeight: '70vh',
-        },
-      }}
+
     >
       <Box sx={{ width: 40, height: 4, borderRadius: 2, bgcolor: 'divider', mx: 'auto', my: 1.5 }} />
 

@@ -5,13 +5,49 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { FONT_SIZES, ReaderConfig } from '../readerTypes';
+import {
+  FONT_SIZES,
+  LINE_HEIGHTS,
+  READER_FONTS,
+  READER_THEMES,
+  ReaderConfig,
+  TEXT_ALIGNMENTS,
+} from '../readerTypes';
 
 interface Props {
   open: boolean;
   onClose: () => void;
   config: ReaderConfig;
   onConfigChange: (patch: Partial<ReaderConfig>) => void;
+}
+
+interface OptionGroupProps<T> {
+  label: string;
+  options: { key: string; label: string; value: T; }[];
+  selected: T;
+  onSelect: (value: T) => void;
+}
+
+function OptionGroup<T> ({ label, options, selected, onSelect }: OptionGroupProps<T>) {
+  return (
+    <Box sx={{ mt: 2 }}>
+      <Typography variant="caption" color="text.secondary">
+        {label}
+      </Typography>
+      <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
+        {options.map((option) => (
+          <Button
+            key={option.key}
+            fullWidth
+            variant={selected === option.value ? 'contained' : 'outlined'}
+            onClick={() => onSelect(option.value)}
+          >
+            {option.label}
+          </Button>
+        ))}
+      </Stack>
+    </Box>
+  );
 }
 
 export function ReaderConfigDrawer ({ open, onClose, config, onConfigChange }: Props) {
@@ -24,21 +60,40 @@ export function ReaderConfigDrawer ({ open, onClose, config, onConfigChange }: P
           Reader Settings
         </Typography>
 
-        <Typography variant="caption" color="text.secondary">
-          Font Size
-        </Typography>
-        <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
-          {FONT_SIZES.map((size) => (
-            <Button
-              key={size}
-              fullWidth
-              variant={config.fontSize === size ? 'contained' : 'outlined'}
-              onClick={() => onConfigChange({ fontSize: size })}
-            >
-              {size}
-            </Button>
-          ))}
-        </Stack>
+        <OptionGroup
+          label="Font Size"
+          options={FONT_SIZES.map((size) => ({ key: String(size), label: String(size), value: size }))}
+          selected={config.fontSize}
+          onSelect={(fontSize) => onConfigChange({ fontSize })}
+        />
+
+        <OptionGroup
+          label="Font"
+          options={READER_FONTS.map((font) => ({ key: font.key, label: font.label, value: font.stack }))}
+          selected={config.fontFamily}
+          onSelect={(fontFamily) => onConfigChange({ fontFamily })}
+        />
+
+        <OptionGroup
+          label="Theme"
+          options={READER_THEMES.map((theme) => ({ key: theme.key, label: theme.label, value: theme.key }))}
+          selected={config.theme}
+          onSelect={(theme) => onConfigChange({ theme })}
+        />
+
+        <OptionGroup
+          label="Text Alignment"
+          options={TEXT_ALIGNMENTS.map((align) => ({ key: align.key, label: align.label, value: align.key }))}
+          selected={config.textAlign}
+          onSelect={(textAlign) => onConfigChange({ textAlign })}
+        />
+
+        <OptionGroup
+          label="Line Height"
+          options={LINE_HEIGHTS.map((lh) => ({ key: String(lh), label: lh.toFixed(1), value: lh }))}
+          selected={config.lineHeight}
+          onSelect={(lineHeight) => onConfigChange({ lineHeight })}
+        />
       </Box>
     </Drawer>
   );

@@ -1,9 +1,9 @@
-import { Box, IconButton, Stack, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import Epub, { Contents, Rendition } from 'epubjs';
 import { useEffect, useRef, useState } from 'react';
 import { AiService, CancelError, UserBooksService } from '../../../api/Learnup';
 import { calculateTotalPages, SectionLocation } from '../../../utils/Calculate';
-import { DEFAULT_CONFIG, READER_FONT_FAMILY, ReaderConfig } from '../readerTypes';
+import { READER_FONT_FACES, READER_THEMES, ReaderConfig } from '../readerTypes';
 import { AiResultDrawer } from './AiResultDrawer';
 import { ReaderConfigDrawer } from './ReaderConfigDrawer';
 
@@ -11,16 +11,26 @@ interface Props {
   bookData: ArrayBuffer;
   bookId?: number;
   initialCfi?: string | null;
+  settingsOpen: boolean;
+  onSettingsClose: () => void;
+  config: ReaderConfig;
+  onConfigChange: (patch: Partial<ReaderConfig>) => void;
 }
 
 // Push the reader configuration into the epub rendition. Re-registering the
 // named theme and re-selecting it makes epubjs re-inject the styles into every
 // currently rendered section, so changes apply live without a reload.
 function applyReaderStyles (rendition: Rendition, config: ReaderConfig) {
+  const theme = READER_THEMES.find((t) => t.key === config.theme) ?? READER_THEMES[0];
   rendition.themes.register('reader', {
     'body, p, li, span, div, h1, h2, h3, h4, h5, h6, a': {
-      'font-family': `${READER_FONT_FAMILY} !important`,
+      'font-family': `${config.fontFamily} !important`,
       'font-size': `${config.fontSize}px !important`,
+      'line-height': `${config.lineHeight} !important`,
+      'color': `${theme.color} !important`,
+    },
+    'p, li, div, h1, h2, h3, h4, h5, h6': {
+      'text-align': `${config.textAlign} !important`,
     },
     body: {
       // iOS Safari only fires click events on elements it considers "clickable";
@@ -176,7 +186,7 @@ declare global {
   }
 }
 
-export function ReaderComponent ({ bookData, bookId, initialCfi }: Props) {
+export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, onSettingsClose, config, onConfigChange }: Props) {
 
   const viewerRef = useRef<HTMLDivElement>(null);
   const renditionRef = useRef<Rendition | null>(null);
@@ -186,8 +196,6 @@ export function ReaderComponent ({ bookData, bookId, initialCfi }: Props) {
   const sectionOffsetsRef = useRef<number[]>([]);
   const [currentPage, setCurrentPage] = useState<number | null>(null);
   const [totalPages, setTotalPages] = useState<number | null>(null);
-  const [config, setConfig] = useState<ReaderConfig>(DEFAULT_CONFIG);
-  const [settingsOpen, setSettingsOpen] = useState(false);
   // Latest config for the rendition-creation effect, so styling a freshly built
   // rendition does not force that effect to depend on (and recreate on) config.
   const configRef = useRef(config);
@@ -246,6 +254,23 @@ export function ReaderComponent ({ bookData, bookId, initialCfi }: Props) {
     });
 
     renditionRef.current = rendition;
+
+    // Book content is rendered inside a separate iframe document, which does not
+    // inherit the @font-face rules declared in index.css. Inject every selectable
+    // reader font directly into each rendered section so they are available on
+    // devices that don't ship them as system fonts (e.g. iOS). A raw <style> is
+    // used (rather than addStylesheetRules) because that API keys rules by
+    // selector and so cannot hold several @font-face blocks at once. URLs are
+    // root-absolute since the iframe's base URL is the epub blob, not the app origin.
+    rendition.hooks.content.register((contents: Contents) => {
+      const doc = contents.document;
+      const style = doc.createElement('style');
+      style.textContent = READER_FONT_FACES.map((face) =>
+        `@font-face{font-family:'${face.family}';font-style:normal;`
+        + `font-weight:${face.weight};font-display:swap;src:${face.src};}`
+      ).join('\n');
+      doc.head.appendChild(style);
+    });
 
     applyReaderStyles(rendition, configRef.current);
 
@@ -403,40 +428,28 @@ export function ReaderComponent ({ bookData, bookId, initialCfi }: Props) {
     if (renditionRef.current) applyReaderStyles(renditionRef.current, config);
   }, [config]);
 
-  const handleConfigChange = (patch: Partial<ReaderConfig>) =>
-    setConfig((prev) => ({ ...prev, ...patch }));
+  const activeTheme = READER_THEMES.find((t) => t.key === config.theme) ?? READER_THEMES[0];
 
   return (
-    <Stack sx={{ width: '100%', height: '100%', overflow: 'hidden', }}>
+    <Stack sx={{ width: '100%', height: '100%', overflow: 'hidden' }}>
       <Box ref={viewerRef} sx={{ flex: 1, minHeight: 0, width: '100%', fontSize: '30px' }} />
       <Stack
         direction="row"
         sx={{
-          justifyContent: 'space-between',
+          justifyContent: 'center',
           alignItems: 'center',
         }}
       >
-        <IconButton onClick={() => setSettingsOpen(true)}>
-          <span className="material-icons">settings</span>
-        </IconButton>
-        <IconButton
-          onClick={() => renditionRef.current?.next()}>
-          <span className="material-icons">chevron_right</span>
-        </IconButton>
-        <Typography variant="body2" sx={{ alignSelf: 'center', color: 'text.secondary' }}>
+        <Typography variant="body2" sx={{ alignSelf: 'center', color: activeTheme.color, opacity: 0.7 }}>
           {currentPage != null && totalPages != null ? `${currentPage} / ${totalPages}` : '…'}
         </Typography>
-        <IconButton
-          onClick={() => renditionRef.current?.prev()}>
-          <span className="material-icons">chevron_left</span>
-        </IconButton>
       </Stack>
 
       <ReaderConfigDrawer
         open={settingsOpen}
-        onClose={() => setSettingsOpen(false)}
+        onClose={onSettingsClose}
         config={config}
-        onConfigChange={handleConfigChange}
+        onConfigChange={onConfigChange}
       />
 
       <AiResultDrawer

@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { UserBooksService } from '../../api/Learnup';
 import { getFileById } from '../../services/fetchFile';
 import { AppLoader } from '../../shared/components/AppLoader';
+import { DefaultHeader } from '../../shared/components/DefaultHeader';
 import { Scaffold } from '../../shared/components/Scaffold';
 import { getCachedBook, setCachedBook } from './bookCache';
 import { ReaderComponent } from './components/ReaderComponent';
@@ -63,7 +64,9 @@ export default function BookDetailPage () {
   const showLoader = isLoading || booksQuery.isLoading;
 
   return (
-    <Scaffold >
+    <Scaffold header={
+      <DefaultHeader header='کتاب' />
+    } >
 
       {
         showLoader && <AppLoader />

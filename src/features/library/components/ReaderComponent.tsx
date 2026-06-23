@@ -1,5 +1,5 @@
 import { Box, IconButton, Stack, Typography } from '@mui/material';
-import Epub, { Contents, Rendition } from 'epubjs';
+import Epub, { Rendition } from 'epubjs';
 import { useEffect, useRef, useState } from 'react';
 import { AiService, CancelError, UserBooksService } from '../../../api/Learnup';
 import { calculateTotalPages, SectionLocation } from '../../../utils/Calculate';
@@ -23,6 +23,10 @@ function applyReaderStyles (rendition: Rendition, config: ReaderConfig) {
       'font-size': `${config.fontSize}px !important`,
     },
     body: {
+      // iOS Safari only fires click events on elements it considers "clickable";
+      // cursor:pointer marks the content as such so taps reach our listener.
+      'cursor': 'pointer',
+      '-webkit-tap-highlight-color': 'transparent',
     },
   });
   rendition.themes.select('reader');
@@ -39,7 +43,6 @@ const SENTENCE_END = /[.!?؟۔]/;
 
 // Resolve the word under the given client coordinates to a DOM Range.
 function wordRangeAtPoint (doc: Document, x: number, y: number): Range | null {
-  console.log('click');
   const anyDoc = doc as Document & {
     caretRangeFromPoint?: (x: number, y: number) => Range | null;
     caretPositionFromPoint?: (x: number, y: number) => { offsetNode: Node; offset: number; } | null;
@@ -154,6 +157,7 @@ declare global {
 }
 
 export function ReaderComponent ({ bookData, bookId, initialCfi }: Props) {
+
   const viewerRef = useRef<HTMLDivElement>(null);
   const renditionRef = useRef<Rendition | null>(null);
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -216,20 +220,36 @@ export function ReaderComponent ({ bookData, bookId, initialCfi }: Props) {
       manager: 'continuous',
       width: '100%',
       height: '100%',
+      // iOS Safari does not deliver touch/click events into a sandboxed iframe
+      // unless allow-scripts is present; this adds it so taps reach our handlers.
+      allowScriptedContent: true,
+      snap: true
     });
 
     renditionRef.current = rendition;
 
     applyReaderStyles(rendition, configRef.current);
 
-    // Each section renders in its own iframe; attach the word-click handler per section.
-    rendition.hooks.content.register((contents: Contents) => {
-      const doc = contents.document;
-      doc.addEventListener('click', (event: MouseEvent) => {
-        const sentence = selectWordAt(doc, event.clientX, event.clientY, highlightRef);
-        if (sentence) askAiRef.current(sentence);
-      });
-    });
+    // epubjs re-emits each section's DOM events on the rendition (see passEvents),
+    // so we hook taps here instead of attaching per-section listeners. touchend is
+    // used on touch devices because iOS Safari often withholds the synthetic click.
+    const handleTap = (doc: Document, x: number, y: number) => {
+      const sentence = selectWordAt(doc, x, y, highlightRef);
+      if (sentence) askAiRef.current(sentence);
+    };
+
+    let lastTouchAt = 0;
+    // rendition.on('touchend', (event: TouchEvent, contents: Contents) => {
+    //   const touch = event.changedTouches[0];
+    //   if (!touch) return;
+    //   lastTouchAt = Date.now();
+    //   handleTap(contents.document, touch.clientX, touch.clientY);
+    // });
+    // rendition.on('click', (event: MouseEvent, contents: Contents) => {
+    //   // Ignore the synthetic click that follows a touchend we already handled.
+    //   if (Date.now() - lastTouchAt < 700) return;
+    //   handleTap(contents.document, event.clientX, event.clientY);
+    // });
 
     window.ePubViewer = {
       Book: {

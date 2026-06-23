@@ -1,4 +1,4 @@
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import Epub, { Contents, Rendition } from 'epubjs';
 import { useEffect, useRef, useState } from 'react';
 import { AiService, BooksControllersService, CancelError, SendAiTextResponse } from '../../../api/Learnup';
@@ -50,7 +50,51 @@ function hrefKey (href: string): string {
   return href.split('#')[0].split('/').pop() ?? href;
 }
 
+function readerCss (config: ReaderConfig): string {
+  const theme = READER_THEMES.find((t) => t.key === config.theme) ?? READER_THEMES[0];
 
+  return `
+    body, p, li, span, div, h1, h2, h3, h4, h5, h6, a {
+      font-family: ${config.fontFamily} !important;
+      font-size: ${config.fontSize}px !important;
+      line-height: ${config.lineHeight} !important;
+      color: ${theme.color} !important;
+    }
+    p, li, div, h1, h2, h3, h4, h5, h6 {
+      text-align: ${config.textAlign} !important;
+      text-justify: ${config.textJustify} !important;
+    }
+    body {
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+  `;
+}
+
+function applyReaderStylesToContents (contents: Contents, config: ReaderConfig) {
+  const doc = contents.document;
+  let style = doc.getElementById('learnup-reader-live-style') as HTMLStyleElement | null;
+  if (!style) {
+    style = doc.createElement('style');
+    style.id = 'learnup-reader-live-style';
+  }
+
+  style.textContent = readerCss(config);
+  doc.head.appendChild(style);
+}
+
+function getRenditionContents (rendition: Rendition): Contents[] {
+  return (rendition.getContents() as unknown as Contents[]) ?? [];
+}
+
+function applyReaderStyles (rendition: Rendition, config: ReaderConfig, extraContents: Contents[] = []) {
+  rendition.themes.registerCss('reader', readerCss(config));
+  rendition.themes.select('reader');
+  rendition.themes.fontSize(`${config.fontSize}px`);
+  new Set([...getRenditionContents(rendition), ...extraContents]).forEach((contents) => {
+    applyReaderStylesToContents(contents, config);
+  });
+}
 
 type HighlightRef = { current: HTMLElement | null; };
 
@@ -296,6 +340,7 @@ export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, o
 
   const viewerRef = useRef<HTMLDivElement>(null);
   const renditionRef = useRef<Rendition | null>(null);
+  const contentsRef = useRef<Set<Contents>>(new Set());
   const [toc, setToc] = useState<NavItem[]>([]);
   // Flat TOC list for mapping a spine href to its section label.
   const flatTocRef = useRef<NavItem[]>([]);
@@ -305,13 +350,6 @@ export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, o
   onSectionChangeRef.current = onSectionChange;
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastSavedRef = useRef<string | null>(initialCfi ?? null);
-  // Cumulative page count preceding each spine section, indexed by spine position.
-  const sectionOffsetsRef = useRef<number[]>([]);
-  const [currentPage, setCurrentPage] = useState<number | null>(null);
-  const [totalPages, setTotalPages] = useState<number | null>(null);
-  // Mirror of totalPages reachable from the rendition's relocated listener, which
-  // is registered once and so can't read the latest state directly.
-  const totalPagesRef = useRef<number | null>(null);
   // Latest config for the rendition-creation effect, so styling a freshly built
   // rendition does not force that effect to depend on (and recreate on) config.
   const configRef = useRef(config);
@@ -380,11 +418,9 @@ export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, o
 
   const loadBook = async () => {
     if (!viewerRef.current) return;
+    let cancelled = false;
 
-    // Warm the shared HTTP cache with the bundled fonts before the section
-    // iframe requests them, so the correct font is ready on first render.
-    // await preloadReaderFonts(configRef.current.fontFamily);
-    await preloadReaderFonts('FredokaOne');
+    await preloadReaderFonts(configRef.current.fontFamily);
 
     const book = Epub(bookData);
 
@@ -404,6 +440,7 @@ export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, o
     // inherit the @font-face rules declared in index.css. Inject the font faces
     // before epub.js samples the layout, then wait for the iframe fonts to settle.
     rendition.hooks.content.register(async (contents: Contents) => {
+      contentsRef.current.add(contents);
       const doc = contents.document;
       const style = doc.createElement('style');
       style.textContent = READER_FONT_FACES.map((face) =>
@@ -412,32 +449,10 @@ export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, o
       ).join('\n');
       doc.head.appendChild(style);
       await waitForContentFonts(contents);
+      applyReaderStylesToContents(contents, configRef.current);
     });
 
-    const theme = READER_THEMES.find((t) => t.key === config.theme) ?? READER_THEMES[0];
-    const font = READER_FONT_FACES.find(f => f.family === 'FredokaOne');
-
-    rendition.themes.register("custom", {
-      "@font-face": {
-        "font-family": font?.family,
-        "src": font?.src
-      },
-      "body, p, span, div, li": {
-        'line-height': `1.6 !important`,
-        'font-size': '20px !important'
-      }
-    });
-
-    rendition.themes.select("custom");
-
-    rendition.themes.default({
-      body: {
-        "font-family": "FredokaOne",
-        'color': `${theme.color} !important`,
-        'line-height': `1.6 !important`,
-        'font-size': '20px !important'
-      }
-    });
+    applyReaderStyles(rendition, configRef.current, [...contentsRef.current]);
 
     // epubjs re-emits each section's DOM events on the rendition (see passEvents),
     // so we hook taps here instead of attaching per-section listeners. touchend is
@@ -532,21 +547,9 @@ export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, o
       },
     };
 
-    // Translate a section-relative location into a whole-book page number.
-    const toGlobalPage = (start?: SectionLocation) => {
-      if (!start) return null;
-      const offset = sectionOffsetsRef.current[start.index] ?? 0;
-      return offset + start.displayed.page;
-    };
-
-    const updateVisibleLocation = (start?: SectionLocation) => {
-      const page = toGlobalPage(start);
-      if (page != null) setCurrentPage(page);
-
+    const updateCurrentSection = (start?: SectionLocation) => {
       const match = flatTocRef.current.find((it) => hrefKey(it.href) === hrefKey(start?.href ?? ''));
       onSectionChangeRef.current(match?.label ?? null);
-
-      return page;
     };
 
     const scheduleProgressSave = () => {
@@ -562,12 +565,9 @@ export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, o
         const cfi = visiblePointCfi(rendition) ?? current?.cfi;
         if (!cfi || cfi === lastSavedRef.current) return;
 
-        const page = updateVisibleLocation(current);
-        const total = totalPagesRef.current;
-        const progress = page != null && total ? (page / total) * 100 : null;
-
+        updateCurrentSection(current);
         lastSavedRef.current = cfi;
-        BooksControllersService.updateUserBookProgress(bookId, { currentRef: cfi, progress });
+        BooksControllersService.updateUserBookProgress(bookId, { currentRef: cfi, progress: null });
       }, 800);
     };
 
@@ -579,18 +579,12 @@ export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, o
       const cfi = start?.cfi;
       if (!cfi) return;
 
-      updateVisibleLocation(start);
+      updateCurrentSection(start);
       scheduleProgressSave();
     });
 
     // Restore the saved page on load, falling back to the start of the book.
     rendition.display(initialCfi ?? undefined);
-
-    // Pre-paginate every section in a hidden rendition sized like the viewer so
-    // we know how many pages each contains. This yields a stable "page X / Y"
-    // that advances by one per flip, instead of the character-based location
-    // count which can skip several numbers per page.
-    let cancelled = false;
 
     // Load the table of contents and keep a flat copy for href→title lookups.
     book.loaded.navigation.then((nav: { toc: EpubNavItem[]; }) => {
@@ -605,21 +599,6 @@ export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, o
       onSectionChangeRef.current(match?.label ?? null);
     });
 
-    book.ready.then(async () => {
-      if (cancelled || !viewerRef.current) return;
-      // const pageCalculation = await calculateTotalPages(book, viewerRef.current, () => cancelled);
-      // if (!pageCalculation) return;
-
-      // sectionOffsetsRef.current = pageCalculation.offsets;
-      // totalPagesRef.current = pageCalculation.totalPages;
-      // setTotalPages(pageCalculation.totalPages);
-
-      // Reflect the page for the position the visible rendition already shows.
-      // const current = (renditionRef.current?.currentLocation() as unknown as { start?: SectionLocation; })?.start;
-      // const page = toGlobalPage(current);
-      // if (page != null) setCurrentPage(page);
-    });
-
     return () => {
       cancelled = true;
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
@@ -627,26 +606,28 @@ export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, o
       rendition.destroy();
       book.destroy();
       renditionRef.current = null;
+      contentsRef.current.clear();
       delete window.ePubViewer;
     };
   };
 
-  const activeTheme = READER_THEMES.find((t) => t.key === config.theme) ?? READER_THEMES[0];
+  useEffect(() => {
+    let cancelled = false;
+
+    preloadReaderFonts(config.fontFamily).then(() => {
+      if (cancelled || !renditionRef.current) return;
+      applyReaderStyles(renditionRef.current, config, [...contentsRef.current]);
+      (renditionRef.current as unknown as { reportLocation?: () => void; }).reportLocation?.();
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [config]);
 
   return (
     <Stack sx={{ width: '100%', height: '100%', overflow: 'hidden', direction: 'rtl' }}>
       <Box ref={viewerRef} sx={{ flex: 1, minHeight: 0, width: '100%', fontSize: '30px' }} />
-      <Stack
-        direction="row"
-        sx={{
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Typography variant="body2" sx={{ alignSelf: 'center', color: activeTheme.color, opacity: 0.7 }}>
-          {currentPage != null && totalPages != null ? `${currentPage} / ${totalPages}` : '…'}
-        </Typography>
-      </Stack>
 
       <ReaderConfigDrawer
         open={settingsOpen}

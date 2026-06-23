@@ -1,12 +1,12 @@
 import {
   Box,
-  CircularProgress,
   Divider,
   Stack,
   SwipeableDrawer,
-  Typography,
+  Typography
 } from '@mui/material';
 import { SendAiTextResponse } from '../../../api/Learnup';
+import { AppLoader } from '../../../shared/components/AppLoader';
 
 interface Props {
   open: boolean;
@@ -47,10 +47,7 @@ export function AiResultDrawer ({ open, onOpen, onClose, word, sentence, loading
       <Box sx={{ px: 2, pb: 3, overflowY: 'auto' }}>
         {word && (
           <>
-            <Typography variant="caption" color="text.secondary">
-              Selected word
-            </Typography>
-            <Typography variant="h6" sx={{ mb: 1, fontWeight: 700 }}>
+            <Typography variant="h6" sx={{ mb: 1, fontWeight: 700, direction: 'rtl' }}>
               {word}
             </Typography>
           </>
@@ -58,10 +55,7 @@ export function AiResultDrawer ({ open, onOpen, onClose, word, sentence, loading
 
         {sentence && (
           <>
-            <Typography variant="caption" color="text.secondary">
-              Selected sentence
-            </Typography>
-            <Typography variant="body2" sx={{ mb: 2, fontStyle: 'italic' }}>
+            <Typography variant="body2" sx={{ mb: 2, fontStyle: 'italic', direction: 'rtl' }}>
               {sentence}
             </Typography>
             <Divider sx={{ mb: 2 }} />
@@ -69,12 +63,7 @@ export function AiResultDrawer ({ open, onOpen, onClose, word, sentence, loading
         )}
 
         {loading && (
-          <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center', py: 2 }}>
-            <CircularProgress size={20} />
-            <Typography variant="body2" color="text.secondary">
-              در حال دریافت پاسخ…
-            </Typography>
-          </Stack>
+          <AppLoader />
         )}
 
         {!loading && error && (
@@ -85,22 +74,22 @@ export function AiResultDrawer ({ open, onOpen, onClose, word, sentence, loading
 
         {!loading && !error && result != null && (
           <Stack spacing={2}>
-            <Box>
-              <Typography variant="caption" color="text.secondary">
-                ترجمه واژه
+            <Stack >
+              <Typography variant='caption' sx={{ color: "text.secondary" }}>
+                ترجمه
               </Typography>
-              <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap' }}>
+              <Typography sx={{ whiteSpace: 'pre-wrap' }}>
                 {wordTranslation || 'ترجمه‌ای دریافت نشد.'}
               </Typography>
-            </Box>
-            <Box>
-              <Typography variant="caption" color="text.secondary">
+            </Stack>
+            <Stack sx={{ flexWrap: 'wrap' }}>
+              <Typography variant='caption' sx={{ color: "text.secondary" }}>
                 ترجمه جمله
               </Typography>
-              <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap' }}>
+              <Typography sx={{ whiteSpace: 'pre-wrap' }}>
                 {sentenceTranslation || 'ترجمه‌ای دریافت نشد.'}
               </Typography>
-            </Box>
+            </Stack>
           </Stack>
         )}
       </Box>

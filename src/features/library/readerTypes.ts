@@ -44,6 +44,8 @@ export interface ReaderFont {
 export interface ReaderFontFace {
   family: string;
   weight: string;
+  url: string;
+  format: string;
   src: string;
 }
 
@@ -51,19 +53,47 @@ export interface ReaderFontFace {
 // inherit the @font-face rules declared in index.css. Each maps to a file in
 // /public/fonts; URLs are root-absolute since the iframe's base is the epub blob.
 export const READER_FONT_FACES: ReaderFontFace[] = [
-  { family: 'Roboto', weight: '300', src: "url('/fonts/Roboto-Light.ttf') format('truetype')" },
-  { family: 'Roboto', weight: '400', src: "url('/fonts/Roboto-Regular.ttf') format('truetype')" },
-  { family: 'IranSans', weight: '400', src: "url('/fonts/IranSans.woff2') format('woff2')" },
-  { family: 'FredokaOne', weight: '300', src: "url('/fonts/FredokaOne.ttf') format('truetype')" },
-  { family: 'Bookerly', weight: '400', src: "url('/fonts/Bookerly.ttf') format('truetype')" },
-  { family: 'Merriweather', weight: '400', src: "url('/fonts/Merriweather-Regular.ttf') format('truetype')" },
-  { family: 'Georgia', weight: '400', src: "url('/fonts/georgia.ttf') format('truetype')" },
+  { family: 'Roboto', weight: '300', url: '/fonts/Roboto-Light.ttf', format: 'truetype', src: "url('/fonts/Roboto-Light.ttf') format('truetype')" },
+  { family: 'Roboto', weight: '400', url: '/fonts/Roboto-Regular.ttf', format: 'truetype', src: "url('/fonts/Roboto-Regular.ttf') format('truetype')" },
+  { family: 'IranSans', weight: '400', url: '/fonts/IranSans.woff2', format: 'woff2', src: "url('/fonts/IranSans.woff2') format('woff2')" },
+  { family: 'FredokaOne', weight: '300', url: '/fonts/FredokaOne.ttf', format: 'truetype', src: "url('/fonts/FredokaOne.ttf') format('truetype')" },
+  { family: 'Bookerly', weight: '400', url: '/fonts/Bookerly.ttf', format: 'truetype', src: "url('/fonts/Bookerly.ttf') format('truetype')" },
+  { family: 'Merriweather', weight: '400', url: '/fonts/Merriweather-Regular.ttf', format: 'truetype', src: "url('/fonts/Merriweather-Regular.ttf') format('truetype')" },
+  { family: 'Georgia', weight: '400', url: '/fonts/georgia.ttf', format: 'truetype', src: "url('/fonts/georgia.ttf') format('truetype')" },
+  { family: 'FredokaOne', weight: '400', url: '/fonts/FredokaOne.ttf', format: 'truetype', src: "url('/fonts/FredokaOne.ttf') format('truetype')" },
 ];
+
+function fontFacesForStack (fontFamily: string): ReaderFontFace[] {
+  return READER_FONT_FACES.filter((face) => fontFamily.includes(`'${face.family}'`) || fontFamily.includes(face.family));
+}
+
+// Warm the browser cache with the selected reader font before epubjs creates
+// section iframes. The iframes still declare their own @font-face rules, but
+// the shared HTTP cache lets those requests resolve before first layout.
+const preloadedFontKeys = new Set<string>();
+export async function preloadReaderFonts (fontFamily?: string) {
+  if (typeof document === 'undefined' || !('fonts' in document)) return;
+
+  const faces = fontFamily ? fontFacesForStack(fontFamily) : READER_FONT_FACES;
+  await Promise.all(faces.map(async (face) => {
+    const key = `${face.family}:${face.weight}`;
+    if (preloadedFontKeys.has(key)) return;
+
+    try {
+      const fontFace = new FontFace(face.family, `url('${face.url}') format('${face.format}')`, { weight: face.weight, display: 'block' });
+      const loadedFont = await fontFace.load();
+      document.fonts.add(loadedFont);
+      preloadedFontKeys.add(key);
+    } catch {
+      // Ignore faces the browser can't construct (e.g. malformed src descriptor).
+    }
+  }));
+}
 
 // Selectable reader fonts. All but the last use bundled faces above; the
 // final one falls back to whatever sans the device provides.
 export const READER_FONTS: ReaderFont[] = [
-  { key: 'roboto', label: 'Roboto', stack: "'Roboto', sans-serif" },
+  { key: 'FredokaOne', label: 'FredokaOne', stack: "'FredokaOne', Georgia, serif" },
   { key: 'bookerly', label: 'Bookerly', stack: "'Bookerly', Georgia, serif" },
   { key: 'merriweather', label: 'Merriweather', stack: "'Merriweather', Georgia, serif" },
   { key: 'georgia', label: 'Georgia', stack: "'Georgia', 'Times New Roman', serif" },

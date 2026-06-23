@@ -2,8 +2,8 @@ import { Box, Stack, Typography } from '@mui/material';
 import Epub, { Contents, Rendition } from 'epubjs';
 import { useEffect, useRef, useState } from 'react';
 import { AiService, BooksControllersService, CancelError, SendAiTextResponse } from '../../../api/Learnup';
-import { calculateTotalPages, SectionLocation } from '../../../utils/Calculate';
-import { NavItem, READER_FONT_FACES, READER_THEMES, ReaderConfig } from '../readerTypes';
+import { SectionLocation } from '../../../utils/Calculate';
+import { NavItem, preloadReaderFonts, READER_FONT_FACES, READER_THEMES, ReaderConfig } from '../readerTypes';
 import { AiResultDrawer } from './AiResultDrawer';
 import { ReaderConfigDrawer } from './ReaderConfigDrawer';
 import { TableOfContentsDrawer } from './TableOfContentsDrawer';
@@ -50,32 +50,7 @@ function hrefKey (href: string): string {
   return href.split('#')[0].split('/').pop() ?? href;
 }
 
-// Push the reader configuration into the epub rendition. Re-registering the
-// named theme and re-selecting it makes epubjs re-inject the styles into every
-// currently rendered section, so changes apply live without a reload.
-function applyReaderStyles (rendition: Rendition, config: ReaderConfig) {
-  const theme = READER_THEMES.find((t) => t.key === config.theme) ?? READER_THEMES[0];
-  rendition.themes.register('reader', {
-    'body, p, li, span, div, h1, h2, h3, h4, h5, h6, a': {
-      'font-family': `${config.fontFamily} !important`,
-      'font-size': `${config.fontSize}px !important`,
-      'line-height': `${config.lineHeight} !important`,
-      'color': `${theme.color} !important`,
-    },
-    'p, li, div, h1, h2, h3, h4, h5, h6': {
-      'text-align': `${config.textAlign} !important`,
-      'text-justify': `${config.textJustify} !important`,
-    },
-    body: {
-      // iOS Safari only fires click events on elements it considers "clickable";
-      // cursor:pointer marks the content as such so taps reach our listener.
-      'cursor': 'pointer',
-      '-webkit-tap-highlight-color': 'transparent',
-    },
-  });
-  rendition.themes.select('reader');
-  rendition.themes.fontSize(`${config.fontSize}px`);
-}
+
 
 type HighlightRef = { current: HTMLElement | null; };
 
@@ -192,10 +167,13 @@ function selectWordAt (doc: Document, x: number, y: number, highlightRef: Highli
 
 // Eased animation of an element's scrollLeft toward target, used to snap to the
 // nearest page after a drag. Returns a canceller so a new gesture can interrupt it.
-function animateScrollLeft (el: HTMLElement, target: number, duration = 200): () => void {
+function animateScrollLeft (el: HTMLElement, target: number, duration = 200, onComplete?: () => void): () => void {
   const start = el.scrollLeft;
   const distance = target - start;
-  if (distance === 0) return () => { };
+  if (distance === 0) {
+    onComplete?.();
+    return () => { };
+  }
 
   const startTime = performance.now();
   let raf = 0;
@@ -204,10 +182,103 @@ function animateScrollLeft (el: HTMLElement, target: number, duration = 200): ()
     // easeInOutQuad
     const eased = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
     el.scrollLeft = start + distance * eased;
-    if (t < 1) raf = requestAnimationFrame(step);
+    if (t < 1) {
+      raf = requestAnimationFrame(step);
+    } else {
+      onComplete?.();
+    }
   };
   raf = requestAnimationFrame(step);
   return () => cancelAnimationFrame(raf);
+}
+
+function nextFrame (): Promise<void> {
+  return new Promise((resolve) => requestAnimationFrame(() => resolve()));
+}
+
+async function waitForContentFonts (contents: Contents) {
+  const fonts = contents.document.fonts;
+  if (!fonts) {
+    await nextFrame();
+    return;
+  }
+
+  try {
+    await fonts.ready;
+  } catch {
+    // Keep the reader usable if a custom font fails and the browser falls back.
+  }
+
+  // Let the iframe paint once with the resolved font before epub.js samples layout.
+  await nextFrame();
+}
+
+function rangeFromPoint (doc: Document, x: number, y: number): Range | null {
+  const anyDoc = doc as Document & {
+    caretRangeFromPoint?: (x: number, y: number) => Range | null;
+    caretPositionFromPoint?: (x: number, y: number) => { offsetNode: Node; offset: number; } | null;
+  };
+
+  if (anyDoc.caretRangeFromPoint) return anyDoc.caretRangeFromPoint(x, y);
+
+  const pos = anyDoc.caretPositionFromPoint?.(x, y);
+  if (!pos) return null;
+
+  const range = doc.createRange();
+  range.setStart(pos.offsetNode, pos.offset);
+  range.collapse(true);
+  return range;
+}
+
+function visiblePointCfi (rendition: Rendition): string | null {
+  type VisibleView = {
+    contents?: Contents;
+    iframe?: HTMLIFrameElement;
+  };
+  type VisibleManager = {
+    container?: HTMLElement;
+    visible?: () => VisibleView[];
+  };
+
+  const manager = (rendition as unknown as { manager?: VisibleManager; }).manager;
+  const container = manager?.container;
+  const views = manager?.visible?.() ?? [];
+  if (!container || !views.length) return null;
+
+  const bounds = container.getBoundingClientRect();
+  const points = [
+    [bounds.left + bounds.width * 0.5, bounds.top + bounds.height * 0.45],
+    [bounds.left + bounds.width * 0.5, bounds.top + bounds.height * 0.35],
+    [bounds.left + bounds.width * 0.35, bounds.top + bounds.height * 0.45],
+    [bounds.left + bounds.width * 0.65, bounds.top + bounds.height * 0.45],
+  ];
+
+  for (const [clientX, clientY] of points) {
+    for (const view of views) {
+      const iframe = view.iframe;
+      const contents = view.contents;
+      if (!iframe || !contents) continue;
+
+      const iframeBounds = iframe.getBoundingClientRect();
+      if (
+        clientX < iframeBounds.left ||
+        clientX > iframeBounds.right ||
+        clientY < iframeBounds.top ||
+        clientY > iframeBounds.bottom
+      ) continue;
+
+      const range = rangeFromPoint(contents.document, clientX - iframeBounds.left, clientY - iframeBounds.top);
+      if (!range) continue;
+
+      try {
+        return contents.cfiFromRange(range);
+      } catch {
+        // Keep probing other points; some coordinates can land on non-content nodes.
+      }
+    }
+  }
+
+  return null;
 }
 
 declare global {
@@ -290,7 +361,30 @@ export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, o
   askAiRef.current = askAi;
 
   useEffect(() => {
+    let cleanup: (() => void) | undefined;
+    let cancelled = false;
+
+    loadBook().then((dispose) => {
+      if (cancelled) {
+        dispose?.();
+        return;
+      }
+      cleanup = dispose;
+    });
+
+    return () => {
+      cancelled = true;
+      cleanup?.();
+    };
+  }, [bookData, bookId, initialCfi]);
+
+  const loadBook = async () => {
     if (!viewerRef.current) return;
+
+    // Warm the shared HTTP cache with the bundled fonts before the section
+    // iframe requests them, so the correct font is ready on first render.
+    // await preloadReaderFonts(configRef.current.fontFamily);
+    await preloadReaderFonts('FredokaOne');
 
     const book = Epub(bookData);
 
@@ -307,23 +401,43 @@ export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, o
     renditionRef.current = rendition;
 
     // Book content is rendered inside a separate iframe document, which does not
-    // inherit the @font-face rules declared in index.css. Inject every selectable
-    // reader font directly into each rendered section so they are available on
-    // devices that don't ship them as system fonts (e.g. iOS). A raw <style> is
-    // used (rather than addStylesheetRules) because that API keys rules by
-    // selector and so cannot hold several @font-face blocks at once. URLs are
-    // root-absolute since the iframe's base URL is the epub blob, not the app origin.
-    rendition.hooks.content.register((contents: Contents) => {
+    // inherit the @font-face rules declared in index.css. Inject the font faces
+    // before epub.js samples the layout, then wait for the iframe fonts to settle.
+    rendition.hooks.content.register(async (contents: Contents) => {
       const doc = contents.document;
       const style = doc.createElement('style');
       style.textContent = READER_FONT_FACES.map((face) =>
-        `@font-face{font-family:'${face.family}';font-style:normal;`
-        + `font-weight:${face.weight};font-display:swap;src:${face.src};}`
+        `@font-face{font-family:'${face.family}';font-style:normal;font-weight:${face.weight};`
+        + `font-display:block;src:${face.src};}`
       ).join('\n');
       doc.head.appendChild(style);
+      await waitForContentFonts(contents);
     });
 
-    applyReaderStyles(rendition, configRef.current);
+    const theme = READER_THEMES.find((t) => t.key === config.theme) ?? READER_THEMES[0];
+    const font = READER_FONT_FACES.find(f => f.family === 'FredokaOne');
+
+    rendition.themes.register("custom", {
+      "@font-face": {
+        "font-family": font?.family,
+        "src": font?.src
+      },
+      "body, p, span, div, li": {
+        'line-height': `1.6 !important`,
+        'font-size': '20px !important'
+      }
+    });
+
+    rendition.themes.select("custom");
+
+    rendition.themes.default({
+      body: {
+        "font-family": "FredokaOne",
+        'color': `${theme.color} !important`,
+        'line-height': `1.6 !important`,
+        'font-size': '20px !important'
+      }
+    });
 
     // epubjs re-emits each section's DOM events on the rendition (see passEvents),
     // so we hook taps here instead of attaching per-section listeners. touchend is
@@ -349,6 +463,8 @@ export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, o
     };
     const getDragManager = () =>
       (rendition as unknown as { manager?: DragManager; }).manager;
+    const reportCurrentLocation = () =>
+      (rendition as unknown as { reportLocation?: () => void; }).reportLocation?.();
 
     let dragging = false;
     let dragMoved = false;
@@ -402,7 +518,11 @@ export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, o
         targetPage = basePage + Math.sign(dragged);
       }
       const target = targetPage * snapWidth;
-      cancelSnap = animateScrollLeft(manager.container, target);
+      cancelSnap = animateScrollLeft(manager.container, target, 200, () => {
+        manager.container.scrollLeft = target;
+        reportCurrentLocation();
+        scheduleProgressSave();
+      });
     });
 
     window.ePubViewer = {
@@ -419,6 +539,38 @@ export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, o
       return offset + start.displayed.page;
     };
 
+    const updateVisibleLocation = (start?: SectionLocation) => {
+      const page = toGlobalPage(start);
+      if (page != null) setCurrentPage(page);
+
+      const match = flatTocRef.current.find((it) => hrefKey(it.href) === hrefKey(start?.href ?? ''));
+      onSectionChangeRef.current(match?.label ?? null);
+
+      return page;
+    };
+
+    const scheduleProgressSave = () => {
+      if (bookId == null) return;
+      if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+
+      saveTimerRef.current = setTimeout(async () => {
+        await nextFrame();
+        await nextFrame();
+        if (cancelled) return;
+
+        const current = (renditionRef.current?.currentLocation() as unknown as { start?: SectionLocation; })?.start;
+        const cfi = visiblePointCfi(rendition) ?? current?.cfi;
+        if (!cfi || cfi === lastSavedRef.current) return;
+
+        const page = updateVisibleLocation(current);
+        const total = totalPagesRef.current;
+        const progress = page != null && total ? (page / total) * 100 : null;
+
+        lastSavedRef.current = cfi;
+        BooksControllersService.updateUserBookProgress(bookId, { currentRef: cfi, progress });
+      }, 800);
+    };
+
 
 
     // Persist the reading position whenever the page changes.
@@ -427,23 +579,8 @@ export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, o
       const cfi = start?.cfi;
       if (!cfi) return;
 
-      const page = toGlobalPage(start);
-      if (page != null) setCurrentPage(page);
-
-      // Surface the title of the section now on screen, matched by href.
-      const match = flatTocRef.current.find((it) => hrefKey(it.href) === hrefKey(start?.href ?? ''));
-      onSectionChangeRef.current(match?.label ?? null);
-
-      if (bookId == null || cfi === lastSavedRef.current) return;
-      lastSavedRef.current = cfi;
-
-      const total = totalPagesRef.current;
-      const progress = page != null && total ? (page / total) * 100 : null;
-
-      if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
-      saveTimerRef.current = setTimeout(() => {
-        BooksControllersService.updateUserBookProgress(bookId, { currentRef: cfi, progress });
-      }, 800);
+      updateVisibleLocation(start);
+      scheduleProgressSave();
     });
 
     // Restore the saved page on load, falling back to the start of the book.
@@ -470,17 +607,17 @@ export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, o
 
     book.ready.then(async () => {
       if (cancelled || !viewerRef.current) return;
-      const pageCalculation = await calculateTotalPages(book, viewerRef.current, () => cancelled);
-      if (!pageCalculation) return;
+      // const pageCalculation = await calculateTotalPages(book, viewerRef.current, () => cancelled);
+      // if (!pageCalculation) return;
 
-      sectionOffsetsRef.current = pageCalculation.offsets;
-      totalPagesRef.current = pageCalculation.totalPages;
-      setTotalPages(pageCalculation.totalPages);
+      // sectionOffsetsRef.current = pageCalculation.offsets;
+      // totalPagesRef.current = pageCalculation.totalPages;
+      // setTotalPages(pageCalculation.totalPages);
 
       // Reflect the page for the position the visible rendition already shows.
-      const current = (renditionRef.current?.currentLocation() as unknown as { start?: SectionLocation; })?.start;
-      const page = toGlobalPage(current);
-      if (page != null) setCurrentPage(page);
+      // const current = (renditionRef.current?.currentLocation() as unknown as { start?: SectionLocation; })?.start;
+      // const page = toGlobalPage(current);
+      // if (page != null) setCurrentPage(page);
     });
 
     return () => {
@@ -492,13 +629,7 @@ export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, o
       renditionRef.current = null;
       delete window.ePubViewer;
     };
-
-  }, [bookData, bookId, initialCfi]);
-
-  // Re-apply styling whenever the config changes, without rebuilding the book.
-  useEffect(() => {
-    if (renditionRef.current) applyReaderStyles(renditionRef.current, config);
-  }, [config]);
+  };
 
   const activeTheme = READER_THEMES.find((t) => t.key === config.theme) ?? READER_THEMES[0];
 

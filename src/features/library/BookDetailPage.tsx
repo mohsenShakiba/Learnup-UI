@@ -1,12 +1,10 @@
-import { Stack, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { UserBooksService } from '../../api/Learnup';
 import { getFileById } from '../../services/fetchFile';
 import { AppLoader } from '../../shared/components/AppLoader';
-import { DefaultHeader } from '../../shared/components/DefaultHeader';
-import { Scaffold } from '../../shared/components/Scaffold';
 import { getCachedBook, setCachedBook } from './bookCache';
 import { ReaderComponent } from './components/ReaderComponent';
 
@@ -64,9 +62,7 @@ export default function BookDetailPage () {
   const showLoader = isLoading || booksQuery.isLoading;
 
   return (
-    <Scaffold header={
-      <DefaultHeader header='کتاب' />
-    } >
+    <Box sx={{ position: 'fixed', inset: 0 }} >
 
       {
         showLoader && <AppLoader />
@@ -92,7 +88,7 @@ export default function BookDetailPage () {
         )
       }
 
-    </Scaffold>
+    </Box>
   );
 }
 

@@ -16,14 +16,26 @@ export function Scaffold ({
   maxWidth = '500px',
 }: ScaffoldProps) {
   return (
-    <Box sx={{ p: 0, position: 'relative', height: 'calc(100vh - 56px)' }}>
+    <Box
+      sx={{
+        p: 0,
+        position: 'relative',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
+      }}
+    >
       {header && <>{header}</>}
       <DotGrid />
       <Box
         component="main"
         sx={{
           maxWidth,
-          height: '100%',
+          width: '100%',
+          flex: 1,
+          minHeight: 0,
+          overflowY: 'auto',
           mx: 'auto',
           py: disablePadding ? 0 : 2,
           px: disablePadding ? 0 : 2,

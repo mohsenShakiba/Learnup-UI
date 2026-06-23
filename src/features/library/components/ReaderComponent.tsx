@@ -239,6 +239,7 @@ export function ReaderComponent ({ bookData, bookId, initialCfi }: Props) {
     };
 
     let lastTouchAt = 0;
+
     // rendition.on('touchend', (event: TouchEvent, contents: Contents) => {
     //   const touch = event.changedTouches[0];
     //   if (!touch) return;

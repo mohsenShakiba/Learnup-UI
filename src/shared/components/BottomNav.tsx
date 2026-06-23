@@ -14,13 +14,14 @@ const tabs = [
   { label: 'Settings', icon: 'settings', path: '/settings' },
 ];
 
-const hiddenPaths = ['/stories/'];
+// Only show the bottom nav on the main pages.
+const visiblePaths = ['/dashboard', '/', '/vocab', '/library', '/settings'];
 
 export function BottomNav () {
   const location = useLocation();
   const navigate = useNavigate();
 
-  if (hiddenPaths.some((path) => location.pathname.startsWith(path))) {
+  if (!visiblePaths.includes(location.pathname)) {
     return null;
   }
 

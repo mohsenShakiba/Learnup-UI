@@ -503,7 +503,7 @@ export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, o
   const activeTheme = READER_THEMES.find((t) => t.key === config.theme) ?? READER_THEMES[0];
 
   return (
-    <Stack sx={{ width: '100%', height: '100%', overflow: 'hidden' }}>
+    <Stack sx={{ width: '100%', height: '100%', overflow: 'hidden', direction: 'rtl' }}>
       <Box ref={viewerRef} sx={{ flex: 1, minHeight: 0, width: '100%', fontSize: '30px' }} />
       <Stack
         direction="row"

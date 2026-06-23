@@ -98,7 +98,7 @@ export default function BookDetailPage () {
         !showLoader && !loadError && bookData && (
           <Box sx={{ position: 'fixed', left: 16, right: 16, top: 16, bottom: 60 }}>
 
-            <Stack direction='row' sx={{ alignItems: 'center', justifyContent: 'space-between', color: activeTheme.color }}>
+            <Stack direction='row' sx={{ gap: 2, alignItems: 'center', justifyContent: 'space-between', color: activeTheme.color }}>
               <IconButton onClick={() => navigate(-1)} sx={{ color: 'inherit' }}>
                 <Icon sx={{ opacity: 0.5 }}>arrow_forward</Icon>
               </IconButton>
@@ -107,14 +107,12 @@ export default function BookDetailPage () {
                 onClick={() => setTocOpen(true)}
                 sx={{ flex: 1, minWidth: 0, alignItems: 'center', cursor: 'pointer' }}
               >
-                <Typography noWrap sx={{ color: 'inherit', textAlign: 'center', opacity: 0.5, maxWidth: '100%' }}>
+                <Typography noWrap sx={{ direction: 'rtl', color: 'inherit', textAlign: 'center', opacity: 0.5, maxWidth: '100%' }}>
                   {book?.title}
                 </Typography>
-                {currentSection && (
-                  <Typography variant="caption" noWrap sx={{ color: 'inherit', textAlign: 'center', opacity: 0.4, maxWidth: '100%' }}>
-                    {currentSection}
-                  </Typography>
-                )}
+                <Typography variant="caption" noWrap sx={{ direction: 'rtl', color: 'inherit', textAlign: 'center', opacity: 0.4, maxWidth: '100%' }}>
+                  {currentSection ?? '-'}
+                </Typography>
               </Stack>
 
               <IconButton onClick={() => setSettingsOpen(true)} sx={{ color: 'inherit' }}>

@@ -1,4 +1,4 @@
-import { Box, LinearProgress, Paper, Stack, Typography } from '@mui/material';
+import { Box, Icon, IconButton, Paper, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import type { UserBookResponse } from '../../../api/Learnup';
 import { getFileById } from '../../../services/fetchFile';
@@ -46,7 +46,7 @@ export function BookListItem ({ book, onClick }: BookListItemProps) {
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        gap: 1,
+        overflow: 'hidden',
         p: 0,
         borderRadius: 2,
         cursor: onClick ? 'pointer' : 'default',
@@ -55,7 +55,6 @@ export function BookListItem ({ book, onClick }: BookListItemProps) {
       <Box
         sx={{
           aspectRatio: '6 / 9',
-          borderRadius: 1,
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',
@@ -63,7 +62,6 @@ export function BookListItem ({ book, onClick }: BookListItemProps) {
           bgcolor: 'action.hover',
           color: 'text.secondary',
           position: 'relative',
-          boxShadow: '0 2px 5px rgba(0,0,0,0.2)'
         }}
       >
         {coverUrl ? (
@@ -95,8 +93,19 @@ export function BookListItem ({ book, onClick }: BookListItemProps) {
           </Stack>
         )}
 
-        <LinearProgress variant='determinate' value={book.progress ?? 0} sx={{ position: 'absolute', left: 12, right: 12, bottom: 12, borderRadius: 1 }} />
+
+
       </Box>
+
+      <Stack spacing={1} direction='row' sx={{ px: 1, alignItems: 'center', }}>
+        <Typography variant='caption' sx={{ color: 'text.secondary' }}>
+          {Math.round(book.progress ?? 0)}%
+        </Typography>
+        <Box sx={{ flex: 1 }} />
+        <IconButton size='small' >
+          <Icon >more_horiz</Icon>
+        </IconButton>
+      </Stack>
 
     </Paper>
   );

@@ -145,6 +145,26 @@ function selectWordAt (doc: Document, x: number, y: number, highlightRef: Highli
   return sentence;
 }
 
+// Eased animation of an element's scrollLeft toward target, used to snap to the
+// nearest page after a drag. Returns a canceller so a new gesture can interrupt it.
+function animateScrollLeft (el: HTMLElement, target: number, duration = 160): () => void {
+  const start = el.scrollLeft;
+  const distance = target - start;
+  if (distance === 0) return () => { };
+
+  const startTime = performance.now();
+  let raf = 0;
+  const step = (now: number) => {
+    const t = Math.min(1, (now - startTime) / duration);
+    // easeInOutQuad
+    const eased = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+    el.scrollLeft = start + distance * eased;
+    if (t < 1) raf = requestAnimationFrame(step);
+  };
+  raf = requestAnimationFrame(step);
+  return () => cancelAnimationFrame(raf);
+}
+
 declare global {
   interface Window {
     ePubViewer?: {
@@ -223,7 +243,6 @@ export function ReaderComponent ({ bookData, bookId, initialCfi }: Props) {
       // iOS Safari does not deliver touch/click events into a sandboxed iframe
       // unless allow-scripts is present; this adds it so taps reach our handlers.
       allowScriptedContent: true,
-      snap: true
     });
 
     renditionRef.current = rendition;
@@ -251,6 +270,56 @@ export function ReaderComponent ({ bookData, bookId, initialCfi }: Props) {
     //   if (Date.now() - lastTouchAt < 700) return;
     //   handleTap(contents.document, event.clientX, event.clientY);
     // });
+
+    // Drag-to-turn: follow the finger by scrolling the continuous manager's
+    // container, then snap to the nearest page on release. epubjs's own `snap`
+    // option is intentionally off so the gesture is driven here instead.
+    type DragManager = {
+      container: HTMLElement;
+      layout: { pageWidth: number; divisor: number; };
+    };
+    const getDragManager = () =>
+      (rendition as unknown as { manager?: DragManager; }).manager;
+
+    let dragging = false;
+    let dragMoved = false;
+    // Track screenX, not clientX: clientX is relative to the section iframe, which
+    // scrolls under the finger as we move the container and feeds back into the
+    // delta. screenX is relative to the device screen and stays stable.
+    let lastTouchX = 0;
+    let cancelSnap: (() => void) | null = null;
+
+    rendition.on('touchstart', (event: TouchEvent) => {
+      const touch = event.touches[0];
+      if (!touch || !getDragManager()) return;
+      cancelSnap?.();
+      cancelSnap = null;
+      dragging = true;
+      dragMoved = false;
+      lastTouchX = touch.screenX;
+    });
+
+    rendition.on('touchmove', (event: TouchEvent) => {
+      if (!dragging) return;
+      const touch = event.touches[0];
+      const manager = getDragManager();
+      if (!touch || !manager) return;
+      const delta = touch.screenX - lastTouchX;
+      if (delta !== 0) dragMoved = true;
+      manager.container.scrollLeft -= delta;
+      lastTouchX = touch.screenX;
+    });
+
+    rendition.on('touchend', () => {
+      if (!dragging) return;
+      dragging = false;
+      const manager = getDragManager();
+      if (!manager || !dragMoved) return;
+      const snapWidth = manager.layout.pageWidth * manager.layout.divisor;
+      if (!snapWidth) return;
+      const target = Math.round(manager.container.scrollLeft / snapWidth) * snapWidth;
+      cancelSnap = animateScrollLeft(manager.container, target);
+    });
 
     window.ePubViewer = {
       Book: {

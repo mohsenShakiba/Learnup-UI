@@ -2,9 +2,11 @@ import {
   Box,
   Button,
   Drawer,
+  IconButton,
   Stack,
   Typography,
 } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import {
   FONT_SIZES,
   LINE_HEIGHTS,
@@ -12,6 +14,7 @@ import {
   READER_THEMES,
   ReaderConfig,
   TEXT_ALIGNMENTS,
+  TEXT_JUSTIFY,
 } from '../readerTypes';
 
 interface Props {
@@ -34,11 +37,10 @@ function OptionGroup<T> ({ label, options, selected, onSelect }: OptionGroupProp
       <Typography variant="caption" color="text.secondary">
         {label}
       </Typography>
-      <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
+      <Stack direction="row" sx={{ mt: 1, gap: 1, flexWrap: 'wrap' }}>
         {options.map((option) => (
           <Button
             key={option.key}
-            fullWidth
             variant={selected === option.value ? 'contained' : 'outlined'}
             onClick={() => onSelect(option.value)}
           >
@@ -56,9 +58,14 @@ export function ReaderConfigDrawer ({ open, onClose, config, onConfigChange }: P
       <Box sx={{ width: 40, height: 4, borderRadius: 2, bgcolor: 'divider', mx: 'auto', my: 2 }} />
 
       <Box sx={{ px: 2, pb: 3 }}>
-        <Typography variant="subtitle1" gutterBottom>
-          Reader Settings
-        </Typography>
+        <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
+          <Typography variant="subtitle1">
+            Reader Settings
+          </Typography>
+          <IconButton aria-label="Close" onClick={onClose} size="small">
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        </Stack>
 
         <OptionGroup
           label="Font Size"
@@ -87,6 +94,15 @@ export function ReaderConfigDrawer ({ open, onClose, config, onConfigChange }: P
           selected={config.textAlign}
           onSelect={(textAlign) => onConfigChange({ textAlign })}
         />
+
+        {config.textAlign === 'justify' && (
+          <OptionGroup
+            label="Text Justification"
+            options={TEXT_JUSTIFY.map((tj) => ({ key: tj.key, label: tj.label, value: tj.key }))}
+            selected={config.textJustify}
+            onSelect={(textJustify) => onConfigChange({ textJustify })}
+          />
+        )}
 
         <OptionGroup
           label="Line Height"

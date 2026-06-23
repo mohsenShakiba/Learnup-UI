@@ -31,6 +31,7 @@ function applyReaderStyles (rendition: Rendition, config: ReaderConfig) {
     },
     'p, li, div, h1, h2, h3, h4, h5, h6': {
       'text-align': `${config.textAlign} !important`,
+      'text-justify': `${config.textJustify} !important`,
     },
     body: {
       // iOS Safari only fires click events on elements it considers "clickable";
@@ -157,7 +158,7 @@ function selectWordAt (doc: Document, x: number, y: number, highlightRef: Highli
 
 // Eased animation of an element's scrollLeft toward target, used to snap to the
 // nearest page after a drag. Returns a canceller so a new gesture can interrupt it.
-function animateScrollLeft (el: HTMLElement, target: number, duration = 160): () => void {
+function animateScrollLeft (el: HTMLElement, target: number, duration = 200): () => void {
   const start = el.scrollLeft;
   const distance = target - start;
   if (distance === 0) return () => { };

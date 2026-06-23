@@ -7,7 +7,7 @@ import { getFileById } from '../../services/fetchFile';
 import { AppLoader } from '../../shared/components/AppLoader';
 import { getCachedBook, setCachedBook } from './bookCache';
 import { ReaderComponent } from './components/ReaderComponent';
-import { DEFAULT_CONFIG, READER_THEMES, ReaderConfig } from './readerTypes';
+import { loadReaderConfig, READER_THEMES, ReaderConfig, saveReaderConfig } from './readerTypes';
 
 
 
@@ -64,10 +64,14 @@ export default function BookDetailPage () {
   // Wait for the book list too, so the saved page is known before first render.
   const showLoader = isLoading || booksQuery.isLoading;
 
-  const [config, setConfig] = useState<ReaderConfig>(DEFAULT_CONFIG);
+  const [config, setConfig] = useState<ReaderConfig>(loadReaderConfig);
 
   const handleConfigChange = (patch: Partial<ReaderConfig>) =>
-    setConfig((prev) => ({ ...prev, ...patch }));
+    setConfig((prev) => {
+      const next = { ...prev, ...patch };
+      saveReaderConfig(next);
+      return next;
+    });
 
   const activeTheme = READER_THEMES.find((t) => t.key === config.theme) ?? READER_THEMES[0];
 
@@ -92,14 +96,14 @@ export default function BookDetailPage () {
         !showLoader && !loadError && bookData && (
           <Box sx={{ position: 'fixed', left: 16, right: 16, top: 24, bottom: 65 }}>
 
-            <Stack direction='row' sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
-              <IconButton onClick={() => navigate(-1)}>
+            <Stack direction='row' sx={{ alignItems: 'center', justifyContent: 'space-between', color: activeTheme.color }}>
+              <IconButton onClick={() => navigate(-1)} sx={{ color: 'inherit' }}>
                 <Icon sx={{ opacity: 0.5 }}>arrow_forward</Icon>
               </IconButton>
 
-              <Typography sx={{ colot: 'inherit', textAlign: 'center', opacity: 0.5 }}>{book?.title}</Typography>
+              <Typography sx={{ color: 'inherit', textAlign: 'center', opacity: 0.5 }}>{book?.title}</Typography>
 
-              <IconButton onClick={() => setSettingsOpen(true)}>
+              <IconButton onClick={() => setSettingsOpen(true)} sx={{ color: 'inherit' }}>
                 <Icon sx={{ opacity: 0.5 }}>settings</Icon>
               </IconButton>
             </Stack>

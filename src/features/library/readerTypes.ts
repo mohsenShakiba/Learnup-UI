@@ -1,5 +1,6 @@
 export type ReaderThemeKey = 'light' | 'sepia' | 'dark';
 export type TextAlign = 'left' | 'justify' | 'right' | 'center';
+export type TextJustify = 'auto' | 'inter-word' | 'inter-character' | 'none';
 
 export interface ReaderConfig {
   fontSize: number;
@@ -7,6 +8,8 @@ export interface ReaderConfig {
   fontFamily: string;
   theme: ReaderThemeKey;
   textAlign: TextAlign;
+  // CSS text-justify: how space is distributed when textAlign is 'justify'.
+  textJustify: TextJustify;
   lineHeight: number;
 }
 
@@ -52,15 +55,18 @@ export const READER_FONT_FACES: ReaderFontFace[] = [
   { family: 'Roboto', weight: '400', src: "url('/fonts/Roboto-Regular.ttf') format('truetype')" },
   { family: 'IranSans', weight: '400', src: "url('/fonts/IranSans.woff2') format('woff2')" },
   { family: 'FredokaOne', weight: '300', src: "url('/fonts/FredokaOne.ttf') format('truetype')" },
+  { family: 'Bookerly', weight: '400', src: "url('/fonts/Bookerly.ttf') format('truetype')" },
+  { family: 'Merriweather', weight: '400', src: "url('/fonts/Merriweather-Regular.ttf') format('truetype')" },
+  { family: 'Georgia', weight: '400', src: "url('/fonts/georgia.ttf') format('truetype')" },
 ];
 
-// Selectable reader fonts. The first three use the bundled faces above; the
-// last two fall back to whatever serif/sans the device provides.
+// Selectable reader fonts. All but the last use bundled faces above; the
+// final one falls back to whatever sans the device provides.
 export const READER_FONTS: ReaderFont[] = [
   { key: 'roboto', label: 'Roboto', stack: "'Roboto', sans-serif" },
-  { key: 'iransans', label: 'IranSans', stack: "'IranSans', sans-serif" },
-  { key: 'fredoka', label: 'Fredoka', stack: "'FredokaOne', cursive" },
-  { key: 'serif', label: 'Serif', stack: "Georgia, 'Times New Roman', serif" },
+  { key: 'bookerly', label: 'Bookerly', stack: "'Bookerly', Georgia, serif" },
+  { key: 'merriweather', label: 'Merriweather', stack: "'Merriweather', Georgia, serif" },
+  { key: 'georgia', label: 'Georgia', stack: "'Georgia', 'Times New Roman', serif" },
   { key: 'sans', label: 'Sans', stack: "system-ui, -apple-system, sans-serif" },
 ];
 
@@ -69,6 +75,14 @@ export const TEXT_ALIGNMENTS: { key: TextAlign; label: string; }[] = [
   { key: 'justify', label: 'Justify' },
   { key: 'right', label: 'Right' },
   { key: 'center', label: 'Center' },
+];
+
+// CSS text-justify values. Only takes effect while textAlign is 'justify'.
+export const TEXT_JUSTIFY: { key: TextJustify; label: string; }[] = [
+  { key: 'auto', label: 'Auto' },
+  { key: 'inter-word', label: 'Word' },
+  { key: 'inter-character', label: 'Char' },
+  { key: 'none', label: 'None' },
 ];
 
 // Selectable line heights (unitless multipliers).
@@ -82,5 +96,30 @@ export const DEFAULT_CONFIG: ReaderConfig = {
   fontFamily: READER_FONTS[0].stack,
   theme: 'light',
   textAlign: 'justify',
+  textJustify: 'auto',
   lineHeight: 1.5,
 };
+
+const READER_CONFIG_STORAGE_KEY = 'reader-config';
+
+// Load the persisted reader config, merged over the defaults so missing or
+// newly added fields fall back gracefully. Returns defaults if nothing is
+// stored or the stored value is malformed.
+export function loadReaderConfig (): ReaderConfig {
+  try {
+    const raw = localStorage.getItem(READER_CONFIG_STORAGE_KEY);
+    if (!raw) return DEFAULT_CONFIG;
+    const parsed = JSON.parse(raw) as Partial<ReaderConfig>;
+    return { ...DEFAULT_CONFIG, ...parsed };
+  } catch {
+    return DEFAULT_CONFIG;
+  }
+}
+
+export function saveReaderConfig (config: ReaderConfig): void {
+  try {
+    localStorage.setItem(READER_CONFIG_STORAGE_KEY, JSON.stringify(config));
+  } catch {
+    // Ignore write failures (e.g. storage disabled or quota exceeded).
+  }
+}

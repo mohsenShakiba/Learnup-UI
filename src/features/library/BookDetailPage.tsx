@@ -1,13 +1,16 @@
 import { Box, Icon, IconButton, Stack, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { BooksControllersService } from '../../api/Learnup';
 import { getFileById } from '../../services/fetchFile';
 import { AppLoader } from '../../shared/components/AppLoader';
 import { getCachedBook, setCachedBook } from '../../stores/bookCache';
-import { ReaderComponent } from './components/ReaderComponent';
-import { loadReaderConfig, READER_THEMES, ReaderConfig, saveReaderConfig } from './readerTypes';
+import { AiResultDrawer } from './components/AiResultDrawer';
+import { ReaderAiState, ReaderComponent } from './components/ReaderComponent';
+import { ReaderConfigDrawer } from './components/ReaderConfigDrawer';
+import { TableOfContentsDrawer } from './components/TableOfContentsDrawer';
+import { loadReaderConfig, NavItem, READER_THEMES, ReaderConfig, saveReaderConfig } from './readerTypes';
 
 
 
@@ -19,6 +22,17 @@ export default function BookDetailPage () {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [tocOpen, setTocOpen] = useState(false);
   const [currentSection, setCurrentSection] = useState<string | null>(null);
+  const [toc, setToc] = useState<NavItem[]>([]);
+  const [tocNavigate, setTocNavigate] = useState<((href: string) => void) | null>(null);
+  const [aiState, setAiState] = useState<ReaderAiState>({
+    open: false,
+    loading: false,
+    error: false,
+    result: null,
+    word: '',
+    sentence: '',
+  });
+  const loggedServerCfiRef = useRef<string | null>(null);
   const navigate = useNavigate();
 
   const booksQuery = useQuery({
@@ -27,6 +41,11 @@ export default function BookDetailPage () {
   });
 
   const book = booksQuery.data?.find((b) => b.fileName === fileName);
+
+  useEffect(() => {
+    if (!book || loggedServerCfiRef.current === book.currentRef) return;
+    loggedServerCfiRef.current = book.currentRef ?? null;
+  }, [book]);
 
   useEffect(() => {
     if (!fileName) return;
@@ -74,6 +93,14 @@ export default function BookDetailPage () {
       saveReaderConfig(next);
       return next;
     });
+
+  const handleTocNavigateChange = (nextNavigate: ((href: string) => void) | null) => {
+    setTocNavigate(() => nextNavigate);
+  };
+
+  const handleAiStateChange = (patch: Partial<ReaderAiState>) => {
+    setAiState((prev) => ({ ...prev, ...patch }));
+  };
 
   const activeTheme = READER_THEMES.find((t) => t.key === config.theme) ?? READER_THEMES[0];
 
@@ -124,17 +151,40 @@ export default function BookDetailPage () {
               bookData={bookData}
               bookId={book?.id}
               initialCfi={book?.currentRef}
-              settingsOpen={settingsOpen}
-              onSettingsClose={() => setSettingsOpen(false)}
-              tocOpen={tocOpen}
-              onTocClose={() => setTocOpen(false)}
               onSectionChange={setCurrentSection}
+              onTocChange={setToc}
+              onTocNavigateChange={handleTocNavigateChange}
+              onAiStateChange={handleAiStateChange}
               config={config}
-              onConfigChange={handleConfigChange}
             />
           </Box>
         )
       }
+
+      <ReaderConfigDrawer
+        open={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+        config={config}
+        onConfigChange={handleConfigChange}
+      />
+
+      <TableOfContentsDrawer
+        open={tocOpen}
+        onClose={() => setTocOpen(false)}
+        toc={toc}
+        onNavigate={(href) => tocNavigate?.(href)}
+      />
+
+      <AiResultDrawer
+        open={aiState.open}
+        onOpen={() => setAiState((prev) => ({ ...prev, open: true }))}
+        onClose={() => setAiState((prev) => ({ ...prev, open: false }))}
+        word={aiState.word}
+        sentence={aiState.sentence}
+        loading={aiState.loading}
+        error={aiState.error}
+        result={aiState.result}
+      />
 
     </Box>
   );

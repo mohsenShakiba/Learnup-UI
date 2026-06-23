@@ -1,25 +1,29 @@
-import { Box, Stack } from '@mui/material';
+import { Box } from '@mui/material';
 import Epub, { Contents, Rendition } from 'epubjs';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { AiService, BooksControllersService, CancelError, SendAiTextResponse } from '../../../api/Learnup';
 import { SectionLocation } from '../../../utils/Calculate';
 import { NavItem, preloadReaderFonts, READER_FONT_FACES, READER_THEMES, ReaderConfig } from '../readerTypes';
-import { AiResultDrawer } from './AiResultDrawer';
-import { ReaderConfigDrawer } from './ReaderConfigDrawer';
-import { TableOfContentsDrawer } from './TableOfContentsDrawer';
+
+export interface ReaderAiState {
+  open: boolean;
+  loading: boolean;
+  error: boolean;
+  result: SendAiTextResponse | null;
+  word: string;
+  sentence: string;
+}
 
 interface Props {
   bookData: ArrayBuffer;
   bookId?: number;
   initialCfi?: string | null;
-  settingsOpen: boolean;
-  onSettingsClose: () => void;
-  tocOpen: boolean;
-  onTocClose: () => void;
   // Reports the title of the section currently on screen (null when unknown).
   onSectionChange: (title: string | null) => void;
+  onTocChange: (toc: NavItem[]) => void;
+  onTocNavigateChange: (navigate: ((href: string) => void) | null) => void;
+  onAiStateChange: (patch: Partial<ReaderAiState>) => void;
   config: ReaderConfig;
-  onConfigChange: (patch: Partial<ReaderConfig>) => void;
 }
 
 // epubjs navigation item shape (the subset we read).
@@ -336,12 +340,11 @@ declare global {
   }
 }
 
-export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, onSettingsClose, tocOpen, onTocClose, onSectionChange, config, onConfigChange }: Props) {
+export function ReaderComponent ({ bookData, bookId, initialCfi, onSectionChange, onTocChange, onTocNavigateChange, onAiStateChange, config }: Props) {
 
   const viewerRef = useRef<HTMLDivElement>(null);
   const renditionRef = useRef<Rendition | null>(null);
   const contentsRef = useRef<Set<Contents>>(new Set());
-  const [toc, setToc] = useState<NavItem[]>([]);
   // Flat TOC list for mapping a spine href to its section label.
   const flatTocRef = useRef<NavItem[]>([]);
   // Keep the latest section-change handler reachable from the rendition's
@@ -357,12 +360,6 @@ export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, o
   // The currently highlighted word's wrapper span, so it can be removed on the next click.
   const highlightRef = useRef<HTMLElement | null>(null);
 
-  const [aiOpen, setAiOpen] = useState(false);
-  const [aiLoading, setAiLoading] = useState(false);
-  const [aiError, setAiError] = useState(false);
-  const [aiResult, setAiResult] = useState<SendAiTextResponse | null>(null);
-  const [aiWord, setAiWord] = useState('');
-  const [aiSentence, setAiSentence] = useState('');
   // In-flight AI request, so a new selection cancels the previous one.
   const aiRequestRef = useRef<ReturnType<typeof AiService.postMobileAiSend> | null>(null);
 
@@ -373,24 +370,24 @@ export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, o
     if (!selectedWord || !selectedSentence) return;
 
     aiRequestRef.current?.cancel();
-    setAiWord(selectedWord);
-    setAiSentence(selectedSentence);
-    setAiResult(null);
-    setAiError(false);
-    setAiLoading(true);
-    setAiOpen(true);
+    onAiStateChange({
+      word: selectedWord,
+      sentence: selectedSentence,
+      result: null,
+      error: false,
+      loading: true,
+      open: true,
+    });
 
     const request = AiService.postMobileAiSend({ word: selectedWord, sentence: selectedSentence });
     aiRequestRef.current = request;
     request
       .then((res) => {
-        setAiResult(res);
-        setAiLoading(false);
+        onAiStateChange({ result: res, loading: false });
       })
       .catch((err) => {
         if (err instanceof CancelError) return;
-        setAiError(true);
-        setAiLoading(false);
+        onAiStateChange({ error: true, loading: false });
       });
   };
   // Keep the latest handler reachable from the per-section click listener
@@ -546,6 +543,9 @@ export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, o
         prevPage: () => rendition.prev(),
       },
     };
+    onTocNavigateChange((href: string) => {
+      rendition.display(href);
+    });
 
     const updateCurrentSection = (start?: SectionLocation) => {
       const match = flatTocRef.current.find((it) => hrefKey(it.href) === hrefKey(start?.href ?? ''));
@@ -571,14 +571,11 @@ export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, o
       }, 800);
     };
 
-
-
     // Persist the reading position whenever the page changes.
     rendition.on('relocated', (location: { start?: SectionLocation; }) => {
       const start = location?.start;
       const cfi = start?.cfi;
       if (!cfi) return;
-
       updateCurrentSection(start);
       scheduleProgressSave();
     });
@@ -590,7 +587,7 @@ export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, o
     book.loaded.navigation.then((nav: { toc: EpubNavItem[]; }) => {
       if (cancelled) return;
       const items = toNavItems(nav.toc);
-      setToc(items);
+      onTocChange(items);
       flatTocRef.current = flattenNav(items);
 
       // Reflect the section the visible rendition already shows.
@@ -607,52 +604,13 @@ export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, o
       book.destroy();
       renditionRef.current = null;
       contentsRef.current.clear();
+      onTocChange([]);
+      onTocNavigateChange(null);
       delete window.ePubViewer;
     };
   };
 
-  useEffect(() => {
-    let cancelled = false;
-
-    preloadReaderFonts(config.fontFamily).then(() => {
-      if (cancelled || !renditionRef.current) return;
-      applyReaderStyles(renditionRef.current, config, [...contentsRef.current]);
-      (renditionRef.current as unknown as { reportLocation?: () => void; }).reportLocation?.();
-    });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [config]);
-
   return (
-    <Stack sx={{ width: '100%', height: '100%', overflow: 'hidden', direction: 'rtl' }}>
-      <Box ref={viewerRef} sx={{ flex: 1, minHeight: 0, width: '100%', fontSize: '30px' }} />
-
-      <ReaderConfigDrawer
-        open={settingsOpen}
-        onClose={onSettingsClose}
-        config={config}
-        onConfigChange={onConfigChange}
-      />
-
-      <TableOfContentsDrawer
-        open={tocOpen}
-        onClose={onTocClose}
-        toc={toc}
-        onNavigate={(href) => renditionRef.current?.display(href)}
-      />
-
-      <AiResultDrawer
-        open={aiOpen}
-        onOpen={() => setAiOpen(true)}
-        onClose={() => setAiOpen(false)}
-        word={aiWord}
-        sentence={aiSentence}
-        loading={aiLoading}
-        error={aiError}
-        result={aiResult}
-      />
-    </Stack>
+    <Box ref={viewerRef} sx={{ width: '100%', height: '100%', direction: 'rtl' }} />
   );
 }

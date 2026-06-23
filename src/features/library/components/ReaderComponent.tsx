@@ -1,5 +1,5 @@
 import { Box, IconButton, Stack, Typography } from '@mui/material';
-import Epub, { Rendition } from 'epubjs';
+import Epub, { Contents, Rendition } from 'epubjs';
 import { useEffect, useRef, useState } from 'react';
 import { AiService, CancelError, UserBooksService } from '../../../api/Learnup';
 import { calculateTotalPages, SectionLocation } from '../../../utils/Calculate';
@@ -257,19 +257,12 @@ export function ReaderComponent ({ bookData, bookId, initialCfi }: Props) {
       if (sentence) askAiRef.current(sentence);
     };
 
-    let lastTouchAt = 0;
-
-    // rendition.on('touchend', (event: TouchEvent, contents: Contents) => {
-    //   const touch = event.changedTouches[0];
-    //   if (!touch) return;
-    //   lastTouchAt = Date.now();
-    //   handleTap(contents.document, touch.clientX, touch.clientY);
-    // });
-    // rendition.on('click', (event: MouseEvent, contents: Contents) => {
-    //   // Ignore the synthetic click that follows a touchend we already handled.
-    //   if (Date.now() - lastTouchAt < 700) return;
-    //   handleTap(contents.document, event.clientX, event.clientY);
-    // });
+    rendition.on('click', (event: MouseEvent, contents: Contents) => {
+      // Skip the click that fires at the end of a drag/swipe so a page turn
+      // doesn't also select a word.
+      if (dragMoved) return;
+      handleTap(contents.document, event.clientX, event.clientY);
+    });
 
     // Drag-to-turn: follow the finger by scrolling the continuous manager's
     // container, then snap to the nearest page on release. epubjs's own `snap`
@@ -287,16 +280,22 @@ export function ReaderComponent ({ bookData, bookId, initialCfi }: Props) {
     // scrolls under the finger as we move the container and feeds back into the
     // delta. screenX is relative to the device screen and stays stable.
     let lastTouchX = 0;
+    let startScrollLeft = 0;
     let cancelSnap: (() => void) | null = null;
+    // Fraction of a page the finger must travel to flip to the next page. Lower
+    // = more sensitive (the default Math.round behaviour was effectively 0.5).
+    const SWIPE_THRESHOLD = 0.15;
 
     rendition.on('touchstart', (event: TouchEvent) => {
       const touch = event.touches[0];
-      if (!touch || !getDragManager()) return;
+      const manager = getDragManager();
+      if (!touch || !manager) return;
       cancelSnap?.();
       cancelSnap = null;
       dragging = true;
       dragMoved = false;
       lastTouchX = touch.screenX;
+      startScrollLeft = manager.container.scrollLeft;
     });
 
     rendition.on('touchmove', (event: TouchEvent) => {
@@ -317,7 +316,16 @@ export function ReaderComponent ({ bookData, bookId, initialCfi }: Props) {
       if (!manager || !dragMoved) return;
       const snapWidth = manager.layout.pageWidth * manager.layout.divisor;
       if (!snapWidth) return;
-      const target = Math.round(manager.container.scrollLeft / snapWidth) * snapWidth;
+      // Snap relative to the page we started on: if the drag covered more than
+      // SWIPE_THRESHOLD of a page, flip one page in the drag direction; otherwise
+      // settle back to the start page.
+      const basePage = Math.round(startScrollLeft / snapWidth);
+      const dragged = manager.container.scrollLeft - basePage * snapWidth;
+      let targetPage = basePage;
+      if (Math.abs(dragged) > snapWidth * SWIPE_THRESHOLD) {
+        targetPage = basePage + Math.sign(dragged);
+      }
+      const target = targetPage * snapWidth;
       cancelSnap = animateScrollLeft(manager.container, target);
     });
 

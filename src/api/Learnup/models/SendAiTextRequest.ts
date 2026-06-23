@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type UpdateUserBookCurrentPageRequest = {
-    currentRef: string;
-    progress: number | null;
+export type SendAiTextRequest = {
+    word: string;
+    sentence: string;
 };

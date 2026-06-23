@@ -2,6 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { SendAiTextRequest } from '../models/SendAiTextRequest';
+import type { SendAiTextResponse } from '../models/SendAiTextResponse';
+
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -10,12 +13,12 @@ export class AiService {
 
     /**
      * @param requestBody 
-     * @returns string OK
+     * @returns SendAiTextResponse OK
      * @throws ApiError
      */
     public static postMobileAiSend(
-requestBody?: string,
-): CancelablePromise<string> {
+requestBody?: SendAiTextRequest,
+): CancelablePromise<SendAiTextResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/Mobile/Ai/send',

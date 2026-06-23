@@ -6,7 +6,9 @@
 export type UserBookResponse = {
     id: number;
     title: string;
+    author: string | null;
     fileName: string;
     currentRef: string | null;
+    progress: number | null;
     uploadedAt: string;
 };

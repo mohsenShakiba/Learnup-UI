@@ -32,6 +32,8 @@ export type { LessonVocabTestResponse } from './models/LessonVocabTestResponse';
 export { Level } from './models/Level';
 export type { MotivationalSentenceResponse } from './models/MotivationalSentenceResponse';
 export type { ReviewLeitnerBoxItemRequest } from './models/ReviewLeitnerBoxItemRequest';
+export type { SendAiTextRequest } from './models/SendAiTextRequest';
+export type { SendAiTextResponse } from './models/SendAiTextResponse';
 export type { StoryItemRequest } from './models/StoryItemRequest';
 export type { StoryItemResponse } from './models/StoryItemResponse';
 export type { StoryItemTimestampResponse } from './models/StoryItemTimestampResponse';

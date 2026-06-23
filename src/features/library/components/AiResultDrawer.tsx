@@ -6,18 +6,33 @@ import {
   SwipeableDrawer,
   Typography,
 } from '@mui/material';
+import { SendAiTextResponse } from '../../../api/Learnup';
 
 interface Props {
   open: boolean;
   onOpen: () => void;
   onClose: () => void;
+  word: string;
   sentence: string;
   loading: boolean;
   error: boolean;
-  result: string | null;
+  result: SendAiTextResponse | null;
 }
 
-export function AiResultDrawer ({ open, onOpen, onClose, sentence, loading, error, result }: Props) {
+function getTranslationText (
+  result: SendAiTextResponse | null,
+  camelCaseKey: keyof SendAiTextResponse,
+  pascalCaseKey: string,
+) {
+  if (!result) return '';
+  const value = result[camelCaseKey] ?? (result as unknown as Record<string, string | null | undefined>)[pascalCaseKey];
+  return value?.trim() ?? '';
+}
+
+export function AiResultDrawer ({ open, onOpen, onClose, word, sentence, loading, error, result }: Props) {
+  const wordTranslation = getTranslationText(result, 'wordTranslation', 'WordTranslation');
+  const sentenceTranslation = getTranslationText(result, 'sentenceTranslation', 'SentenceTranslation');
+
   return (
     <SwipeableDrawer
       anchor="bottom"
@@ -30,6 +45,17 @@ export function AiResultDrawer ({ open, onOpen, onClose, sentence, loading, erro
       <Box sx={{ width: 40, height: 4, borderRadius: 2, bgcolor: 'divider', mx: 'auto', my: 1.5 }} />
 
       <Box sx={{ px: 2, pb: 3, overflowY: 'auto' }}>
+        {word && (
+          <>
+            <Typography variant="caption" color="text.secondary">
+              Selected word
+            </Typography>
+            <Typography variant="h6" sx={{ mb: 1, fontWeight: 700 }}>
+              {word}
+            </Typography>
+          </>
+        )}
+
         {sentence && (
           <>
             <Typography variant="caption" color="text.secondary">
@@ -58,9 +84,24 @@ export function AiResultDrawer ({ open, onOpen, onClose, sentence, loading, erro
         )}
 
         {!loading && !error && result != null && (
-          <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap' }}>
-            {result}
-          </Typography>
+          <Stack spacing={2}>
+            <Box>
+              <Typography variant="caption" color="text.secondary">
+                ترجمه واژه
+              </Typography>
+              <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap' }}>
+                {wordTranslation || 'ترجمه‌ای دریافت نشد.'}
+              </Typography>
+            </Box>
+            <Box>
+              <Typography variant="caption" color="text.secondary">
+                ترجمه جمله
+              </Typography>
+              <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap' }}>
+                {sentenceTranslation || 'ترجمه‌ای دریافت نشد.'}
+              </Typography>
+            </Box>
+          </Stack>
         )}
       </Box>
     </SwipeableDrawer>

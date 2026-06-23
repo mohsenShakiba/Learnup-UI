@@ -1,7 +1,7 @@
 import { Box, Stack, Typography } from '@mui/material';
 import Epub, { Contents, Rendition } from 'epubjs';
 import { useEffect, useRef, useState } from 'react';
-import { AiService, CancelError, UserBooksService } from '../../../api/Learnup';
+import { AiService, CancelError, SendAiTextResponse, UserBooksService } from '../../../api/Learnup';
 import { calculateTotalPages, SectionLocation } from '../../../utils/Calculate';
 import { NavItem, READER_FONT_FACES, READER_THEMES, ReaderConfig } from '../readerTypes';
 import { AiResultDrawer } from './AiResultDrawer';
@@ -165,12 +165,13 @@ function clearHighlight (highlightRef: HighlightRef) {
   parent.normalize();
 }
 
-// Highlight the clicked word and return the sentence surrounding it.
-function selectWordAt (doc: Document, x: number, y: number, highlightRef: HighlightRef): string | null {
+// Highlight the clicked word and return it along with the sentence surrounding it.
+function selectWordAt (doc: Document, x: number, y: number, highlightRef: HighlightRef): { word: string; sentence: string; } | null {
   const range = wordRangeAtPoint(doc, x, y);
   if (!range) return null;
 
-  // Compute the sentence before mutating the DOM, since highlighting splits nodes.
+  // Compute the word and sentence before mutating the DOM, since highlighting splits nodes.
+  const word = range.toString().trim();
   const block = blockAncestor(range.startContainer);
   const blockText = block.textContent ?? '';
   const wordOffset = offsetWithinBlock(doc, block, range.startContainer, range.startOffset);
@@ -186,7 +187,7 @@ function selectWordAt (doc: Document, x: number, y: number, highlightRef: Highli
   } catch {
     // surroundContents throws if the range crosses element boundaries; skip the highlight.
   }
-  return sentence;
+  return { word, sentence };
 }
 
 // Eased animation of an element's scrollLeft toward target, used to snap to the
@@ -237,6 +238,9 @@ export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, o
   const sectionOffsetsRef = useRef<number[]>([]);
   const [currentPage, setCurrentPage] = useState<number | null>(null);
   const [totalPages, setTotalPages] = useState<number | null>(null);
+  // Mirror of totalPages reachable from the rendition's relocated listener, which
+  // is registered once and so can't read the latest state directly.
+  const totalPagesRef = useRef<number | null>(null);
   // Latest config for the rendition-creation effect, so styling a freshly built
   // rendition does not force that effect to depend on (and recreate on) config.
   const configRef = useRef(config);
@@ -247,21 +251,27 @@ export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, o
   const [aiOpen, setAiOpen] = useState(false);
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState(false);
-  const [aiResult, setAiResult] = useState<string | null>(null);
+  const [aiResult, setAiResult] = useState<SendAiTextResponse | null>(null);
+  const [aiWord, setAiWord] = useState('');
   const [aiSentence, setAiSentence] = useState('');
   // In-flight AI request, so a new selection cancels the previous one.
   const aiRequestRef = useRef<ReturnType<typeof AiService.postMobileAiSend> | null>(null);
 
-  // Send the selected sentence to the AI service and surface the result in the drawer.
-  const askAi = (sentence: string) => {
+  // Send the selected word and sentence to the AI service and surface the result in the drawer.
+  const askAi = (word: string, sentence: string) => {
+    const selectedWord = word.trim();
+    const selectedSentence = sentence.trim();
+    if (!selectedWord || !selectedSentence) return;
+
     aiRequestRef.current?.cancel();
-    setAiSentence(sentence);
+    setAiWord(selectedWord);
+    setAiSentence(selectedSentence);
     setAiResult(null);
     setAiError(false);
     setAiLoading(true);
     setAiOpen(true);
 
-    const request = AiService.postMobileAiSend(sentence);
+    const request = AiService.postMobileAiSend({ word: selectedWord, sentence: selectedSentence });
     aiRequestRef.current = request;
     request
       .then((res) => {
@@ -319,8 +329,8 @@ export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, o
     // so we hook taps here instead of attaching per-section listeners. touchend is
     // used on touch devices because iOS Safari often withholds the synthetic click.
     const handleTap = (doc: Document, x: number, y: number) => {
-      const sentence = selectWordAt(doc, x, y, highlightRef);
-      if (sentence) askAiRef.current(sentence);
+      const selection = selectWordAt(doc, x, y, highlightRef);
+      if (selection) askAiRef.current(selection.word, selection.sentence);
     };
 
     rendition.on('click', (event: MouseEvent, contents: Contents) => {
@@ -427,9 +437,12 @@ export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, o
       if (bookId == null || cfi === lastSavedRef.current) return;
       lastSavedRef.current = cfi;
 
+      const total = totalPagesRef.current;
+      const progress = page != null && total ? (page / total) * 100 : null;
+
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
       saveTimerRef.current = setTimeout(() => {
-        UserBooksService.updateUserBookCurrentPage(bookId, { currentRef: cfi });
+        UserBooksService.updateUserBookCurrentPage(bookId, { currentRef: cfi, progress });
       }, 800);
     });
 
@@ -461,6 +474,7 @@ export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, o
       if (!pageCalculation) return;
 
       sectionOffsetsRef.current = pageCalculation.offsets;
+      totalPagesRef.current = pageCalculation.totalPages;
       setTotalPages(pageCalculation.totalPages);
 
       // Reflect the page for the position the visible rendition already shows.
@@ -521,6 +535,7 @@ export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, o
         open={aiOpen}
         onOpen={() => setAiOpen(true)}
         onClose={() => setAiOpen(false)}
+        word={aiWord}
         sentence={aiSentence}
         loading={aiLoading}
         error={aiError}

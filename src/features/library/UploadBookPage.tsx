@@ -24,6 +24,17 @@ export default function UploadBookPage () {
       const book = ePub(await selected.arrayBuffer());
       const metadata = await book.loaded.metadata;
 
+      console.log('metadata', metadata);
+
+      const coverHref = await book.loaded.cover;
+      if (coverHref) {
+        const coverBlob = await book.archive.getBlob(coverHref);
+        console.log('cover blob', coverBlob);
+        console.log('cover content type', coverBlob.type);
+      } else {
+        console.log('cover', 'no cover declared in epub');
+      }
+
       setMeta({
         title: metadata.title?.trim() || selected.name.replace(/\.epub$/i, ''),
       });
@@ -67,12 +78,6 @@ export default function UploadBookPage () {
           <Typography variant="caption" sx={{ opacity: 0.6 }}>
             در حال پردازش اطلاعات کتاب...
           </Typography>
-        )}
-
-        {meta && (
-          <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}>
-            <Typography sx={{ fontSize: '1rem' }}>{meta.title}</Typography>
-          </Stack>
         )}
 
         {uploadMutation.isError && (

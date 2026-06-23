@@ -54,7 +54,7 @@ export function BookListItem ({ book, coverUrl, onClick }: BookListItemProps) {
               color: 'text.secondary',
               textAlign: 'center',
             }}>
-              Neil Fergosen
+              {book.author}
             </Typography>
             <Box component='img'
               src='/images/subscriptions/book.png'
@@ -62,7 +62,7 @@ export function BookListItem ({ book, coverUrl, onClick }: BookListItemProps) {
           </Stack>
         )}
 
-        <LinearProgress variant='determinate' value={10} sx={{ position: 'absolute', left: 12, right: 12, bottom: 12, borderRadius: 1 }} />
+        <LinearProgress variant='determinate' value={book.progress ?? 0} sx={{ position: 'absolute', left: 12, right: 12, bottom: 12, borderRadius: 1 }} />
       </Box>
 
     </Paper>

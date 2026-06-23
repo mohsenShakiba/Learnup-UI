@@ -1,13 +1,45 @@
 import { Box, LinearProgress, Paper, Stack, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
 import type { UserBookResponse } from '../../../api/Learnup';
+import { getFileById } from '../../../services/fetchFile';
 
 interface BookListItemProps {
   book: UserBookResponse;
-  coverUrl?: string | null;
   onClick?: (book: UserBookResponse) => void;
 }
 
-export function BookListItem ({ book, coverUrl, onClick }: BookListItemProps) {
+export function BookListItem ({ book, onClick }: BookListItemProps) {
+  const [coverUrl, setCoverUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!book.coverId) {
+      setCoverUrl(null);
+      return;
+    }
+
+    let cancelled = false;
+    let objectUrl: string | null = null;
+
+    getFileById(book.coverId)
+      .then((buffer) => {
+        const url = URL.createObjectURL(new Blob([buffer]));
+        if (cancelled) {
+          URL.revokeObjectURL(url);
+          return;
+        }
+        objectUrl = url;
+        setCoverUrl(url);
+      })
+      .catch(() => {
+        if (!cancelled) setCoverUrl(null);
+      });
+
+    return () => {
+      cancelled = true;
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
+  }, [book.coverId]);
+
   return (
     <Paper
       onClick={() => onClick?.(book)}
@@ -22,15 +54,16 @@ export function BookListItem ({ book, coverUrl, onClick }: BookListItemProps) {
     >
       <Box
         sx={{
-          aspectRatio: '3 / 4',
-          borderRadius: 1.5,
+          aspectRatio: '6 / 9',
+          borderRadius: 1,
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
           bgcolor: 'action.hover',
           color: 'text.secondary',
-          position: 'relative'
+          position: 'relative',
+          boxShadow: '0 2px 5px rgba(0,0,0,0.2)'
         }}
       >
         {coverUrl ? (

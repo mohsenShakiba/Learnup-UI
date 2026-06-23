@@ -2,7 +2,7 @@ import { Box, Icon, IconButton, Stack, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { UserBooksService } from '../../api/Learnup';
+import { BooksControllersService } from '../../api/Learnup';
 import { getFileById } from '../../services/fetchFile';
 import { AppLoader } from '../../shared/components/AppLoader';
 import { getCachedBook, setCachedBook } from '../../stores/bookCache';
@@ -23,7 +23,7 @@ export default function BookDetailPage () {
 
   const booksQuery = useQuery({
     queryKey: ['userBooks'],
-    queryFn: () => UserBooksService.getUserBooks(),
+    queryFn: () => BooksControllersService.getUserBooks(),
   });
 
   const book = booksQuery.data?.find((b) => b.fileName === fileName);

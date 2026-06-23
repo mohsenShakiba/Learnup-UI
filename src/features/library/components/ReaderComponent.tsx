@@ -1,7 +1,7 @@
 import { Box, Stack, Typography } from '@mui/material';
 import Epub, { Contents, Rendition } from 'epubjs';
 import { useEffect, useRef, useState } from 'react';
-import { AiService, CancelError, SendAiTextResponse, UserBooksService } from '../../../api/Learnup';
+import { AiService, BooksControllersService, CancelError, SendAiTextResponse } from '../../../api/Learnup';
 import { calculateTotalPages, SectionLocation } from '../../../utils/Calculate';
 import { NavItem, READER_FONT_FACES, READER_THEMES, ReaderConfig } from '../readerTypes';
 import { AiResultDrawer } from './AiResultDrawer';
@@ -442,7 +442,7 @@ export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, o
 
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
       saveTimerRef.current = setTimeout(() => {
-        UserBooksService.updateUserBookCurrentPage(bookId, { currentRef: cfi, progress });
+        BooksControllersService.updateUserBookProgress(bookId, { currentRef: cfi, progress });
       }, 800);
     });
 

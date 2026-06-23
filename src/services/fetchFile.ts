@@ -7,7 +7,7 @@ export async function getFileById (fileName: string): Promise<ArrayBuffer> {
         : OpenAPI.TOKEN;
 
     const res = await axios.get<ArrayBuffer>(
-        `${OpenAPI.BASE}/Mobile/UserBooks/book/${encodeURIComponent(fileName)}`,
+        `${OpenAPI.BASE}/Mobile/Files/${fileName}`,
         {
             responseType: 'arraybuffer',
             withCredentials: OpenAPI.WITH_CREDENTIALS,

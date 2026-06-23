@@ -1,7 +1,7 @@
 import { Box, Fab, Stack, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { UserBooksService } from '../../api/Learnup';
+import { BooksControllersService } from '../../api/Learnup';
 import { AppLoader } from '../../shared/components/AppLoader';
 import { DefaultHeader } from '../../shared/components/DefaultHeader';
 import { Scaffold } from '../../shared/components/Scaffold';
@@ -12,7 +12,7 @@ export default function ListBooksPage () {
 
   const booksQuery = useQuery({
     queryKey: ['userBooks'],
-    queryFn: () => UserBooksService.getUserBooks(),
+    queryFn: () => BooksControllersService.getUserBooks(),
   });
 
   if (booksQuery.isLoading || booksQuery.isFetching) {

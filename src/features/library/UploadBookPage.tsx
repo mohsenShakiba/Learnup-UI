@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import ePub from 'epubjs';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { UserBooksService } from '../../api/Learnup';
+import { BooksControllersService } from '../../api/Learnup';
 import { DefaultHeader } from '../../shared/components/DefaultHeader';
 import { Scaffold } from '../../shared/components/Scaffold';
 
@@ -12,11 +12,14 @@ export default function UploadBookPage () {
   const queryClient = useQueryClient();
 
   const [file, setFile] = useState<File | null>(null);
+  const [cover, setCover] = useState<Blob | null>(null);
   const [meta, setMeta] = useState<BookMeta | null>(null);
   const [parsing, setParsing] = useState(false);
 
   const handleSelect = async (selected: File | null) => {
     setFile(selected);
+    setCover(null);
+    setMeta(null);
     if (!selected) return;
 
     setParsing(true);
@@ -24,15 +27,10 @@ export default function UploadBookPage () {
       const book = ePub(await selected.arrayBuffer());
       const metadata = await book.loaded.metadata;
 
-      console.log('metadata', metadata);
-
       const coverHref = await book.loaded.cover;
       if (coverHref) {
         const coverBlob = await book.archive.getBlob(coverHref);
-        console.log('cover blob', coverBlob);
-        console.log('cover content type', coverBlob.type);
-      } else {
-        console.log('cover', 'no cover declared in epub');
+        setCover(coverBlob);
       }
 
       setMeta({
@@ -45,9 +43,10 @@ export default function UploadBookPage () {
 
   const uploadMutation = useMutation({
     mutationFn: () =>
-      UserBooksService.uploadUserBook({
+      BooksControllersService.uploadUserBook({
         Title: meta?.title,
         File: file ?? undefined,
+        CoverImage: cover ?? undefined
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userBooks'] });

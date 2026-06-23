@@ -8,6 +8,7 @@ export type UserBookResponse = {
     title: string;
     author: string | null;
     fileName: string;
+    coverId: string | null;
     currentRef: string | null;
     progress: number | null;
     uploadedAt: string;

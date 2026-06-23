@@ -62,6 +62,7 @@ export { VocabTestType } from './models/VocabTestType';
 export { VocabType } from './models/VocabType';
 
 export { AiService } from './services/AiService';
+export { BooksControllersService } from './services/BooksControllersService';
 export { CoursesService } from './services/CoursesService';
 export { FilesService } from './services/FilesService';
 export { GrammarsService } from './services/GrammarsService';
@@ -71,7 +72,6 @@ export { LeitnerBoxService } from './services/LeitnerBoxService';
 export { LessonsService } from './services/LessonsService';
 export { StoriesService } from './services/StoriesService';
 export { SubscriptionsService } from './services/SubscriptionsService';
-export { UserBooksService } from './services/UserBooksService';
 export { UsersService } from './services/UsersService';
 export { VocabsService } from './services/VocabsService';
 export { VocabTestsService } from './services/VocabTestsService';

@@ -9,7 +9,7 @@ import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 
-export class UserBooksService {
+export class BooksControllersService {
 
     /**
      * @param formData 
@@ -25,7 +25,7 @@ CoverImage?: Blob;
 ): CancelablePromise<UserBookResponse> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/Mobile/UserBooks',
+            url: '/Mobile/BooksControllers',
             formData: formData,
             mediaType: 'multipart/form-data',
         });
@@ -38,24 +38,7 @@ CoverImage?: Blob;
     public static getUserBooks(): CancelablePromise<Array<UserBookResponse>> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/Mobile/UserBooks',
-        });
-    }
-
-    /**
-     * @param name 
-     * @returns any OK
-     * @throws ApiError
-     */
-    public static getUserBookFile(
-name: string,
-): CancelablePromise<any> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/Mobile/UserBooks/book/{name}',
-            path: {
-                'name': name,
-            },
+            url: '/Mobile/BooksControllers',
         });
     }
 
@@ -65,13 +48,13 @@ name: string,
      * @returns any OK
      * @throws ApiError
      */
-    public static updateUserBookCurrentPage(
+    public static updateUserBookProgress(
 id: number,
 requestBody?: UpdateUserBookCurrentPageRequest,
 ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'PUT',
-            url: '/Mobile/UserBooks/book/{id}',
+            url: '/Mobile/BooksControllers/book/{id}',
             path: {
                 'id': id,
             },

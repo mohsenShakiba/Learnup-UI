@@ -1,16 +1,15 @@
 interface StoredEntry {
   fileName: string;
   data: ArrayBuffer;
-  expiry: number;
 }
 
-const TTL_MS = 3 * 60 * 60 * 1000; // 3 hours
 const DB_NAME = 'book-cache';
 const STORE_NAME = 'books';
 
 let dbPromise: Promise<IDBDatabase> | null = null;
 
 function openDB (): Promise<IDBDatabase> {
+
   if (dbPromise) return dbPromise;
 
   dbPromise = new Promise((resolve, reject) => {
@@ -44,30 +43,15 @@ export async function getCachedBook (fileName: string): Promise<ArrayBuffer | nu
 export async function setCachedBook (fileName: string, data: ArrayBuffer): Promise<void> {
   try {
     const db = await openDB();
-    const entry: StoredEntry = { fileName, data, expiry: Date.now() + TTL_MS };
+    const entry: StoredEntry = { fileName, data };
     await new Promise<void>((resolve, reject) => {
       const tx = db.transaction(STORE_NAME, 'readwrite');
       tx.objectStore(STORE_NAME).put(entry);
       tx.oncomplete = () => resolve();
       tx.onerror = () => reject(tx.error);
     });
-    console.log('saved to db');
   } catch {
-    console.log('error in saving the book');
     // Quota exceeded or unavailable — skip caching rather than throw.
   }
 }
 
-export async function deleteCachedBook (fileName: string): Promise<void> {
-  try {
-    const db = await openDB();
-    await new Promise<void>((resolve, reject) => {
-      const tx = db.transaction(STORE_NAME, 'readwrite');
-      tx.objectStore(STORE_NAME).delete(fileName);
-      tx.oncomplete = () => resolve();
-      tx.onerror = () => reject(tx.error);
-    });
-  } catch {
-    // ignore
-  }
-}

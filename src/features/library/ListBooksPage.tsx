@@ -1,11 +1,13 @@
-import { Fab, Paper, Stack, Typography } from '@mui/material';
+import { Box, Fab, Stack, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { UserBooksService } from '../../api/Learnup';
 import { AppLoader } from '../../shared/components/AppLoader';
+import { DefaultHeader } from '../../shared/components/DefaultHeader';
 import { Scaffold } from '../../shared/components/Scaffold';
+import { BookListItem } from './components/BookListItem';
 
-export default function UserBooksPage () {
+export default function ListBooksPage () {
   const navigate = useNavigate();
 
   const booksQuery = useQuery({
@@ -20,9 +22,10 @@ export default function UserBooksPage () {
   const books = booksQuery.data ?? [];
 
   return (
-    <Scaffold>
-      <Stack sx={{ height: '100%' }} spacing={2}>
-        <Typography variant="h6">کتاب‌های من</Typography>
+    <Scaffold header={
+      <DefaultHeader header='کتاب ها' />
+    }>
+      <Stack spacing={2}>
 
         {books.length === 0 ? (
           <Stack sx={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 1, opacity: 0.6 }}>
@@ -30,31 +33,23 @@ export default function UserBooksPage () {
             <Typography variant="body2">هنوز کتابی اضافه نکرده‌ای</Typography>
           </Stack>
         ) : (
-          <Stack spacing={1.5} sx={{ flex: 1, overflowY: 'auto' }}>
+          <Box
+            sx={{
+              flex: 1,
+              overflowY: 'auto',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
+              gap: 1.5,
+            }}
+          >
             {books.map((book) => (
-              <Paper
+              <BookListItem
                 key={book.id}
-                onClick={() => navigate(`/library/book/${encodeURIComponent(book.fileName)}`)}
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 1.5,
-                  p: 1,
-                  borderRadius: 2,
-                  cursor: 'pointer',
-                }}
-              >
-                <Stack sx={{ minWidth: 0, flex: 1 }}>
-                  <Typography noWrap sx={{ fontSize: '1rem' }}>
-                    {book.title}
-                  </Typography>
-                  <Typography variant="caption" sx={{ opacity: 0.6 }}>
-                    {new Date(book.uploadedAt).toLocaleDateString('fa-IR')}
-                  </Typography>
-                </Stack>
-              </Paper>
+                book={book}
+                onClick={(b) => navigate(`/library/book/${encodeURIComponent(b.fileName)}`)}
+              />
             ))}
-          </Stack>
+          </Box>
         )}
       </Stack>
 

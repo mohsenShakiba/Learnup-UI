@@ -1,12 +1,13 @@
-import { Box, Button, Stack, Typography } from '@mui/material';
+import { Alert, Box, Button, Stack, Typography } from '@mui/material';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import ePub from 'epubjs';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserBooksService } from '../../api/Learnup';
+import { DefaultHeader } from '../../shared/components/DefaultHeader';
 import { Scaffold } from '../../shared/components/Scaffold';
 
-export default function UploadUserBookPage () {
+export default function UploadBookPage () {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -46,9 +47,14 @@ export default function UploadUserBookPage () {
   const canSubmit = !!file && !!meta && !parsing && !uploadMutation.isPending;
 
   return (
-    <Scaffold>
+    <Scaffold header={
+      <DefaultHeader header='آپلود کتاب' />
+    }>
       <Stack spacing={2}>
-        <Typography variant="h6">افزودن کتاب</Typography>
+
+        <Alert severity='info'>
+          فقط کتاب های فرمت epub قابل استفاده میباشد.
+        </Alert>
 
         <FilePicker
           label="فایل کتاب (EPUB)"
@@ -59,7 +65,7 @@ export default function UploadUserBookPage () {
 
         {parsing && (
           <Typography variant="caption" sx={{ opacity: 0.6 }}>
-            در حال خواندن اطلاعات کتاب...
+            در حال پردازش اطلاعات کتاب...
           </Typography>
         )}
 

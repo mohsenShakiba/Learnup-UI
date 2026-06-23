@@ -3,9 +3,10 @@ import Epub, { Contents, Rendition } from 'epubjs';
 import { useEffect, useRef, useState } from 'react';
 import { AiService, CancelError, UserBooksService } from '../../../api/Learnup';
 import { calculateTotalPages, SectionLocation } from '../../../utils/Calculate';
-import { READER_FONT_FACES, READER_THEMES, ReaderConfig } from '../readerTypes';
+import { NavItem, READER_FONT_FACES, READER_THEMES, ReaderConfig } from '../readerTypes';
 import { AiResultDrawer } from './AiResultDrawer';
 import { ReaderConfigDrawer } from './ReaderConfigDrawer';
+import { TableOfContentsDrawer } from './TableOfContentsDrawer';
 
 interface Props {
   bookData: ArrayBuffer;
@@ -13,8 +14,40 @@ interface Props {
   initialCfi?: string | null;
   settingsOpen: boolean;
   onSettingsClose: () => void;
+  tocOpen: boolean;
+  onTocClose: () => void;
+  // Reports the title of the section currently on screen (null when unknown).
+  onSectionChange: (title: string | null) => void;
   config: ReaderConfig;
   onConfigChange: (patch: Partial<ReaderConfig>) => void;
+}
+
+// epubjs navigation item shape (the subset we read).
+interface EpubNavItem {
+  id?: string;
+  href: string;
+  label: string;
+  subitems?: EpubNavItem[];
+}
+
+// Convert epubjs' navigation tree into our own NavItem tree, trimming labels.
+function toNavItems (items: EpubNavItem[]): NavItem[] {
+  return items.map((it) => ({
+    id: it.id ?? it.href,
+    href: it.href,
+    label: (it.label ?? '').trim(),
+    subitems: it.subitems && it.subitems.length ? toNavItems(it.subitems) : undefined,
+  }));
+}
+
+// Flatten the nav tree into a single list for href lookups.
+function flattenNav (items: NavItem[]): NavItem[] {
+  return items.flatMap((it) => [it, ...(it.subitems ? flattenNav(it.subitems) : [])]);
+}
+
+// Strip directory and fragment so a spine href can be matched to a TOC entry.
+function hrefKey (href: string): string {
+  return href.split('#')[0].split('/').pop() ?? href;
 }
 
 // Push the reader configuration into the epub rendition. Re-registering the
@@ -187,10 +220,17 @@ declare global {
   }
 }
 
-export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, onSettingsClose, config, onConfigChange }: Props) {
+export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, onSettingsClose, tocOpen, onTocClose, onSectionChange, config, onConfigChange }: Props) {
 
   const viewerRef = useRef<HTMLDivElement>(null);
   const renditionRef = useRef<Rendition | null>(null);
+  const [toc, setToc] = useState<NavItem[]>([]);
+  // Flat TOC list for mapping a spine href to its section label.
+  const flatTocRef = useRef<NavItem[]>([]);
+  // Keep the latest section-change handler reachable from the rendition's
+  // relocated listener without re-registering it on every render.
+  const onSectionChangeRef = useRef(onSectionChange);
+  onSectionChangeRef.current = onSectionChange;
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastSavedRef = useRef<string | null>(initialCfi ?? null);
   // Cumulative page count preceding each spine section, indexed by spine position.
@@ -380,6 +420,10 @@ export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, o
       const page = toGlobalPage(start);
       if (page != null) setCurrentPage(page);
 
+      // Surface the title of the section now on screen, matched by href.
+      const match = flatTocRef.current.find((it) => hrefKey(it.href) === hrefKey(start?.href ?? ''));
+      onSectionChangeRef.current(match?.label ?? null);
+
       if (bookId == null || cfi === lastSavedRef.current) return;
       lastSavedRef.current = cfi;
 
@@ -397,6 +441,19 @@ export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, o
     // that advances by one per flip, instead of the character-based location
     // count which can skip several numbers per page.
     let cancelled = false;
+
+    // Load the table of contents and keep a flat copy for href→title lookups.
+    book.loaded.navigation.then((nav: { toc: EpubNavItem[]; }) => {
+      if (cancelled) return;
+      const items = toNavItems(nav.toc);
+      setToc(items);
+      flatTocRef.current = flattenNav(items);
+
+      // Reflect the section the visible rendition already shows.
+      const current = (renditionRef.current?.currentLocation() as unknown as { start?: SectionLocation; })?.start;
+      const match = flatTocRef.current.find((it) => hrefKey(it.href) === hrefKey(current?.href ?? ''));
+      onSectionChangeRef.current(match?.label ?? null);
+    });
 
     book.ready.then(async () => {
       if (cancelled || !viewerRef.current) return;
@@ -451,6 +508,13 @@ export function ReaderComponent ({ bookData, bookId, initialCfi, settingsOpen, o
         onClose={onSettingsClose}
         config={config}
         onConfigChange={onConfigChange}
+      />
+
+      <TableOfContentsDrawer
+        open={tocOpen}
+        onClose={onTocClose}
+        toc={toc}
+        onNavigate={(href) => renditionRef.current?.display(href)}
       />
 
       <AiResultDrawer

@@ -23,21 +23,21 @@ export function DefaultHeader ({ header, subtitle, children }: DefaultHeaderProp
       px: 2,
       bgcolor: 'background.default'
     }}>
-    <Stack direction='row' spacing={1} sx={{maxWidth: '500px', margin: '0 auto'}} >
-      <IconButton onClick={() => navigate(-1)}>
-        <Icon sx={{ opacity: 0.5 }}>arrow_forward</Icon>
-      </IconButton>
-      <Stack >
-        <Typography>
-          {header}
-        </Typography>
-        {subtitle && <Typography sx={{ fontSize: '0.8rem', color: 'text.secondary' }}>
-          {subtitle}
-        </Typography>}
+      <Stack direction='row' spacing={1} sx={{ maxWidth: '500px', margin: '0 auto', alignItems: 'center' }} >
+        <IconButton onClick={() => navigate(-1)}>
+          <Icon sx={{ opacity: 0.5 }}>arrow_forward</Icon>
+        </IconButton>
+        <Stack >
+          <Typography>
+            {header}
+          </Typography>
+          {subtitle && <Typography sx={{ fontSize: '0.8rem', color: 'text.secondary' }}>
+            {subtitle}
+          </Typography>}
+        </Stack>
+        <Box sx={{ flex: 1 }}></Box>
+        {children}
       </Stack>
-      <Box sx={{ flex: 1 }}></Box>
-      {children}
-    </Stack>
     </Box>
   );
 }

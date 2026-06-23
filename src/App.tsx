@@ -12,8 +12,8 @@ import BoxLevelReviewPage from "./features/leitnerBox/BoxLevelReviewPage";
 import LeitnerBoxPage from "./features/leitnerBox/LeitnerBoxPage";
 import LessonDetailPage from "./features/lessons/LessonDetailPage";
 import BookDetailPage from "./features/library/BookDetailPage";
-import UploadUserBookPage from "./features/library/UploadUserBookPage";
-import UserBooksPage from "./features/library/UserBooksPage";
+import ListBooksPage from "./features/library/ListBooksPage";
+import UploadBookPage from "./features/library/UploadBookPage";
 import SettingsPage from "./features/settings/SettingsPage";
 import SubscriptionsPage from "./features/settings/SubscriptionsPage";
 import StoryDetailPage from "./features/stories/StoryDetailPage";
@@ -61,10 +61,10 @@ function App () {
             <Route path="/settings/subscriptions" element={<SubscriptionsPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/library/book/:fileName" element={<BookDetailPage />} />
-            <Route path="/library" element={<UserBooksPage />} />
+            <Route path="/library" element={<ListBooksPage />} />
             <Route
               path="/library/user-books/upload"
-              element={<UploadUserBookPage />}
+              element={<UploadBookPage />}
             />
             <Route path="/" element={<ListCoursesPage />} />
             <Route path="*" element={<h1>404 - Not Found</h1>} />

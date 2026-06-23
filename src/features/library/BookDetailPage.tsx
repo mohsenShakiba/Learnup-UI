@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { UserBooksService } from '../../api/Learnup';
 import { getFileById } from '../../services/fetchFile';
 import { AppLoader } from '../../shared/components/AppLoader';
-import { getCachedBook, setCachedBook } from './bookCache';
+import { getCachedBook, setCachedBook } from '../../stores/bookCache';
 import { ReaderComponent } from './components/ReaderComponent';
 import { loadReaderConfig, READER_THEMES, ReaderConfig, saveReaderConfig } from './readerTypes';
 
@@ -17,6 +17,8 @@ export default function BookDetailPage () {
   const [bookData, setBookData] = useState<ArrayBuffer | null>(null);
   const [loadError, setLoadError] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [tocOpen, setTocOpen] = useState(false);
+  const [currentSection, setCurrentSection] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const booksQuery = useQuery({
@@ -94,14 +96,26 @@ export default function BookDetailPage () {
 
       {
         !showLoader && !loadError && bookData && (
-          <Box sx={{ position: 'fixed', left: 16, right: 16, top: 24, bottom: 65 }}>
+          <Box sx={{ position: 'fixed', left: 16, right: 16, top: 16, bottom: 60 }}>
 
             <Stack direction='row' sx={{ alignItems: 'center', justifyContent: 'space-between', color: activeTheme.color }}>
               <IconButton onClick={() => navigate(-1)} sx={{ color: 'inherit' }}>
                 <Icon sx={{ opacity: 0.5 }}>arrow_forward</Icon>
               </IconButton>
 
-              <Typography sx={{ color: 'inherit', textAlign: 'center', opacity: 0.5 }}>{book?.title}</Typography>
+              <Stack
+                onClick={() => setTocOpen(true)}
+                sx={{ flex: 1, minWidth: 0, alignItems: 'center', cursor: 'pointer' }}
+              >
+                <Typography noWrap sx={{ color: 'inherit', textAlign: 'center', opacity: 0.5, maxWidth: '100%' }}>
+                  {book?.title}
+                </Typography>
+                {currentSection && (
+                  <Typography variant="caption" noWrap sx={{ color: 'inherit', textAlign: 'center', opacity: 0.4, maxWidth: '100%' }}>
+                    {currentSection}
+                  </Typography>
+                )}
+              </Stack>
 
               <IconButton onClick={() => setSettingsOpen(true)} sx={{ color: 'inherit' }}>
                 <Icon sx={{ opacity: 0.5 }}>settings</Icon>
@@ -114,6 +128,9 @@ export default function BookDetailPage () {
               initialCfi={book?.currentRef}
               settingsOpen={settingsOpen}
               onSettingsClose={() => setSettingsOpen(false)}
+              tocOpen={tocOpen}
+              onTocClose={() => setTocOpen(false)}
+              onSectionChange={setCurrentSection}
               config={config}
               onConfigChange={handleConfigChange}
             />

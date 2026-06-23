@@ -9,6 +9,7 @@ export interface TotalPageCalculation {
 export interface SectionLocation {
     index: number;
     cfi?: string;
+    href?: string;
     displayed: { page: number; total: number; };
 }
 

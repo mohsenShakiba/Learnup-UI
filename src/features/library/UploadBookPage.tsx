@@ -25,17 +25,21 @@ export default function UploadBookPage () {
     setParsing(true);
     try {
       const book = ePub(await selected.arrayBuffer());
-      const metadata = await book.loaded.metadata;
+      try {
+        const metadata = await book.loaded.metadata;
 
-      const coverHref = await book.loaded.cover;
-      if (coverHref) {
-        const coverBlob = await book.archive.getBlob(coverHref);
-        setCover(coverBlob);
+        const coverHref = await book.loaded.cover;
+        if (coverHref) {
+          const coverBlob = await book.archive.getBlob(coverHref);
+          setCover(coverBlob);
+        }
+
+        setMeta({
+          title: metadata.title?.trim() || selected.name.replace(/\.epub$/i, ''),
+        });
+      } finally {
+        book.destroy();
       }
-
-      setMeta({
-        title: metadata.title?.trim() || selected.name.replace(/\.epub$/i, ''),
-      });
     } finally {
       setParsing(false);
     }

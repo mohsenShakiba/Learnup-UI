@@ -3,6 +3,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
+import { SwipeableDrawerHost } from "./shared/swipeableDrawer";
 import { LearnupThemeProvider } from "./shared/theme/ThemeContext.tsx";
 import { ToastHost } from "./shared/toast";
 
@@ -14,6 +15,7 @@ createRoot(document.getElementById("root")!).render(
     <QueryClientProvider client={queryClient}>
       <LearnupThemeProvider>
         <App />
+        <SwipeableDrawerHost />
         <ToastHost />
       </LearnupThemeProvider>
     </QueryClientProvider>

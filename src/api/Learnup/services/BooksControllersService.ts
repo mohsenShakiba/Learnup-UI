@@ -44,6 +44,23 @@ CoverImage?: Blob;
 
     /**
      * @param id 
+     * @returns UserBookResponse OK
+     * @throws ApiError
+     */
+    public static getUserBookById(
+id: number,
+): CancelablePromise<UserBookResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/Mobile/BooksControllers/{id}',
+            path: {
+                'id': id,
+            },
+        });
+    }
+
+    /**
+     * @param id 
      * @param requestBody 
      * @returns any OK
      * @throws ApiError

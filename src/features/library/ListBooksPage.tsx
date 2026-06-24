@@ -46,7 +46,7 @@ export default function ListBooksPage () {
               <BookListItem
                 key={book.id}
                 book={book}
-                onClick={(b) => navigate(`/library/book/${encodeURIComponent(b.fileName)}`)}
+                onClick={(b) => navigate(`/library/book/${b.id}`)}
               />
             ))}
           </Box>

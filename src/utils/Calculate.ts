@@ -15,8 +15,7 @@ export interface SectionLocation {
 
 export async function calculateTotalPages (
     book: ReturnType<typeof Epub>,
-    viewer: HTMLDivElement,
-    isCancelled: () => boolean,
+    viewer: HTMLElement
 ): Promise<TotalPageCalculation | null> {
     const width = viewer.clientWidth;
     const height = viewer.clientHeight;
@@ -44,16 +43,14 @@ export async function calculateTotalPages (
         let cumulative = 0;
 
         for (const item of spineItems) {
-            if (isCancelled()) return null;
             await measureRendition.display(item.href);
             const start = (measureRendition.location as unknown as { start?: SectionLocation; })?.start;
             offsets[item.index] = cumulative;
             cumulative += start?.displayed.total ?? 1;
         }
 
-        if (isCancelled()) return null;
-
         return { offsets, totalPages: cumulative };
+
     } finally {
         measureRendition.destroy();
         measureContainer.remove();

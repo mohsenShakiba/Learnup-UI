@@ -60,7 +60,7 @@ function App () {
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/settings/subscriptions" element={<SubscriptionsPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/library/book/:fileName" element={<BookDetailPage />} />
+            <Route path="/library/book/:bookId" element={<BookDetailPage />} />
             <Route path="/library" element={<ListBooksPage />} />
             <Route
               path="/library/user-books/upload"

@@ -1,20 +1,13 @@
 import {
-  Box,
-  Divider,
-  Drawer,
-  IconButton,
   List,
   ListItem,
   ListItemButton,
-  ListItemText,
-  Typography,
+  ListItemText
 } from '@mui/material';
-import { NavItem } from '../readerTypes';
+import { EpubNavItem } from '../../../services/BookManagarService';
 
 interface Props {
-  open: boolean;
-  onClose: () => void;
-  toc: NavItem[];
+  toc: EpubNavItem[];
   onNavigate: (href: string) => void;
 }
 
@@ -23,15 +16,15 @@ function TocItem ({
   onNavigate,
   depth = 0,
 }: {
-  item: NavItem;
+  item: EpubNavItem;
   onNavigate: (href: string) => void;
   depth?: number;
 }) {
   return (
     <>
-      <ListItem disablePadding>
+      <ListItem disablePadding >
         <ListItemButton sx={{ pl: 2 + depth * 2 }} onClick={() => onNavigate(item.href)}>
-          <ListItemText
+          <ListItemText sx={{ direction: 'rtl', textAlign: 'right' }}
             primary={item.label.trim()}
           />
         </ListItemButton>
@@ -43,40 +36,16 @@ function TocItem ({
   );
 }
 
-export function TableOfContentsDrawer ({ open, onClose, toc, onNavigate }: Props) {
+export function TableOfContentsDrawer ({ toc, onNavigate }: Props) {
   const handleNavigate = (href: string) => {
     onNavigate(href);
-    onClose();
   };
 
   return (
-    <Drawer
-      anchor="left"
-      open={open}
-      onClose={onClose}
-    >
-      <Box sx={{ px: 2, py: 1.5, display: 'flex', alignItems: 'center', gap: 1 }}>
-        <Typography variant="h6" sx={{ flex: 1 }}>
-          Contents
-        </Typography>
-        <IconButton onClick={onClose} size="small">
-          <span className="material-icons">close</span>
-        </IconButton>
-      </Box>
-      <Divider />
-      {toc.length === 0 ? (
-        <Box sx={{ p: 2 }}>
-          <Typography variant="body2" color="text.secondary">
-            No table of contents available.
-          </Typography>
-        </Box>
-      ) : (
-        <List dense disablePadding>
-          {toc.map((item) => (
-            <TocItem key={item.id} item={item} onNavigate={handleNavigate} />
-          ))}
-        </List>
-      )}
-    </Drawer>
+    <List dense sx={{ direction: 'rtl' }}>
+      {toc.map((item) => (
+        <TocItem key={item.id} item={item} onNavigate={handleNavigate} />
+      ))}
+    </List>
   );
 }

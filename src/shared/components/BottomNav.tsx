@@ -32,6 +32,7 @@ export function BottomNav() {
   return (
 
     <BottomNavigation
+      sx={{ px: 2 }}
       value={currentTab === -1 ? false : currentTab}
       onChange={(_, newValue) => navigate(tabs[newValue].path)}
     >
@@ -40,17 +41,8 @@ export function BottomNav() {
           sx={{
             minWidth: 0,
             px: 0.5,
-            '& .MuiBottomNavigationAction-label': {
-              fontSize: '10px',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              width: '100%',
-              textAlign: 'center',
-            },
           }}
           key={tab.path}
-          label={tab.label}
           icon={<Icon>{tab.icon}</Icon>}
         />
       ))}

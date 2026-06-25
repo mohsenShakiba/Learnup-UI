@@ -11,7 +11,7 @@ type CourseListItemProps = {
   sx?: SxProps<Theme>;
 };
 
-export function CourseListItem ({ course }: CourseListItemProps) {
+export function CourseListItem({ course }: CourseListItemProps) {
 
   const navigate = useNavigate();
 
@@ -28,7 +28,8 @@ export function CourseListItem ({ course }: CourseListItemProps) {
     <Box sx={{
       p: 2,
       display: 'flex',
-      height: 'calc(100vh - 90px)',
+      height: 'calc(100vh - 120px)',
+      pb: 5,
     }}>
 
       <Paper
@@ -124,7 +125,6 @@ export function CourseListItem ({ course }: CourseListItemProps) {
           </Stack>
 
           <FancyButton
-            sx={{ borderRadius: 99 }}
             fullWidth
             onClick={handleNavigateToCourseDetail}
             variant='contained' >

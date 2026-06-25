@@ -1,17 +1,20 @@
 import { Box } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
+import { useRef, useState } from 'react';
+import type { Swiper as SwiperType } from 'swiper';
 import 'swiper/css';
-import 'swiper/css/pagination';
-import { Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { CoursesService } from '../../api/Learnup';
 import { AppLoader } from '../../shared/components/AppLoader';
-import { DotGrid } from '../../shared/components/DotGrid';
 import { ErrorPage } from '../../shared/components/ErrorPage';
-import { CourseListItem } from './components/CourseListItem';
 import { Scaffold } from '../../shared/components/Scaffold';
+import { CoursePagination } from './components/CoursePagination';
+import { CourseListItem } from './components/CourseListItem';
 
 export default function ListCoursesPage() {
+  const swiperRef = useRef<SwiperType | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+
   const coursesQuery = useQuery({
     queryKey: ['courses', 'language'],
     queryFn: () => CoursesService.getCoursesByLanguageId(1),
@@ -29,19 +32,27 @@ export default function ListCoursesPage() {
 
   return (
     <Scaffold disablePadding>
-      <Swiper
-        direction='horizontal'
-        modules={[Pagination]}
-        pagination={{ clickable: true }}
-        slidesPerView={1}
-      >
-        {courses.map((course) => (
-          <SwiperSlide key={course.id} >
-            <CourseListItem key={course.id} course={course} />
-          </SwiperSlide>
-        ))}
-      </Swiper>
-    </Scaffold>
+      <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+        <Swiper
+          direction='horizontal'
+          slidesPerView={1}
+          style={{ flex: 1, width: '100%' }}
+          onSwiper={(swiper) => { swiperRef.current = swiper; }}
+          onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
+        >
+          {courses.map((course) => (
+            <SwiperSlide key={course.id}>
+              <CourseListItem course={course} />
+            </SwiperSlide>
+          ))}
+        </Swiper>
 
+        <CoursePagination
+          count={courses.length}
+          activeIndex={activeIndex}
+          onDotClick={(index) => swiperRef.current?.slideTo(index)}
+        />
+      </Box>
+    </Scaffold>
   );
 }

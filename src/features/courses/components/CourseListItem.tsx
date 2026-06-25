@@ -15,7 +15,6 @@ export function CourseListItem({ course }: CourseListItemProps) {
 
   const navigate = useNavigate();
 
-
   const progress = course.totalLessonsCount > 0
     ? (course.completedLessonsCount / course.totalLessonsCount) * 100
     : 0;
@@ -28,7 +27,7 @@ export function CourseListItem({ course }: CourseListItemProps) {
     <Box sx={{
       p: 2,
       display: 'flex',
-      height: 'calc(100vh - 120px)',
+      height: 'calc(100vh - 100px)',
       pb: 5,
     }}>
 

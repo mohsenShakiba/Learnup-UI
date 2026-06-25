@@ -5,6 +5,7 @@ const READER_CONFIG_STORAGE_KEY = 'reader-config';
 const DEFAULT_CONFIG: ReaderConfig = {
     fontSize: 18,
     fontFamily: 'Bookerly',
+    textAlign: 'left',
 };
 
 

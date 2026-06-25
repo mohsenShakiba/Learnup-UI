@@ -8,7 +8,8 @@ import { useEffect, useState } from 'react';
 import {
   FONT_SIZES,
   READER_FONTS,
-  ReaderConfig
+  ReaderConfig,
+  TEXT_ALIGNMENTS
 } from '../../../services/readerTypes';
 
 interface Props {
@@ -72,6 +73,13 @@ export function ReaderConfigDrawer ({ config, onConfigChange }: Props) {
           options={READER_FONTS.map((font) => ({ key: font.key, label: font.key, value: font.key }))}
           selected={draftConfig.fontFamily}
           onSelect={(fontFamily) => updateConfig({ fontFamily })}
+        />
+
+        <OptionGroup
+          label="Text Alignment"
+          options={TEXT_ALIGNMENTS}
+          selected={draftConfig.textAlign}
+          onSelect={(textAlign) => updateConfig({ textAlign })}
         />
 
       </Box>

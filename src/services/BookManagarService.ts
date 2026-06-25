@@ -353,6 +353,7 @@ export class BookManagarService {
     const fontFamily = JSON.stringify(config.fontFamily);
     const fontStack = `${fontFamily}, serif`;
     const fontSize = `${config.fontSize}px`;
+    const textAlign = config.textAlign ?? 'left';
     const fontFaces = READER_FONTS.map((face) => {
       const source = new URL(face.source, window.location.origin).href;
       return `@font-face{font-family:${JSON.stringify(face.key)};font-style:normal;font-weight:400;font-display:swap;src:url("${source}") format("${face.format}");}`;
@@ -385,6 +386,12 @@ export class BookManagarService {
       body h5,
       body h6 {
         font-size: ${fontSize} !important;
+      }
+      body p,
+      body div,
+      body li,
+      body blockquote {
+        text-align: ${textAlign} !important;
       }
     `;
   }

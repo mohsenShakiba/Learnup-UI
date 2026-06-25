@@ -1,6 +1,9 @@
+export type TextAlign = 'left' | 'justify';
+
 export interface ReaderConfig {
   fontSize: number;
   fontFamily: string;
+  textAlign: TextAlign;
 }
 
 export interface ReaderFont {
@@ -36,5 +39,10 @@ export const READER_FONTS: ReaderFont[] = [
 ];
 
 export const FONT_SIZES = [14, 16, 18, 20, 24];
+
+export const TEXT_ALIGNMENTS: { key: string; label: string; value: TextAlign }[] = [
+  { key: 'left', label: 'Left', value: 'left' },
+  { key: 'justify', label: 'Justify', value: 'justify' },
+];
 
 

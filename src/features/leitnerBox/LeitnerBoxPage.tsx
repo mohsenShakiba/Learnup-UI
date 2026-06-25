@@ -22,12 +22,12 @@ import {
   LeitnerBoxTutorialCard,
 } from "./components/LeitnerBoxTutorialCard";
 
-function parseReviewedDays (value: string): string {
+function parseReviewedDays(value: string): string {
   const match = value.match(/-?\d+/);
   return match ? match[0] : "";
 }
 
-export default function LeitnerBoxPage () {
+export default function LeitnerBoxPage() {
   const queryClient = useQueryClient();
   const [showTutorial, setShowTutorial] = useState(() => !hasTutorialBeenSeen());
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -114,28 +114,25 @@ export default function LeitnerBoxPage () {
 
   return (
     <Scaffold>
-      <Stack spacing={2}>
-        {showTutorial ? (
-          <LeitnerBoxTutorialCard onDismiss={() => setShowTutorial(false)} />
-        ) : (
-          <>
-            {levels.length === 0 ? (
-              <EmptyList message="No words in your Leitner box yet. Saved vocabulary will appear here and be grouped by level." />
-            ) : (
-              levels.map((level) => (
-                <BoxLevelCard
-                  key={level.id}
-                  levelId={level.id}
-                  level={Number(level.level)}
-                  totalItems={level.itemsCount}
-                  readyToReview={level.dueItemsCount}
-                />
-              ))
-            )}
-          </>
-        )}
-
-      </Stack>
+      {showTutorial ? (
+        <LeitnerBoxTutorialCard onDismiss={() => setShowTutorial(false)} />
+      ) : (
+        <Stack spacing={2}>
+          {levels.length === 0 ? (
+            <EmptyList message="No words in your Leitner box yet. Saved vocabulary will appear here and be grouped by level." />
+          ) : (
+            levels.map((level) => (
+              <BoxLevelCard
+                key={level.id}
+                levelId={level.id}
+                level={Number(level.level)}
+                totalItems={level.itemsCount}
+                readyToReview={level.dueItemsCount}
+              />
+            ))
+          )}
+        </Stack>
+      )}
 
       <Drawer
         anchor="right"

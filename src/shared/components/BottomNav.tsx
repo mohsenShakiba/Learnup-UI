@@ -14,14 +14,12 @@ const tabs = [
   { label: 'Settings', icon: 'settings', path: '/settings' },
 ];
 
-// Only show the bottom nav on the main pages.
-const visiblePaths = ['/dashboard', '/', '/vocab', '/library', '/settings'];
 
-export function BottomNav () {
+export function BottomNav() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  if (!visiblePaths.includes(location.pathname)) {
+  if (!tabs.some(t => t.path === location.pathname)) {
     return null;
   }
 

@@ -1,8 +1,8 @@
-import { Button, Card, Divider, Stack, Typography } from "@mui/material";
+import { Box, Button, Card, Divider, Stack, Typography } from "@mui/material";
 
 const TUTORIAL_SEEN_KEY = "leitner_tutorial_seen";
 
-export function hasTutorialBeenSeen (): boolean {
+export function hasTutorialBeenSeen(): boolean {
   return localStorage.getItem(TUTORIAL_SEEN_KEY) === "true";
 }
 
@@ -10,15 +10,15 @@ type LeitnerBoxTutorialCardProps = {
   onDismiss: () => void;
 };
 
-export function LeitnerBoxTutorialCard ({ onDismiss }: LeitnerBoxTutorialCardProps) {
+export function LeitnerBoxTutorialCard({ onDismiss }: LeitnerBoxTutorialCardProps) {
   const handleDismiss = () => {
     localStorage.setItem(TUTORIAL_SEEN_KEY, "true");
     onDismiss();
   };
 
   return (
-    <Card sx={{ p: 3, border: "1px solid", borderColor: "primary.light" }} dir="rtl">
-      <Stack spacing={2}>
+    <Card sx={{ p: 3, height: '100%' }} dir="rtl">
+      <Stack spacing={2} sx={{ height: '100%' }}>
         <Stack direction="row" spacing={1.5} sx={{ alignItems: "center" }}>
           <Typography variant="h6" >
             به جعبه لایتنر خود خوش آمدید
@@ -31,15 +31,16 @@ export function LeitnerBoxTutorialCard ({ onDismiss }: LeitnerBoxTutorialCardPro
           <strong>جعبه لایتنر</strong> یک سیستم تکرار فاصله‌دار است که با مرور کلمات در بازه‌های زمانی افزایشی، به شما کمک می‌کند واژگان را به‌طور مؤثر حفظ کنید.
         </Typography>
 
-
-
         <Typography variant="body2" color="text.secondary">
           کلماتی که هنگام مطالعه یا در زمان جستجو ذخیره می‌کنید به‌طور خودکار اینجا ظاهر می‌شوند و بر اساس میزان تسلط شما در سطوح مختلف قرار می‌گیرند.
         </Typography>
 
-        <Button variant="contained" onClick={handleDismiss} sx={{ alignSelf: "flex-end" }}>
+        <Box sx={{ flex: 1 }} />
+
+        <Button fullWidth variant="contained" onClick={handleDismiss} sx={{ alignSelf: "flex-end" }}>
           برو به جعبه لایتنر
         </Button>
+
       </Stack>
     </Card>
   );

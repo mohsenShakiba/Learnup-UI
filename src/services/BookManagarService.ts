@@ -19,8 +19,8 @@ export interface EpubNavItem {
 }
 
 export type BookPageInfo = {
-  currentPage: number | null;
-  totalPages: number | null;
+  currentPage: number | string | null;
+  totalPages: number | string | null;
   sectionTitle: string;
   display: boolean;
 };
@@ -41,6 +41,8 @@ export class BookManagarService {
   private shouldDisplay = false;
   private saveProgressTimeout: ReturnType<typeof setTimeout> | null = null;
   private lastSavedProgressKey: string | null = null;
+  private visualPageLocation: VisualPageLocation | null = null;
+  private sectionPageCounts = new Map<number, number>();
 
   navItems: EpubNavItem[] = [];
 
@@ -62,6 +64,8 @@ export class BookManagarService {
     this.config = loadReaderConfig();
     this.initialCfi = bookResponse.currentRef ?? undefined;
     this.currentLocation = null;
+    this.visualPageLocation = null;
+    this.sectionPageCounts.clear();
     this.emitPageInfo();
     this.bookData = await getCachedBook(bookResponse.id);
 
@@ -97,6 +101,7 @@ export class BookManagarService {
     this.book = view.book;
     this.navItems = view.book?.toc ?? [];
     view.renderer?.setAttribute('animated', '');
+    this.setupVisualPageEvent();
 
     this.applyConfig(config);
     await view.init({ lastLocation: this.initialCfi, showTextStart: !this.initialCfi });
@@ -167,6 +172,31 @@ export class BookManagarService {
     }) as EventListener);
   }
 
+  private setupVisualPageEvent () {
+    const renderer = this.view?.renderer;
+    if (!renderer) return;
+
+    renderer.addEventListener('relocate', ((event: CustomEvent<RendererLocationDetail>) => {
+      const { index } = event.detail;
+      if (typeof index !== 'number') return;
+
+      const currentPage = typeof renderer.page === 'number' ? renderer.page : null;
+      const totalPages = typeof renderer.pages === 'number' ? renderer.pages : null;
+      const sectionPages = totalPages === null
+        ? 1
+        : Math.max(1, totalPages - 2);
+
+      this.sectionPageCounts.set(index, sectionPages);
+
+      this.visualPageLocation = {
+        index,
+        page: currentPage === null ? 1 : Math.max(1, Math.min(currentPage, sectionPages)),
+        pages: sectionPages,
+      };
+      this.emitPageInfo();
+    }) as EventListener);
+  }
+
   saveCurrentPage = () => {
     if (!this.bookResponse || !this.currentLocation?.cfi) return;
     if (this.saveProgressTimeout) {
@@ -205,13 +235,82 @@ export class BookManagarService {
 
   private emitPageInfo (): void {
     if (!this.onPageInfoChange) return;
-    const progressPage = this.getLocationProgress(this.currentLocation);
+    const { currentPage, totalPages } = this.getPageCounts(this.currentLocation);
     this.onPageInfoChange({
-      currentPage: progressPage,
-      totalPages: this.currentLocation ? 100 : 0,
+      currentPage,
+      totalPages,
       sectionTitle: this.getCurrentSection() ?? '',
       display: this.shouldDisplay
     });
+  }
+
+  private getPageCounts (location: SectionLocation | null): Pick<BookPageInfo, 'currentPage' | 'totalPages'> {
+    if (!location) {
+      return { currentPage: null, totalPages: null };
+    }
+
+    const visualPages = this.getVisualPageCounts();
+    if (visualPages.currentPage !== null) {
+      return visualPages;
+    }
+
+    const pageList = this.book?.pageList ?? [];
+    if (location.pageItem?.label) {
+      return {
+        currentPage: location.pageItem.label,
+        totalPages: getLastPageLabel(pageList) ?? (pageList.length || null),
+      };
+    }
+
+    return { currentPage: null, totalPages: null };
+  }
+
+  private getVisualPageCounts (): Pick<BookPageInfo, 'currentPage' | 'totalPages'> {
+    if (!this.visualPageLocation || !this.book?.sections?.length) {
+      return { currentPage: null, totalPages: null };
+    }
+
+    const { index, page } = this.visualPageLocation;
+    const pagesBefore = this.getPageCountBeforeSection(index);
+    const totalPages = this.getEstimatedTotalPageCount();
+
+    return {
+      currentPage: pagesBefore + page,
+      totalPages,
+    };
+  }
+
+  private getPageCountBeforeSection (sectionIndex: number): number {
+    let total = 0;
+    for (let index = 0; index < sectionIndex; index += 1) {
+      total += this.getSectionPageCount(index);
+    }
+    return total;
+  }
+
+  private getEstimatedTotalPageCount (): number {
+    const sections = this.book?.sections ?? [];
+    return sections.reduce((total, _section, index) => total + this.getSectionPageCount(index), 0);
+  }
+
+  private getSectionPageCount (sectionIndex: number): number {
+    const knownCount = this.sectionPageCounts.get(sectionIndex);
+    if (knownCount) return knownCount;
+
+    const sections = this.book?.sections ?? [];
+    const section = sections[sectionIndex];
+    const knownRatios = [...this.sectionPageCounts.entries()]
+      .map(([index, pageCount]) => {
+        const size = sections[index]?.size ?? 0;
+        return size > 0 ? pageCount / size : null;
+      })
+      .filter((ratio): ratio is number => ratio !== null);
+
+    const averagePagesPerSize = knownRatios.length
+      ? knownRatios.reduce((sum, ratio) => sum + ratio, 0) / knownRatios.length
+      : 1 / 1500;
+
+    return Math.max(1, Math.round((section?.size ?? 1500) * averagePagesPerSize));
   }
 
   private getLocationProgress (location: SectionLocation | null): number {
@@ -304,14 +403,38 @@ function hrefKey (href: string): string {
   return href.split('#')[0].split('/').pop() ?? href;
 }
 
+function getLastPageLabel (pageList: EpubNavItem[]): string | null {
+  for (let i = pageList.length - 1; i >= 0; i -= 1) {
+    const item = pageList[i];
+    if (item.label) return item.label;
+  }
+  return null;
+}
+
 type FoliateBook = {
   toc?: EpubNavItem[];
+  pageList?: EpubNavItem[];
+  sections?: Array<{ size?: number; linear?: string; }>;
   destroy?: () => void;
 };
 
 type FoliateRenderer = HTMLElement & {
+  page?: number;
+  pages?: number;
   setStyles?: (css: string) => void;
   getContents?: () => Array<{ doc: Document; index: number; }>;
+};
+
+type RendererLocationDetail = {
+  index?: number;
+  fraction?: number;
+  size?: number;
+};
+
+type VisualPageLocation = {
+  index: number;
+  page: number;
+  pages: number;
 };
 
 type FoliateLoadDetail = {

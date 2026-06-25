@@ -111,7 +111,7 @@ export default function BookDetailPage () {
               </IconButton>
             </Stack>
 
-            <Box ref={setReaderContainer} sx={{ width: '100%', height: '100%', direction: 'rtl', position: 'fixed', left: 0, right: 0, top: 16, bottom: 32, opacity: pageInfo?.display ? 1 : 0 }} />
+            <Box ref={setReaderContainer} sx={{ width: '100%', direction: 'rtl', position: 'fixed', left: 0, right: 0, top: 16, bottom: 8, }} />
 
             <Typography
               variant="caption"

@@ -5,7 +5,7 @@ import {
 } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-const tabs = [
+export const ROOT_TABS = [
   { label: 'Dashboard', icon: 'dashboard', path: '/dashboard' },
   { label: 'Courses', icon: 'school', path: '/' },
   { label: 'Leitner', icon: 'layers', path: '/leitner-box' },
@@ -13,6 +13,8 @@ const tabs = [
   { label: 'Vocab', icon: 'search', path: '/vocab' },
   { label: 'Settings', icon: 'settings', path: '/settings' },
 ];
+
+const tabs = ROOT_TABS;
 
 
 export function BottomNav() {

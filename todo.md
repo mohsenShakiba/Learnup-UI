@@ -5,4 +5,3 @@
 [] in search vocab page, in the dialog for choosing language use a toogle button.
 [] in settings page add a page for editting profile
 []  fix subscriptions page, drop the fancy card and show a normal and minimal subscriptions page.
-[] in fefault header, if the current page is a root page, don't show the back button. how do we know it is a root page? all the paths that are defined in the BottomNav are root pages.

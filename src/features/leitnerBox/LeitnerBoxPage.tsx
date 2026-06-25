@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Stack } from "@mui/material";
+import { Box, Divider, Stack, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { LeitnerBoxService } from "../../api/Learnup";
 import { AppLoader } from "../../shared/components/AppLoader";
@@ -41,6 +41,12 @@ export default function LeitnerBoxPage() {
 
   return (
     <Scaffold>
+
+      <Stack direction='row' sx={{ alignItems: 'end', pb: 2 }}>
+        <Typography sx={{ px: 2 }} variant='body1'>لایتنر باکس</Typography>
+        <Box sx={{ flex: 1 }} />
+      </Stack>
+
       {showTutorial ? (
         <LeitnerBoxTutorialCard onDismiss={() => setShowTutorial(false)} />
       ) : (

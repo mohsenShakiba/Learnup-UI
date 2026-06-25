@@ -1,4 +1,5 @@
 import {
+  Box,
   Divider,
   Icon,
   ListItem,
@@ -6,19 +7,26 @@ import {
   ListItemIcon,
   ListItemText,
   Paper,
+  Stack,
   Switch,
+  Typography,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { DefaultHeader } from '../../shared/components/DefaultHeader';
 import { Scaffold } from '../../shared/components/Scaffold';
 import { useThemeMode } from '../../shared/theme/themeMode';
 
-export default function SettingsPage () {
+export default function SettingsPage() {
   const { isDark, setMode } = useThemeMode();
   const navigate = useNavigate();
 
   return (
-    <Scaffold header={<DefaultHeader header="Settings" />}>
+    <Scaffold >
+
+      <Stack direction='row' sx={{ alignItems: 'end', pb: 2 }}>
+        <Typography sx={{ px: 2 }} variant='body1'>تنظیمات</Typography>
+        <Box sx={{ flex: 1 }} />
+      </Stack>
+
       <Paper sx={{ p: 0, overflow: 'hidden' }}>
         <ListItem
           secondaryAction={

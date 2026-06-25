@@ -27,7 +27,6 @@ export function CourseListItem({ course }: CourseListItemProps) {
     <Box sx={{
       p: 2,
       display: 'flex',
-      height: 'calc(100vh - 100px)',
       pb: 5,
     }}>
 
@@ -35,6 +34,7 @@ export function CourseListItem({ course }: CourseListItemProps) {
         sx={
           {
             borderRadius: 2,
+            flex: 1,
             p: 0,
             display: 'flex',
             flexDirection: 'column',

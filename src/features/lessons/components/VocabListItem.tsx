@@ -1,4 +1,4 @@
-import { Box, Icon, Stack, Typography } from '@mui/material';
+import { Box, Button, Divider, Icon, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { VocabResponse } from '../../../api/Learnup/models/VocabResponse';
 import { TypeWriter } from '../../../components/TypeWriter';
@@ -10,7 +10,7 @@ type Props = {
     lessonId: number;
 };
 
-export function VocabListItem ({ vocabs, lessonId }: Props) {
+export function VocabListItem({ vocabs, lessonId }: Props) {
 
     const navigate = useNavigate();
     if (!vocabs.length) return null;
@@ -38,6 +38,15 @@ export function VocabListItem ({ vocabs, lessonId }: Props) {
                 <Box sx={{ color: 'rgba(125,125,125,0.65)', fontSize: '25px', lineHeight: '22px', height: 25, direction: 'rtl' }}>
                     <TypeWriter words={vocabs.map(v => v.word)} />
                 </Box>
+
+                <Divider />
+
+
+                <Stack direction='row'>
+                    <Typography>شروع تست</Typography>
+                    <Box sx={{ flex: 1 }} />
+                    <Button >شروع تست</Button>
+                </Stack>
 
             </Stack>
 

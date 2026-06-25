@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import type { Swiper as SwiperType } from 'swiper';
@@ -32,7 +32,9 @@ export default function ListCoursesPage() {
 
   return (
     <Scaffold disablePadding>
-      <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', pt: 2, }}>
+
+        <Typography sx={{ px: 2 }} variant='h6'>لیست دوره ها</Typography>
         <Swiper
           direction='horizontal'
           slidesPerView={1}

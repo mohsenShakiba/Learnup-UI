@@ -38,6 +38,8 @@ export class BookManagarService {
   private theme: Theme | null = null;
   private onPageInfoChange: ((pageInfo: BookPageInfo) => void) | null = null;
   private shouldDisplay = false;
+  private saveProgressTimeout: ReturnType<typeof setTimeout> | null = null;
+  private lastSavedProgressKey: string | null = null;
 
   navItems: EpubNavItem[] = [];
 
@@ -116,6 +118,10 @@ export class BookManagarService {
     this.view?.close();
     this.view?.remove();
     this.book?.destroy?.();
+    if (this.saveProgressTimeout) {
+      clearTimeout(this.saveProgressTimeout);
+      this.saveProgressTimeout = null;
+    }
     this.element = null;
     this.onPageInfoChange = null;
   };
@@ -147,31 +153,60 @@ export class BookManagarService {
       this.currentLocation = event.detail;
       // this.initialCfi = location.start.cfi;
       this.emitPageInfo();
-      // BooksControllersService.updateUserBookProgress(bookResponse.id, {
-      //   currentRef: location.start.cfi,
-      //   progress: 0
-      // });
+      this.scheduleProgressSave(bookResponse.id, event.detail);
     }) as EventListener);
   }
 
   saveCurrentPage = () => {
+    if (!this.bookResponse || !this.currentLocation?.cfi) return;
+    if (this.saveProgressTimeout) {
+      clearTimeout(this.saveProgressTimeout);
+      this.saveProgressTimeout = null;
+    }
     BooksControllersService.updateUserBookProgress(this.bookResponse!.id, {
       currentRef: this.currentLocation!.cfi!,
-      progress: 0
+      progress: this.getLocationProgress(this.currentLocation)
     });
   };
 
+  private scheduleProgressSave (bookId: number, location: SectionLocation): void {
+    if (!location.cfi) return;
+
+    const progress = this.getLocationProgress(location);
+    const progressKey = `${location.cfi}:${progress}`;
+    if (progressKey === this.lastSavedProgressKey) return;
+
+    if (this.saveProgressTimeout) {
+      clearTimeout(this.saveProgressTimeout);
+    }
+
+    this.saveProgressTimeout = setTimeout(() => {
+      this.saveProgressTimeout = null;
+      BooksControllersService.updateUserBookProgress(bookId, {
+        currentRef: location.cfi!,
+        progress,
+      }).then(() => {
+        this.lastSavedProgressKey = progressKey;
+      }).catch((error) => {
+        console.error('Failed to save book progress', error);
+      });
+    }, 1000);
+  }
+
   private emitPageInfo (): void {
     if (!this.onPageInfoChange) return;
-    const progressPage = this.currentLocation?.fraction == null
-      ? 0
-      : Math.max(1, Math.round(this.currentLocation.fraction * 100));
+    const progressPage = this.getLocationProgress(this.currentLocation);
     this.onPageInfoChange({
       currentPage: progressPage,
       totalPages: this.currentLocation ? 100 : 0,
       sectionTitle: this.getCurrentSection() ?? '',
       display: this.shouldDisplay
     });
+  }
+
+  private getLocationProgress (location: SectionLocation | null): number {
+    if (location?.fraction == null) return 0;
+    return Math.max(1, Math.min(100, Math.round(location.fraction * 100)));
   }
 
   private setupReaderStyles (): void {
@@ -181,35 +216,68 @@ export class BookManagarService {
     }
 
     view.addEventListener('load', ((event: CustomEvent<FoliateLoadDetail>) => {
-      this.injectReaderFontFaces(event.detail.doc);
-      if (this.config) this.applyConfig(this.config);
+      if (this.config) this.applyConfigToDocument(event.detail.doc, this.config);
       this.shouldDisplay = true;
       this.emitPageInfo();
     }) as EventListener);
   }
 
-  private injectReaderFontFaces (document: Document): void {
-    if (document.getElementById('learnup-reader-fonts')) return;
-    const style = document.createElement('style');
-    style.id = 'learnup-reader-fonts';
-    style.textContent = READER_FONTS.map((face) => face.fontFace).join('\n');
+  private applyConfigToDocument (document: Document, config: ReaderConfig): void {
+    const style = document.getElementById('learnup-reader-config') ?? document.createElement('style');
+    style.id = 'learnup-reader-config';
+    style.textContent = this.getReaderCss(config);
     document.head.appendChild(style);
   }
 
   private applyConfig (config: ReaderConfig): void {
     const view = this.view;
     if (view === null) return;
+    const css = this.getReaderCss(config);
 
-    view.renderer?.setStyles?.(`
+    view.renderer?.setStyles?.(css);
+    for (const content of view.renderer?.getContents?.() ?? []) {
+      this.applyConfigToDocument(content.doc, config);
+    }
+  }
+
+  private getReaderCss (config: ReaderConfig): string {
+    const fontFamily = JSON.stringify(config.fontFamily);
+    const fontStack = `${fontFamily}, serif`;
+    const fontSize = `${config.fontSize}px`;
+    const fontFaces = READER_FONTS.map((face) => {
+      const source = new URL(face.source, window.location.origin).href;
+      return `@font-face{font-family:${JSON.stringify(face.key)};font-style:normal;font-weight:400;font-display:swap;src:url("${source}") format("${face.format}");}`;
+    }).join('\n');
+
+    return `
+      ${fontFaces}
+      html,
       body {
         background: ${this.theme?.palette.background.default};
         color: ${this.theme?.palette.text.primary};
+        font-family: ${fontStack} !important;
+        font-size: ${fontSize} !important;
       }
-      body * {
-        font-family: ${JSON.stringify(config.fontFamily)} !important;
-        font-size: ${config.fontSize}px !important;
+      body *:not(svg):not(svg *) {
+        font-family: ${fontStack} !important;
       }
-    `);
+      body,
+      body p,
+      body div,
+      body span,
+      body li,
+      body blockquote,
+      body section,
+      body article,
+      body h1,
+      body h2,
+      body h3,
+      body h4,
+      body h5,
+      body h6 {
+        font-size: ${fontSize} !important;
+      }
+    `;
   }
 
   // returns the current chapter title
@@ -233,6 +301,7 @@ type FoliateBook = {
 
 type FoliateRenderer = HTMLElement & {
   setStyles?: (css: string) => void;
+  getContents?: () => Array<{ doc: Document; index: number; }>;
 };
 
 type FoliateLoadDetail = {

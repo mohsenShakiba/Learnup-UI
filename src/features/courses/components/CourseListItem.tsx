@@ -28,6 +28,7 @@ export function CourseListItem({ course }: CourseListItemProps) {
       p: 2,
       display: 'flex',
       pb: 5,
+      height: '100%'
     }}>
 
       <Paper

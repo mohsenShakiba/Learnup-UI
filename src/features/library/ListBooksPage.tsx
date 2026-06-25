@@ -7,7 +7,7 @@ import { DefaultHeader } from '../../shared/components/DefaultHeader';
 import { Scaffold } from '../../shared/components/Scaffold';
 import { BookListItem } from './components/BookListItem';
 
-export default function ListBooksPage () {
+export default function ListBooksPage() {
   const navigate = useNavigate();
 
   const booksQuery = useQuery({

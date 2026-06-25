@@ -129,7 +129,6 @@ export default function VocabSearchPage() {
                       <Icon>mic_none</Icon>
                     </IconButton>
                   )}
-                  <Icon>search</Icon>
                 </InputAdornment>
               ),
             },
@@ -166,40 +165,26 @@ export default function VocabSearchPage() {
             {/* Mic button with pulse animation */}
             <Box sx={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               {isListening && (
-                <>
-                  <Box sx={{
-                    position: 'absolute',
-                    width: 80,
-                    height: 80,
-                    borderRadius: '50%',
-                    backgroundColor: 'error.main',
-                    opacity: 0.3,
-                    animation: 'ripple 1.4s ease-out infinite',
-                    '@keyframes ripple': {
-                      '0%': { transform: 'scale(1)', opacity: 0.3 },
-                      '100%': { transform: 'scale(2.2)', opacity: 0 },
-                    },
-                  }} />
-                  <Box sx={{
-                    position: 'absolute',
-                    width: 80,
-                    height: 80,
-                    borderRadius: '50%',
-                    backgroundColor: 'error.main',
-                    opacity: 0.2,
-                    animation: 'ripple 1.4s ease-out 0.4s infinite',
-                    '@keyframes ripple': {
-                      '0%': { transform: 'scale(1)', opacity: 0.2 },
-                      '100%': { transform: 'scale(2.2)', opacity: 0 },
-                    },
-                  }} />
-                </>
+                <Box sx={{
+                  position: 'absolute',
+                  width: 80,
+                  height: 80,
+                  borderRadius: 999,
+                  backgroundColor: 'error.main',
+                  opacity: 0.3,
+                  animation: 'ripple 1.4s ease-out infinite',
+                  '@keyframes ripple': {
+                    '0%': { transform: 'scale(1)', opacity: 0.3 },
+                    '100%': { transform: 'scale(2.2)', opacity: 0 },
+                  },
+                }} />
               )}
               <IconButton
                 onClick={toggleMicInDialog}
                 sx={{
                   width: 80,
                   height: 80,
+                  borderRadius: 999,
                   backgroundColor: isListening ? 'error.main' : 'action.selected',
                   color: isListening ? 'white' : 'text.primary',
                   transition: 'background-color 0.2s',
@@ -212,7 +197,7 @@ export default function VocabSearchPage() {
               </IconButton>
             </Box>
 
-            <Typography variant="body2" color={isListening ? 'error' : 'text.secondary'}>
+            <Typography variant="body2" color={'text.secondary'}>
               {isListening ? 'در حال گوش دادن...' : 'برای شروع ضربه بزنید'}
             </Typography>
 

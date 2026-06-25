@@ -8,9 +8,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 const tabs = [
   { label: 'Dashboard', icon: 'dashboard', path: '/dashboard' },
   { label: 'Courses', icon: 'school', path: '/' },
-  { label: 'Vocab', icon: 'menu_book', path: '/vocab' },
   { label: 'Leitner', icon: 'layers', path: '/leitner-box' },
-  { label: 'Library', icon: 'local_library', path: '/library' },
+  { label: 'Library', icon: 'menu_book', path: '/library' },
+  { label: 'Vocab', icon: 'search', path: '/vocab' },
   { label: 'Settings', icon: 'settings', path: '/settings' },
 ];
 

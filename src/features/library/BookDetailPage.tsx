@@ -1,11 +1,13 @@
 import { Box, Icon, IconButton, Stack, Typography, useTheme } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
-import { useEffect, useRef, useState } from 'react';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { BooksControllersService } from '../../api/Learnup';
+import { AiService, BooksControllersService } from '../../api/Learnup';
 import { BookManagarService, BookPageInfo } from '../../services/BookManagarService';
+import type { SentenceDetectionResult } from '../../services/SentenceDetection';
 import { AppLoader } from '../../shared/components/AppLoader';
 import { useSwipeableDrawerStore } from '../../shared/swipeableDrawer';
+import { AiResultDrawer } from './components/AiResultDrawer';
 import { ReaderConfigDrawer } from './components/ReaderConfigDrawer';
 import { TableOfContentsDrawer } from './components/TableOfContentsDrawer';
 
@@ -18,6 +20,8 @@ export default function BookDetailPage () {
   const bookManagerRef = useRef<BookManagarService | null>(null);
   const [readerContainer, setReaderContainer] = useState<HTMLDivElement | null>(null);
   const [pageInfo, setPageInfo] = useState<BookPageInfo | null>(null);
+  const [selectedText, setSelectedText] = useState<SentenceDetectionResult | null>(null);
+  const [aiDrawerOpen, setAiDrawerOpen] = useState(false);
 
   const navigate = useNavigate();
   const { show, close } = useSwipeableDrawerStore();
@@ -30,6 +34,14 @@ export default function BookDetailPage () {
   });
 
   const book = booksQuery.data;
+  const {
+    mutate: sendAiText,
+    data: aiResult,
+    isPending: aiLoading,
+    isError: aiError,
+  } = useMutation({
+    mutationFn: AiService.postMobileAiSend,
+  });
 
   // loading
   const isLoading = booksQuery.isLoading;
@@ -41,11 +53,17 @@ export default function BookDetailPage () {
 
   const bookManager = bookManagerRef.current;
 
+  const handleWordSelect = useCallback((selection: SentenceDetectionResult) => {
+    setSelectedText(selection);
+    setAiDrawerOpen(true);
+    sendAiText(selection);
+  }, [sendAiText]);
+
   useEffect(() => {
     if (!readerContainer) return;
     if (!book) return;
-    bookManager.display(book, readerContainer, theme, setPageInfo);
-  }, [book, readerContainer, bookManager, theme]);
+    void bookManager.display(book, readerContainer, theme, setPageInfo, handleWordSelect);
+  }, [book, readerContainer, bookManager, theme, handleWordSelect]);
 
   const handleOpenToc = () => {
     show(<TableOfContentsDrawer
@@ -113,6 +131,17 @@ export default function BookDetailPage () {
 
           </Box>
       }
+
+      <AiResultDrawer
+        open={aiDrawerOpen}
+        onOpen={() => setAiDrawerOpen(true)}
+        onClose={() => setAiDrawerOpen(false)}
+        word={selectedText?.word ?? ''}
+        sentence={selectedText?.sentence ?? ''}
+        loading={aiLoading}
+        error={aiError}
+        result={aiResult ?? null}
+      />
     </Box>
   );
 }

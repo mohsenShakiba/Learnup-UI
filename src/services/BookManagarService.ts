@@ -9,7 +9,7 @@ import {
   READER_FONTS,
   ReaderConfig,
 } from './readerTypes';
-import { detectSentenceAtPoint } from './SentenceDetection';
+import { detectSentenceAtPoint, SentenceDetectionResult } from './SentenceDetection';
 
 export interface EpubNavItem {
   id?: string;
@@ -37,6 +37,7 @@ export class BookManagarService {
   private currentLocation: SectionLocation | null = null;
   private theme: Theme | null = null;
   private onPageInfoChange: ((pageInfo: BookPageInfo) => void) | null = null;
+  private onWordSelect: ((selection: SentenceDetectionResult) => void) | null = null;
   private shouldDisplay = false;
   private saveProgressTimeout: ReturnType<typeof setTimeout> | null = null;
   private lastSavedProgressKey: string | null = null;
@@ -47,9 +48,16 @@ export class BookManagarService {
     return !!this.bookData;
   }
 
-  public async display (bookResponse: UserBookResponse, element: HTMLElement, theme: Theme, handler: ((pageInfo: BookPageInfo) => void)): Promise<void> {
+  public async display (
+    bookResponse: UserBookResponse,
+    element: HTMLElement,
+    theme: Theme,
+    handler: ((pageInfo: BookPageInfo) => void),
+    onWordSelect?: (selection: SentenceDetectionResult) => void,
+  ): Promise<void> {
 
     this.onPageInfoChange = handler;
+    this.onWordSelect = onWordSelect ?? null;
     this.theme = theme;
     this.config = loadReaderConfig();
     this.initialCfi = bookResponse.currentRef ?? undefined;
@@ -124,6 +132,7 @@ export class BookManagarService {
     }
     this.element = null;
     this.onPageInfoChange = null;
+    this.onWordSelect = null;
   };
 
   private setupClickEvent () {
@@ -135,9 +144,10 @@ export class BookManagarService {
       const doc = event.detail.doc;
       doc.addEventListener('click', (clickEvent: MouseEvent) => {
         const selection = detectSentenceAtPoint(doc, clickEvent.clientX, clickEvent.clientY, this.highlightRef);
-        void selection;
+        if (selection) {
+          this.onWordSelect?.(selection);
+        }
       });
-      // todo: show translation
     }) as EventListener);
   }
 

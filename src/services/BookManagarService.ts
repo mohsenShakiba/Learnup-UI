@@ -28,6 +28,7 @@ export type BookPageInfo = {
   currentPage: number | null;
   totalPages: number | null;
   sectionTitle: string;
+  display: boolean;
 };
 
 export class BookManagarService {
@@ -42,6 +43,7 @@ export class BookManagarService {
   private currentLocation: SectionLocation | null = null;
   private theme: Theme | null = null;
   private onPageInfoChange: ((pageInfo: BookPageInfo) => void) | null = null;
+  private shouldDisplay = false;
 
   navItems: EpubNavItem[] = [];
 
@@ -100,7 +102,7 @@ export class BookManagarService {
     });
 
     this.applyConfig(config);
-    await rendition.display(this.initialCfi);
+    await rendition.display();
   }
 
   // called by toc drawer to change chapter
@@ -205,14 +207,21 @@ export class BookManagarService {
     rendition.on('relocated', (location: { start?: SectionLocation; }) => {
       if (!location?.start?.cfi) return;
       this.currentLocation = location.start;
-      this.initialCfi = location.start.cfi;
+      // this.initialCfi = location.start.cfi;
       this.emitPageInfo();
-      BooksControllersService.updateUserBookProgress(bookResponse.id, {
-        currentRef: location.start.cfi,
-        progress: 0
-      });
+      // BooksControllersService.updateUserBookProgress(bookResponse.id, {
+      //   currentRef: location.start.cfi,
+      //   progress: 0
+      // });
     });
   }
+
+  saveCurrentPage = () => {
+    BooksControllersService.updateUserBookProgress(this.bookResponse!.id, {
+      currentRef: this.currentLocation!.cfi!,
+      progress: 0
+    });
+  };
 
   private emitPageInfo (): void {
     if (!this.onPageInfoChange) return;
@@ -220,6 +229,7 @@ export class BookManagarService {
       currentPage: (this.currentLocation?.displayed.page ?? 0),
       totalPages: (this.currentLocation?.displayed.total ?? 0),
       sectionTitle: this.getCurrentSection() ?? '',
+      display: this.shouldDisplay
     });
   }
 
@@ -231,7 +241,14 @@ export class BookManagarService {
 
     rendition.hooks.content.register(async (contents: Contents) => {
       this.injectReaderFontFaces(contents);
-      rendition.display(this.initialCfi);
+      setTimeout(async () => {
+        rendition.display(this.initialCfi);
+        setTimeout(() => {
+          rendition.display(this.initialCfi);
+          this.shouldDisplay = true;
+          this.emitPageInfo();
+        }, 1000);
+      }, 1000);
     });
   }
 

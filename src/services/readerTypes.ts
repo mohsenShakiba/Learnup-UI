@@ -5,6 +5,8 @@ export interface ReaderConfig {
 
 export interface ReaderFont {
   key: string;
+  source: string;
+  format: string;
   fontFace: string;
 }
 
@@ -15,15 +17,21 @@ export interface ReaderFont {
 export const READER_FONTS: ReaderFont[] = [
   {
     key: 'Bookerly',
-    fontFace: `@font-face{font-family:'Bookerly';font-style:normal;font-display:swap;src:url('/fonts/Bookerly.ttf') format('truetype');}`
+    source: '/fonts/Bookerly.ttf',
+    format: 'truetype',
+    fontFace: `@font-face{font-family:'Bookerly';font-style:normal;font-display:block;src:url('/fonts/Bookerly.ttf') format('truetype');}`
   },
   {
     key: 'Merriweather',
-    fontFace: `@font-face{font-family:'Merriweather';font-style:normal;font-display:swap;src:url('/fonts/Merriweather-Regular.ttf') format('truetype');}`
+    source: '/fonts/Merriweather-Regular.ttf',
+    format: 'truetype',
+    fontFace: `@font-face{font-family:'Merriweather';font-style:normal;font-display:block;src:url('/fonts/Merriweather-Regular.ttf') format('truetype');}`
   },
   {
     key: 'Georgia',
-    fontFace: `@font-face{font-family:'Georgia';font-style:normal;font-display:swap;src:url('/fonts/georgia.ttf') format('truetype');}`
+    source: '/fonts/georgia.ttf',
+    format: 'truetype',
+    fontFace: `@font-face{font-family:'Georgia';font-style:normal;font-display:block;src:url('/fonts/georgia.ttf') format('truetype');}`
   },
 ];
 

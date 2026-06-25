@@ -1,4 +1,4 @@
-import { Box, Icon, IconButton, Stack, Typography, useTheme } from '@mui/material';
+import { Box, Button, Icon, IconButton, Stack, Typography, useTheme } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -80,10 +80,10 @@ export default function BookDetailPage () {
 
               <Stack onClick={handleOpenToc}>
                 <Typography noWrap sx={{ direction: 'rtl', color: 'inherit', textAlign: 'center', opacity: 0.5, maxWidth: '100%' }}>
-                  {book?.title ?? ''}
+                  {book?.title ?? 'loading'}
                 </Typography>
                 <Typography variant="caption" noWrap sx={{ direction: 'rtl', color: 'inherit', textAlign: 'center', opacity: 0.4, maxWidth: '100%' }}>
-                  {pageInfo?.sectionTitle}
+                  {pageInfo?.sectionTitle || 'loading...'}
                 </Typography>
               </Stack>
 
@@ -93,7 +93,7 @@ export default function BookDetailPage () {
               </IconButton>
             </Stack>
 
-            <Box ref={setReaderContainer} sx={{ width: '100%', height: '100%', direction: 'rtl' }} />
+            <Box ref={setReaderContainer} sx={{ width: '100%', height: '100%', direction: 'rtl', opacity: pageInfo?.display ? 1 : 0 }} />
 
             <Typography
               variant="caption"
@@ -110,6 +110,8 @@ export default function BookDetailPage () {
             >
               {pageInfo && `${pageInfo.currentPage} / ${pageInfo.totalPages}`}
             </Typography>
+
+            <Button sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} onClick={bookManager.saveCurrentPage}>save</Button>
 
             {/* <AiResultDrawer
         open={aiState.open}

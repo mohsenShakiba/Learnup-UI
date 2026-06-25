@@ -19,7 +19,7 @@ interface Props {
   result: SendAiTextResponse | null;
 }
 
-function getTranslationText (
+function getTranslationText(
   result: SendAiTextResponse | null,
   camelCaseKey: keyof SendAiTextResponse,
   pascalCaseKey: string,
@@ -29,7 +29,7 @@ function getTranslationText (
   return value?.trim() ?? '';
 }
 
-export function AiResultDrawer ({ open, onOpen, onClose, word, sentence, loading, error, result }: Props) {
+export function ReaderTranslationDrawer({ open, onOpen, onClose, word, sentence, loading, error, result }: Props) {
   const wordTranslation = getTranslationText(result, 'wordTranslation', 'WordTranslation');
   const sentenceTranslation = getTranslationText(result, 'sentenceTranslation', 'SentenceTranslation');
 
@@ -63,7 +63,7 @@ export function AiResultDrawer ({ open, onOpen, onClose, word, sentence, loading
         )}
 
         {loading && (
-          <AppLoader />
+          <AppLoader fullHeight={false} />
         )}
 
         {!loading && error && (

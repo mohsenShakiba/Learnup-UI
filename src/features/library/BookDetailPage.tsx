@@ -7,11 +7,11 @@ import { BookManagarService, BookPageInfo } from '../../services/BookManagarServ
 import type { SentenceDetectionResult } from '../../services/SentenceDetection';
 import { AppLoader } from '../../shared/components/AppLoader';
 import { useSwipeableDrawerStore } from '../../shared/swipeableDrawer';
-import { AiResultDrawer } from './components/AiResultDrawer';
+import { ReaderTranslationDrawer } from './components/ReaderTranslationDrawer';
 import { ReaderConfigDrawer } from './components/ReaderConfigDrawer';
 import { TableOfContentsDrawer } from './components/TableOfContentsDrawer';
 
-export default function BookDetailPage () {
+export default function BookDetailPage() {
 
   // book id
   const { bookId } = useParams<{ bookId: string; }>();
@@ -132,7 +132,7 @@ export default function BookDetailPage () {
           </Box>
       }
 
-      <AiResultDrawer
+      <ReaderTranslationDrawer
         open={aiDrawerOpen}
         onOpen={() => setAiDrawerOpen(true)}
         onClose={() => setAiDrawerOpen(false)}

@@ -2,16 +2,18 @@ import { Box, CircularProgress, Typography } from '@mui/material';
 
 type AppLoaderProps = {
   text?: string;
+  fullHeight?: boolean;
 };
 
-export function AppLoader ({
+export function AppLoader({
   text = 'در حال بارگذاری...',
+  fullHeight = true,
 }: AppLoaderProps) {
   return (
     <Box
       sx={{
         width: '100%',
-        minHeight: '60vh',
+        minHeight: fullHeight ? '60vh' : 100,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',

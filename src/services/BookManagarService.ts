@@ -239,16 +239,18 @@ export class BookManagarService {
       return;
     }
 
-    rendition.hooks.content.register(async (contents: Contents) => {
-      this.injectReaderFontFaces(contents);
-      setTimeout(async () => {
+    setTimeout(async () => {
+      rendition.display(this.initialCfi);
+      setTimeout(() => {
         rendition.display(this.initialCfi);
-        setTimeout(() => {
-          rendition.display(this.initialCfi);
-          this.shouldDisplay = true;
-          this.emitPageInfo();
-        }, 1000);
+        this.shouldDisplay = true;
+        this.emitPageInfo();
       }, 1000);
+    }, 1000);
+
+    rendition.hooks.content.register(async (contents: Contents) => {
+      console.log('content display');
+      this.injectReaderFontFaces(contents);
     });
   }
 

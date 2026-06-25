@@ -1,6 +1,6 @@
 import { Alert, Box, Button, Stack, Typography } from '@mui/material';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import ePub from 'epubjs';
+import { makeBook } from 'foliate-js/view.js';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BooksControllersService } from '../../api/Learnup';
@@ -24,21 +24,20 @@ export default function UploadBookPage () {
 
     setParsing(true);
     try {
-      const book = ePub(await selected.arrayBuffer());
+      const book = await makeBook(selected) as FoliateBook;
       try {
-        const metadata = await book.loaded.metadata;
+        const title = formatLanguageMap(book.metadata?.title);
+        const coverBlob = await book.getCover?.();
 
-        const coverHref = await book.loaded.cover;
-        if (coverHref) {
-          const coverBlob = await book.archive.getBlob(coverHref);
+        if (coverBlob) {
           setCover(coverBlob);
         }
 
         setMeta({
-          title: metadata.title?.trim() || selected.name.replace(/\.epub$/i, ''),
+          title: title?.trim() || selected.name.replace(/\.epub$/i, ''),
         });
       } finally {
-        book.destroy();
+        book.destroy?.();
       }
     } finally {
       setParsing(false);
@@ -105,6 +104,23 @@ export default function UploadBookPage () {
 type BookMeta = {
   title: string;
 };
+
+type LanguageMap = string | Record<string, string> | Array<string | Record<string, string>>;
+
+type FoliateBook = {
+  metadata?: {
+    title?: LanguageMap;
+  };
+  getCover?: () => Promise<Blob | null>;
+  destroy?: () => void;
+};
+
+function formatLanguageMap (value: LanguageMap | undefined): string {
+  if (!value) return '';
+  if (typeof value === 'string') return value;
+  if (Array.isArray(value)) return value.map(formatLanguageMap).find(Boolean) ?? '';
+  return value[Object.keys(value)[0]] ?? '';
+}
 
 type FilePickerProps = {
   label: string;

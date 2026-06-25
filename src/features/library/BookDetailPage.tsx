@@ -1,4 +1,4 @@
-import { Box, Button, Icon, IconButton, Stack, Typography, useTheme } from '@mui/material';
+import { Box, Icon, IconButton, Stack, Typography, useTheme } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -71,9 +71,9 @@ export default function BookDetailPage () {
       {
         isLoading ?
           <AppLoader /> :
-          <Box sx={{ position: 'fixed', left: 16, right: 16, top: 16, bottom: 60 }}>
+          <Box sx={{ position: 'fixed', left: 0, right: 0, top: 0, bottom: 0 }}>
 
-            <Stack direction='row' sx={{ gap: 2, alignItems: 'center', justifyContent: 'space-between', }}>
+            <Stack direction='row' sx={{ position: 'fixed', left: 16, right: 16, top: 16, gap: 2, zIndex: 1, alignItems: 'center', justifyContent: 'space-between', }}>
               <IconButton onClick={() => navigate(-1)} sx={{ color: 'inherit' }}>
                 <Icon sx={{ opacity: 0.5 }}>arrow_forward</Icon>
               </IconButton>
@@ -93,7 +93,7 @@ export default function BookDetailPage () {
               </IconButton>
             </Stack>
 
-            <Box ref={setReaderContainer} sx={{ width: '100%', height: '100%', direction: 'rtl', opacity: pageInfo?.display ? 1 : 0 }} />
+            <Box ref={setReaderContainer} sx={{ width: '100%', height: '100%', direction: 'rtl', position: 'fixed', left: 0, right: 0, top: 16, bottom: 32, opacity: pageInfo?.display ? 1 : 0 }} />
 
             <Typography
               variant="caption"
@@ -110,17 +110,6 @@ export default function BookDetailPage () {
             >
               {pageInfo && `${pageInfo.currentPage} / ${pageInfo.totalPages}`}
             </Typography>
-
-            <Button sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} onClick={bookManager.saveCurrentPage}>save</Button>
-
-            {/* <AiResultDrawer
-        open={aiState.open}
-        word={aiState.word}
-        sentence={aiState.sentence}
-        loading={aiState.loading}
-        error={aiState.error}
-        result={aiState.result}
-      /> */}
 
           </Box>
       }

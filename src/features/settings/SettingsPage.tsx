@@ -27,6 +27,16 @@ export default function SettingsPage() {
         <Box sx={{ flex: 1 }} />
       </Stack>
 
+      <Paper sx={{ p: 0, overflow: 'hidden', mb: 2 }}>
+        <ListItemButton onClick={() => navigate('/profile')}>
+          <ListItemIcon>
+            <Icon>account_circle</Icon>
+          </ListItemIcon>
+          <ListItemText primary="پروفایل" secondary="ویرایش نام و تصویر پروفایل" />
+          <Icon sx={{ opacity: 0.4, fontSize: 18 }}>chevron_left</Icon>
+        </ListItemButton>
+      </Paper>
+
       <Paper sx={{ p: 0, overflow: 'hidden' }}>
         <ListItem
           secondaryAction={

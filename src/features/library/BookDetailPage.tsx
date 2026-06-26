@@ -40,7 +40,7 @@ export default function BookDetailPage() {
     isPending: aiLoading,
     isError: aiError,
   } = useMutation({
-    mutationFn: AiService.postMobileAiSend,
+    mutationFn: AiService.postMobileAiProcess,
   });
 
   // loading

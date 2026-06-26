@@ -40,12 +40,12 @@ export default function CourseDetailPage() {
   }
 
   const lessons = lessonsQuery.data ?? [];
+  const course = courseQuery.data;
 
   return (
     <Scaffold
       header={
-        <DefaultHeader header='لیست دروس'
-          subtitle='12 درس'
+        <DefaultHeader header={`درس های ${course?.code}`}
           children={
             <WaveProgress value={40} size={40} />
           } />

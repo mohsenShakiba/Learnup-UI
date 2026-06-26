@@ -4,6 +4,7 @@ import type { StoryResponse } from '../../../api/Learnup';
 import { ActionCard } from '../../../shared/components/ActionCard';
 import { DurationBadge } from '../../../shared/components/DurationBadge';
 import { ImageLoader } from '../../../shared/components/ImageLoader';
+import { ActionButton } from '../../../shared/components/ActionButton';
 
 type StoryListItemProps = {
   story: StoryResponse;
@@ -37,7 +38,12 @@ export function StoryListItem({ story }: StoryListItemProps) {
           {story.title}
         </Typography>
 
-        <Button size='small'>شروع مکالمه</Button>
+        <ActionButton
+          pendingText="شروع مکالمه"
+          completedText="تکمیل شد"
+          isCompleted={false}
+          onClick={() => { }}
+        />
       </Stack>
 
     </ActionCard >

@@ -54,7 +54,7 @@ function TimelineColumn({ completed, isLast }: { completed: boolean; isLast: boo
   );
 }
 
-export default function LessonDetailPage () {
+export default function LessonDetailPage() {
   const { id: lessonId } = useParams<{ id: string; }>();
   const lessonIdNumber = Number(lessonId);
 
@@ -80,7 +80,7 @@ export default function LessonDetailPage () {
   return (
     <Scaffold
       header={
-        <DefaultHeader header='درس اول' subtitle='12 درس' />
+        <DefaultHeader header={`درس ` + lesson.order} />
       }
     >
       <Stack spacing={2}>

@@ -79,17 +79,17 @@ export function CourseListItem({ course }: CourseListItemProps) {
               [
                 <Stack direction='row' sx={{ gap: 0.5 }}>
                   <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>در این دوره</Typography>
-                  <Typography sx={{ fontSize: '0.9rem', color: 'orange' }}>30 تا داستان</Typography>
+                  <Typography sx={{ fontSize: '0.9rem', color: 'orange' }}>{course.totalLessonsCount} تا داستان</Typography>
                   <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>میخونی</Typography>
                 </Stack>,
                 <Stack direction='row' sx={{ gap: 0.5 }}>
                   <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>در این دوره</Typography>
-                  <Typography sx={{ fontSize: '0.9rem', color: 'orange' }}>20 تا گرامر مهم</Typography>
+                  <Typography sx={{ fontSize: '0.9rem', color: 'orange' }}>{course.totalLessonsCount} تا گرامر مهم</Typography>
                   <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>یاد میگیری</Typography>
                 </Stack>,
                 <Stack direction='row' sx={{ gap: 0.5 }}>
                   <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>در این دوره</Typography>
-                  <Typography sx={{ fontSize: '0.9rem', color: 'orange' }}>300 تا کلمه</Typography>
+                  <Typography sx={{ fontSize: '0.9rem', color: 'orange' }}>{course.totalLessonsCount} تا کلمه</Typography>
                   <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>یاد میگیری</Typography>
                 </Stack>,
               ]

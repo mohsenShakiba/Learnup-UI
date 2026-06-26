@@ -12,12 +12,18 @@ import {
   Typography,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { clearAuth } from '../../stores/authStore';
 import { Scaffold } from '../../shared/components/Scaffold';
 import { useThemeMode } from '../../shared/theme/themeMode';
 
 export default function SettingsPage() {
   const { isDark, setMode } = useThemeMode();
   const navigate = useNavigate();
+
+  const handleLogout = () => {
+    clearAuth();
+    navigate('/login');
+  };
 
   return (
     <Scaffold >
@@ -62,6 +68,15 @@ export default function SettingsPage() {
           </ListItemIcon>
           <ListItemText primary="Subscription" secondary="Manage your plan" />
           <Icon sx={{ opacity: 0.4, fontSize: 18 }}>chevron_left</Icon>
+        </ListItemButton>
+      </Paper>
+
+      <Paper sx={{ p: 0, overflow: 'hidden', mt: 2 }}>
+        <ListItemButton onClick={handleLogout}>
+          <ListItemIcon>
+            <Icon sx={{ color: 'error.main' }}>logout</Icon>
+          </ListItemIcon>
+          <ListItemText primary={<Typography color="error">خروج از حساب</Typography>} />
         </ListItemButton>
       </Paper>
     </Scaffold>

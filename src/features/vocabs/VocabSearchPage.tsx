@@ -45,7 +45,7 @@ export default function VocabSearchPage() {
   const [searchWord, setSearchWord] = useState('');
   const [isListening, setIsListening] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [micLang, setMicLang] = useState<'fa-IR' | 'en-US'>('fa-IR');
+  const [micLang, setMicLang] = useState<'fa-IR' | 'en-US'>('en-US');
   const recognitionRef = useRef<ISpeechRecognition | null>(null);
 
   useEffect(() => {
@@ -214,13 +214,14 @@ export default function VocabSearchPage() {
 
             {/* Language toggle */}
             <ToggleButtonGroup
+              fullWidth
               value={micLang}
               exclusive
               onChange={(_, val) => val && switchLang(val)}
               size="small"
             >
-              <ToggleButton value="fa-IR">فارسی</ToggleButton>
-              <ToggleButton value="en-US">English</ToggleButton>
+              <ToggleButton value="fa-IR" sx={{ width: '75px' }}>فارسی</ToggleButton>
+              <ToggleButton value="en-US" sx={{ width: '75px' }}>English</ToggleButton>
             </ToggleButtonGroup>
 
           </Stack>

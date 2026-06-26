@@ -1,11 +1,15 @@
 import {
   Box,
+  CircularProgress,
   Divider,
+  Icon,
+  IconButton,
   Stack,
   SwipeableDrawer,
   Typography
 } from '@mui/material';
-import { SendAiTextResponse } from '../../../api/Learnup';
+import { useState } from 'react';
+import { LeitnerBoxService, SendAiTextResponse, VocabLevel, VocabsService, VocabType } from '../../../api/Learnup';
 import { AppLoader } from '../../../shared/components/AppLoader';
 
 interface Props {
@@ -29,9 +33,40 @@ function getTranslationText(
   return value?.trim() ?? '';
 }
 
+type BookmarkState = 'idle' | 'loading' | 'saved' | 'error';
+
 export function ReaderTranslationDrawer({ open, onOpen, onClose, word, sentence, loading, error, result }: Props) {
   const wordTranslation = getTranslationText(result, 'wordTranslation', 'WordTranslation');
   const sentenceTranslation = getTranslationText(result, 'sentenceTranslation', 'SentenceTranslation');
+  const [bookmarkState, setBookmarkState] = useState<BookmarkState>('idle');
+
+  const handleBookmark = async () => {
+    if (!word || bookmarkState === 'loading' || bookmarkState === 'saved') return;
+    setBookmarkState('loading');
+    try {
+      const vocabs = await VocabsService.getVocabByWord(word);
+      let vocabId: number;
+      if (vocabs.length > 0) {
+        vocabId = vocabs[0].id;
+      } else {
+        vocabId = await VocabsService.createVocab({
+          languageId: 1,
+          word,
+          translation: wordTranslation || null,
+          type: VocabType.UNKNOWN,
+          level: VocabLevel.UNKNOWN,
+          description: null,
+          example: sentence || null,
+          exampleTranslation: sentenceTranslation || null,
+          voiceId: null,
+        });
+      }
+      await LeitnerBoxService.addVocabToLeitnerBox(vocabId);
+      setBookmarkState('saved');
+    } catch {
+      setBookmarkState('error');
+    }
+  };
 
   return (
     <SwipeableDrawer
@@ -46,11 +81,22 @@ export function ReaderTranslationDrawer({ open, onOpen, onClose, word, sentence,
 
       <Box sx={{ px: 2, pb: 3, overflowY: 'auto' }}>
         {word && (
-          <>
-            <Typography variant="h6" sx={{ mb: 1, fontWeight: 700, direction: 'rtl' }}>
+          <Stack direction="row" sx={{ alignItems: 'center', mb: 1, direction: 'rtl' }}>
+            <Typography variant="h6" sx={{ fontWeight: 700, flex: 1 }}>
               {word}
             </Typography>
-          </>
+            {result != null && (
+              <IconButton onClick={() => void handleBookmark()} disabled={bookmarkState === 'loading'} size="small">
+                {bookmarkState === 'loading' ? (
+                  <CircularProgress size={18} />
+                ) : (
+                  <Icon sx={{ color: bookmarkState === 'saved' ? 'success.main' : bookmarkState === 'error' ? 'error.main' : 'text.secondary' }}>
+                    {bookmarkState === 'saved' ? 'bookmark' : 'bookmark_border'}
+                  </Icon>
+                )}
+              </IconButton>
+            )}
+          </Stack>
         )}
 
         {sentence && (

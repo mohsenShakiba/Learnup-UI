@@ -16,3 +16,4 @@ export type LessonResponse = {
     completedVocabsCount: number;
     readonly isCompleted: boolean;
 };
+

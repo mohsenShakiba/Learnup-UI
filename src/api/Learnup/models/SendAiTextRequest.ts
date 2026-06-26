@@ -7,3 +7,4 @@ export type SendAiTextRequest = {
     word: string;
     sentence: string;
 };
+

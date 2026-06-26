@@ -6,3 +6,4 @@
 export type SendOtpResponse = {
     expiresAt: string;
 };
+

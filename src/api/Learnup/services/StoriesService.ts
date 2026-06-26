@@ -11,13 +11,13 @@ import { request as __request } from '../core/request';
 export class StoriesService {
 
     /**
-     * @param id 
+     * @param id
      * @returns StoryResponse OK
      * @throws ApiError
      */
     public static getStoryById(
-id: number,
-): CancelablePromise<StoryResponse> {
+        id: number,
+    ): CancelablePromise<StoryResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/Mobile/Stories/{id}',

@@ -13,3 +13,4 @@ export type UserProfileResponse = {
     lastLogin: string | null;
     status: UserStatus;
 };
+

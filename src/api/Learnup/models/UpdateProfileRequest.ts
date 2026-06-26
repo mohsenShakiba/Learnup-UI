@@ -3,8 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type SendAiTextResponse = {
-    wordTranslation: string;
-    sentenceTranslation: string;
+export type UpdateProfileRequest = {
+    displayName: string;
+    avatarUrl: string | null;
 };
 

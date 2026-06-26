@@ -9,3 +9,4 @@ export type StoryItemTimestampResponse = {
     start: number;
     end: number;
 };
+

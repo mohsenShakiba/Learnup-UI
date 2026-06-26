@@ -13,13 +13,13 @@ import { request as __request } from '../core/request';
 export class VocabTestsService {
 
     /**
-     * @param lessonId 
+     * @param lessonId
      * @returns VocabTestResponse OK
      * @throws ApiError
      */
     public static getVocabTests(
-lessonId: number,
-): CancelablePromise<Array<VocabTestResponse>> {
+        lessonId: number,
+    ): CancelablePromise<Array<VocabTestResponse>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/Mobile/VocabTests/lesson/{lessonId}',
@@ -30,15 +30,15 @@ lessonId: number,
     }
 
     /**
-     * @param id 
-     * @param requestBody 
+     * @param id
+     * @param requestBody
      * @returns AnswerTestResponse OK
      * @throws ApiError
      */
     public static answerVocabTest(
-id: number,
-requestBody?: AnswerTestRequest,
-): CancelablePromise<AnswerTestResponse> {
+        id: number,
+        requestBody?: AnswerTestRequest,
+    ): CancelablePromise<AnswerTestResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/Mobile/VocabTests/{id}/answer',
@@ -51,13 +51,13 @@ requestBody?: AnswerTestRequest,
     }
 
     /**
-     * @param lessonId 
+     * @param lessonId
      * @returns any OK
      * @throws ApiError
      */
     public static resetVocabTestResult(
-lessonId: number,
-): CancelablePromise<any> {
+        lessonId: number,
+    ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/Mobile/VocabTests/{lessonId}/reset',

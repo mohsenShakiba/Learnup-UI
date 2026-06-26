@@ -7,3 +7,4 @@ export type UpdateBoxLevelReviewIntervalRequest = {
     levelId: number;
     number: number;
 };
+

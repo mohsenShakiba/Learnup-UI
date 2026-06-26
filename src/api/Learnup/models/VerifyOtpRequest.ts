@@ -7,3 +7,4 @@ export type VerifyOtpRequest = {
     mobileNumber: string;
     code: string;
 };
+

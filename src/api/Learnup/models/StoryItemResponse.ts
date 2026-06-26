@@ -10,6 +10,8 @@ export type StoryItemResponse = {
     content: string;
     translation: string;
     order: number;
+    person: number;
     voiceId: string | null;
     timestamps: Array<StoryItemTimestampResponse>;
 };
+

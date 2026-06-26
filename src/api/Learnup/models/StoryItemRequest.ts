@@ -6,5 +6,7 @@
 export type StoryItemRequest = {
     order: number;
     text: string;
+    person: number;
     translation: string;
 };
+

@@ -7,3 +7,4 @@ export type VerifyOtpResponse = {
     accessToken: string;
     expiresAt: string;
 };
+

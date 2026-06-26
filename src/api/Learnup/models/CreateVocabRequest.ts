@@ -4,20 +4,17 @@
 /* eslint-disable */
 
 import type { VocabLevel } from './VocabLevel';
-import type { VocabStatus } from './VocabStatus';
 import type { VocabType } from './VocabType';
 
-export type VocabResponse = {
-    id: number;
+export type CreateVocabRequest = {
+    languageId: number;
     word: string;
     translation: string | null;
-    voiceId: string | null;
+    type: VocabType;
+    level: VocabLevel;
     description: string | null;
     example: string | null;
     exampleTranslation: string | null;
-    level: VocabLevel;
-    status: VocabStatus;
-    type: VocabType;
-    languageId: number;
+    voiceId: string | null;
 };
 

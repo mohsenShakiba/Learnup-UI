@@ -12,17 +12,17 @@ import { request as __request } from '../core/request';
 export class BooksControllersService {
 
     /**
-     * @param formData 
+     * @param formData
      * @returns UserBookResponse OK
      * @throws ApiError
      */
     public static uploadUserBook(
-formData?: {
-Title?: string;
-File?: Blob;
-CoverImage?: Blob;
-},
-): CancelablePromise<UserBookResponse> {
+        formData?: {
+            Title?: string;
+            File?: Blob;
+            CoverImage?: Blob;
+        },
+    ): CancelablePromise<UserBookResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/Mobile/BooksControllers',
@@ -43,13 +43,13 @@ CoverImage?: Blob;
     }
 
     /**
-     * @param id 
+     * @param id
      * @returns UserBookResponse OK
      * @throws ApiError
      */
     public static getUserBookById(
-id: number,
-): CancelablePromise<UserBookResponse> {
+        id: number,
+    ): CancelablePromise<UserBookResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/Mobile/BooksControllers/{id}',
@@ -60,15 +60,15 @@ id: number,
     }
 
     /**
-     * @param id 
-     * @param requestBody 
+     * @param id
+     * @param requestBody
      * @returns any OK
      * @throws ApiError
      */
     public static updateUserBookProgress(
-id: number,
-requestBody?: UpdateUserBookCurrentPageRequest,
-): CancelablePromise<any> {
+        id: number,
+        requestBody?: UpdateUserBookCurrentPageRequest,
+    ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/Mobile/BooksControllers/book/{id}',

@@ -2,6 +2,8 @@ import { Box, Stack } from "@mui/material";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import setupOpenApi from "./api/setup";
 import "./App.css";
+import LoginPage from "./features/auth/LoginPage";
+import { RequireAuth } from "./features/auth/RequireAuth";
 import CourseDetailPage from "./features/courses/CourseDetailPage";
 import ListCoursesPage from "./features/courses/ListCoursesPage";
 import DashboardPage from "./features/dashboard/DashboardPage";
@@ -29,7 +31,9 @@ function App () {
       <Stack sx={{ height: "100dvh", overflow: "hidden" }}>
         <Box sx={{ flex: 1, overflowY: "auto", position: "relative" }}>
 
-          <Routes location={location}>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route element={<RequireAuth />}>
             <Route path="/stories/:id" element={<StoryDetailPage />} />
             <Route path="/courses/:id" element={<CourseDetailPage />} />
             <Route path="/grammar" element={<ListGrammarPage />} />
@@ -68,6 +72,7 @@ function App () {
             />
             <Route path="/" element={<ListCoursesPage />} />
             <Route path="*" element={<h1>404 - Not Found</h1>} />
+            </Route>
           </Routes>
         </Box>
 

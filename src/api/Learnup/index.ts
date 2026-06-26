@@ -34,6 +34,8 @@ export type { MotivationalSentenceResponse } from './models/MotivationalSentence
 export type { ReviewLeitnerBoxItemRequest } from './models/ReviewLeitnerBoxItemRequest';
 export type { SendAiTextRequest } from './models/SendAiTextRequest';
 export type { SendAiTextResponse } from './models/SendAiTextResponse';
+export type { SendOtpRequest } from './models/SendOtpRequest';
+export type { SendOtpResponse } from './models/SendOtpResponse';
 export type { StoryItemRequest } from './models/StoryItemRequest';
 export type { StoryItemResponse } from './models/StoryItemResponse';
 export type { StoryItemTimestampResponse } from './models/StoryItemTimestampResponse';
@@ -54,6 +56,8 @@ export type { UserStreakDayResponse } from './models/UserStreakDayResponse';
 export type { UserStreakResponse } from './models/UserStreakResponse';
 export type { UserSubscriptionResponse } from './models/UserSubscriptionResponse';
 export { UserSubscriptionStatus } from './models/UserSubscriptionStatus';
+export type { VerifyOtpRequest } from './models/VerifyOtpRequest';
+export type { VerifyOtpResponse } from './models/VerifyOtpResponse';
 export { VocabLevel } from './models/VocabLevel';
 export type { VocabResponse } from './models/VocabResponse';
 export { VocabStatus } from './models/VocabStatus';
@@ -62,6 +66,7 @@ export { VocabTestType } from './models/VocabTestType';
 export { VocabType } from './models/VocabType';
 
 export { AiService } from './services/AiService';
+export { AuthService } from './services/AuthService';
 export { BooksControllersService } from './services/BooksControllersService';
 export { CoursesService } from './services/CoursesService';
 export { FilesService } from './services/FilesService';

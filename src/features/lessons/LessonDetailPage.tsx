@@ -90,10 +90,10 @@ export default function LessonDetailPage() {
           itemIndex++;
           return (
             <Stack key={story.id} direction="row" spacing={1.5} sx={{ alignItems: 'stretch' }}>
+              <TimelineColumn completed={story.isCompleted} isLast={isLast} />
               <Box sx={{ flex: 1 }}>
                 <StoryListItem story={story} />
               </Box>
-              <TimelineColumn completed={story.isCompleted} isLast={isLast} />
             </Stack>
           );
         })}
@@ -103,20 +103,20 @@ export default function LessonDetailPage() {
           itemIndex++;
           return (
             <Stack key={grammar.id} direction="row" spacing={1.5} sx={{ alignItems: 'stretch' }}>
+              <TimelineColumn completed={false} isLast={isLast} />
               <Box sx={{ flex: 1 }}>
                 <GrammarListItem grammar={grammar} />
               </Box>
-              <TimelineColumn completed={false} isLast={isLast} />
             </Stack>
           );
         })}
 
         {hasVocabs && (
           <Stack direction="row" spacing={1.5} sx={{ alignItems: 'stretch' }}>
+            <TimelineColumn completed={false} isLast={true} />
             <Box sx={{ flex: 1 }}>
               <VocabListItem lessonId={lesson.id} vocabs={lesson.vocabs} />
             </Box>
-            <TimelineColumn completed={false} isLast={true} />
           </Stack>
         )}
 

@@ -8,7 +8,7 @@ type Props = {
     grammar: GrammarResponse;
 };
 
-export function GrammarListItem ({ grammar }: Props) {
+export function GrammarListItem({ grammar }: Props) {
 
     const navigate = useNavigate();
 
@@ -21,44 +21,25 @@ export function GrammarListItem ({ grammar }: Props) {
 
             <Stack spacing={1} sx={{}}>
 
-                <Typography sx={{ lineHeight: '15px', fontSize: '1.1rem', direction: 'rtl' }}>{grammar.name}</Typography>
-
-                <Typography sx={{ color: 'text.secondary', fontSize: '0.9rem' }}>{grammar.description}</Typography>
-
-                <Divider />
-
                 <Stack direction='row' spacing={1} sx={{ alignItems: 'center' }}>
-
-                    <Stack direction='row' spacing={0.5} sx={{ alignItems: 'center', px: 0.8, py: 0.4, fontSize: '0.7rem', bgcolor: 'warning.main', borderRadius: 1, color: 'white' }}>
-                        <Icon sx={{ fontSize: '0.8rem' }}>hourglass_empty</Icon>
-                        <Box>در انتظار</Box>
-                    </Stack>
-
-                    <DurationBadge minutes={5} />
-
-                    <Box sx={{ flex: 1 }}></Box>
-
                     <Stack direction='row' spacing={0.5} sx={{ alignItems: 'center', borderRadius: 1, bgcolor: 'secondary.main', fontSize: '0.7rem', px: 0.8, py: 0.3, color: 'white' }}>
                         <Icon sx={{ fontSize: '0.8rem' }}>menu_book</Icon>
                         <Box>گرامر</Box>
                     </Stack>
 
+                    <Box sx={{ flex: 1 }}></Box>
+
+                    <DurationBadge minutes={5} />
                 </Stack>
 
                 <Divider />
 
-                <Stack direction='row'>
-                    <Typography>شروع تست</Typography>
-                    <Box sx={{ flex: 1 }} />
-                    <Button >شروع تست</Button>
-                </Stack>
+                <Typography sx={{ lineHeight: '15px', fontSize: '1.1rem', direction: 'rtl' }}>{grammar.name}</Typography>
 
+                <Typography sx={{ color: 'text.secondary', fontSize: '0.9rem' }}>{grammar.description}</Typography>
 
+                <Button size='small'>مطالعه گرامر</Button>
             </Stack>
-
-
-
-
         </ActionCard>
     );
 }

@@ -11,7 +11,7 @@ import { StoryCoverHeader } from './components/StoryCoverHeader';
 import { StoryItem } from './components/StoryItem';
 import { StoryAudioProvider } from './hooks/useStoryAudio';
 
-export default function StoryDetailPage () {
+export default function StoryDetailPage() {
   const { id: storyId } = useParams<{ id: string; }>();
   const storyIdNumber = Number(storyId);
 
@@ -35,8 +35,7 @@ export default function StoryDetailPage () {
   return (
     <StoryAudioProvider storyItems={storyItems}>
       <Scaffold header={<DefaultHeader header='داستان' subtitle={story.title} />}>
-        <Stack direction='column' sx={{ flexWrap: 'wrap', gap: 1 }}>
-          <StoryCoverHeader story={story} />
+        <Stack direction='column' sx={{ gap: 1, pb: 12 }}>
           {storyItems.map((item) => (
             <StoryItem key={item.id} item={item} />
           ))}

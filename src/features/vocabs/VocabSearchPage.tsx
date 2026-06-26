@@ -1,6 +1,5 @@
 import {
   Box,
-  Chip,
   Dialog,
   DialogContent,
   Icon,
@@ -8,6 +7,8 @@ import {
   InputAdornment,
   Stack,
   TextField,
+  ToggleButton,
+  ToggleButtonGroup,
   Typography,
 } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
@@ -136,9 +137,15 @@ export default function VocabSearchPage() {
         />
 
         {input.length === 0 && (
-          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            می‌توانید لغات را به فارسی یا انگلیسی جستجو کنید و یا با استفاده از میکروفون کلمات را بیان کنید.
-          </Typography>
+          <Stack spacing={1} sx={{ alignItems: 'center', py: 4, color: 'text.secondary' }}>
+            <Icon sx={{ fontSize: 48, opacity: 0.3 }}>search</Icon>
+            <Typography variant="body2" sx={{ textAlign: 'center' }}>
+              کلمه‌ای را به فارسی یا انگلیسی تایپ کنید
+            </Typography>
+            <Typography variant="caption" sx={{ textAlign: 'center', opacity: 0.7 }}>
+              برای جستجوی صوتی روی آیکون میکروفون ضربه بزنید
+            </Typography>
+          </Stack>
         )}
 
         {query.isLoading && <AppLoader />}
@@ -146,7 +153,11 @@ export default function VocabSearchPage() {
         {query.isError && <Typography color="error">خطا در جستجو</Typography>}
 
         {query.data && query.data.length === 0 && (
-          <Typography color="text.secondary">نتیجه‌ای یافت نشد</Typography>
+          <Stack spacing={1} sx={{ alignItems: 'center', py: 4, color: 'text.secondary' }}>
+            <Icon sx={{ fontSize: 48, opacity: 0.3 }}>sentiment_dissatisfied</Icon>
+            <Typography variant="body2">نتیجه‌ای برای «{searchWord}» یافت نشد</Typography>
+            <Typography variant="caption" sx={{ opacity: 0.7 }}>املای کلمه را بررسی کنید یا کلمه دیگری امتحان کنید</Typography>
+          </Stack>
         )}
 
         {query.data && query.data.length > 0 && (
@@ -202,20 +213,15 @@ export default function VocabSearchPage() {
             </Typography>
 
             {/* Language toggle */}
-            <Stack direction="row" spacing={1}>
-              <Chip
-                label="فارسی"
-                onClick={() => switchLang('fa-IR')}
-                color={micLang === 'fa-IR' ? 'primary' : 'default'}
-                variant={micLang === 'fa-IR' ? 'filled' : 'outlined'}
-              />
-              <Chip
-                label="English"
-                onClick={() => switchLang('en-US')}
-                color={micLang === 'en-US' ? 'primary' : 'default'}
-                variant={micLang === 'en-US' ? 'filled' : 'outlined'}
-              />
-            </Stack>
+            <ToggleButtonGroup
+              value={micLang}
+              exclusive
+              onChange={(_, val) => val && switchLang(val)}
+              size="small"
+            >
+              <ToggleButton value="fa-IR">فارسی</ToggleButton>
+              <ToggleButton value="en-US">English</ToggleButton>
+            </ToggleButtonGroup>
 
           </Stack>
         </DialogContent>

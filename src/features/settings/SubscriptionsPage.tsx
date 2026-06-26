@@ -10,7 +10,6 @@ import {
 import { AppLoader } from '../../shared/components/AppLoader';
 import { DefaultHeader } from '../../shared/components/DefaultHeader';
 import { ErrorPage } from '../../shared/components/ErrorPage';
-import { FancyCard } from '../../shared/components/FancyCard';
 import { Scaffold } from '../../shared/components/Scaffold';
 
 function durationLabel (duration: SubscriptionDuration): string {
@@ -55,19 +54,15 @@ function formatDate (dateStr: string): string {
 
 function CurrentPlanCard ({ sub }: { sub: UserSubscriptionResponse; }) {
   return (
-    <FancyCard>
+    <Card variant="outlined">
       <Box sx={{ p: 2 }}>
-        <Stack direction="row" >
+        <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'flex-start', mb: 1.5 }}>
           <Stack>
-            <Typography variant="body2" color="text.secondary">Your Plan</Typography>
-            <Typography variant="h6" >{sub.subscriptionTitle}</Typography>
+            <Typography variant="caption" color="text.secondary">Your Plan</Typography>
+            <Typography variant="h6">{sub.subscriptionTitle}</Typography>
           </Stack>
-          <Stack spacing={0.5} >
-            <Chip
-              label={statusLabel(sub.status)}
-              size="small"
-              color={statusColor(sub.status)}
-            />
+          <Stack spacing={0.5} alignItems="flex-end">
+            <Chip label={statusLabel(sub.status)} size="small" color={statusColor(sub.status)} />
             <Chip label={durationLabel(sub.duration)} size="small" variant="outlined" />
           </Stack>
         </Stack>
@@ -83,7 +78,7 @@ function CurrentPlanCard ({ sub }: { sub: UserSubscriptionResponse; }) {
           </Stack>
         </Stack>
       </Box>
-    </FancyCard>
+    </Card>
   );
 }
 
@@ -92,66 +87,56 @@ function PlanCard ({ plan, isActive }: { plan: SubscriptionResponse; isActive: b
     ? plan.price * (1 - plan.discountPercent / 100)
     : plan.price;
 
-  const inner = (
-    <Box sx={{ p: 2 }}>
-      <Stack direction="row" >
-        <Typography variant="h6" >{plan.title}</Typography>
-        <Stack direction="row" spacing={0.5}>
-          <Chip label={typeLabel(plan.type)} size="small" color="primary" />
-          <Chip label={durationLabel(plan.duration)} size="small" variant="outlined" />
+  return (
+    <Card variant={isActive ? 'elevation' : 'outlined'} sx={isActive ? { borderColor: 'primary.main', border: '1px solid' } : {}}>
+      <Box sx={{ p: 2 }}>
+        <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
+          <Typography variant="h6">{plan.title}</Typography>
+          <Stack direction="row" spacing={0.5}>
+            <Chip label={typeLabel(plan.type)} size="small" color="primary" />
+            <Chip label={durationLabel(plan.duration)} size="small" variant="outlined" />
+          </Stack>
         </Stack>
-      </Stack>
 
-      {plan.description && (
-        <Typography variant="body2" >
-          {plan.description}
-        </Typography>
-      )}
-
-      <Stack direction="row" spacing={1} >
-        <Typography variant="h5" color="primary">
-          {discountedPrice.toLocaleString()}
-        </Typography>
-        {plan.discountPercent > 0 && (
-          <>
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              sx={{ textDecoration: 'line-through' }}
-            >
-              {plan.price.toLocaleString()}
-            </Typography>
-            <Chip label={`-${plan.discountPercent}%`} size="small" color="warning" />
-          </>
+        {plan.description && (
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+            {plan.description}
+          </Typography>
         )}
-      </Stack>
 
-      <Divider sx={{ mb: 1.5 }} />
-
-      <Stack spacing={1}>
-        {[...plan.features]
-          .sort((a, b) => a.order - b.order)
-          .map((feature) => (
-            <Stack key={feature.id} direction="row" spacing={1} >
-              <Icon
-                sx={{ fontSize: 18 }}
-                color={feature.isIncluded ? 'success' : 'disabled'}
-              >
-                {feature.isIncluded ? 'check_circle' : 'cancel'}
-              </Icon>
-              <Typography
-                variant="body2"
-                color={feature.isIncluded ? 'text.primary' : 'text.secondary'}
-              >
-                {feature.description}
+        <Stack direction="row" spacing={1} alignItems="baseline" sx={{ mb: 1.5 }}>
+          <Typography variant="h5" color="primary">
+            {discountedPrice.toLocaleString()}
+          </Typography>
+          {plan.discountPercent > 0 && (
+            <>
+              <Typography variant="body2" color="text.secondary" sx={{ textDecoration: 'line-through' }}>
+                {plan.price.toLocaleString()}
               </Typography>
-            </Stack>
-          ))}
-      </Stack>
-    </Box>
-  );
+              <Chip label={`-${plan.discountPercent}%`} size="small" color="warning" />
+            </>
+          )}
+        </Stack>
 
-  return isActive ? <FancyCard>{inner}</FancyCard> : <Card>{inner}</Card>;
+        <Divider sx={{ mb: 1.5 }} />
+
+        <Stack spacing={0.5}>
+          {[...plan.features]
+            .sort((a, b) => a.order - b.order)
+            .map((feature) => (
+              <Stack key={feature.id} direction="row" spacing={1} alignItems="center">
+                <Icon sx={{ fontSize: 16 }} color={feature.isIncluded ? 'success' : 'disabled'}>
+                  {feature.isIncluded ? 'check_circle' : 'cancel'}
+                </Icon>
+                <Typography variant="body2" color={feature.isIncluded ? 'text.primary' : 'text.secondary'}>
+                  {feature.description}
+                </Typography>
+              </Stack>
+            ))}
+        </Stack>
+      </Box>
+    </Card>
+  );
 }
 
 export default function SubscriptionsPage () {

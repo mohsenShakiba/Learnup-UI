@@ -128,7 +128,7 @@ export function CourseListItem({ course }: CourseListItemProps) {
             fullWidth
             onClick={handleNavigateToCourseDetail}
             variant='contained' >
-            بریم شروع کنیم
+            {course.completedLessonsCount > 0 ? 'ادامه بده' : 'بریم شروع کنیم'}
           </FancyButton>
         </Stack>
       </Paper>

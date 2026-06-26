@@ -16,12 +16,12 @@ export class AiService {
      * @returns SendAiTextResponse OK
      * @throws ApiError
      */
-    public static postMobileAiSend(
+    public static postMobileAiProcess(
 requestBody?: SendAiTextRequest,
 ): CancelablePromise<SendAiTextResponse> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/Mobile/Ai/send',
+            url: '/Mobile/Ai/Process',
             body: requestBody,
             mediaType: 'application/json',
         });

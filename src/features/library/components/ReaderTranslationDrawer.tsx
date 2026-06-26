@@ -41,6 +41,7 @@ export function ReaderTranslationDrawer({ open, onOpen, onClose, word, sentence,
   const [bookmarkState, setBookmarkState] = useState<BookmarkState>('idle');
 
   const handleBookmark = async () => {
+    console.log('word 2', word, bookmarkState, bookmarkState)
     if (!word || bookmarkState === 'loading' || bookmarkState === 'saved') return;
     setBookmarkState('loading');
     try {

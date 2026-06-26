@@ -3,17 +3,17 @@ import { createTheme } from '@mui/material';
 
 
 export const createLearnupTheme = (mode: PaletteMode) => {
-  const sufaceBackground = mode === 'dark' ? 'rgba(23, 20, 25)' : 'rgba(250, 244, 235)';
-  const paperBackgorund = mode === 'dark' ? 'rgba(25, 23, 29)' : 'rgba(247, 239, 225)';
-  const dividerColor = mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(230, 226, 218)';
+  const sufaceBackground = mode === 'dark' ? 'rgba(23, 20, 25)' : 'rgba(250, 250, 250)';
+  const paperBackgorund = mode === 'dark' ? 'rgba(25, 23, 29)' : 'rgba(255, 255, 255)';
+  const dividerColor = mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(240, 240, 240)';
   return createTheme({
     direction: 'rtl',
     palette: {
       mode,
       primary: {
-        main: '#778873',
-        light: '#A1BC98',
-        dark: '#778873',
+        main: '#3458eb',
+        light: '#3458eb',
+        dark: '#3458eb',
         contrastText: '#ffffff',
       },
       secondary: {

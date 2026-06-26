@@ -34,16 +34,20 @@ export function StoryListItem({ story }: StoryListItemProps) {
 
         <Divider />
 
-        <Typography sx={{ direction: 'rtl' }} >
-          {story.title}
-        </Typography>
+        <Stack spacing={1}>
+          <Typography sx={{ direction: 'rtl' }} >
+            {story.title}
+          </Typography>
 
-        <ActionButton
-          pendingText="شروع مکالمه"
-          completedText="تکمیل شد"
-          isCompleted={false}
-          onClick={() => { }}
-        />
+          <Typography variant='caption' sx={{ color: 'text.secondary' }} >
+            آشنایی با یک شخص جدید
+          </Typography>
+
+        </Stack>
+
+        <Button size='small'>
+          شروع مکالمه
+        </Button>
       </Stack>
 
     </ActionCard >

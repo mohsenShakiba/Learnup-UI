@@ -8,7 +8,7 @@ type DefaultHeaderProps = {
   children?: ReactNode;
 };
 
-export function DefaultHeader ({ header, subtitle, children }: DefaultHeaderProps) {
+export function DefaultHeader({ header, subtitle, children }: DefaultHeaderProps) {
 
   const navigate = useNavigate();
 
@@ -25,7 +25,7 @@ export function DefaultHeader ({ header, subtitle, children }: DefaultHeaderProp
     }}>
       <Stack direction='row' spacing={1} sx={{ maxWidth: '500px', margin: '0 auto', alignItems: 'center' }} >
         <IconButton onClick={() => navigate(-1)}>
-          <Icon sx={{ opacity: 0.5 }}>arrow_forward</Icon>
+          <Icon>arrow_forward</Icon>
         </IconButton>
         <Stack >
           <Typography>

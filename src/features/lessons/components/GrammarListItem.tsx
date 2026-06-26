@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import type { GrammarResponse } from '../../../api/Learnup/models/GrammarResponse';
 import { ActionCard } from '../../../shared/components/ActionCard';
 import { DurationBadge } from '../../../shared/components/DurationBadge';
+import { TypeWriter } from '../../../components/TypeWriter';
 
 type Props = {
     grammar: GrammarResponse;
@@ -38,7 +39,11 @@ export function GrammarListItem({ grammar }: Props) {
 
                 <Typography sx={{ color: 'text.secondary', fontSize: '0.9rem' }}>{grammar.description}</Typography>
 
-                <Button size='small'>مطالعه گرامر</Button>
+                <Stack direction='row' spacing={1}>
+                    <Button sx={{ flex: 2 }} size='small'>مطالعه گرامر</Button>
+                    <Button sx={{ flex: 1 }} size='small' variant='outlined'>آزمون</Button>
+                </Stack>
+
             </Stack>
         </ActionCard>
     );

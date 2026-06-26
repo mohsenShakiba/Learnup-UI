@@ -38,7 +38,10 @@ export function VocabListItem({ vocabs, lessonId }: Props) {
 
                 <Typography variant='caption' sx={{ color: 'text.secondary' }}>مرور لغات استفاده شده در این درس</Typography>
 
-                <Button size='small'>مرور لغات</Button>
+                <Stack direction='row' spacing={1}>
+                    <Button sx={{ flex: 2 }} size='small'>مرور کلمات</Button>
+                    <Button sx={{ flex: 1 }} size='small' variant='outlined'>آزمون</Button>
+                </Stack>
 
             </Stack>
 

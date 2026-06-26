@@ -26,9 +26,10 @@ export function CourseListItem({ course }: CourseListItemProps) {
   return (
     <Box sx={{
       p: 2,
+      pb: 0,
       display: 'flex',
-      pb: 5,
-      height: '100%'
+      height: '100%',
+      boxSizing: 'border-box'
     }}>
 
       <Paper

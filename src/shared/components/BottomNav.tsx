@@ -1,23 +1,26 @@
-import {
-  BottomNavigation,
-  BottomNavigationAction,
-  Icon
-} from '@mui/material';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { BottomNavigation, BottomNavigationAction, Icon } from "@mui/material";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const tabs = [
-  { label: 'Dashboard', icon: 'dashboard', path: '/dashboard' },
-  { label: 'Courses', icon: 'school', path: '/' },
-  { label: 'Vocab', icon: 'menu_book', path: '/vocab' },
-  { label: 'Leitner', icon: 'layers', path: '/leitner-box' },
-  { label: 'Library', icon: 'local_library', path: '/library' },
-  { label: 'Settings', icon: 'settings', path: '/settings' },
+  { label: "Dashboard", icon: "dashboard", path: "/dashboard" },
+  { label: "Courses", icon: "school", path: "/" },
+  { label: "Vocab", icon: "menu_book", path: "/vocab" },
+  { label: "Leitner", icon: "layers", path: "/leitner-box" },
+  { label: "Library", icon: "local_library", path: "/library" },
+  { label: "Settings", icon: "settings", path: "/settings" },
 ];
 
 // Only show the bottom nav on the main pages.
-const visiblePaths = ['/dashboard', '/', '/vocab', '/library', '/settings'];
+const visiblePaths = [
+  "/dashboard",
+  "/",
+  "/vocab",
+  "/library",
+  "/settings",
+  "/leitner-box",
+];
 
-export function BottomNav () {
+export function BottomNav() {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -26,14 +29,14 @@ export function BottomNav () {
   }
 
   const currentTab = tabs.findIndex((tab) =>
-    tab.path === '/'
-      ? location.pathname === '/'
-      : location.pathname.startsWith(tab.path)
+    tab.path === "/"
+      ? location.pathname === "/"
+      : location.pathname.startsWith(tab.path),
   );
 
   return (
-
     <BottomNavigation
+      sx={{ flexShrink: 0 }}
       value={currentTab === -1 ? false : currentTab}
       onChange={(_, newValue) => navigate(tabs[newValue].path)}
     >
@@ -42,13 +45,13 @@ export function BottomNav () {
           sx={{
             minWidth: 0,
             px: 0.5,
-            '& .MuiBottomNavigationAction-label': {
-              fontSize: '10px',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              width: '100%',
-              textAlign: 'center',
+            "& .MuiBottomNavigationAction-label": {
+              fontSize: "10px",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              width: "100%",
+              textAlign: "center",
             },
           }}
           key={tab.path}

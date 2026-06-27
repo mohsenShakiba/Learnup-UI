@@ -1,8 +1,10 @@
-import { Stack } from "@mui/material";
+import SettingsIcon from "@mui/icons-material/Settings";
+import { IconButton, Stack } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { LeitnerBoxService } from "../../api/Learnup";
 import { AppLoader } from "../../shared/components/AppLoader";
+import { DefaultHeader } from "../../shared/components/DefaultHeader";
 import { EmptyList } from "../../shared/components/EmptyList";
 import { ErrorPage } from "../../shared/components/ErrorPage";
 import { Scaffold } from "../../shared/components/Scaffold";
@@ -37,7 +39,18 @@ export default function LeitnerBoxPage() {
   const totalItems = levels.reduce((sum, level) => sum + level.itemsCount, 0);
 
   return (
-    <Scaffold>
+    <Scaffold
+      header={
+        <DefaultHeader
+          header="مرور"
+          children={
+            <IconButton onClick={() => setIsSettingsOpen(true)}>
+              <SettingsIcon />
+            </IconButton>
+          }
+        />
+      }
+    >
       <Stack spacing={2}>
         {levels.length === 0 ? (
           <EmptyList message="No words in your Leitner box yet. Saved vocabulary will appear here and be grouped by level." />

@@ -105,7 +105,7 @@ export default function LessonDetailPage() {
             <Stack key={grammar.id} direction="row" spacing={1.5} sx={{ alignItems: 'stretch' }}>
               <TimelineColumn completed={false} isLast={isLast} />
               <Box sx={{ flex: 1 }}>
-                <GrammarListItem grammar={grammar} />
+                <GrammarListItem grammar={grammar} lessonId={lesson.id} />
               </Box>
             </Stack>
           );

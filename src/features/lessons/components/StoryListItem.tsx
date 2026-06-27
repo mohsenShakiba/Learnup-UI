@@ -14,9 +14,10 @@ type StoryListItemProps = {
 export function StoryListItem({ story }: StoryListItemProps) {
   const navigate = useNavigate();
 
+  const goToStory = () => navigate(`/stories/${story.id}`);
 
   return (
-    <ActionCard onClick={() => navigate(`/stories/${story.id}`)}>
+    <ActionCard onClick={goToStory}>
 
       <Stack spacing={1}>
 
@@ -45,7 +46,13 @@ export function StoryListItem({ story }: StoryListItemProps) {
 
         </Stack>
 
-        <Button size='small'>
+        <Button
+          size='small'
+          onClick={(e) => {
+            e.stopPropagation();
+            goToStory();
+          }}
+        >
           شروع مکالمه
         </Button>
       </Stack>

@@ -145,14 +145,49 @@ export class BookManagarService {
     const view = this.view;
     if (view === null) return;
 
+    const LONG_PRESS_DURATION = 1000;
+    const MOVE_TOLERANCE = 10;
+
     view.addEventListener('load', ((event: CustomEvent<FoliateLoadDetail>) => {
       const doc = event.detail.doc;
-      doc.addEventListener('click', (clickEvent: MouseEvent) => {
-        const selection = detectSentenceAtPoint(doc, clickEvent.clientX, clickEvent.clientY, this.highlightRef);
-        if (selection) {
-          this.onWordSelect?.(selection);
+
+      let longPressTimeout: ReturnType<typeof setTimeout> | null = null;
+      let startX = 0;
+      let startY = 0;
+
+      const cancelLongPress = () => {
+        if (longPressTimeout !== null) {
+          clearTimeout(longPressTimeout);
+          longPressTimeout = null;
+        }
+      };
+
+      doc.addEventListener('pointerdown', (pointerEvent: PointerEvent) => {
+        startX = pointerEvent.clientX;
+        startY = pointerEvent.clientY;
+        cancelLongPress();
+        longPressTimeout = setTimeout(() => {
+          longPressTimeout = null;
+          const selection = detectSentenceAtPoint(doc, startX, startY, this.highlightRef);
+          if (selection) {
+            this.onWordSelect?.(selection);
+          }
+        }, LONG_PRESS_DURATION);
+      });
+
+      doc.addEventListener('pointermove', (pointerEvent: PointerEvent) => {
+        if (longPressTimeout === null) return;
+        if (
+          Math.abs(pointerEvent.clientX - startX) > MOVE_TOLERANCE ||
+          Math.abs(pointerEvent.clientY - startY) > MOVE_TOLERANCE
+        ) {
+          cancelLongPress();
         }
       });
+
+      doc.addEventListener('pointerup', cancelLongPress);
+      doc.addEventListener('pointercancel', cancelLongPress);
+      doc.addEventListener('pointerleave', cancelLongPress);
     }) as EventListener);
   }
 

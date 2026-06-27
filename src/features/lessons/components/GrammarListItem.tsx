@@ -3,18 +3,22 @@ import { useNavigate } from 'react-router-dom';
 import type { GrammarResponse } from '../../../api/Learnup/models/GrammarResponse';
 import { ActionCard } from '../../../shared/components/ActionCard';
 import { DurationBadge } from '../../../shared/components/DurationBadge';
-import { TypeWriter } from '../../../components/TypeWriter';
 
 type Props = {
     grammar: GrammarResponse;
+    lessonId: number;
 };
 
-export function GrammarListItem({ grammar }: Props) {
+export function GrammarListItem({ grammar, lessonId }: Props) {
 
     const navigate = useNavigate();
 
     const handleNavigateToGrammarPage = () => {
         navigate(`/grammars/${grammar.id}`);
+    };
+
+    const handleNavigateToGrammarTest = () => {
+        navigate(`/lessons/${lessonId}/grammar-tests`);
     };
 
     return (
@@ -40,8 +44,27 @@ export function GrammarListItem({ grammar }: Props) {
                 <Typography sx={{ color: 'text.secondary', fontSize: '0.9rem' }}>{grammar.description}</Typography>
 
                 <Stack direction='row' spacing={1}>
-                    <Button sx={{ flex: 2 }} size='small'>مطالعه گرامر</Button>
-                    <Button sx={{ flex: 1 }} size='small' variant='outlined'>آزمون</Button>
+                    <Button
+                        sx={{ flex: 2 }}
+                        size='small'
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleNavigateToGrammarPage();
+                        }}
+                    >
+                        مطالعه گرامر
+                    </Button>
+                    <Button
+                        sx={{ flex: 1 }}
+                        size='small'
+                        variant='outlined'
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleNavigateToGrammarTest();
+                        }}
+                    >
+                        آزمون
+                    </Button>
                 </Stack>
 
             </Stack>

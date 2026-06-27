@@ -1,7 +1,6 @@
 import { Box, Button, Divider, Icon, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { VocabResponse } from '../../../api/Learnup/models/VocabResponse';
-import { TypeWriter } from '../../../components/TypeWriter';
 import { ActionCard } from '../../../shared/components/ActionCard';
 import { DurationBadge } from '../../../shared/components/DurationBadge';
 
@@ -17,6 +16,10 @@ export function VocabListItem({ vocabs, lessonId }: Props) {
 
     const handleNavigateToVocabPage = () => {
         navigate(`/lessons/${lessonId}/vocabs`);
+    };
+
+    const handleNavigateToVocabTest = () => {
+        navigate(`/lessons/${lessonId}/vocab-tests`);
     };
 
     return (
@@ -39,8 +42,27 @@ export function VocabListItem({ vocabs, lessonId }: Props) {
                 <Typography variant='caption' sx={{ color: 'text.secondary' }}>مرور لغات استفاده شده در این درس</Typography>
 
                 <Stack direction='row' spacing={1}>
-                    <Button sx={{ flex: 2 }} size='small'>مرور کلمات</Button>
-                    <Button sx={{ flex: 1 }} size='small' variant='outlined'>آزمون</Button>
+                    <Button
+                        sx={{ flex: 2 }}
+                        size='small'
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleNavigateToVocabPage();
+                        }}
+                    >
+                        مرور کلمات
+                    </Button>
+                    <Button
+                        sx={{ flex: 1 }}
+                        size='small'
+                        variant='outlined'
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleNavigateToVocabTest();
+                        }}
+                    >
+                        آزمون
+                    </Button>
                 </Stack>
 
             </Stack>

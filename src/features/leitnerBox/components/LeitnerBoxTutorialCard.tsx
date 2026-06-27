@@ -17,7 +17,7 @@ export function LeitnerBoxTutorialCard({ onDismiss }: LeitnerBoxTutorialCardProp
   };
 
   return (
-    <Card sx={{ p: 3, height: '100%' }} dir="rtl">
+    <Card sx={{ p: 3, flex: 1 }} dir="rtl">
       <Stack spacing={2} sx={{ height: '100%' }}>
         <Stack direction="row" spacing={1.5} sx={{ alignItems: "center" }}>
           <Typography variant="h6" >

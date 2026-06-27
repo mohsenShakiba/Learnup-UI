@@ -39,6 +39,7 @@ export default function LeitnerBoxPage() {
     return <ErrorPage onAction={() => void leitnerBoxQuery.refetch()} />;
   }
 
+
   return (
     <Scaffold>
 

@@ -18,4 +18,3 @@ export type SubscriptionResponse = {
     isActive: boolean;
     features: Array<SubscriptionFeatureResponse>;
 };
-

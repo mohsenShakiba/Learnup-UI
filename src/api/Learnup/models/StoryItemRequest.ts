@@ -8,4 +8,3 @@ export type StoryItemRequest = {
     text: string;
     translation: string;
 };
-

@@ -10,16 +10,18 @@ const tabs = [
   { label: 'Courses', icon: 'school', path: '/' },
   { label: 'Vocab', icon: 'menu_book', path: '/vocab' },
   { label: 'Leitner', icon: 'layers', path: '/leitner-box' },
+  { label: 'Library', icon: 'local_library', path: '/library' },
   { label: 'Settings', icon: 'settings', path: '/settings' },
 ];
 
-const hiddenPaths = ['/stories/'];
+// Only show the bottom nav on the main pages.
+const visiblePaths = ['/dashboard', '/', '/vocab', '/library', '/settings'];
 
 export function BottomNav () {
   const location = useLocation();
   const navigate = useNavigate();
 
-  if (hiddenPaths.some((path) => location.pathname.startsWith(path))) {
+  if (!visiblePaths.includes(location.pathname)) {
     return null;
   }
 

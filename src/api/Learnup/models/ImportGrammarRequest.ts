@@ -8,4 +8,3 @@ import type { GrammarRequest } from './GrammarRequest';
 export type ImportGrammarRequest = {
     grammar: GrammarRequest;
 };
-

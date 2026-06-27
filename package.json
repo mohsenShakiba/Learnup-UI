@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "generate": "openapi -c axios -i http://localhost:5000/swagger/v1/swagger.json -o src/api/Learnup"
+    "generate": "openapi -c axios -i http://localhost:5050/swagger/v1/swagger.json -o src/api/Learnup"
   },
   "dependencies": {
     "@emotion/styled": "11.14.1",
@@ -16,6 +16,7 @@
     "@mui/material": "^9.0.0",
     "@tanstack/react-query": "^5.100.9",
     "axios": "^1.16.0",
+    "epubjs": "^0.3.93",
     "material-icons": "^1.13.14",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",

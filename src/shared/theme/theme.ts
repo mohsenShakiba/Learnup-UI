@@ -135,6 +135,7 @@ export const createLearnupTheme = (mode: PaletteMode) => {
           root: {
             borderTop: '1px solid',
             borderColor: dividerColor,
+            backgroundColor: sufaceBackground,
           }
         }
       },

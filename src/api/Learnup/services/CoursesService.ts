@@ -11,13 +11,13 @@ import { request as __request } from '../core/request';
 export class CoursesService {
 
     /**
-     * @param languageId
+     * @param languageId 
      * @returns CourseResponse OK
      * @throws ApiError
      */
     public static getCoursesByLanguageId(
-        languageId: number,
-    ): CancelablePromise<Array<CourseResponse>> {
+languageId: number,
+): CancelablePromise<Array<CourseResponse>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/Mobile/Courses/language/{languageId}',
@@ -28,13 +28,13 @@ export class CoursesService {
     }
 
     /**
-     * @param id
+     * @param id 
      * @returns CourseResponse OK
      * @throws ApiError
      */
     public static getCourseById(
-        id: number,
-    ): CancelablePromise<CourseResponse> {
+id: number,
+): CancelablePromise<CourseResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/Mobile/Courses/{id}',

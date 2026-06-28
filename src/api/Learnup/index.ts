@@ -22,6 +22,7 @@ export type { GrammarRequest } from './models/GrammarRequest';
 export type { GrammarResponse } from './models/GrammarResponse';
 export { HTMLTag } from './models/HTMLTag';
 export type { ImportGrammarRequest } from './models/ImportGrammarRequest';
+export type { ImportLessonGrammarsResponse } from './models/ImportLessonGrammarsResponse';
 export type { ImportVocabsResponse } from './models/ImportVocabsResponse';
 export type { LeitnerBoxItemResponse } from './models/LeitnerBoxItemResponse';
 export type { LeitnerBoxResponse } from './models/LeitnerBoxResponse';

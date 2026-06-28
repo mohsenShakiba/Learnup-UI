@@ -33,7 +33,7 @@ export default function GrammarCard (props: TGrammarCardProps) {
             color="primary"
           />
 
-          <DurationBadge minutes={grammar.estimatedTime} />
+          <DurationBadge minutes={grammar.duration} />
         </Stack>
       </Stack>
 

@@ -11,7 +11,7 @@ export type GrammarResponse = {
     name: string;
     level: VocabLevel;
     order: number;
-    estimatedTime: string;
+    duration: number;
     description: string;
     parentGrammarId: number | null;
     prerequisiteGrammarIds: Array<number>;

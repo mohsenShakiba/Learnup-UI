@@ -13,3 +13,5 @@
 [x] add a page for listing all grammars. (already exists: ListGrammarPage at /grammar route)
 [x] after uploading avatar url, use getFileById to show the image.
 [x] create a section in settings to show all grammars page.
+[] remove continue card from dashboard the current user lesson is null.
+[] update the button's color in leitner box in dashboard

@@ -11,13 +11,13 @@ export const ROOT_TABS = [
   { label: 'Leitner', icon: 'layers', path: '/leitner-box' },
   { label: 'Library', icon: 'menu_book', path: '/library' },
   { label: 'Vocab', icon: 'search', path: '/vocab' },
-  { label: 'Settings', icon: 'settings', path: '/settings' },
+  { label: 'Settings', icon: 'menu', path: '/settings' },
 ];
 
 const tabs = ROOT_TABS;
 
 
-export function BottomNav() {
+export function BottomNav () {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -34,7 +34,7 @@ export function BottomNav() {
   return (
 
     <BottomNavigation
-      sx={{ px: 2 }}
+      sx={{ px: 2, pb: 0.5, height: 65 }}
       value={currentTab === -1 ? false : currentTab}
       onChange={(_, newValue) => navigate(tabs[newValue].path)}
     >

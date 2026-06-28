@@ -61,7 +61,7 @@ function CurrentPlanCard ({ sub }: { sub: UserSubscriptionResponse; }) {
             <Typography variant="caption" color="text.secondary">Your Plan</Typography>
             <Typography variant="h6">{sub.subscriptionTitle}</Typography>
           </Stack>
-          <Stack spacing={0.5} alignItems="flex-end">
+          <Stack spacing={0.5} >
             <Chip label={statusLabel(sub.status)} size="small" color={statusColor(sub.status)} />
             <Chip label={durationLabel(sub.duration)} size="small" variant="outlined" />
           </Stack>
@@ -104,7 +104,7 @@ function PlanCard ({ plan, isActive }: { plan: SubscriptionResponse; isActive: b
           </Typography>
         )}
 
-        <Stack direction="row" spacing={1} alignItems="baseline" sx={{ mb: 1.5 }}>
+        <Stack direction="row" spacing={1} sx={{ mb: 1.5 }}>
           <Typography variant="h5" color="primary">
             {discountedPrice.toLocaleString()}
           </Typography>
@@ -124,7 +124,7 @@ function PlanCard ({ plan, isActive }: { plan: SubscriptionResponse; isActive: b
           {[...plan.features]
             .sort((a, b) => a.order - b.order)
             .map((feature) => (
-              <Stack key={feature.id} direction="row" spacing={1} alignItems="center">
+              <Stack key={feature.id} direction="row" spacing={1} >
                 <Icon sx={{ fontSize: 16 }} color={feature.isIncluded ? 'success' : 'disabled'}>
                   {feature.isIncluded ? 'check_circle' : 'cancel'}
                 </Icon>

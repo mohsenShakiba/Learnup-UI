@@ -19,7 +19,7 @@ import { DefaultHeader } from '../../shared/components/DefaultHeader';
 import { Scaffold } from '../../shared/components/Scaffold';
 import { toast } from '../../shared/toast/toastStore';
 
-export default function ProfilePage() {
+export default function ProfilePage () {
   const queryClient = useQueryClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -106,7 +106,7 @@ export default function ProfilePage() {
   return (
     <Scaffold header={<DefaultHeader header="پروفایل" />}>
       <Stack spacing={3} sx={{ pb: 2 }}>
-        <Stack alignItems="center" spacing={1} sx={{ pt: 2 }}>
+        <Stack spacing={1} sx={{ pt: 2 }}>
           <Box sx={{ position: 'relative' }}>
             {profileQuery.isLoading ? (
               <Box

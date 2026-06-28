@@ -1,9 +1,5 @@
-import {
-  BottomNavigation,
-  BottomNavigationAction,
-  Icon
-} from '@mui/material';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { BottomNavigation, BottomNavigationAction, Icon } from "@mui/material";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const ROOT_TABS = [
   { label: 'Dashboard', icon: 'dashboard', path: '/dashboard' },
@@ -26,13 +22,12 @@ export function BottomNav () {
   }
 
   const currentTab = tabs.findIndex((tab) =>
-    tab.path === '/'
-      ? location.pathname === '/'
-      : location.pathname.startsWith(tab.path)
+    tab.path === "/"
+      ? location.pathname === "/"
+      : location.pathname.startsWith(tab.path),
   );
 
   return (
-
     <BottomNavigation
       sx={{ px: 2, pb: 0.5, height: 65 }}
       value={currentTab === -1 ? false : currentTab}

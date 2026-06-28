@@ -1,26 +1,25 @@
-import { Stack } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'react-router-dom';
-import { CoursesService, LessonsService } from '../../api/Learnup';
-import { AppLoader } from '../../shared/components/AppLoader';
-import { DefaultHeader } from '../../shared/components/DefaultHeader';
-import { ErrorPage } from '../../shared/components/ErrorPage';
-import { Scaffold } from '../../shared/components/Scaffold';
-import { WaveProgress } from '../../shared/components/WaveProgress';
-import { LessonListItem } from './components/LessonListItem';
+import { Stack } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
+import { CoursesService, LessonsService } from "../../api/Learnup";
+import { AppLoader } from "../../shared/components/AppLoader";
+import { DefaultHeader } from "../../shared/components/DefaultHeader";
+import { ErrorPage } from "../../shared/components/ErrorPage";
+import { Scaffold } from "../../shared/components/Scaffold";
+import { WaveProgress } from "../../shared/components/WaveProgress";
+import { LessonListItem } from "./components/LessonListItem";
 
-export default function CourseDetailPage() {
-
+export default function CourseDetailPage () {
   const { id: courseId } = useParams<{ id: string; }>();
   const courseIdNumber = Number(courseId);
 
   const courseQuery = useQuery({
-    queryKey: ['course', courseIdNumber],
+    queryKey: ["course", courseIdNumber],
     queryFn: () => CoursesService.getCourseById(courseIdNumber),
   });
 
   const lessonsQuery = useQuery({
-    queryKey: ['lessons', 'course', courseIdNumber],
+    queryKey: ["lessons", "course", courseIdNumber],
     queryFn: () => LessonsService.getLessonsByCourseId(courseIdNumber),
   });
 

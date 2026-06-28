@@ -1,5 +1,4 @@
 import { Box, Icon, Typography } from '@mui/material';
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import { useQuery } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import type { Swiper as SwiperType } from 'swiper';
@@ -9,15 +8,15 @@ import { CoursesService } from '../../api/Learnup';
 import { AppLoader } from '../../shared/components/AppLoader';
 import { ErrorPage } from '../../shared/components/ErrorPage';
 import { Scaffold } from '../../shared/components/Scaffold';
-import { CoursePagination } from './components/CoursePagination';
 import { CourseListItem } from './components/CourseListItem';
+import { CoursePagination } from './components/CoursePagination';
 
-export default function ListCoursesPage() {
+export default function ListCoursesPage () {
   const swiperRef = useRef<SwiperType | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
   const coursesQuery = useQuery({
-    queryKey: ['courses', 'language'],
+    queryKey: ["courses", "language"],
     queryFn: () => CoursesService.getCoursesByLanguageId(1),
   });
 

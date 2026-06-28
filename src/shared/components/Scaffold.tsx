@@ -1,6 +1,6 @@
-import { Box } from '@mui/material';
-import type { ReactNode } from 'react';
-import { DotGrid } from './DotGrid';
+import { Box } from "@mui/material";
+import type { ReactNode } from "react";
+import { DotGrid } from "./DotGrid";
 
 type ScaffoldProps = {
   header?: ReactNode;
@@ -9,21 +9,21 @@ type ScaffoldProps = {
   maxWidth?: string | number;
 };
 
-export function Scaffold ({
+export function Scaffold({
   header,
   children,
   disablePadding,
-  maxWidth = '500px',
+  maxWidth = "500px",
 }: ScaffoldProps) {
   return (
     <Box
       sx={{
         p: 0,
-        position: 'relative',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        overflow: 'hidden',
+        position: "relative",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        overflowY: "auto",
       }}
     >
       {header && <>{header}</>}
@@ -32,16 +32,16 @@ export function Scaffold ({
         component="main"
         sx={{
           maxWidth,
-          width: '100%',
+          width: "100%",
           flex: 1,
           display: 'flex',
           flexDirection: 'column',
           minHeight: 0,
-          overflowY: 'auto',
-          mx: 'auto',
+          overflowY: "auto",
+          mx: "auto",
           py: disablePadding ? 0 : 2,
           px: disablePadding ? 0 : 2,
-          boxSizing: 'border-box',
+          boxSizing: "border-box",
         }}
       >
         {children}

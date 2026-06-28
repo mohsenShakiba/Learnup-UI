@@ -1,26 +1,23 @@
-import { useMemo, useState } from "react";
-import { Box, Divider, Stack, Typography } from "@mui/material";
+import SettingsIcon from "@mui/icons-material/Settings";
+import { IconButton, Stack } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
+import { useMemo, useState } from "react";
 import { LeitnerBoxService } from "../../api/Learnup";
 import { AppLoader } from "../../shared/components/AppLoader";
+import { DefaultHeader } from "../../shared/components/DefaultHeader";
 import { EmptyList } from "../../shared/components/EmptyList";
 import { ErrorPage } from "../../shared/components/ErrorPage";
 import { Scaffold } from "../../shared/components/Scaffold";
 import { BoxLevelCard } from "./components/BoxLevelCard";
-import {
-  hasTutorialBeenSeen,
-  LeitnerBoxTutorialCard,
-} from "./components/LeitnerBoxTutorialCard";
 import { LeitnerBoxSettingsDrawer } from "./components/LeitnerBoxSettingsDrawer";
 
-export default function LeitnerBoxPage() {
-
-  const [showTutorial, setShowTutorial] = useState(() => !hasTutorialBeenSeen());
+export default function LeitnerBoxPage () {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const leitnerBoxQuery = useQuery({
     queryKey: ["leitner-box-levels"],
     queryFn: () => LeitnerBoxService.getBoxLevelsInfo(),
+    refetchOnMount: "always",
   });
 
   const levels = useMemo(
@@ -39,39 +36,42 @@ export default function LeitnerBoxPage() {
     return <ErrorPage onAction={() => void leitnerBoxQuery.refetch()} />;
   }
 
+  const totalItems = levels.reduce((sum, level) => sum + level.itemsCount, 0);
 
   return (
-    <Scaffold>
-
-      <Stack direction='row' sx={{ alignItems: 'end', pb: 2 }}>
-        <Typography sx={{ px: 2 }} variant='body1'>لایتنر باکس</Typography>
-        <Box sx={{ flex: 1 }} />
+    <Scaffold
+      header={
+        <DefaultHeader
+          header="مرور"
+          children={
+            <IconButton onClick={() => setIsSettingsOpen(true)}>
+              <SettingsIcon />
+            </IconButton>
+          }
+        />
+      }
+    >
+      <Stack spacing={2}>
+        {levels.length === 0 ? (
+          <EmptyList message="No words in your Leitner box yet. Saved vocabulary will appear here and be grouped by level." />
+        ) : (
+          levels.map((level) => (
+            <BoxLevelCard
+              key={level.id}
+              levelId={level.id}
+              level={Number(level.level)}
+              totalItems={level.itemsCount}
+              readyToReview={level.dueItemsCount}
+            />
+          ))
+        )}
       </Stack>
 
-      {showTutorial ? (
-        <LeitnerBoxTutorialCard onDismiss={() => setShowTutorial(false)} />
-      ) : (
-        <Stack spacing={2}>
-          {levels.length === 0 ? (
-            <EmptyList message="No words in your Leitner box yet. Saved vocabulary will appear here and be grouped by level." />
-          ) : (
-            levels.map((level) => (
-              <BoxLevelCard
-                key={level.id}
-                levelId={level.id}
-                level={Number(level.level)}
-                totalItems={level.itemsCount}
-                readyToReview={level.dueItemsCount}
-              />
-            ))
-          )}
-        </Stack>
-      )}
-
       <LeitnerBoxSettingsDrawer
+        boxId={leitnerBoxQuery.data.id}
+        levels={levels}
         open={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
-        leitnerBox={leitnerBoxQuery.data}
       />
     </Scaffold>
   );

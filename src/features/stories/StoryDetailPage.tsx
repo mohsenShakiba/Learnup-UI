@@ -1,35 +1,33 @@
 import { Stack } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
-import { StoriesService } from '../../api/Learnup';
+import { StorySection } from '../../api/Learnup';
+import { useLesson } from '../lessons/hooks/useLesson';
+import { useSectionCompleted } from '../lessons/hooks/useSectionCompleted';
 import { AppLoader } from '../../shared/components/AppLoader';
 import { DefaultHeader } from '../../shared/components/DefaultHeader';
 import { ErrorPage } from '../../shared/components/ErrorPage';
 import { Scaffold } from '../../shared/components/Scaffold';
 import { StoryControls } from './components/StoryControls';
-import { StoryCoverHeader } from './components/StoryCoverHeader';
 import { StoryItem } from './components/StoryItem';
 import { StoryAudioProvider } from './hooks/useStoryAudio';
 
-export default function StoryDetailPage() {
-  const { id: storyId } = useParams<{ id: string; }>();
+export default function StoryDetailPage () {
+  const { lessonId, id: storyId } = useParams<{ lessonId: string; id: string; }>();
+  const lessonIdNumber = Number(lessonId);
   const storyIdNumber = Number(storyId);
 
-  const storyQuery = useQuery({
-    queryKey: ['story', storyIdNumber],
-    queryFn: () => StoriesService.getStoryById(storyIdNumber),
-    enabled: Number.isFinite(storyIdNumber),
-  });
-
-  const story = storyQuery.data;
+  const lessonQuery = useLesson(lessonIdNumber);
+  const story = lessonQuery.data?.stories.find((item) => item.id === storyIdNumber);
   const storyItems = story?.items ?? [];
 
-  if (storyQuery.isLoading) {
+  useSectionCompleted(lessonIdNumber, StorySection.STORY, story != null);
+
+  if (lessonQuery.isLoading) {
     return <AppLoader />;
   }
 
-  if (storyQuery.isError || !story) {
-    return <ErrorPage onAction={() => void storyQuery.refetch()} />;
+  if (lessonQuery.isError || !story) {
+    return <ErrorPage onAction={() => void lessonQuery.refetch()} />;
   }
 
   return (

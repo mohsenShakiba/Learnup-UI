@@ -5,7 +5,7 @@
 import type { CurrentLessonProgressResponse } from '../models/CurrentLessonProgressResponse';
 import type { LessonDetailResponse } from '../models/LessonDetailResponse';
 import type { LessonResponse } from '../models/LessonResponse';
-import type { UserLessonEntityType } from '../models/UserLessonEntityType';
+import type { StorySection } from '../models/StorySection';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -14,13 +14,13 @@ import { request as __request } from '../core/request';
 export class LessonsService {
 
     /**
-     * @param courseId
+     * @param courseId 
      * @returns LessonResponse OK
      * @throws ApiError
      */
     public static getLessonsByCourseId(
-        courseId: number,
-    ): CancelablePromise<Array<LessonResponse>> {
+courseId: number,
+): CancelablePromise<Array<LessonResponse>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/Mobile/Lessons/course/{courseId}',
@@ -42,38 +42,41 @@ export class LessonsService {
     }
 
     /**
-     * @param id
-     * @param lastReadEntityType
-     * @param lastReadEntityId
+     * @param id 
      * @returns LessonDetailResponse OK
      * @throws ApiError
      */
     public static getLessonById(
-        id: number,
-        lastReadEntityType?: UserLessonEntityType,
-        lastReadEntityId?: number,
-    ): CancelablePromise<LessonDetailResponse> {
+id: number,
+): CancelablePromise<LessonDetailResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/Mobile/Lessons/{id}',
             path: {
                 'id': id,
             },
-            query: {
-                'lastReadEntityType': lastReadEntityType,
-                'lastReadEntityId': lastReadEntityId,
-            },
         });
     }
 
     /**
-     * @returns LessonDetailResponse OK
+     * @param id 
+     * @param section 
+     * @returns any OK
      * @throws ApiError
      */
-    public static goToNextLesson(): CancelablePromise<LessonDetailResponse> {
+    public static onLessonSectionCompleted(
+id: number,
+section?: StorySection,
+): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/Mobile/Lessons/next',
+            url: '/Mobile/Lessons/{id}/section-completed',
+            path: {
+                'id': id,
+            },
+            query: {
+                'section': section,
+            },
         });
     }
 

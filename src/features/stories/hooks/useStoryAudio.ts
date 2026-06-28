@@ -9,14 +9,13 @@ import {
   type ReactNode,
   type RefObject,
 } from 'react';
-import type { StoryItemResponse, StoryItemTimestampResponse } from '../../../api/Learnup';
+import type { StoryItemResponse } from '../../../api/Learnup';
 
 export type PlaybackStatus = 'idle' | 'playing' | 'paused';
 
 
 type UseStoryAudioResult = {
   activeItemId: number | null;
-  activeTimestampIndex: number;
   audioProgress: number;
   audioRef: RefObject<HTMLAudioElement | null>;
   playbackStatus: PlaybackStatus;
@@ -39,41 +38,9 @@ type UseStoryAudioResult = {
 
 const StoryAudioContext = createContext<UseStoryAudioResult | null>(null);
 
-const getActiveTimestampIndex = (
-  timestamps: StoryItemTimestampResponse[] | null | undefined,
-  currentTime: number,
-) => {
-  if (!timestamps?.length) {
-    return -1;
-  }
-
-  // Highlight the last word whose start has passed, rather than requiring the
-  // sampled currentTime to fall strictly inside a [start, end) window. Polling
-  // is coarse (~40ms), so short words / gaps between words would otherwise be
-  // skipped entirely and never highlighted. Assumes timestamps are ordered by start.
-  let activeIndex = -1;
-
-  for (let index = 0; index < timestamps.length; index += 1) {
-    const { start } = timestamps[index];
-
-    if (start == null) {
-      continue;
-    }
-
-    if (currentTime < start) {
-      break;
-    }
-
-    activeIndex = index;
-  }
-
-  return activeIndex;
-};
-
 function useStoryAudioState (storyItems: StoryItemResponse[]): UseStoryAudioResult {
   const [audioMap, setAudioMap] = useState<Record<number, string>>({});
   const [playingItemId, setPlayingItemId] = useState<number | null>(null);
-  const [activeTimestampIndex, setActiveTimestampIndex] = useState(-1);
   const [playbackStatus, setPlaybackStatus] = useState<PlaybackStatus>('idle');
   const [audioProgress, setAudioProgress] = useState(0);
   const [audioDuration, setAudioDuration] = useState(0);
@@ -81,30 +48,6 @@ function useStoryAudioState (storyItems: StoryItemResponse[]): UseStoryAudioResu
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? '';
-
-  useEffect(() => {
-    if (playbackStatus !== 'playing') {
-      return;
-    }
-
-    const syncActiveTimestamp = () => {
-      const currentTime = audioRef.current?.currentTime || 0;
-      const activeItem = storyItems.find((item) => item.id === playingItemId);
-
-      setActiveTimestampIndex((currentIndex) => {
-        const nextIndex = getActiveTimestampIndex(activeItem?.timestamps, currentTime);
-
-        return currentIndex === nextIndex ? currentIndex : nextIndex;
-      });
-    };
-
-    syncActiveTimestamp();
-    const intervalId = window.setInterval(syncActiveTimestamp, 40);
-
-    return () => {
-      window.clearInterval(intervalId);
-    };
-  }, [playbackStatus, playingItemId, storyItems]);
 
   useEffect(() => {
     const voiceItems = storyItems.filter((item) => item.id != null && item.voiceId);
@@ -188,7 +131,6 @@ function useStoryAudioState (storyItems: StoryItemResponse[]): UseStoryAudioResu
 
     setPlayingItemId(itemId);
     setPlaybackStatus('playing');
-    setActiveTimestampIndex(getActiveTimestampIndex(storyItems.find((item) => item.id === itemId)?.timestamps, startTime));
     audioRef.current.pause();
 
     if (audioRef.current.src !== audioUrl) {
@@ -203,7 +145,6 @@ function useStoryAudioState (storyItems: StoryItemResponse[]): UseStoryAudioResu
       audioRef.current.playbackRate = 1;
     } catch (err) {
       setPlaybackStatus('paused');
-      setActiveTimestampIndex(-1);
       console.error('Failed to play story item audio:', err);
     }
   };
@@ -228,7 +169,6 @@ function useStoryAudioState (storyItems: StoryItemResponse[]): UseStoryAudioResu
     }
 
     setAudioProgress(audioRef.current.currentTime);
-    setActiveTimestampIndex(-1);
     setPlaybackStatus('paused');
     audioRef.current.pause();
   };
@@ -272,7 +212,6 @@ function useStoryAudioState (storyItems: StoryItemResponse[]): UseStoryAudioResu
   const handleAudioEnded = () => {
     if (playingItemId == null) {
       setPlaybackStatus('idle');
-      setActiveTimestampIndex(-1);
       return;
     }
 
@@ -286,7 +225,6 @@ function useStoryAudioState (storyItems: StoryItemResponse[]): UseStoryAudioResu
 
     setPlaybackStatus('idle');
     setPlayingItemId(null);
-    setActiveTimestampIndex(-1);
     setAudioProgress(0);
   };
 
@@ -297,21 +235,17 @@ function useStoryAudioState (storyItems: StoryItemResponse[]): UseStoryAudioResu
   const handlePause = () => {
     if (audioRef.current?.ended) {
       setPlaybackStatus('idle');
-      setActiveTimestampIndex(-1);
     }
   };
 
   const handleTimeUpdate = () => {
     const currentTime = audioRef.current?.currentTime || 0;
-    const activeItem = storyItems.find((item) => item.id === playingItemId);
 
     setAudioProgress(currentTime);
-    setActiveTimestampIndex(getActiveTimestampIndex(activeItem?.timestamps, currentTime));
   };
 
   return {
     activeItemId: playingItemId,
-    activeTimestampIndex,
     audioProgress,
     audioRef,
     playbackStatus,

@@ -7,9 +7,7 @@ import type { UserStreakDayResponse } from './UserStreakDayResponse';
 
 export type UserStreakResponse = {
     currentStreak: number;
-    longestStreak: number;
     lastStreakDate: string | null;
     lastVisitedAt: string | null;
     lastSevenDays: Array<UserStreakDayResponse>;
 };
-

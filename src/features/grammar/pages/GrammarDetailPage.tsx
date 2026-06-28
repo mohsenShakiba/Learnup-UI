@@ -1,22 +1,27 @@
 import { Chip, Stack } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'react-router-dom';
-import { GrammarsService } from '../../../api/Learnup';
+import { useLocation, useParams } from 'react-router-dom';
+import { GrammarsService, StorySection } from '../../../api/Learnup';
 import { AppLoader } from '../../../shared/components/AppLoader';
 import { DefaultHeader } from '../../../shared/components/DefaultHeader';
 import { ErrorPage } from '../../../shared/components/ErrorPage';
 import { Scaffold } from '../../../shared/components/Scaffold';
+import { useSectionCompleted } from '../../lessons/hooks/useSectionCompleted';
 import { GrammarContentRenderer } from '../components/GrammarContentRenderer';
 
 export default function GrammarDetailPage () {
   const { id: grammarId } = useParams<{ id: string; }>();
   const grammarIdNumber = Number(grammarId);
+  const { state } = useLocation();
+  const lessonId = (state as { lessonId?: number } | null)?.lessonId ?? null;
 
   const grammarQuery = useQuery({
     queryKey: ['grammar', grammarIdNumber],
     queryFn: () => GrammarsService.getMobileGrammars(grammarIdNumber),
     enabled: Number.isFinite(grammarIdNumber),
   });
+
+  useSectionCompleted(lessonId, StorySection.GRAMMAR, grammarQuery.data != null);
 
   if (grammarQuery.isLoading) {
     return <AppLoader />;

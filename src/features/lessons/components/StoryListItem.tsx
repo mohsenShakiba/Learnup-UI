@@ -8,13 +8,14 @@ import { ActionButton } from '../../../shared/components/ActionButton';
 
 type StoryListItemProps = {
   story: StoryResponse;
+  lessonId: number;
 };
 
 
-export function StoryListItem({ story }: StoryListItemProps) {
+export function StoryListItem({ story, lessonId }: StoryListItemProps) {
   const navigate = useNavigate();
 
-  const goToStory = () => navigate(`/stories/${story.id}`);
+  const goToStory = () => navigate(`/lessons/${lessonId}/stories/${story.id}`);
 
   return (
     <ActionCard onClick={goToStory}>

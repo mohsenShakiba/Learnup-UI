@@ -1,11 +1,11 @@
 import { Box, Divider, Stack, Typography } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
-import { AnswerTestResponse, GrammarTestsService } from '../../../api/Learnup';
-import type { GrammarTestResponse } from '../../../api/Learnup/models/GrammarTestResponse';
+import { AnswerTestResponse, TestsService } from '../../../api/Learnup';
+import type { TestResponse } from '../../../api/Learnup/models/TestResponse';
 
 type Props = {
-  test: GrammarTestResponse;
+  test: TestResponse;
   onAnswer?: (testId: number, isCorrect: boolean) => void;
 };
 
@@ -23,7 +23,7 @@ export function GrammarTestCard ({ test, onAnswer }: Props) {
 
   const mutation = useMutation({
     mutationFn: (optionId: number) =>
-      GrammarTestsService.answerGrammarTest(test.id, { selectedOptionId: optionId }),
+      TestsService.answerTest(test.id, { selectedOptionId: optionId }),
     onSuccess: (data, optionId) => {
       setSelectedOptionId(optionId);
       setResult(data);

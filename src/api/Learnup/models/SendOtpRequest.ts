@@ -6,4 +6,3 @@
 export type SendOtpRequest = {
     mobileNumber: string;
 };
-

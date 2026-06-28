@@ -14,7 +14,7 @@ export function GrammarListItem({ grammar, lessonId }: Props) {
     const navigate = useNavigate();
 
     const handleNavigateToGrammarPage = () => {
-        navigate(`/grammars/${grammar.id}`);
+        navigate(`/grammars/${grammar.id}`, { state: { lessonId } });
     };
 
     const handleNavigateToGrammarTest = () => {

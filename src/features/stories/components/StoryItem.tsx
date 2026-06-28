@@ -1,16 +1,23 @@
 import { Avatar, Box, Stack, Typography } from "@mui/material";
+import { useRef } from "react";
 import type { StoryItemResponse } from "../../../api/Learnup";
+import { showDrawer } from "../../../shared/swipeableDrawer";
 import { useStoryAudio } from "../hooks/useStoryAudio";
+import { WordTranslationDrawer } from "./WordTranslationDrawer";
 
 type StoryItemProps = {
   item: StoryItemResponse;
 };
 
 const AVATAR_SIZE = 30;
+const LONG_PRESS_DURATION = 500;
 
 export function StoryItem({ item }: StoryItemProps) {
   const { activeItemId, playbackStatus, showTranslation, playItemAudio } =
     useStoryAudio();
+
+  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const didLongPress = useRef(false);
 
   const isActive = playbackStatus === "playing" && activeItemId === item.id;
   const isPerson1 = item.person === 1;
@@ -18,6 +25,34 @@ export function StoryItem({ item }: StoryItemProps) {
   const play = () => {
     if (item.id != null) {
       void playItemAudio(item.id);
+    }
+  };
+
+  const cancelLongPress = () => {
+    if (longPressTimer.current !== null) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
+  };
+
+  const startLongPress = (word: string) => {
+    const cleanWord = word.replace(/[^\p{L}\p{N}'-]/gu, "");
+    if (!cleanWord) return;
+
+    cancelLongPress();
+    didLongPress.current = false;
+    longPressTimer.current = setTimeout(() => {
+      longPressTimer.current = null;
+      didLongPress.current = true;
+      showDrawer(<WordTranslationDrawer word={cleanWord} />);
+    }, LONG_PRESS_DURATION);
+  };
+
+  const handleWordClick = (event: React.MouseEvent) => {
+    // Swallow the tap that follows a long-press so it doesn't also start audio.
+    if (didLongPress.current) {
+      event.stopPropagation();
+      didLongPress.current = false;
     }
   };
 
@@ -58,8 +93,14 @@ export function StoryItem({ item }: StoryItemProps) {
             <Box
               key={`${item.id}-${index}`}
               component="span"
+              onPointerDown={() => startLongPress(word)}
+              onPointerUp={cancelLongPress}
+              onPointerLeave={cancelLongPress}
+              onPointerCancel={cancelLongPress}
+              onClick={handleWordClick}
               sx={{
                 cursor: 'pointer',
+                userSelect: 'none',
                 '&:hover': {
                   opacity: 0.7,
                 },

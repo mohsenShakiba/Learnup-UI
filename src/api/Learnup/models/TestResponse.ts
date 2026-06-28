@@ -4,13 +4,16 @@
 /* eslint-disable */
 
 import type { TestOptionResponse } from './TestOptionResponse';
+import type { TestQuestionType } from './TestQuestionType';
+import type { TestType } from './TestType';
 
-export type GrammarTestResponse = {
+export type TestResponse = {
     id: number;
-    grammarId: number;
+    lessonId: number;
+    type: TestType;
+    questionType: TestQuestionType;
     question: string;
     options: Array<TestOptionResponse>;
     userSelectedOptionId: number | null;
     isCorrect: boolean | null;
 };
-

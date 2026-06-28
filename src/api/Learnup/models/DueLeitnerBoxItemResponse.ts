@@ -10,4 +10,3 @@ export type DueLeitnerBoxItemResponse = {
     translation: string | null;
     nextReviewAt: string | null;
 };
-

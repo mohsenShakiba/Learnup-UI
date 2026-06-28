@@ -1,7 +1,8 @@
 import { Stack } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
-import { LessonsService } from '../../api/Learnup';
+import { StorySection } from '../../api/Learnup';
+import { useLesson } from '../lessons/hooks/useLesson';
+import { useSectionCompleted } from '../lessons/hooks/useSectionCompleted';
 import { AppLoader } from '../../shared/components/AppLoader';
 import { DefaultHeader } from '../../shared/components/DefaultHeader';
 import { ErrorPage } from '../../shared/components/ErrorPage';
@@ -12,11 +13,9 @@ export default function LessonVocabsPage () {
   const { id: lessonId } = useParams<{ id: string; }>();
   const lessonIdNumber = Number(lessonId);
 
-  const lessonQuery = useQuery({
-    queryKey: ['lesson', lessonIdNumber],
-    queryFn: () => LessonsService.getLessonById(lessonIdNumber),
-    enabled: Number.isFinite(lessonIdNumber),
-  });
+  const lessonQuery = useLesson(lessonIdNumber);
+
+  useSectionCompleted(lessonIdNumber, StorySection.VOCAB, lessonQuery.data != null);
 
   if (lessonQuery.isLoading) {
     return <AppLoader />;

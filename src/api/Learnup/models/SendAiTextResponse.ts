@@ -7,4 +7,3 @@ export type SendAiTextResponse = {
     wordTranslation: string;
     sentenceTranslation: string;
 };
-

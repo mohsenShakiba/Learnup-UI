@@ -13,17 +13,17 @@ import { request as __request } from '../core/request';
 export class ImportService {
 
     /**
-     * @param formData
+     * @param formData 
      * @returns ImportVocabsResponse OK
      * @throws ApiError
      */
     public static importVocabs(
-        formData?: {
-            File?: Blob;
-            LevelId?: number;
-            LanguageId?: number;
-        },
-    ): CancelablePromise<ImportVocabsResponse> {
+formData?: {
+File?: Blob;
+LevelId?: number;
+LanguageId?: number;
+},
+): CancelablePromise<ImportVocabsResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/Admin/Import/vocabs',
@@ -33,15 +33,15 @@ export class ImportService {
     }
 
     /**
-     * @param lessonId
-     * @param requestBody
+     * @param lessonId 
+     * @param requestBody 
      * @returns number OK
      * @throws ApiError
      */
     public static importStory(
-        lessonId: number,
-        requestBody?: StoryRequest,
-    ): CancelablePromise<number> {
+lessonId: number,
+requestBody?: StoryRequest,
+): CancelablePromise<number> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/Admin/Import/stories/{lessonId}',
@@ -54,13 +54,13 @@ export class ImportService {
     }
 
     /**
-     * @param requestBody
+     * @param requestBody 
      * @returns number OK
      * @throws ApiError
      */
     public static postAdminImportGrammars(
-        requestBody?: ImportGrammarRequest,
-    ): CancelablePromise<number> {
+requestBody?: ImportGrammarRequest,
+): CancelablePromise<number> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/Admin/Import/grammars',

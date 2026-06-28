@@ -12,13 +12,13 @@ import { request as __request } from '../core/request';
 export class VocabsService {
 
     /**
-     * @param requestBody
+     * @param requestBody 
      * @returns number OK
      * @throws ApiError
      */
     public static createVocab(
-        requestBody?: CreateVocabRequest,
-    ): CancelablePromise<number> {
+requestBody?: CreateVocabRequest,
+): CancelablePromise<number> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/Mobile/Vocabs',
@@ -28,13 +28,13 @@ export class VocabsService {
     }
 
     /**
-     * @param word
+     * @param word 
      * @returns VocabResponse OK
      * @throws ApiError
      */
     public static getVocabByWord(
-        word: string,
-    ): CancelablePromise<Array<VocabResponse>> {
+word: string,
+): CancelablePromise<Array<VocabResponse>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/Mobile/Vocabs/{word}',

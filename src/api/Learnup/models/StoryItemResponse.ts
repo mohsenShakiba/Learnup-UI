@@ -3,8 +3,6 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { StoryItemTimestampResponse } from './StoryItemTimestampResponse';
-
 export type StoryItemResponse = {
     id: number;
     content: string;
@@ -12,6 +10,4 @@ export type StoryItemResponse = {
     order: number;
     person: number;
     voiceId: string | null;
-    timestamps: Array<StoryItemTimestampResponse>;
 };
-

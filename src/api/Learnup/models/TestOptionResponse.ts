@@ -7,4 +7,3 @@ export type TestOptionResponse = {
     id: number;
     text: string;
 };
-

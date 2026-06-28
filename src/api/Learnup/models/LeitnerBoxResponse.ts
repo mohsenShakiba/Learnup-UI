@@ -9,4 +9,3 @@ export type LeitnerBoxResponse = {
     id: number;
     items: Array<LeitnerBoxItemResponse>;
 };
-

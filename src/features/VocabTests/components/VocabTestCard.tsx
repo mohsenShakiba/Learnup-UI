@@ -1,17 +1,17 @@
 import { Box, Divider, Stack, Typography } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
-import { AnswerTestResponse, VocabTestsService, VocabTestType } from '../../../api/Learnup';
-import type { VocabTestResponse } from '../../../api/Learnup/models/VocabTestResponse';
+import { AnswerTestResponse, TestQuestionType, TestsService } from '../../../api/Learnup';
+import type { TestResponse } from '../../../api/Learnup/models/TestResponse';
 
-const typeMessages: Record<VocabTestType, string> = {
-  [VocabTestType.FIND_THE_RIGHT_WORD]: 'کلمه مناسب را برای لغت زیر پیدا کنید',
-  [VocabTestType.FIND_THE_RIGHT_TRANSLATION]: 'ترجمه درست را برای کلمه زیر پیدا کنید',
-  [VocabTestType.FILL_IN_THE_BLANKS]: 'جای خالی را پر کنید',
+const typeMessages: Record<TestQuestionType, string> = {
+  [TestQuestionType.FIND_THE_RIGHT_WORD]: 'کلمه مناسب را برای لغت زیر پیدا کنید',
+  [TestQuestionType.FIND_THE_RIGHT_TRANSLATION]: 'ترجمه درست را برای کلمه زیر پیدا کنید',
+  [TestQuestionType.FILL_IN_THE_BLANKS]: 'جای خالی را پر کنید',
 };
 
 type Props = {
-  test: VocabTestResponse;
+  test: TestResponse;
   onAnswer?: (testId: number, isCorrect: boolean) => void;
 };
 
@@ -29,7 +29,7 @@ export function VocabTestCard ({ test, onAnswer }: Props) {
 
   const mutation = useMutation({
     mutationFn: (optionId: number) =>
-      VocabTestsService.answerVocabTest(test.id, { selectedOptionId: optionId }),
+      TestsService.answerTest(test.id, { selectedOptionId: optionId }),
     onSuccess: (data, optionId) => {
       setSelectedOptionId(optionId);
       setResult(data);
@@ -61,7 +61,7 @@ export function VocabTestCard ({ test, onAnswer }: Props) {
       <Stack spacing={2} sx={{ alignItems: 'center' }}>
 
         <Typography variant="caption" sx={{ direction: 'rtl', color: "text.secondary" }}>
-          {typeMessages[test.type]}
+          {typeMessages[test.questionType]}
         </Typography>
         <Typography variant="body1" sx={{ fontWeight: '500', direction: 'rtl' }}>
           {test.question}

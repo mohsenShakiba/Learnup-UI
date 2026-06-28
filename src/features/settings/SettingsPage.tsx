@@ -69,6 +69,14 @@ export default function SettingsPage() {
           <ListItemText primary="Subscription" secondary="Manage your plan" />
           <Icon sx={{ opacity: 0.4, fontSize: 18 }}>chevron_left</Icon>
         </ListItemButton>
+        <Divider />
+        <ListItemButton onClick={() => navigate('/grammar')}>
+          <ListItemIcon>
+            <Icon>menu_book</Icon>
+          </ListItemIcon>
+          <ListItemText primary="گرامرها" secondary="مشاهده همه گرامرها" />
+          <Icon sx={{ opacity: 0.4, fontSize: 18 }}>chevron_left</Icon>
+        </ListItemButton>
       </Paper>
 
       <Paper sx={{ p: 0, overflow: 'hidden', mt: 2 }}>

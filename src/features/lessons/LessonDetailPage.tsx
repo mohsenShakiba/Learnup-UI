@@ -1,7 +1,5 @@
 import { Box, Icon, Stack } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
-import { LessonsService } from '../../api/Learnup';
 import { AppLoader } from '../../shared/components/AppLoader';
 import { DefaultHeader } from '../../shared/components/DefaultHeader';
 import { ErrorPage } from '../../shared/components/ErrorPage';
@@ -9,6 +7,7 @@ import { Scaffold } from '../../shared/components/Scaffold';
 import { GrammarListItem } from './components/GrammarListItem';
 import { StoryListItem } from './components/StoryListItem';
 import { VocabListItem } from './components/VocabListItem';
+import { useLesson } from './hooks/useLesson';
 
 const CIRCLE_SIZE = 28;
 const ITEM_GAP = 16;
@@ -58,11 +57,7 @@ export default function LessonDetailPage() {
   const { id: lessonId } = useParams<{ id: string; }>();
   const lessonIdNumber = Number(lessonId);
 
-  const lessonQuery = useQuery({
-    queryKey: ['lesson', lessonIdNumber],
-    queryFn: () => LessonsService.getLessonById(lessonIdNumber),
-    enabled: Number.isFinite(lessonIdNumber),
-  });
+  const lessonQuery = useLesson(lessonIdNumber);
 
   if (lessonQuery.isLoading) {
     return <AppLoader />;
@@ -92,7 +87,7 @@ export default function LessonDetailPage() {
             <Stack key={story.id} direction="row" spacing={1.5} sx={{ alignItems: 'stretch' }}>
               <TimelineColumn completed={story.isCompleted} isLast={isLast} />
               <Box sx={{ flex: 1 }}>
-                <StoryListItem story={story} />
+                <StoryListItem story={story} lessonId={lesson.id} />
               </Box>
             </Stack>
           );

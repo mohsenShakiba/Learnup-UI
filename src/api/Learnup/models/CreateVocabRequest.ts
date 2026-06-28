@@ -17,4 +17,3 @@ export type CreateVocabRequest = {
     exampleTranslation: string | null;
     voiceId: string | null;
 };
-

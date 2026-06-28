@@ -1,7 +1,7 @@
 import { Icon, Stack, Typography } from '@mui/material';
 
 type Props = {
-    minutes: number;
+    minutes: number | string;
 };
 
 export function DurationBadge ({ minutes }: Props) {

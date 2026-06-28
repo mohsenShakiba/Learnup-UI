@@ -14,6 +14,7 @@ import {
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 import { UsersService } from '../../api/Learnup';
+import { getFileById } from '../../services/fetchFile';
 import { DefaultHeader } from '../../shared/components/DefaultHeader';
 import { Scaffold } from '../../shared/components/Scaffold';
 import { toast } from '../../shared/toast/toastStore';
@@ -29,12 +30,42 @@ export default function ProfilePage() {
 
   const profile = profileQuery.data;
   const [displayName, setDisplayName] = useState('');
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (profile) {
       setDisplayName(profile.displayName);
     }
   }, [profile]);
+
+  useEffect(() => {
+    if (!profile?.avatarUrl) {
+      setAvatarUrl(null);
+      return;
+    }
+
+    let cancelled = false;
+    let objectUrl: string | null = null;
+
+    getFileById(profile.avatarUrl)
+      .then((buffer) => {
+        const url = URL.createObjectURL(new Blob([buffer]));
+        if (cancelled) {
+          URL.revokeObjectURL(url);
+          return;
+        }
+        objectUrl = url;
+        setAvatarUrl(url);
+      })
+      .catch(() => {
+        if (!cancelled) setAvatarUrl(null);
+      });
+
+    return () => {
+      cancelled = true;
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
+  }, [profile?.avatarUrl]);
 
   const updateMutation = useMutation({
     mutationFn: () =>
@@ -93,10 +124,10 @@ export default function ProfilePage() {
               </Box>
             ) : (
               <Avatar
-                src={profile?.avatarUrl ?? undefined}
+                src={avatarUrl ?? undefined}
                 sx={{ width: 96, height: 96, fontSize: '2.5rem' }}
               >
-                {!profile?.avatarUrl && (profile?.displayName?.[0]?.toUpperCase() ?? '?')}
+                {!avatarUrl && (profile?.displayName?.[0]?.toUpperCase() ?? '?')}
               </Avatar>
             )}
             <IconButton

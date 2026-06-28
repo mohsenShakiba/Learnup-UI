@@ -1,14 +1,16 @@
 import { Box, Button, LinearProgress, Stack, Typography } from '@mui/material';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import type { Swiper as SwiperType } from 'swiper';
 import 'swiper/css';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { VocabTestsService } from '../../api/Learnup';
+import { StorySection, TestsService, TestType } from '../../api/Learnup';
 import { AppLoader } from '../../shared/components/AppLoader';
 import { DefaultHeader } from '../../shared/components/DefaultHeader';
 import { ErrorPage } from '../../shared/components/ErrorPage';
+import { useLesson } from '../lessons/hooks/useLesson';
+import { useSectionCompleted } from '../lessons/hooks/useSectionCompleted';
 import { VocabTestCard } from './components/VocabTestCard';
 import VocabTestResult from './components/VocabTestResult';
 
@@ -17,11 +19,11 @@ export default function LessonVocabTestsPage () {
   const lessonIdNumber = Number(lessonId);
   const navigate = useNavigate();
 
-  const testsQuery = useQuery({
-    queryKey: ['vocabTests', lessonIdNumber],
-    queryFn: () => VocabTestsService.getVocabTests(lessonIdNumber),
-    enabled: Number.isFinite(lessonIdNumber),
-  });
+  const lessonQuery = useLesson(lessonIdNumber);
+  const tests = useMemo(
+    () => (lessonQuery.data?.tests ?? []).filter((test) => test.type === TestType.VOCAB),
+    [lessonQuery.data],
+  );
 
   const [answers, setAnswers] = useState<Record<number, boolean>>({});
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -29,10 +31,9 @@ export default function LessonVocabTestsPage () {
   const slideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const initialSlide = useMemo(() => {
-    if (!testsQuery.data) return 0;
-    const firstUnanswered = testsQuery.data.findIndex((t) => t.isCorrect === null);
+    const firstUnanswered = tests.findIndex((t) => t.isCorrect === null);
     return firstUnanswered === -1 ? 0 : firstUnanswered;
-  }, [testsQuery.data]);
+  }, [tests]);
 
   const handleAnswer = useCallback((testId: number, isCorrect: boolean) => {
     setAnswers((prev) => ({ ...prev, [testId]: isCorrect }));
@@ -42,9 +43,9 @@ export default function LessonVocabTestsPage () {
   }, []);
 
   const resetMutation = useMutation({
-    mutationFn: (lessonId: number) => VocabTestsService.resetVocabTestResult(lessonId),
+    mutationFn: (lessonId: number) => TestsService.resetTestResult(lessonId, TestType.VOCAB),
     onSuccess: () => {
-      void testsQuery.refetch();
+      void lessonQuery.refetch();
       setAnswers({});
       setCurrentSlide(0);
       swiperRef.current?.slideTo(0);
@@ -52,33 +53,37 @@ export default function LessonVocabTestsPage () {
   });
 
   const results = useMemo<(boolean | null)[]>(() => {
-    return (testsQuery.data ?? []).map((test) =>
+    return tests.map((test) =>
       answers[test.id] !== undefined ? answers[test.id] : test.isCorrect ?? null
     );
-  }, [testsQuery.data, answers]);
+  }, [tests, answers]);
 
   const isAlreadyPassed = useMemo(
-    () => (testsQuery.data ?? []).length > 0 && (testsQuery.data ?? []).every((t) => t.isCorrect != null),
-    [testsQuery.data],
+    () => tests.length > 0 && tests.every((t) => t.isCorrect != null),
+    [tests],
   );
+
+  const isCompleted = useMemo(
+    () => tests.length > 0 && tests.every((t) => answers[t.id] !== undefined || t.isCorrect !== null),
+    [tests, answers],
+  );
+
+  useSectionCompleted(lessonIdNumber, StorySection.VOCAB_TEST, isCompleted);
 
   // Refetch when all tests answered in this session to transition to results screen
   useEffect(() => {
-    if (!testsQuery.data || testsQuery.data.length === 0 || isAlreadyPassed) return;
-    const allAnswered = testsQuery.data.every(
-      (t) => answers[t.id] !== undefined || t.isCorrect !== null
-    );
-    if (allAnswered) {
-      void testsQuery.refetch();
+    if (tests.length === 0 || isAlreadyPassed) return;
+    if (isCompleted) {
+      void lessonQuery.refetch();
     }
-  }, [answers, testsQuery, isAlreadyPassed]);
+  }, [isCompleted, isAlreadyPassed, tests, lessonQuery]);
 
   const score = results.length > 0
     ? Math.round((results.filter((r) => r === true).length / results.length) * 100)
     : 0;
 
-  const totalTests = testsQuery.data?.length ?? 0;
-  const currentTest = testsQuery.data?.[currentSlide];
+  const totalTests = tests.length;
+  const currentTest = tests[currentSlide];
   const isCurrentAnswered = currentTest
     ? answers[currentTest.id] !== undefined || currentTest.isCorrect !== null
     : false;
@@ -100,12 +105,12 @@ export default function LessonVocabTestsPage () {
     swiperRef.current?.slideNext();
   };
 
-  if (testsQuery.isLoading) {
+  if (lessonQuery.isLoading) {
     return <AppLoader />;
   }
 
-  if (testsQuery.isError || !testsQuery.data) {
-    return <ErrorPage onAction={() => void testsQuery.refetch()} />;
+  if (lessonQuery.isError || !lessonQuery.data) {
+    return <ErrorPage onAction={() => void lessonQuery.refetch()} />;
   }
 
   return (
@@ -130,7 +135,7 @@ export default function LessonVocabTestsPage () {
                 }}
                 onSlideChange={(swiper) => setCurrentSlide(swiper.activeIndex)}
               >
-                {testsQuery.data.map((test) => (
+                {tests.map((test) => (
                   <SwiperSlide key={test.id} style={{ height: '100%' }}>
                     <VocabTestCard test={test} onAnswer={handleAnswer} />
                   </SwiperSlide>

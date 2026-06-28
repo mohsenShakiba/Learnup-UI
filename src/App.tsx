@@ -35,7 +35,7 @@ function App () {
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route element={<RequireAuth />}>
-            <Route path="/stories/:id" element={<StoryDetailPage />} />
+            <Route path="/lessons/:lessonId/stories/:id" element={<StoryDetailPage />} />
             <Route path="/courses/:id" element={<CourseDetailPage />} />
             <Route path="/grammar" element={<ListGrammarPage />} />
             <Route path="/grammars/:id" element={<GrammarDetailPage />} />

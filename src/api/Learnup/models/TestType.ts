@@ -3,8 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export enum UserLessonEntityType {
-    STORY = 1,
+export enum TestType {
+    VOCAB = 1,
     GRAMMAR = 2,
-    VOCAB = 3,
 }

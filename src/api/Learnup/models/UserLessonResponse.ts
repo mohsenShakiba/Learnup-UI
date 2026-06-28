@@ -3,13 +3,10 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type CurrentLessonProgressResponse = {
-    lessonId: number;
-    title: string;
-    order: number;
-    courseId: number;
+export type UserLessonResponse = {
     isStoryCompleted: boolean;
     isGrammarCompleted: boolean;
     isVocabCompleted: boolean;
-    nextLessonId: number | null;
+    isGrammarTestCompleted: boolean;
+    isVocabTestCompleted: boolean;
 };

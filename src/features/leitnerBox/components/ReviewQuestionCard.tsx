@@ -16,12 +16,11 @@ export function ReviewQuestionCard({
     <Card
       onClick={onReveal}
       sx={{
-        minHeight: 320,
+        height: "100%",
+        boxSizing: "border-box",
         borderRadius: 4,
         cursor: isPending ? "progress" : "pointer",
         p: 2,
-        mt: 3,
-        flex: 1,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",

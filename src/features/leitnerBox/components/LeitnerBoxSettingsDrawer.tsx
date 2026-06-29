@@ -40,7 +40,7 @@ const LEVEL_HARDNESS_LABELS = [
   "Mastered",
 ] as const;
 
-function parseReviewedDays (value: string): string {
+function parseReviewedDays(value: string): string {
   const match = value.match(/-?\d+/);
   if (!match) {
     return "";
@@ -53,7 +53,7 @@ function parseReviewedDays (value: string): string {
   return match[0];
 }
 
-function getLevelBadgeColor (levelIndex: number, totalLevels: number): string {
+function getLevelBadgeColor(levelIndex: number, totalLevels: number): string {
   if (totalLevels <= 1) {
     return "hsl(145 65% 42%)";
   }
@@ -63,7 +63,7 @@ function getLevelBadgeColor (levelIndex: number, totalLevels: number): string {
   return `hsl(${hue} 70% 48%)`;
 }
 
-export function LeitnerBoxSettingsDrawer ({
+export function LeitnerBoxSettingsDrawer({
   boxId,
   levels,
   open,
@@ -176,7 +176,7 @@ export function LeitnerBoxSettingsDrawer ({
             sx={{
               flex: 1,
               overflowY: "auto",
-              pt: 2,
+              pt: 1,
             }}
           >
             {levels.map((level, index) => {
@@ -187,7 +187,7 @@ export function LeitnerBoxSettingsDrawer ({
 
               return (
                 <Box
-                  key={`Level ${levelNumber}`}
+                  key={level.id}
                   sx={{
                     display: "flex",
                     alignItems: "center",
@@ -204,6 +204,7 @@ export function LeitnerBoxSettingsDrawer ({
                     }}
                   >
                     <TextField
+                      id={`leitner-level-${level.id}`}
                       type="text"
                       value={reviewIntervals[level.id] ?? ""}
                       onChange={(event) => {

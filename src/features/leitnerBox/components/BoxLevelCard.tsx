@@ -1,25 +1,65 @@
-import { Box, Card, Chip, Stack, Typography } from "@mui/material";
+import { alpha, Box, Card, Icon, Stack, Typography, useTheme } from "@mui/material";
+import type { Theme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import FormatNumber from "../../../utils/NumberFmt";
 
 type BoxLevelCardProps = {
   levelId: number;
   level: number;
   totalItems: number;
   readyToReview: number;
+  reviewInterval: string;
 };
+
+type LevelTone = {
+  color: string;
+  softColor: string;
+  status: string;
+};
+
+const numberFormatter = new Intl.NumberFormat("en-US");
+
+function formatNumber(value: number): string {
+  return numberFormatter.format(value);
+}
+
+function getLevelTone(level: number, theme: Theme): LevelTone {
+  if (level <= 5) {
+    return {
+      color: theme.palette.warning.main,
+      softColor: alpha(theme.palette.warning.main, 0.14),
+      status: "Learning",
+    };
+  }
+
+  if (level <= 10) {
+    return {
+      color: theme.palette.success.main,
+      softColor: alpha(theme.palette.success.main, 0.14),
+      status: "Reviewing",
+    };
+  }
+
+  return {
+    color: theme.palette.primary.main,
+    softColor: alpha(theme.palette.primary.main, 0.14),
+    status: "Mastered",
+  };
+}
 
 export function BoxLevelCard({
   levelId,
   level,
   totalItems,
   readyToReview,
+  reviewInterval,
 }: BoxLevelCardProps) {
   const navigate = useNavigate();
-  const formattedLevel = FormatNumber(level);
-  const formattedReady = FormatNumber(readyToReview);
-  const formattedTotal = FormatNumber(totalItems);
+  const theme = useTheme();
+  const formattedLevel = formatNumber(level);
+  const formattedReady = formatNumber(readyToReview);
+  const formattedTotal = formatNumber(totalItems);
   const canReview = readyToReview > 0;
+  const tone = getLevelTone(level, theme);
 
   return (
     <Card
@@ -28,41 +68,132 @@ export function BoxLevelCard({
         navigate(`/boxlevel/${levelId}`);
       }}
       sx={{
-        p: 2.25,
+        p: 1.45,
+        minHeight: 64,
+        borderRadius: 2,
+        borderColor: "divider",
+        bgcolor: "background.paper",
         cursor: canReview ? "pointer" : "default",
+        boxShadow: (theme) =>
+          theme.palette.mode === "dark"
+            ? "0 8px 18px rgba(0, 0, 0, 0.28)"
+            : "0 2px 8px rgba(17, 24, 39, 0.06)",
         transition: "transform 160ms ease, box-shadow 160ms ease",
         "&:hover": canReview
           ? {
               transform: "translateY(-2px)",
-              boxShadow: 4,
+              boxShadow: (theme) =>
+                theme.palette.mode === "dark"
+                  ? "0 12px 24px rgba(0, 0, 0, 0.36)"
+                  : "0 8px 18px rgba(17, 24, 39, 0.1)",
             }
           : undefined,
-        opacity: canReview ? 1 : 0.8,
       }}
     >
-      <Stack spacing={2}>
-        <Stack direction="row" sx={{ alignItems: "center", gap: 1 }}>
-          <Box>
-            <Typography sx={{ fontSize: "1rem", fontWeight: 700 }}>
-              مرحله {formattedLevel}
+      <Stack direction="row" sx={{ alignItems: "center", gap: 1.6 }}>
+        <Box
+          sx={{
+            width: 46,
+            height: 46,
+            flex: "0 0 46px",
+            borderRadius: 2.25,
+            bgcolor: tone.color,
+            color: "common.white",
+            display: "grid",
+            placeItems: "center",
+            fontSize: 19,
+            fontWeight: 800,
+            fontFamily: "Georgia, Merriweather, serif",
+          }}
+        >
+          {formattedLevel}
+        </Box>
+
+        <Box sx={{ minWidth: 0, flex: 1 }}>
+          <Stack
+            direction="row"
+            spacing={0.8}
+            sx={{ alignItems: "center", minWidth: 0 }}
+          >
+            <Typography
+              sx={{
+                fontSize: 14,
+                lineHeight: 1.1,
+                fontWeight: 800,
+                color: "text.primary",
+                whiteSpace: "nowrap",
+              }}
+            >
+              Level {formattedLevel}
+            </Typography>
+            <Box
+              sx={{
+                px: 0.85,
+                py: 0.2,
+                borderRadius: 999,
+                bgcolor: tone.softColor,
+                color: tone.color,
+                fontSize: 10,
+                lineHeight: 1.3,
+                fontWeight: 800,
+                whiteSpace: "nowrap",
+              }}
+            >
+              {tone.status}
+            </Box>
+          </Stack>
+          <Typography
+            sx={{
+              mt: 0.55,
+              color: "text.secondary",
+              fontSize: 11.5,
+              lineHeight: 1.25,
+              fontWeight: 700,
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {reviewInterval} - {formattedTotal} cards
+          </Typography>
+        </Box>
+
+        {canReview ? (
+          <Box
+            sx={{
+              width: 48,
+              height: 48,
+              flex: "0 0 48px",
+              borderRadius: 2,
+              bgcolor: tone.color,
+              color: "common.white",
+              display: "grid",
+              placeItems: "center",
+              textAlign: "center",
+              fontWeight: 800,
+              lineHeight: 1,
+            }}
+          >
+            <Typography sx={{ fontSize: 17, fontWeight: 900, lineHeight: 1 }}>
+              {formattedReady}
+            </Typography>
+            <Typography sx={{ fontSize: 9.5, fontWeight: 800, lineHeight: 1 }}>
+              due
             </Typography>
           </Box>
-
-          <Box sx={{ flex: 1 }} />
-
-          <Chip
-            label={`${formattedReady} آماده مرور`}
-            color={readyToReview > 0 ? "warning" : "default"}
-            size="small"
-            sx={{ fontWeight: 600 }}
-          />
-          <Chip
-            label={`${formattedTotal} کل واژگان`}
-            color={readyToReview > 0 ? "warning" : "default"}
-            size="small"
-            sx={{ fontWeight: 600 }}
-          />
-        </Stack>
+        ) : (
+          <Icon
+            sx={{
+              width: 48,
+              flex: "0 0 48px",
+              textAlign: "center",
+              color: "success.main",
+              fontSize: 23,
+            }}
+          >
+            check
+          </Icon>
+        )}
       </Stack>
     </Card>
   );

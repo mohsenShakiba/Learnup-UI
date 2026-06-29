@@ -1,29 +1,21 @@
-// the window whose CSS.highlights registry currently holds our highlights, so
-// they can be cleared without re-querying the document.
-export type HighlightRef = { current: HighlightCapableWindow | null; };
+import { Overlayer } from 'foliate-js/overlayer.js';
 
-const WORD_HIGHLIGHT = 'rgba(255, 209, 0, 0.45)';
-const SENTENCE_HIGHLIGHT = 'rgba(255, 209, 0, 0.12)';
+// foliate's per-section SVG overlay; draws highlights over the page without
+// inserting nodes into the section DOM, so reading-position CFIs stay valid.
+// (A wrapping <span> would shift node indices/offsets and invalidate them.)
+export type SectionOverlayer = {
+  add: (key: string, range: Range, draw: typeof Overlayer.highlight, options?: Record<string, unknown>) => void;
+  remove: (key: string) => void;
+};
+
+// tracks the overlay and the keys we drew into it, so they can be cleared.
+export type HighlightRef = { current: { overlayer: SectionOverlayer; keys: string[]; } | null; };
+
+const WORD_HIGHLIGHT = 'rgba(255, 209, 0, 0.9)';
+const SENTENCE_HIGHLIGHT = 'rgba(255, 209, 0, 0.35)';
 
 const WORD_HIGHLIGHT_NAME = 'learnup-word';
 const SENTENCE_HIGHLIGHT_NAME = 'learnup-sentence';
-
-type DocHighlight = { priority: number; };
-
-type HighlightCapableWindow = Window & {
-  Highlight?: new (...ranges: Range[]) => DocHighlight;
-  CSS: { highlights?: Map<string, DocHighlight>; };
-};
-
-// CSS rules that style the registered highlights. Injected into every section
-// document so the highlights render. Kept here so highlight colors/names stay
-// in one place; the word sits visually on top of the lighter sentence tint.
-export function getHighlightCss (): string {
-  return `
-    ::highlight(${SENTENCE_HIGHLIGHT_NAME}) { background-color: ${SENTENCE_HIGHLIGHT}; }
-    ::highlight(${WORD_HIGHLIGHT_NAME}) { background-color: ${WORD_HIGHLIGHT}; }
-  `;
-}
 
 export type SentenceDetectionResult = {
   word: string;
@@ -37,6 +29,7 @@ export function detectSentenceAtPoint (
   doc: Document,
   x: number,
   y: number,
+  overlayer: SectionOverlayer | null,
   highlightRef: HighlightRef,
 ): SentenceDetectionResult | null {
   const range = wordRangeAtPoint(doc, x, y);
@@ -49,7 +42,7 @@ export function detectSentenceAtPoint (
   const bounds = sentenceBounds(blockText, wordOffset);
   const sentence = blockText.slice(bounds.start, bounds.end).trim();
 
-  highlightSelection(doc, block, range, bounds, highlightRef);
+  highlightSelection(doc, block, range, bounds, overlayer, highlightRef);
   return { word, sentence };
 }
 
@@ -144,37 +137,35 @@ function sentenceBounds (text: string, index: number): { start: number; end: num
   return { start, end };
 }
 
-// Highlights the word and surrounding sentence using the CSS Custom Highlight
-// API, which paints over live Ranges without inserting any nodes. This keeps
-// the section DOM untouched so foliate's reading-position CFIs stay valid (a
-// wrapping <span> would shift node indices/offsets and invalidate them).
+// Highlights the word and surrounding sentence by drawing into foliate's SVG
+// overlay, which paints over the live Ranges without inserting any nodes. This
+// keeps the section DOM untouched so foliate's reading-position CFIs stay valid
+// (a wrapping <span> would shift node indices/offsets and invalidate them), and
+// unlike the CSS Custom Highlight API it renders reliably on mobile engines.
 function highlightSelection (
   doc: Document,
   block: HTMLElement,
   wordRange: Range,
   bounds: { start: number; end: number; },
+  overlayer: SectionOverlayer | null,
   highlightRef: HighlightRef,
 ) {
   clearHighlight(highlightRef);
+  if (!overlayer) return;
 
-  const win = doc.defaultView as HighlightCapableWindow | null;
-  const highlights = win?.CSS?.highlights;
-  if (!win?.Highlight || !highlights) {
-    // browser/runtime lacks the CSS Custom Highlight API; skip the visual hint.
-    return;
-  }
+  const keys: string[] = [];
 
+  // draw the sentence first so the darker word highlight paints on top of it.
   const sentenceRange = rangeFromBlockOffsets(doc, block, bounds.start, bounds.end);
   if (sentenceRange) {
-    highlights.set(SENTENCE_HIGHLIGHT_NAME, new win.Highlight(sentenceRange));
+    overlayer.add(SENTENCE_HIGHLIGHT_NAME, sentenceRange, Overlayer.highlight, { color: SENTENCE_HIGHLIGHT });
+    keys.push(SENTENCE_HIGHLIGHT_NAME);
   }
 
-  const wordHighlight = new win.Highlight(wordRange);
-  // higher priority paints the word over the lighter sentence highlight.
-  wordHighlight.priority = 1;
-  highlights.set(WORD_HIGHLIGHT_NAME, wordHighlight);
+  overlayer.add(WORD_HIGHLIGHT_NAME, wordRange, Overlayer.highlight, { color: WORD_HIGHLIGHT });
+  keys.push(WORD_HIGHLIGHT_NAME);
 
-  highlightRef.current = win;
+  highlightRef.current = { overlayer, keys };
 }
 
 // builds a Range covering [start, end) character offsets within the block's
@@ -217,11 +208,9 @@ function rangeFromBlockOffsets (
 }
 
 function clearHighlight (highlightRef: HighlightRef) {
-  const win = highlightRef.current;
+  const state = highlightRef.current;
   highlightRef.current = null;
+  if (!state) return;
 
-  const highlights = win?.CSS?.highlights;
-  if (!highlights) return;
-  highlights.delete(WORD_HIGHLIGHT_NAME);
-  highlights.delete(SENTENCE_HIGHLIGHT_NAME);
+  for (const key of state.keys) state.overlayer.remove(key);
 }

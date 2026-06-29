@@ -15,6 +15,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 import { VocabsService } from '../../api/Learnup';
 import { AppLoader } from '../../shared/components/AppLoader';
+import { DefaultHeader } from '../../shared/components/DefaultHeader';
 import { Scaffold } from '../../shared/components/Scaffold';
 import { VocabListItem } from './components/VocabListItem';
 
@@ -114,7 +115,7 @@ export default function VocabSearchPage() {
   });
 
   return (
-    <Scaffold>
+    <Scaffold header={<DefaultHeader header="جستجوی لغات" />}>
       <Stack spacing={2}>
         <TextField
           fullWidth

@@ -1,4 +1,4 @@
-import { Box, Icon, Typography } from '@mui/material';
+import { Box, Icon } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import type { Swiper as SwiperType } from 'swiper';
@@ -6,6 +6,7 @@ import 'swiper/css';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { CoursesService } from '../../api/Learnup';
 import { AppLoader } from '../../shared/components/AppLoader';
+import { DefaultHeader } from '../../shared/components/DefaultHeader';
 import { ErrorPage } from '../../shared/components/ErrorPage';
 import { Scaffold } from '../../shared/components/Scaffold';
 import { CourseListItem } from './components/CourseListItem';
@@ -31,17 +32,15 @@ export default function ListCoursesPage () {
   const courses = coursesQuery.data ?? [];
 
   return (
-    <Scaffold disablePadding>
+    <Scaffold disablePadding header={<DefaultHeader header="لیست دوره ها" />}>
       <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', pt: 2, }}>
-
-        <Typography sx={{ px: 2 }} variant='body1'>لیست دوره ها</Typography>
 
         {activeIndex < courses.length - 1 && (
           <Box
             sx={{
               position: 'absolute',
               right: 18,
-              top: 16,
+              top: 72,
               display: 'flex',
               alignItems: 'center',
               color: 'text.secondary',

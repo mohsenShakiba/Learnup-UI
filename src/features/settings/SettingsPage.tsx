@@ -1,5 +1,4 @@
 import {
-  Box,
   Divider,
   Icon,
   ListItem,
@@ -13,6 +12,7 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { clearAuth } from '../../stores/authStore';
+import { DefaultHeader } from '../../shared/components/DefaultHeader';
 import { Scaffold } from '../../shared/components/Scaffold';
 import { useThemeMode } from '../../shared/theme/themeMode';
 
@@ -26,12 +26,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <Scaffold >
-
-      <Stack direction='row' sx={{ alignItems: 'end', pb: 2 }}>
-        <Typography sx={{ px: 2 }} variant='body1'>تنظیمات</Typography>
-        <Box sx={{ flex: 1 }} />
-      </Stack>
+    <Scaffold header={<DefaultHeader header="تنظیمات" />}>
 
       <Paper sx={{ p: 0, overflow: 'hidden', mb: 2 }}>
         <ListItemButton onClick={() => navigate('/profile')}>

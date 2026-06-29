@@ -8,5 +8,8 @@ export type DueLeitnerBoxItemResponse = {
     vocabId: number;
     word: string;
     translation: string | null;
+    description: string | null;
+    example: string | null;
+    exampleTranslation: string | null;
     nextReviewAt: string | null;
 };

@@ -1,6 +1,5 @@
 import {
   Button,
-  Card,
   LinearProgress,
   Snackbar,
   Stack,
@@ -16,6 +15,8 @@ import { EmptyList } from "../../shared/components/EmptyList";
 import { ErrorPage } from "../../shared/components/ErrorPage";
 import { FancyCard } from "../../shared/components/FancyCard";
 import { Scaffold } from "../../shared/components/Scaffold";
+import { ReviewAnswerCard } from "./components/ReviewAnswerCard";
+import { ReviewQuestionCard } from "./components/ReviewQuestionCard";
 
 const qualityChoices = [
   {
@@ -50,7 +51,6 @@ export default function BoxLevelReviewPage() {
   const { id } = useParams<{ id: string }>();
   const boxLevelId = Number(id);
 
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnswerVisible, setIsAnswerVisible] = useState(false);
   const [reviews, setReviews] = useState<Record<number, string>>({});
   const [showErrorMessage, setShowErrorMessage] = useState(false);
@@ -110,7 +110,12 @@ export default function BoxLevelReviewPage() {
 
   function handleReveal() {
     if (!activeCard || reviewMutation.isPending) return;
-    setIsAnswerVisible((prev) => !prev);
+    setIsAnswerVisible(true);
+  }
+
+  function handleHideAnswer() {
+    if (reviewMutation.isPending) return;
+    setIsAnswerVisible(false);
   }
 
   function handleQualitySelect(choice: (typeof qualityChoices)[number]) {
@@ -124,7 +129,6 @@ export default function BoxLevelReviewPage() {
       {
         onSuccess: () => {
           setReviews((prev) => ({ ...prev, [activeCard.id]: choice.id }));
-          setCurrentIndex((prev) => prev + 1);
           setIsAnswerVisible(false);
         },
       },
@@ -202,65 +206,39 @@ export default function BoxLevelReviewPage() {
             <Typography variant="caption" color="text.secondary">
               Card {reviewedCount + 1} of {totalCards}
             </Typography>
-            <Card
-              onClick={handleReveal}
-              sx={{
-                minHeight: 320,
-                borderRadius: 4,
-                cursor: reviewMutation.isPending ? "progress" : "pointer",
-                p: 2,
-                mt: 3,
-                flex: 1,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Stack
-                spacing={3}
-                sx={{
-                  height: "100%",
-                  minHeight: 280,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  textAlign: "center",
-                }}
-              >
-                <Typography variant="overline" color="text.secondary">
-                  {isAnswerVisible ? "Translation" : "Word"}
-                </Typography>
+            {isAnswerVisible ? (
+              <ReviewAnswerCard
+                card={activeCard}
+                isPending={reviewMutation.isPending}
+                onHide={handleHideAnswer}
+              />
+            ) : (
+              <ReviewQuestionCard
+                card={activeCard}
+                isPending={reviewMutation.isPending}
+                onReveal={handleReveal}
+              />
+            )}
+          </Stack>
 
-                <Typography variant="h4" sx={{ fontWeight: 800 }}>
-                  {isAnswerVisible
-                    ? activeCard.translation || "No translation available"
-                    : activeCard.word}
-                </Typography>
-
-                <Typography sx={{ direction: "rtl" }} color="text.secondary">
-                  {isAnswerVisible
-                    ? "Choose how well you remembered it."
-                    : "Tap the card to reveal the translation."}
-                </Typography>
+          {isAnswerVisible && (
+            <Stack spacing={1.5} sx={{ mt: "auto", pb: 2 }}>
+              <Stack direction="row" spacing={1} sx={{ width: "100%" }}>
+                {qualityChoices.map((choice) => (
+                  <Button
+                    key={choice.id}
+                    variant="contained"
+                    color={choice.color}
+                    disabled={reviewMutation.isPending}
+                    onClick={() => handleQualitySelect(choice)}
+                    sx={{ flex: 1, minWidth: 0, borderRadius: 999 }}
+                  >
+                    {choice.label}
+                  </Button>
+                ))}
               </Stack>
-            </Card>
-          </Stack>
-
-          <Stack spacing={1.5} sx={{ mt: "auto", pb: 2 }}>
-            <Stack direction="row" spacing={1} sx={{ width: "100%" }}>
-              {qualityChoices.map((choice) => (
-                <Button
-                  key={choice.id}
-                  variant="contained"
-                  color={choice.color}
-                  disabled={!isAnswerVisible || reviewMutation.isPending}
-                  onClick={() => handleQualitySelect(choice)}
-                  sx={{ flex: 1, minWidth: 0, borderRadius: 999 }}
-                >
-                  {choice.label}
-                </Button>
-              ))}
             </Stack>
-          </Stack>
+          )}
         </Stack>
       )}
 

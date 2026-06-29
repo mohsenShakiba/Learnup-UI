@@ -11,21 +11,27 @@ export const ROOT_TABS = [
 ];
 
 const tabs = ROOT_TABS;
+const LEITNER_REVIEW_PATH_PREFIX = "/boxlevel/";
 
 
 export function BottomNav () {
   const location = useLocation();
   const navigate = useNavigate();
+  const isLeitnerReviewRoute = location.pathname.startsWith(LEITNER_REVIEW_PATH_PREFIX);
 
-  if (!tabs.some(t => t.path === location.pathname)) {
+  if (!isLeitnerReviewRoute && !tabs.some(t => t.path === location.pathname)) {
     return null;
   }
 
-  const currentTab = tabs.findIndex((tab) =>
-    tab.path === "/"
+  const currentTab = tabs.findIndex((tab) => {
+    if (isLeitnerReviewRoute) {
+      return tab.path === "/leitner-box";
+    }
+
+    return tab.path === "/"
       ? location.pathname === "/"
-      : location.pathname.startsWith(tab.path),
-  );
+      : location.pathname.startsWith(tab.path);
+  });
 
   return (
     <BottomNavigation

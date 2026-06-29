@@ -9,7 +9,7 @@ import {
   READER_FONTS,
   ReaderConfig,
 } from './readerTypes';
-import { detectSentenceAtPoint, SentenceDetectionResult } from './SentenceDetection';
+import { detectSentenceAtPoint, HighlightRef, SentenceDetectionResult } from './SentenceDetection';
 
 export interface EpubNavItem {
   id?: string;
@@ -32,7 +32,7 @@ export class BookManagarService {
   private bookData: ArrayBuffer | null = null;
   private initialCfi: string | undefined = undefined;
   config: ReaderConfig | null = null;
-  private highlightRef: { current: HTMLElement | null; } = { current: null };
+  private highlightRef: HighlightRef = { current: null };
   private view: FoliateViewElement | null = null;
   private currentLocation: SectionLocation | null = null;
   private theme: Theme | null = null;
@@ -104,6 +104,8 @@ export class BookManagarService {
     this.setupVisualPageEvent();
 
     this.applyConfig(config);
+    // await view.init({ lastLocation: 'epubcfi(/6/14!/4/4[id70270868511660],/6/1:146,/12/3:22)', showTextStart: !this.initialCfi });
+    // await view.init({ lastLocation: 'epubcfi(/6/14!/4/4[id70270868511660],/6/1:146,/12/1:113)', showTextStart: !this.initialCfi });
     await view.init({ lastLocation: this.initialCfi, showTextStart: !this.initialCfi });
   }
 
@@ -198,13 +200,15 @@ export class BookManagarService {
     if (view === null) return;
     if (bookResponse === null) return;
 
-    view.addEventListener('relocate', ((event: CustomEvent<SectionLocation>) => {
-      if (!event.detail?.cfi) return;
-      console.log('relocate', event);
-      this.currentLocation = event.detail;
-      this.emitPageInfo();
-      this.scheduleProgressSave(bookResponse.id, event.detail);
-    }) as EventListener);
+    setTimeout(() => {
+      view.addEventListener('relocate', ((event: CustomEvent<SectionLocation>) => {
+        if (!event.detail?.cfi) return;
+        console.log('relocate', event.detail.cfi);
+        this.currentLocation = event.detail;
+        this.emitPageInfo();
+        this.scheduleProgressSave(bookResponse.id, event.detail);
+      }) as EventListener);
+    }, 2000);
   }
 
   private setupVisualPageEvent () {

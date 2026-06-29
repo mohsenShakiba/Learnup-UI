@@ -1,4 +1,7 @@
-export type HighlightRef = { current: HTMLElement | null; };
+export type HighlightRef = { current: HTMLElement[] | null; };
+
+const WORD_HIGHLIGHT = 'rgba(255, 209, 0, 0.45)';
+const SENTENCE_HIGHLIGHT = 'rgba(255, 209, 0, 0.12)';
 
 export type SentenceDetectionResult = {
   word: string;
@@ -19,12 +22,12 @@ export function detectSentenceAtPoint (
 
   const word = range.toString().trim();
   const block = blockAncestor(range.startContainer);
-  const sentence = sentenceAround(
-    block.textContent ?? '',
-    offsetWithinBlock(doc, block, range.startContainer, range.startOffset),
-  );
+  const blockText = block.textContent ?? '';
+  const wordOffset = offsetWithinBlock(doc, block, range.startContainer, range.startOffset);
+  const bounds = sentenceBounds(blockText, wordOffset);
+  const sentence = blockText.slice(bounds.start, bounds.end).trim();
 
-  highlightRange(range, highlightRef);
+  highlightSelection(doc, block, range, bounds, highlightRef);
   return { word, sentence };
 }
 
@@ -96,7 +99,7 @@ function offsetWithinBlock (doc: Document, block: Node, node: Node, nodeOffset: 
   return total;
 }
 
-function sentenceAround (text: string, index: number): string {
+function sentenceBounds (text: string, index: number): { start: number; end: number; } {
   let start = 0;
   for (let i = index - 1; i >= 0; i--) {
     if (SENTENCE_END.test(text[i])) {
@@ -113,35 +116,105 @@ function sentenceAround (text: string, index: number): string {
     }
   }
 
-  return text.slice(start, end).trim();
+  // drop leading whitespace so the highlight starts at the first visible glyph.
+  while (start < end && /\s/.test(text[start])) start++;
+
+  return { start, end };
 }
 
-function highlightRange (range: Range, highlightRef: HighlightRef) {
+function highlightSelection (
+  doc: Document,
+  block: HTMLElement,
+  wordRange: Range,
+  bounds: { start: number; end: number; },
+  highlightRef: HighlightRef,
+) {
   clearHighlight(highlightRef);
 
+  const spans: HTMLElement[] = [];
+
+  // wrap the word first while its range is still valid, then the sentence so
+  // the (darker) word highlight sits on top of the (very light) sentence one.
+  const wordSpan = wrapRange(wordRange, WORD_HIGHLIGHT);
+  if (wordSpan) spans.push(wordSpan);
+
+  const sentenceRange = rangeFromBlockOffsets(doc, block, bounds.start, bounds.end);
+  if (sentenceRange) {
+    const sentenceSpan = wrapRange(sentenceRange, SENTENCE_HIGHLIGHT);
+    if (sentenceSpan) spans.push(sentenceSpan);
+  }
+
+  highlightRef.current = spans.length ? spans : null;
+}
+
+// builds a Range covering [start, end) character offsets within the block's
+// text content, walking across any inline markup and split text nodes.
+function rangeFromBlockOffsets (
+  doc: Document,
+  block: Node,
+  start: number,
+  end: number,
+): Range | null {
+  const walker = doc.createTreeWalker(block, NodeFilter.SHOW_TEXT);
+  let total = 0;
+  let startNode: Node | null = null;
+  let startOffset = 0;
+  let endNode: Node | null = null;
+  let endOffset = 0;
+
+  let node = walker.nextNode();
+  while (node) {
+    const len = (node.textContent ?? '').length;
+    if (!startNode && start <= total + len) {
+      startNode = node;
+      startOffset = start - total;
+    }
+    if (end <= total + len) {
+      endNode = node;
+      endOffset = end - total;
+      break;
+    }
+    total += len;
+    node = walker.nextNode();
+  }
+
+  if (!startNode || !endNode) return null;
+
+  const range = doc.createRange();
+  range.setStart(startNode, startOffset);
+  range.setEnd(endNode, endOffset);
+  return range;
+}
+
+function wrapRange (range: Range, color: string): HTMLElement | null {
   const doc = range.startContainer.ownerDocument;
-  if (!doc) return;
+  if (!doc) return null;
 
   const span = doc.createElement('span');
-  span.style.backgroundColor = 'rgba(255, 209, 0, 0.45)';
+  span.style.backgroundColor = color;
   span.style.borderRadius = '3px';
 
   try {
     range.surroundContents(span);
-    highlightRef.current = span;
+    return span;
   } catch {
-    // surroundContents throws if the range crosses element boundaries; skip the highlight.
+    // surroundContents throws if the range crosses element boundaries; skip it.
+    return null;
   }
 }
 
 function clearHighlight (highlightRef: HighlightRef) {
-  const span = highlightRef.current;
+  const spans = highlightRef.current;
   highlightRef.current = null;
+  if (!spans) return;
 
-  const parent = span?.parentNode;
-  if (!span || !parent) return;
-
-  while (span.firstChild) parent.insertBefore(span.firstChild, span);
-  parent.removeChild(span);
-  parent.normalize();
+  // unwrap inner-most spans first so the word highlight is removed before the
+  // sentence highlight that contains it.
+  for (const span of spans) {
+    const parent = span.parentNode;
+    if (!parent) continue;
+    while (span.firstChild) parent.insertBefore(span.firstChild, span);
+    parent.removeChild(span);
+    parent.normalize();
+  }
 }

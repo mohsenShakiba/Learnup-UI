@@ -1,6 +1,10 @@
 import { Avatar, Box, Icon, IconButton, Typography } from '@mui/material';
-import type { ReactNode } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useEffect, useState, type ReactNode } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { UsersService } from '../../api/Learnup';
+import { getFileById } from '../../services/fetchFile';
+import { SettingsDrawer } from '../../features/settings/SettingsDrawer';
 import { ROOT_TABS } from './BottomNav';
 
 type DefaultHeaderProps = {
@@ -14,6 +18,44 @@ export function DefaultHeader ({ header, subtitle, children }: DefaultHeaderProp
   const navigate = useNavigate();
   const location = useLocation();
   const isRootTab = ROOT_TABS.some((tab) => tab.path === location.pathname);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+
+  const profileQuery = useQuery({
+    queryKey: ['user', 'profile'],
+    queryFn: () => UsersService.getProfile(),
+    enabled: isRootTab,
+  });
+  const profile = profileQuery.data;
+
+  useEffect(() => {
+    if (!profile?.avatarUrl) {
+      setAvatarUrl(null);
+      return;
+    }
+
+    let cancelled = false;
+    let objectUrl: string | null = null;
+
+    getFileById(profile.avatarUrl)
+      .then((buffer) => {
+        const url = URL.createObjectURL(new Blob([buffer]));
+        if (cancelled) {
+          URL.revokeObjectURL(url);
+          return;
+        }
+        objectUrl = url;
+        setAvatarUrl(url);
+      })
+      .catch(() => {
+        if (!cancelled) setAvatarUrl(null);
+      });
+
+    return () => {
+      cancelled = true;
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
+  }, [profile?.avatarUrl]);
 
   return (
     <Box sx={{
@@ -34,7 +76,7 @@ export function DefaultHeader ({ header, subtitle, children }: DefaultHeaderProp
           <Icon>arrow_forward</Icon>
         </IconButton>
       ) : (
-        <IconButton >
+        <IconButton onClick={() => setSettingsOpen(true)}>
           <Icon>menu</Icon>
         </IconButton>
       )}
@@ -43,10 +85,15 @@ export function DefaultHeader ({ header, subtitle, children }: DefaultHeaderProp
       </Typography>
       <Box sx={{ flex: 1 }}></Box>
 
-      {isRootTab && <Avatar sizes='1' />
-      }
+      {isRootTab && (
+        <Avatar src={avatarUrl ?? undefined} sx={{ width: 32, height: 32, fontSize: '0.875rem' }}>
+          {!avatarUrl && (profile?.displayName?.[0]?.toUpperCase() ?? undefined)}
+        </Avatar>
+      )}
 
       {children}
+
+      <SettingsDrawer open={settingsOpen} onClose={() => setSettingsOpen(false)} />
     </Box>
   );
 }

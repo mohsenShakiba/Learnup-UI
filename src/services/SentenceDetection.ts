@@ -1,4 +1,29 @@
-export type HighlightRef = { current: HTMLElement | null; };
+// the window whose CSS.highlights registry currently holds our highlights, so
+// they can be cleared without re-querying the document.
+export type HighlightRef = { current: HighlightCapableWindow | null; };
+
+const WORD_HIGHLIGHT = 'rgba(255, 209, 0, 0.45)';
+const SENTENCE_HIGHLIGHT = 'rgba(255, 209, 0, 0.12)';
+
+const WORD_HIGHLIGHT_NAME = 'learnup-word';
+const SENTENCE_HIGHLIGHT_NAME = 'learnup-sentence';
+
+type DocHighlight = { priority: number; };
+
+type HighlightCapableWindow = Window & {
+  Highlight?: new (...ranges: Range[]) => DocHighlight;
+  CSS: { highlights?: Map<string, DocHighlight>; };
+};
+
+// CSS rules that style the registered highlights. Injected into every section
+// document so the highlights render. Kept here so highlight colors/names stay
+// in one place; the word sits visually on top of the lighter sentence tint.
+export function getHighlightCss (): string {
+  return `
+    ::highlight(${SENTENCE_HIGHLIGHT_NAME}) { background-color: ${SENTENCE_HIGHLIGHT}; }
+    ::highlight(${WORD_HIGHLIGHT_NAME}) { background-color: ${WORD_HIGHLIGHT}; }
+  `;
+}
 
 export type SentenceDetectionResult = {
   word: string;
@@ -19,12 +44,12 @@ export function detectSentenceAtPoint (
 
   const word = range.toString().trim();
   const block = blockAncestor(range.startContainer);
-  const sentence = sentenceAround(
-    block.textContent ?? '',
-    offsetWithinBlock(doc, block, range.startContainer, range.startOffset),
-  );
+  const blockText = block.textContent ?? '';
+  const wordOffset = offsetWithinBlock(doc, block, range.startContainer, range.startOffset);
+  const bounds = sentenceBounds(blockText, wordOffset);
+  const sentence = blockText.slice(bounds.start, bounds.end).trim();
 
-  highlightRange(range, highlightRef);
+  highlightSelection(doc, block, range, bounds, highlightRef);
   return { word, sentence };
 }
 
@@ -96,7 +121,7 @@ function offsetWithinBlock (doc: Document, block: Node, node: Node, nodeOffset: 
   return total;
 }
 
-function sentenceAround (text: string, index: number): string {
+function sentenceBounds (text: string, index: number): { start: number; end: number; } {
   let start = 0;
   for (let i = index - 1; i >= 0; i--) {
     if (SENTENCE_END.test(text[i])) {
@@ -113,35 +138,90 @@ function sentenceAround (text: string, index: number): string {
     }
   }
 
-  return text.slice(start, end).trim();
+  // drop leading whitespace so the highlight starts at the first visible glyph.
+  while (start < end && /\s/.test(text[start])) start++;
+
+  return { start, end };
 }
 
-function highlightRange (range: Range, highlightRef: HighlightRef) {
+// Highlights the word and surrounding sentence using the CSS Custom Highlight
+// API, which paints over live Ranges without inserting any nodes. This keeps
+// the section DOM untouched so foliate's reading-position CFIs stay valid (a
+// wrapping <span> would shift node indices/offsets and invalidate them).
+function highlightSelection (
+  doc: Document,
+  block: HTMLElement,
+  wordRange: Range,
+  bounds: { start: number; end: number; },
+  highlightRef: HighlightRef,
+) {
   clearHighlight(highlightRef);
 
-  const doc = range.startContainer.ownerDocument;
-  if (!doc) return;
-
-  const span = doc.createElement('span');
-  span.style.backgroundColor = 'rgba(255, 209, 0, 0.45)';
-  span.style.borderRadius = '3px';
-
-  try {
-    range.surroundContents(span);
-    highlightRef.current = span;
-  } catch {
-    // surroundContents throws if the range crosses element boundaries; skip the highlight.
+  const win = doc.defaultView as HighlightCapableWindow | null;
+  const highlights = win?.CSS?.highlights;
+  if (!win?.Highlight || !highlights) {
+    // browser/runtime lacks the CSS Custom Highlight API; skip the visual hint.
+    return;
   }
+
+  const sentenceRange = rangeFromBlockOffsets(doc, block, bounds.start, bounds.end);
+  if (sentenceRange) {
+    highlights.set(SENTENCE_HIGHLIGHT_NAME, new win.Highlight(sentenceRange));
+  }
+
+  const wordHighlight = new win.Highlight(wordRange);
+  // higher priority paints the word over the lighter sentence highlight.
+  wordHighlight.priority = 1;
+  highlights.set(WORD_HIGHLIGHT_NAME, wordHighlight);
+
+  highlightRef.current = win;
+}
+
+// builds a Range covering [start, end) character offsets within the block's
+// text content, walking across any inline markup and split text nodes.
+function rangeFromBlockOffsets (
+  doc: Document,
+  block: Node,
+  start: number,
+  end: number,
+): Range | null {
+  const walker = doc.createTreeWalker(block, NodeFilter.SHOW_TEXT);
+  let total = 0;
+  let startNode: Node | null = null;
+  let startOffset = 0;
+  let endNode: Node | null = null;
+  let endOffset = 0;
+
+  let node = walker.nextNode();
+  while (node) {
+    const len = (node.textContent ?? '').length;
+    if (!startNode && start <= total + len) {
+      startNode = node;
+      startOffset = start - total;
+    }
+    if (end <= total + len) {
+      endNode = node;
+      endOffset = end - total;
+      break;
+    }
+    total += len;
+    node = walker.nextNode();
+  }
+
+  if (!startNode || !endNode) return null;
+
+  const range = doc.createRange();
+  range.setStart(startNode, startOffset);
+  range.setEnd(endNode, endOffset);
+  return range;
 }
 
 function clearHighlight (highlightRef: HighlightRef) {
-  const span = highlightRef.current;
+  const win = highlightRef.current;
   highlightRef.current = null;
 
-  const parent = span?.parentNode;
-  if (!span || !parent) return;
-
-  while (span.firstChild) parent.insertBefore(span.firstChild, span);
-  parent.removeChild(span);
-  parent.normalize();
+  const highlights = win?.CSS?.highlights;
+  if (!highlights) return;
+  highlights.delete(WORD_HIGHLIGHT_NAME);
+  highlights.delete(SENTENCE_HIGHLIGHT_NAME);
 }

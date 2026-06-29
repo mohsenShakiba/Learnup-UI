@@ -29,7 +29,7 @@ export function LeitnerStatsCard({ totalItems, dueItems }: Props) {
           <Button
             endIcon={<Icon>arrow_backward</Icon>}
             onClick={() => navigate('/leitner-box')}
-            sx={{ bgcolor: 'common.black' }}
+            sx={{ bgcolor: 'primary.main' }}
           >
             {isTotalEmpty ? 'آشنایی با لاینتر' : 'بریم مرور کنیم'}
           </Button>

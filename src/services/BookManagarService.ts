@@ -9,7 +9,7 @@ import {
   READER_FONTS,
   ReaderConfig,
 } from './readerTypes';
-import { detectSentenceAtPoint, SentenceDetectionResult } from './SentenceDetection';
+import { detectSentenceAtPoint, getHighlightCss, HighlightRef, SentenceDetectionResult } from './SentenceDetection';
 
 export interface EpubNavItem {
   id?: string;
@@ -32,7 +32,7 @@ export class BookManagarService {
   private bookData: ArrayBuffer | null = null;
   private initialCfi: string | undefined = undefined;
   config: ReaderConfig | null = null;
-  private highlightRef: { current: HTMLElement | null; } = { current: null };
+  private highlightRef: HighlightRef = { current: null };
   private view: FoliateViewElement | null = null;
   private currentLocation: SectionLocation | null = null;
   private theme: Theme | null = null;
@@ -104,6 +104,8 @@ export class BookManagarService {
     this.setupVisualPageEvent();
 
     this.applyConfig(config);
+    // await view.init({ lastLocation: 'epubcfi(/6/14!/4/4[id70270868511660],/6/1:146,/12/3:22)', showTextStart: !this.initialCfi });
+    // await view.init({ lastLocation: 'epubcfi(/6/14!/4/4[id70270868511660],/6/1:146,/12/1:113)', showTextStart: !this.initialCfi });
     await view.init({ lastLocation: this.initialCfi, showTextStart: !this.initialCfi });
   }
 
@@ -199,9 +201,9 @@ export class BookManagarService {
     if (bookResponse === null) return;
 
     view.addEventListener('relocate', ((event: CustomEvent<SectionLocation>) => {
+      console.log('relocate', event.detail);
       if (!event.detail?.cfi) return;
       this.currentLocation = event.detail;
-      // this.initialCfi = location.start.cfi;
       this.emitPageInfo();
       this.scheduleProgressSave(bookResponse.id, event.detail);
     }) as EventListener);
@@ -228,6 +230,7 @@ export class BookManagarService {
         page: currentPage === null ? 1 : Math.max(1, Math.min(currentPage, sectionPages)),
         pages: sectionPages,
       };
+
       this.emitPageInfo();
     }) as EventListener);
   }
@@ -281,11 +284,13 @@ export class BookManagarService {
 
   private getPageCounts (location: SectionLocation | null): Pick<BookPageInfo, 'currentPage' | 'totalPages'> {
     if (!location) {
+      console.log('null1');
       return { currentPage: null, totalPages: null };
     }
 
     const visualPages = this.getVisualPageCounts();
     if (visualPages.currentPage !== null) {
+      console.log('null2');
       return visualPages;
     }
 
@@ -360,10 +365,31 @@ export class BookManagarService {
     }
 
     view.addEventListener('load', ((event: CustomEvent<FoliateLoadDetail>) => {
-      if (this.config) this.applyConfigToDocument(event.detail.doc, this.config);
-      this.shouldDisplay = true;
-      this.emitPageInfo();
+      const doc = event.detail.doc;
+      if (this.config) this.applyConfigToDocument(doc, this.config);
+      void this.waitForFontReady(doc).then(() => {
+        this.shouldDisplay = true;
+        this.emitPageInfo();
+      });
     }) as EventListener);
+  }
+
+  // resolves once the configured reader font has finished loading in the
+  // section document, so the book is only revealed with its final font applied.
+  private async waitForFontReady (doc: Document): Promise<void> {
+    const fonts = (doc as Document & { fonts?: FontFaceSet; }).fonts;
+    if (!fonts) return;
+
+    try {
+      const fontFamily = this.config?.fontFamily;
+      const fontSize = this.config?.fontSize ?? 16;
+      if (fontFamily) {
+        await fonts.load(`${fontSize}px ${JSON.stringify(fontFamily)}`);
+      }
+      await fonts.ready;
+    } catch {
+      // ignore font loading failures; fall back to showing the book anyway.
+    }
   }
 
   private applyConfigToDocument (document: Document, config: ReaderConfig): void {
@@ -402,6 +428,10 @@ export class BookManagarService {
         color: ${this.theme?.palette.text.primary};
         font-family: ${fontStack} !important;
         font-size: ${fontSize} !important;
+        -webkit-user-select: none !important;
+        -moz-user-select: none !important;
+        user-select: none !important;
+        -webkit-touch-callout: none !important;
       }
       body *:not(svg):not(svg *) {
         font-family: ${fontStack} !important;
@@ -428,6 +458,7 @@ export class BookManagarService {
       body blockquote {
         text-align: ${textAlign} !important;
       }
+      ${getHighlightCss()}
     `;
   }
 

@@ -18,9 +18,11 @@ export default function DashboardPage() {
         <Fade in timeout={500}>
           <div><Greeting name={profileName} motivationalSentence={motivationalSentence} /></div>
         </Fade>
-        <Fade in timeout={500} style={{ transitionDelay: '200ms' }}>
-          <div><ContinueCard lesson={currentLesson} /></div>
-        </Fade>
+        {currentLesson && (
+          <Fade in timeout={500} style={{ transitionDelay: '200ms' }}>
+            <div><ContinueCard lesson={currentLesson} /></div>
+          </Fade>
+        )}
         <Fade in timeout={500} style={{ transitionDelay: '300ms' }}>
           <div><StreakCardBlaze streak={streak} /></div>
         </Fade>

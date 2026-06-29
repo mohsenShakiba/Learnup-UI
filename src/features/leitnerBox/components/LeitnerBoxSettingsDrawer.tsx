@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Divider,
   Drawer,
   Icon,
   IconButton,
@@ -9,11 +8,13 @@ import {
   Stack,
   TextField,
   Typography,
+  useTheme,
 } from "@mui/material";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import type { BoxLevelInfoResponse } from "../../../api/Learnup";
 import { LeitnerBoxService } from "../../../api/Learnup";
+import { getLevelTone } from "./levelTone";
 
 type LeitnerBoxSettingsDrawerProps = {
   boxId: number;
@@ -53,22 +54,13 @@ function parseReviewedDays(value: string): string {
   return match[0];
 }
 
-function getLevelBadgeColor(levelIndex: number, totalLevels: number): string {
-  if (totalLevels <= 1) {
-    return "hsl(145 65% 42%)";
-  }
-
-  const ratio = levelIndex / (totalLevels - 1);
-  const hue = 145 - ratio * 145;
-  return `hsl(${hue} 70% 48%)`;
-}
-
 export function LeitnerBoxSettingsDrawer({
   boxId,
   levels,
   open,
   onClose,
 }: LeitnerBoxSettingsDrawerProps) {
+  const theme = useTheme();
   const queryClient = useQueryClient();
   const [reviewIntervals, setReviewIntervals] = useState<
     Record<number, string>
@@ -171,17 +163,16 @@ export function LeitnerBoxSettingsDrawer({
           </Stack>
 
           <Stack
-            spacing={2}
-            divider={<Divider />}
+            spacing={1.2}
             sx={{
               flex: 1,
               overflowY: "auto",
               pt: 1,
             }}
           >
-            {levels.map((level, index) => {
-              const badgeColor = getLevelBadgeColor(index, levels.length);
+            {levels.map((level) => {
               const levelNumber = Number(level.level);
+              const tone = getLevelTone(levelNumber, theme);
               const hardnessLabel =
                 LEVEL_HARDNESS_LABELS[levelNumber - 1] ?? "Mastered";
 
@@ -191,64 +182,99 @@ export function LeitnerBoxSettingsDrawer({
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    gap: 1.75,
+                    gap: 1.35,
+                    p: 1.2,
+                    border: 1,
+                    borderColor: "divider",
+                    borderRadius: 2,
+                    bgcolor: "background.paper",
                   }}
                 >
+                  <TextField
+                    id={`leitner-level-${level.id}`}
+                    size="small"
+                    type="text"
+                    value={reviewIntervals[level.id] ?? ""}
+                    onChange={(event) => {
+                      const nextValue = event.target.value.replace(
+                        /[^\d]/g,
+                        "",
+                      );
+                      setReviewIntervals((current) => ({
+                        ...current,
+                        [level.id]: nextValue,
+                      }));
+                    }}
+                    error={invalidLevelIds.has(level.id)}
+                    placeholder="روز"
+                    slotProps={{
+                      htmlInput: {
+                        inputMode: "numeric",
+                        pattern: "[0-9]*",
+                      },
+                    }}
+                    sx={{
+                      width: 76,
+                      flex: "0 0 76px",
+                      "& .MuiOutlinedInput-root": {
+                        bgcolor: "background.paper",
+                        "& fieldset": {
+                          borderColor: "divider",
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "text.secondary",
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: tone.color,
+                          borderWidth: 2,
+                        },
+                      },
+                    }}
+                  />
+
                   <Stack
-                    direction="row"
                     sx={{
                       flex: 1,
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      gap: 0.5,
+                      minWidth: 0,
+                      gap: 0.55,
                     }}
                   >
-                    <TextField
-                      id={`leitner-level-${level.id}`}
-                      type="text"
-                      value={reviewIntervals[level.id] ?? ""}
-                      onChange={(event) => {
-                        const nextValue = event.target.value.replace(
-                          /[^\d]/g,
-                          "",
-                        );
-                        setReviewIntervals((current) => ({
-                          ...current,
-                          [level.id]: nextValue,
-                        }));
-                      }}
-                      error={invalidLevelIds.has(level.id)}
-                      placeholder="روز"
-                      slotProps={{
-                        htmlInput: {
-                          inputMode: "numeric",
-                          pattern: "[0-9]*",
-                        },
-                      }}
+                    <Stack
+                      direction="row"
+                      spacing={0.8}
                       sx={{
-                        width: "80px",
-                        "& .MuiOutlinedInput-root": {
-                          bgcolor: "background.paper",
-                          "& fieldset": {
-                            borderColor: "divider",
-                          },
-                          "&:hover fieldset": {
-                            borderColor: "text.secondary",
-                          },
-                          "&.Mui-focused fieldset": {
-                            borderColor: badgeColor,
-                            borderWidth: 2,
-                          },
-                        },
+                        justifyContent: "end",
+                        alignItems: "center",
+                        minWidth: 0,
                       }}
-                    />
+                    >
+                      <Box
+                        sx={{
+                          px: 0.85,
+                          py: 0.2,
+                          borderRadius: 999,
+                          bgcolor: tone.softColor,
+                          color: tone.color,
+                          fontSize: 10,
+                          fontWeight: 800,
+                          lineHeight: 1.3,
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {tone.status}
+                      </Box>
+                    </Stack>
 
                     <Typography
-                      variant="caption"
                       sx={{
                         color: "text.secondary",
-                        textTransform: "uppercase",
-                        letterSpacing: 0.8,
+                        fontSize: 11.5,
+                        fontWeight: 700,
+                        lineHeight: 1.25,
+                        overflow: "hidden",
+                        textAlign: "right",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
                       }}
                     >
                       {hardnessLabel}
@@ -257,20 +283,18 @@ export function LeitnerBoxSettingsDrawer({
 
                   <Box
                     sx={{
-                      minWidth: 52,
-                      height: 52,
+                      width: 46,
+                      height: 46,
+                      flex: "0 0 46px",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      borderRadius: 1.5,
-                      bgcolor: badgeColor,
+                      borderRadius: 2.25,
+                      bgcolor: tone.color,
                       color: "common.white",
-                      fontWeight: 700,
+                      fontFamily: "Georgia, Merriweather, serif",
+                      fontWeight: 800,
                       fontSize: 18,
-                      boxShadow: (theme) =>
-                        theme.palette.mode === "dark"
-                          ? "inset 0 0 0 1px rgba(255,255,255,0.12), 0 8px 18px rgba(0,0,0,0.32)"
-                          : "inset 0 0 0 1px rgba(255,255,255,0.18), 0 8px 18px rgba(0,0,0,0.12)",
                     }}
                   >
                     {levelNumber}

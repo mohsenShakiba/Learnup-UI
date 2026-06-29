@@ -1,6 +1,6 @@
-import { alpha, Box, Card, Icon, Stack, Typography, useTheme } from "@mui/material";
-import type { Theme } from "@mui/material";
+import { Box, Card, Icon, Stack, Typography, useTheme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { getLevelTone } from "./levelTone";
 
 type BoxLevelCardProps = {
   levelId: number;
@@ -10,40 +10,10 @@ type BoxLevelCardProps = {
   reviewInterval: string;
 };
 
-type LevelTone = {
-  color: string;
-  softColor: string;
-  status: string;
-};
-
 const numberFormatter = new Intl.NumberFormat("en-US");
 
 function formatNumber(value: number): string {
   return numberFormatter.format(value);
-}
-
-function getLevelTone(level: number, theme: Theme): LevelTone {
-  if (level <= 5) {
-    return {
-      color: theme.palette.warning.main,
-      softColor: alpha(theme.palette.warning.main, 0.14),
-      status: "Learning",
-    };
-  }
-
-  if (level <= 10) {
-    return {
-      color: theme.palette.success.main,
-      softColor: alpha(theme.palette.success.main, 0.14),
-      status: "Reviewing",
-    };
-  }
-
-  return {
-    color: theme.palette.primary.main,
-    softColor: alpha(theme.palette.primary.main, 0.14),
-    status: "Mastered",
-  };
 }
 
 export function BoxLevelCard({

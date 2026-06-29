@@ -140,17 +140,7 @@ export default function LeitnerBoxPage() {
                 color: "text.primary",
               }}
             >
-              Español
-            </Typography>
-            <Typography
-              sx={{
-                mt: 0.6,
-                fontSize: 12,
-                fontWeight: 800,
-                color: "text.secondary",
-              }}
-            >
-              Leitner box - Level A2
+              Leitner box
             </Typography>
           </Box>
 
@@ -161,9 +151,7 @@ export default function LeitnerBoxPage() {
               borderRadius: "50%",
               bgcolor: "warning.main",
               color: "warning.contrastText",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              position: "relative",
               gap: 0.25,
               fontSize: 13,
               fontWeight: 900,
@@ -171,8 +159,27 @@ export default function LeitnerBoxPage() {
                 `0 8px 18px ${alpha(theme.palette.warning.main, 0.24)}`,
             }}
           >
-            <Icon sx={{ fontSize: 17 }}>local_fire_department</Icon>
-            {formatNumber(currentStreak)}
+            <Icon
+              sx={{
+                fontSize: 17,
+                position: "absolute",
+                top: "50%",
+                right: "50%",
+                transform: "translate(85%, -60%)",
+              }}
+            >
+              local_fire_department
+            </Icon>
+            <span
+              style={{
+                position: "absolute",
+                top: "50%",
+                right: "50%",
+                transform: "translate(140%, -40%)",
+              }}
+            >
+              {formatNumber(currentStreak)}
+            </span>
           </Box>
         </Stack>
 
@@ -207,10 +214,16 @@ export default function LeitnerBoxPage() {
             <Stack spacing={1.2} sx={{ alignItems: "flex-end" }}>
               <Box sx={{ textAlign: "right" }}>
                 <Typography sx={{ fontSize: 13, fontWeight: 900 }}>
-                  {formatNumber(dueLevels.length)} of {formatNumber(levels.length)} levels
+                  {formatNumber(dueLevels.length)} of{" "}
+                  {formatNumber(levels.length)} levels
                 </Typography>
                 <Typography
-                  sx={{ mt: 0.35, fontSize: 12, fontWeight: 800, opacity: 0.82 }}
+                  sx={{
+                    mt: 0.35,
+                    fontSize: 12,
+                    fontWeight: 800,
+                    opacity: 0.82,
+                  }}
                 >
                   {formatNumber(totalItems)} cards total
                 </Typography>

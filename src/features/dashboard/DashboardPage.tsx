@@ -1,4 +1,5 @@
 import { Fade, Stack } from '@mui/material';
+import { DefaultHeader } from '../../shared/components/DefaultHeader';
 import { Scaffold } from '../../shared/components/Scaffold';
 import { ContinueCard } from './components/ContinueCard';
 import { Greeting } from './components/Greeting';
@@ -13,7 +14,7 @@ export default function DashboardPage() {
   if (isLoading) return null;
 
   return (
-    <Scaffold >
+    <Scaffold header={<DefaultHeader header="داشبورد" />}>
       <Stack spacing={2}>
         <Fade in timeout={500}>
           <div><Greeting name={profileName} motivationalSentence={motivationalSentence} /></div>

@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import type { StoryResponse } from '../../../api/Learnup';
 import { ActionCard } from '../../../shared/components/ActionCard';
 import { DurationBadge } from '../../../shared/components/DurationBadge';
-import { ImageLoader } from '../../../shared/components/ImageLoader';
-import { ActionButton } from '../../../shared/components/ActionButton';
 
 type StoryListItemProps = {
   story: StoryResponse;
@@ -12,7 +10,7 @@ type StoryListItemProps = {
 };
 
 
-export function StoryListItem({ story, lessonId }: StoryListItemProps) {
+export function StoryListItem ({ story, lessonId }: StoryListItemProps) {
   const navigate = useNavigate();
 
   const goToStory = () => navigate(`/lessons/${lessonId}/stories/${story.id}`);
@@ -42,7 +40,7 @@ export function StoryListItem({ story, lessonId }: StoryListItemProps) {
           </Typography>
 
           <Typography variant='caption' sx={{ color: 'text.secondary' }} >
-            آشنایی با یک شخص جدید
+            {story.title}
           </Typography>
 
         </Stack>

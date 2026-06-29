@@ -1,7 +1,9 @@
 import {
   Box,
   Divider,
+  Drawer,
   Icon,
+  IconButton,
   ListItem,
   ListItemButton,
   ListItemIcon,
@@ -13,28 +15,54 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { clearAuth } from '../../stores/authStore';
-import { Scaffold } from '../../shared/components/Scaffold';
 import { useThemeMode } from '../../shared/theme/themeMode';
 
-export default function SettingsPage() {
+type SettingsDrawerProps = {
+  open: boolean;
+  onClose: () => void;
+};
+
+export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
   const { isDark, setMode } = useThemeMode();
   const navigate = useNavigate();
 
+  const go = (path: string) => {
+    onClose();
+    navigate(path);
+  };
+
   const handleLogout = () => {
+    onClose();
     clearAuth();
     navigate('/login');
   };
 
   return (
-    <Scaffold >
-
-      <Stack direction='row' sx={{ alignItems: 'end', pb: 2 }}>
-        <Typography sx={{ px: 2 }} variant='body1'>تنظیمات</Typography>
+    <Drawer
+      anchor="left"
+      open={open}
+      onClose={onClose}
+      sx={{
+        '& .MuiDrawer-paper': {
+          width: { xs: 320, sm: 380 },
+          height: '100dvh',
+          px: 2.5,
+          py: 2,
+          bgcolor: 'background.default',
+          borderRadius: 0,
+        },
+      }}
+    >
+      <Stack direction="row" spacing={1} sx={{ alignItems: 'center', mb: 2 }}>
+        <Typography variant="h6">تنظیمات</Typography>
         <Box sx={{ flex: 1 }} />
+        <IconButton onClick={onClose} aria-label="Close settings">
+          <Icon>close</Icon>
+        </IconButton>
       </Stack>
 
       <Paper sx={{ p: 0, overflow: 'hidden', mb: 2 }}>
-        <ListItemButton onClick={() => navigate('/profile')}>
+        <ListItemButton onClick={() => go('/profile')}>
           <ListItemIcon>
             <Icon>account_circle</Icon>
           </ListItemIcon>
@@ -56,13 +84,10 @@ export default function SettingsPage() {
           <ListItemIcon>
             <Icon>{isDark ? 'dark_mode' : 'light_mode'}</Icon>
           </ListItemIcon>
-          <ListItemText
-            primary="Dark mode"
-            secondary={isDark ? 'On' : 'Off'}
-          />
+          <ListItemText primary="Dark mode" secondary={isDark ? 'On' : 'Off'} />
         </ListItem>
         <Divider />
-        <ListItemButton onClick={() => navigate('/settings/subscriptions')}>
+        <ListItemButton onClick={() => go('/settings/subscriptions')}>
           <ListItemIcon>
             <Icon>workspace_premium</Icon>
           </ListItemIcon>
@@ -70,7 +95,7 @@ export default function SettingsPage() {
           <Icon sx={{ opacity: 0.4, fontSize: 18 }}>chevron_left</Icon>
         </ListItemButton>
         <Divider />
-        <ListItemButton onClick={() => navigate('/grammar')}>
+        <ListItemButton onClick={() => go('/grammar')}>
           <ListItemIcon>
             <Icon>menu_book</Icon>
           </ListItemIcon>
@@ -87,6 +112,6 @@ export default function SettingsPage() {
           <ListItemText primary={<Typography color="error">خروج از حساب</Typography>} />
         </ListItemButton>
       </Paper>
-    </Scaffold>
+    </Drawer>
   );
 }

@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Fab, Icon, Stack, Typography } from '@mui/material';
+import { Box, Button, Fab, Icon, Stack, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { BooksControllersService } from '../../api/Learnup';
@@ -22,22 +22,19 @@ export default function ListBooksPage() {
   const books = booksQuery.data ?? [];
 
   return (
-    <Scaffold >
-
-      <Stack spacing={1}>
-
-        <Stack direction='row' sx={{ alignItems: 'end' }}>
-          <Typography sx={{ px: 2 }} variant='body1'>لیست کتاب ها</Typography>
-
-          <Box sx={{ flex: 1 }} />
+    <Scaffold
+      header={
+        <DefaultHeader header="لیست کتاب ها">
           <Button size='small'
             onClick={() => navigate('/library/user-books/upload')}
             endIcon={
               <Icon>add</Icon>
             }>افزودن کتاب</Button>
-        </Stack>
+        </DefaultHeader>
+      }
+    >
 
-        <Divider />
+      <Stack spacing={1}>
 
         {books.length === 0 ? (
           <Stack sx={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 1, opacity: 0.6 }}>

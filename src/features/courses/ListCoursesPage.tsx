@@ -10,6 +10,19 @@ import { ErrorPage } from "../../shared/components/ErrorPage";
 import { Scaffold } from "../../shared/components/Scaffold";
 import { CourseListItem } from "./components/CourseListItem";
 import { CoursePagination } from "./components/CoursePagination";
+import { Box, Icon } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
+import { useRef, useState } from 'react';
+import type { Swiper as SwiperType } from 'swiper';
+import 'swiper/css';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { CoursesService } from '../../api/Learnup';
+import { AppLoader } from '../../shared/components/AppLoader';
+import { DefaultHeader } from '../../shared/components/DefaultHeader';
+import { ErrorPage } from '../../shared/components/ErrorPage';
+import { Scaffold } from '../../shared/components/Scaffold';
+import { CourseListItem } from './components/CourseListItem';
+import { CoursePagination } from './components/CoursePagination';
 
 export default function ListCoursesPage() {
   const swiperRef = useRef<SwiperType | null>(null);
@@ -38,6 +51,8 @@ export default function ListCoursesPage() {
         <Typography sx={{ px: 2 }} variant="body1">
           لیست دوره ها
         </Typography>
+    <Scaffold disablePadding header={<DefaultHeader header="لیست دوره ها" />}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', pt: 2, }}>
 
         {activeIndex < courses.length - 1 && (
           <Box
@@ -51,6 +66,13 @@ export default function ListCoursesPage() {
               "@keyframes bounceLeft": {
                 "0%, 100%": { transform: "translateX(0)" },
                 "50%": { transform: "translateX(-6px)" },
+              top: 72,
+              display: 'flex',
+              alignItems: 'center',
+              color: 'text.secondary',
+              '@keyframes bounceLeft': {
+                '0%, 100%': { transform: 'translateX(0)' },
+                '50%': { transform: 'translateX(-6px)' },
               },
               animation: "bounceLeft 1.2s ease-in-out infinite",
             }}

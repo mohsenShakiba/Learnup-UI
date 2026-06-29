@@ -7,7 +7,6 @@ export const ROOT_TABS = [
   { label: 'Leitner', icon: 'layers', path: '/leitner-box' },
   { label: 'Library', icon: 'menu_book', path: '/library' },
   { label: 'Vocab', icon: 'search', path: '/vocab' },
-  { label: 'Settings', icon: 'menu', path: '/settings' },
 ];
 
 const tabs = ROOT_TABS;

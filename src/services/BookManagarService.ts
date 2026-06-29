@@ -9,7 +9,7 @@ import {
   READER_FONTS,
   ReaderConfig,
 } from './readerTypes';
-import { detectSentenceAtPoint, getHighlightCss, HighlightRef, SentenceDetectionResult } from './SentenceDetection';
+import { detectSentenceAtPoint, HighlightRef, SectionOverlayer, SentenceDetectionResult } from './SentenceDetection';
 
 export interface EpubNavItem {
   id?: string;
@@ -170,7 +170,8 @@ export class BookManagarService {
         cancelLongPress();
         longPressTimeout = setTimeout(() => {
           longPressTimeout = null;
-          const selection = detectSentenceAtPoint(doc, startX, startY, this.highlightRef);
+          const overlayer = this.getOverlayerForDoc(doc);
+          const selection = detectSentenceAtPoint(doc, startX, startY, overlayer, this.highlightRef);
           if (selection) {
             this.onWordSelect?.(selection);
           }
@@ -191,6 +192,14 @@ export class BookManagarService {
       doc.addEventListener('pointercancel', cancelLongPress);
       doc.addEventListener('pointerleave', cancelLongPress);
     }) as EventListener);
+  }
+
+  // foliate creates one Overlayer per rendered section; find the one whose
+  // document matches the section the long-press happened in, so highlights are
+  // drawn into the correct overlay.
+  private getOverlayerForDoc (doc: Document): SectionOverlayer | null {
+    const contents = this.view?.renderer?.getContents?.() ?? [];
+    return contents.find((content) => content.doc === doc)?.overlayer ?? null;
   }
 
   private setupRelocateEvent () {
@@ -458,7 +467,6 @@ export class BookManagarService {
       body blockquote {
         text-align: ${textAlign} !important;
       }
-      ${getHighlightCss()}
     `;
   }
 
@@ -495,7 +503,7 @@ type FoliateRenderer = HTMLElement & {
   page?: number;
   pages?: number;
   setStyles?: (css: string) => void;
-  getContents?: () => Array<{ doc: Document; index: number; }>;
+  getContents?: () => Array<{ doc: Document; index: number; overlayer?: SectionOverlayer; }>;
 };
 
 type RendererLocationDetail = {

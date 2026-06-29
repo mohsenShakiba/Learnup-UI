@@ -13,5 +13,7 @@
 [x] add a page for listing all grammars. (already exists: ListGrammarPage at /grammar route)
 [x] after uploading avatar url, use getFileById to show the image.
 [x] create a section in settings to show all grammars page.
-[] remove continue card from dashboard the current user lesson is null.
-[] update the button's color in leitner box in dashboard
+[x] remove continue card from dashboard the current user lesson is null.
+[x] update the button's color in leitner box in dashboard
+[x] in book detail page, hide the book until the font is loaded.
+[x] in book detail page, long click on a word will cause the word to be selected by the os, not opening the translation drawer. if it is poissble to overcome this, do it, otherwise a single click shoule open the drawer.

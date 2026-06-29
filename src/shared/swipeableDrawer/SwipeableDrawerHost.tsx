@@ -17,7 +17,7 @@ export function SwipeableDrawerHost () {
       onOpen={() => undefined}
       disableBackdropTransition={drawer?.disableBackdropTransition}
       disableDiscovery={drawer?.disableDiscovery}
-      keepMounted={drawer?.keepMounted}
+      keepMounted={false}
       slotProps={{
         paper: {
           sx: {

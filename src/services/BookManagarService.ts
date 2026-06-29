@@ -200,8 +200,8 @@ export class BookManagarService {
 
     view.addEventListener('relocate', ((event: CustomEvent<SectionLocation>) => {
       if (!event.detail?.cfi) return;
+      console.log('relocate', event);
       this.currentLocation = event.detail;
-      // this.initialCfi = location.start.cfi;
       this.emitPageInfo();
       this.scheduleProgressSave(bookResponse.id, event.detail);
     }) as EventListener);
@@ -360,10 +360,31 @@ export class BookManagarService {
     }
 
     view.addEventListener('load', ((event: CustomEvent<FoliateLoadDetail>) => {
-      if (this.config) this.applyConfigToDocument(event.detail.doc, this.config);
-      this.shouldDisplay = true;
-      this.emitPageInfo();
+      const doc = event.detail.doc;
+      if (this.config) this.applyConfigToDocument(doc, this.config);
+      void this.waitForFontReady(doc).then(() => {
+        this.shouldDisplay = true;
+        this.emitPageInfo();
+      });
     }) as EventListener);
+  }
+
+  // resolves once the configured reader font has finished loading in the
+  // section document, so the book is only revealed with its final font applied.
+  private async waitForFontReady (doc: Document): Promise<void> {
+    const fonts = (doc as Document & { fonts?: FontFaceSet; }).fonts;
+    if (!fonts) return;
+
+    try {
+      const fontFamily = this.config?.fontFamily;
+      const fontSize = this.config?.fontSize ?? 16;
+      if (fontFamily) {
+        await fonts.load(`${fontSize}px ${JSON.stringify(fontFamily)}`);
+      }
+      await fonts.ready;
+    } catch {
+      // ignore font loading failures; fall back to showing the book anyway.
+    }
   }
 
   private applyConfigToDocument (document: Document, config: ReaderConfig): void {
@@ -402,6 +423,10 @@ export class BookManagarService {
         color: ${this.theme?.palette.text.primary};
         font-family: ${fontStack} !important;
         font-size: ${fontSize} !important;
+        -webkit-user-select: none !important;
+        -moz-user-select: none !important;
+        user-select: none !important;
+        -webkit-touch-callout: none !important;
       }
       body *:not(svg):not(svg *) {
         font-family: ${fontStack} !important;

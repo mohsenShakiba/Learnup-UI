@@ -8,6 +8,7 @@ const typeMessages: Record<TestQuestionType, string> = {
   [TestQuestionType.FIND_THE_RIGHT_WORD]: 'کلمه مناسب را برای لغت زیر پیدا کنید',
   [TestQuestionType.FIND_THE_RIGHT_TRANSLATION]: 'ترجمه درست را برای کلمه زیر پیدا کنید',
   [TestQuestionType.FILL_IN_THE_BLANKS]: 'جای خالی را پر کنید',
+  [TestQuestionType.LISTENING]: 'تست شنیداری',
 };
 
 type Props = {

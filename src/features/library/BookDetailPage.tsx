@@ -22,6 +22,7 @@ export default function BookDetailPage() {
   const [pageInfo, setPageInfo] = useState<BookPageInfo | null>(null);
   const [selectedText, setSelectedText] = useState<SentenceDetectionResult | null>(null);
   const [aiDrawerOpen, setAiDrawerOpen] = useState(false);
+  const drawerOpenedAtRef = useRef(0);
 
   const navigate = useNavigate();
   const { show, close } = useSwipeableDrawerStore();
@@ -43,8 +44,9 @@ export default function BookDetailPage() {
     mutationFn: AiService.postMobileAiProcess,
   });
 
-  // loading
-  const isLoading = booksQuery.isLoading;
+  // loading: wait for the book query as well as the reader revealing itself
+  // (which only happens once the configured font has finished loading).
+  const isLoading = booksQuery.isLoading || !pageInfo?.display;
 
   // initialize the manager
   if (!bookManagerRef.current) {
@@ -55,9 +57,18 @@ export default function BookDetailPage() {
 
   const handleWordSelect = useCallback((selection: SentenceDetectionResult) => {
     setSelectedText(selection);
+    drawerOpenedAtRef.current = Date.now();
     setAiDrawerOpen(true);
     sendAiText(selection);
   }, [sendAiText]);
+
+  // Ignore the ghost click/touch release that immediately follows opening the
+  // drawer via long-press, which would otherwise close it the instant the
+  // thumb lifts.
+  const handleDrawerClose = useCallback(() => {
+    if (Date.now() - drawerOpenedAtRef.current < 500) return;
+    setAiDrawerOpen(false);
+  }, []);
 
   useEffect(() => {
     if (!readerContainer) return;
@@ -86,56 +97,61 @@ export default function BookDetailPage() {
   return (
     <Box sx={{ position: 'fixed', inset: 0, }} >
 
-      {
-        isLoading ?
-          <AppLoader /> :
-          <Box sx={{ position: 'fixed', left: 0, right: 0, top: 0, bottom: 0 }}>
-
-            <Stack direction='row' sx={{ position: 'fixed', left: 16, right: 16, top: 16, gap: 2, zIndex: 1, alignItems: 'center', justifyContent: 'space-between', }}>
-              <IconButton onClick={() => navigate(-1)} sx={{ color: 'inherit' }}>
-                <Icon sx={{ opacity: 0.5 }}>arrow_forward</Icon>
-              </IconButton>
-
-              <Stack onClick={handleOpenToc}>
-                <Typography noWrap sx={{ direction: 'rtl', color: 'inherit', textAlign: 'center', opacity: 0.5, maxWidth: '100%' }}>
-                  {book?.title ?? 'loading'}
-                </Typography>
-                <Typography variant="caption" noWrap sx={{ direction: 'rtl', color: 'inherit', textAlign: 'center', opacity: 0.4, maxWidth: '100%' }}>
-                  {pageInfo?.sectionTitle || 'loading...'}
-                </Typography>
-              </Stack>
-
-              <IconButton
-                onClick={handleOpenSettings}>
-                <Icon sx={{ opacity: 0.5 }}>settings</Icon>
-              </IconButton>
-            </Stack>
-
-            <Box ref={setReaderContainer} sx={{ width: '100%', direction: 'rtl', position: 'fixed', left: 0, right: 0, top: 16, bottom: 8, }} />
-
-            <Typography
-              variant="caption"
-              sx={{
-                direction: 'rtl',
-                position: 'fixed',
-                left: 16,
-                right: 16,
-                bottom: 24,
-                opacity: 0.45,
-                textAlign: 'center',
-                pointerEvents: 'none',
-              }}
-            >
-              {pageInfo && `${pageInfo.currentPage} / ${pageInfo.totalPages}`}
-            </Typography>
-
-          </Box>
+      {isLoading &&
+        <Box sx={{ position: 'fixed', inset: 0, zIndex: 2, bgcolor: 'background.default', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <AppLoader />
+        </Box>
       }
+
+      {/* The reader container must always be mounted so the book can render and
+          reveal itself once its font is ready; it is kept hidden behind the
+          loader until then. */}
+      <Box sx={{ position: 'fixed', left: 0, right: 0, top: 0, bottom: 0, visibility: isLoading ? 'hidden' : 'visible' }}>
+
+        <Stack direction='row' sx={{ position: 'fixed', left: 16, right: 16, top: 16, gap: 2, zIndex: 1, alignItems: 'center', justifyContent: 'space-between', }}>
+          <IconButton onClick={() => navigate(-1)} sx={{ color: 'inherit' }}>
+            <Icon sx={{ opacity: 0.5 }}>arrow_forward</Icon>
+          </IconButton>
+
+          <Stack onClick={handleOpenToc}>
+            <Typography noWrap sx={{ direction: 'rtl', color: 'inherit', textAlign: 'center', opacity: 0.5, maxWidth: '100%' }}>
+              {book?.title ?? 'loading'}
+            </Typography>
+            <Typography variant="caption" noWrap sx={{ direction: 'rtl', color: 'inherit', textAlign: 'center', opacity: 0.4, maxWidth: '100%' }}>
+              {pageInfo?.sectionTitle || 'loading...'}
+            </Typography>
+          </Stack>
+
+          <IconButton
+            onClick={handleOpenSettings}>
+            <Icon sx={{ opacity: 0.5 }}>settings</Icon>
+          </IconButton>
+        </Stack>
+
+        <Box ref={setReaderContainer} sx={{ width: '100%', direction: 'rtl', position: 'fixed', left: 0, right: 0, top: 16, bottom: 8, }} />
+
+        <Typography
+          variant="caption"
+          sx={{
+            direction: 'rtl',
+            position: 'fixed',
+            left: 16,
+            right: 16,
+            bottom: 24,
+            opacity: 0.45,
+            textAlign: 'center',
+            pointerEvents: 'none',
+          }}
+        >
+          {pageInfo && `${pageInfo.currentPage} / ${pageInfo.totalPages}`}
+        </Typography>
+
+      </Box>
 
       <ReaderTranslationDrawer
         open={aiDrawerOpen}
         onOpen={() => setAiDrawerOpen(true)}
-        onClose={() => setAiDrawerOpen(false)}
+        onClose={handleDrawerClose}
         word={selectedText?.word ?? ''}
         sentence={selectedText?.sentence ?? ''}
         loading={aiLoading}

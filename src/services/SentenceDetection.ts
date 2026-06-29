@@ -1,7 +1,29 @@
-export type HighlightRef = { current: HTMLElement[] | null; };
+// the window whose CSS.highlights registry currently holds our highlights, so
+// they can be cleared without re-querying the document.
+export type HighlightRef = { current: HighlightCapableWindow | null; };
 
 const WORD_HIGHLIGHT = 'rgba(255, 209, 0, 0.45)';
 const SENTENCE_HIGHLIGHT = 'rgba(255, 209, 0, 0.12)';
+
+const WORD_HIGHLIGHT_NAME = 'learnup-word';
+const SENTENCE_HIGHLIGHT_NAME = 'learnup-sentence';
+
+type DocHighlight = { priority: number; };
+
+type HighlightCapableWindow = Window & {
+  Highlight?: new (...ranges: Range[]) => DocHighlight;
+  CSS: { highlights?: Map<string, DocHighlight>; };
+};
+
+// CSS rules that style the registered highlights. Injected into every section
+// document so the highlights render. Kept here so highlight colors/names stay
+// in one place; the word sits visually on top of the lighter sentence tint.
+export function getHighlightCss (): string {
+  return `
+    ::highlight(${SENTENCE_HIGHLIGHT_NAME}) { background-color: ${SENTENCE_HIGHLIGHT}; }
+    ::highlight(${WORD_HIGHLIGHT_NAME}) { background-color: ${WORD_HIGHLIGHT}; }
+  `;
+}
 
 export type SentenceDetectionResult = {
   word: string;
@@ -122,6 +144,10 @@ function sentenceBounds (text: string, index: number): { start: number; end: num
   return { start, end };
 }
 
+// Highlights the word and surrounding sentence using the CSS Custom Highlight
+// API, which paints over live Ranges without inserting any nodes. This keeps
+// the section DOM untouched so foliate's reading-position CFIs stay valid (a
+// wrapping <span> would shift node indices/offsets and invalidate them).
 function highlightSelection (
   doc: Document,
   block: HTMLElement,
@@ -131,20 +157,24 @@ function highlightSelection (
 ) {
   clearHighlight(highlightRef);
 
-  const spans: HTMLElement[] = [];
-
-  // wrap the word first while its range is still valid, then the sentence so
-  // the (darker) word highlight sits on top of the (very light) sentence one.
-  const wordSpan = wrapRange(wordRange, WORD_HIGHLIGHT);
-  if (wordSpan) spans.push(wordSpan);
+  const win = doc.defaultView as HighlightCapableWindow | null;
+  const highlights = win?.CSS?.highlights;
+  if (!win?.Highlight || !highlights) {
+    // browser/runtime lacks the CSS Custom Highlight API; skip the visual hint.
+    return;
+  }
 
   const sentenceRange = rangeFromBlockOffsets(doc, block, bounds.start, bounds.end);
   if (sentenceRange) {
-    const sentenceSpan = wrapRange(sentenceRange, SENTENCE_HIGHLIGHT);
-    if (sentenceSpan) spans.push(sentenceSpan);
+    highlights.set(SENTENCE_HIGHLIGHT_NAME, new win.Highlight(sentenceRange));
   }
 
-  highlightRef.current = spans.length ? spans : null;
+  const wordHighlight = new win.Highlight(wordRange);
+  // higher priority paints the word over the lighter sentence highlight.
+  wordHighlight.priority = 1;
+  highlights.set(WORD_HIGHLIGHT_NAME, wordHighlight);
+
+  highlightRef.current = win;
 }
 
 // builds a Range covering [start, end) character offsets within the block's
@@ -186,35 +216,12 @@ function rangeFromBlockOffsets (
   return range;
 }
 
-function wrapRange (range: Range, color: string): HTMLElement | null {
-  const doc = range.startContainer.ownerDocument;
-  if (!doc) return null;
-
-  const span = doc.createElement('span');
-  span.style.backgroundColor = color;
-  span.style.borderRadius = '3px';
-
-  try {
-    range.surroundContents(span);
-    return span;
-  } catch {
-    // surroundContents throws if the range crosses element boundaries; skip it.
-    return null;
-  }
-}
-
 function clearHighlight (highlightRef: HighlightRef) {
-  const spans = highlightRef.current;
+  const win = highlightRef.current;
   highlightRef.current = null;
-  if (!spans) return;
 
-  // unwrap inner-most spans first so the word highlight is removed before the
-  // sentence highlight that contains it.
-  for (const span of spans) {
-    const parent = span.parentNode;
-    if (!parent) continue;
-    while (span.firstChild) parent.insertBefore(span.firstChild, span);
-    parent.removeChild(span);
-    parent.normalize();
-  }
+  const highlights = win?.CSS?.highlights;
+  if (!highlights) return;
+  highlights.delete(WORD_HIGHLIGHT_NAME);
+  highlights.delete(SENTENCE_HIGHLIGHT_NAME);
 }

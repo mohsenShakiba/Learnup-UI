@@ -9,7 +9,7 @@ import {
   READER_FONTS,
   ReaderConfig,
 } from './readerTypes';
-import { detectSentenceAtPoint, HighlightRef, SentenceDetectionResult } from './SentenceDetection';
+import { detectSentenceAtPoint, getHighlightCss, HighlightRef, SentenceDetectionResult } from './SentenceDetection';
 
 export interface EpubNavItem {
   id?: string;
@@ -200,15 +200,13 @@ export class BookManagarService {
     if (view === null) return;
     if (bookResponse === null) return;
 
-    setTimeout(() => {
-      view.addEventListener('relocate', ((event: CustomEvent<SectionLocation>) => {
-        if (!event.detail?.cfi) return;
-        console.log('relocate', event.detail.cfi);
-        this.currentLocation = event.detail;
-        this.emitPageInfo();
-        this.scheduleProgressSave(bookResponse.id, event.detail);
-      }) as EventListener);
-    }, 2000);
+    view.addEventListener('relocate', ((event: CustomEvent<SectionLocation>) => {
+      console.log('relocate', event.detail);
+      if (!event.detail?.cfi) return;
+      this.currentLocation = event.detail;
+      this.emitPageInfo();
+      this.scheduleProgressSave(bookResponse.id, event.detail);
+    }) as EventListener);
   }
 
   private setupVisualPageEvent () {
@@ -232,6 +230,7 @@ export class BookManagarService {
         page: currentPage === null ? 1 : Math.max(1, Math.min(currentPage, sectionPages)),
         pages: sectionPages,
       };
+
       this.emitPageInfo();
     }) as EventListener);
   }
@@ -285,11 +284,13 @@ export class BookManagarService {
 
   private getPageCounts (location: SectionLocation | null): Pick<BookPageInfo, 'currentPage' | 'totalPages'> {
     if (!location) {
+      console.log('null1');
       return { currentPage: null, totalPages: null };
     }
 
     const visualPages = this.getVisualPageCounts();
     if (visualPages.currentPage !== null) {
+      console.log('null2');
       return visualPages;
     }
 
@@ -457,6 +458,7 @@ export class BookManagarService {
       body blockquote {
         text-align: ${textAlign} !important;
       }
+      ${getHighlightCss()}
     `;
   }
 

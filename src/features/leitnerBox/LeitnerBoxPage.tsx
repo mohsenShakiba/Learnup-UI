@@ -3,8 +3,8 @@ import {
   alpha,
   Box,
   Button,
+  Fab,
   Icon,
-  IconButton,
   Stack,
   Typography,
 } from "@mui/material";
@@ -22,11 +22,11 @@ import { LeitnerBoxSettingsDrawer } from "./components/LeitnerBoxSettingsDrawer"
 
 const numberFormatter = new Intl.NumberFormat("en-US");
 
-function formatNumber(value: number): string {
+function formatNumber (value: number): string {
   return numberFormatter.format(value);
 }
 
-function getIntervalDays(value: string): number {
+function getIntervalDays (value: string): number {
   const dayPart = value.match(/^(-?\d+)\./);
   if (dayPart) {
     return Number(dayPart[1]);
@@ -44,7 +44,7 @@ function getIntervalDays(value: string): number {
   return Number(parts[0]);
 }
 
-function formatReviewInterval(value: string): string {
+function formatReviewInterval (value: string): string {
   const days = getIntervalDays(value);
 
   if (days <= 0) {
@@ -72,7 +72,7 @@ function formatReviewInterval(value: string): string {
   return `every ${days} days`;
 }
 
-export default function LeitnerBoxPage() {
+export default function LeitnerBoxPage () {
   const navigate = useNavigate();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
@@ -112,31 +112,16 @@ export default function LeitnerBoxPage() {
 
   return (
     <Scaffold
-      maxWidth="390px"
-      header={
-        <DefaultHeader
-          header="مرور"
-          children={
-            <IconButton
-              onClick={() => setIsSettingsOpen(true)}
-              aria-label="Open Leitner settings"
-            >
-              <SettingsIcon />
-            </IconButton>
-          }
-        />
-      }
+      header={<DefaultHeader header="لایتنر باکس" />}
     >
       <Stack dir="ltr" spacing={2.15} sx={{ width: "100%", mx: "auto" }}>
-        <Stack direction="row" sx={{ alignItems: "center", gap: 1.5 }}>
+        <Stack direction="row" sx={{ alignItems: "end", gap: 1.5 }}>
           <Box sx={{ minWidth: 0, flex: 1 }}>
             <Typography
               component="h1"
               sx={{
-                fontFamily: "Georgia, Merriweather, serif",
                 fontSize: 30,
                 lineHeight: 1,
-                fontWeight: 800,
                 color: "text.primary",
               }}
             >
@@ -154,7 +139,6 @@ export default function LeitnerBoxPage() {
               position: "relative",
               gap: 0.25,
               fontSize: 13,
-              fontWeight: 900,
               boxShadow: (theme) =>
                 `0 8px 18px ${alpha(theme.palette.warning.main, 0.24)}`,
             }}
@@ -201,7 +185,6 @@ export default function LeitnerBoxPage() {
                   fontFamily: "Georgia, Merriweather, serif",
                   fontSize: 42,
                   lineHeight: 0.9,
-                  fontWeight: 900,
                 }}
               >
                 {formatNumber(dueItems)}
@@ -246,7 +229,6 @@ export default function LeitnerBoxPage() {
                     alpha(theme.palette.warning.contrastText, 0.2),
                   color: "warning.contrastText",
                   fontSize: 12,
-                  fontWeight: 900,
                   textTransform: "none",
                   "&:hover": {
                     bgcolor: (theme) =>
@@ -286,6 +268,19 @@ export default function LeitnerBoxPage() {
           )}
         </Stack>
       </Stack>
+
+      <Fab
+        color="primary"
+        onClick={() => setIsSettingsOpen(true)}
+        aria-label="Open Leitner settings"
+        sx={{
+          position: "fixed",
+          right: 16,
+          bottom: 81,
+        }}
+      >
+        <SettingsIcon />
+      </Fab>
 
       <LeitnerBoxSettingsDrawer
         boxId={leitnerBoxQuery.data.id}

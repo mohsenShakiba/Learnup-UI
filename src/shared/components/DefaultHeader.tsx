@@ -80,6 +80,8 @@ export function DefaultHeader ({ header, subtitle, children }: DefaultHeaderProp
           <Icon>menu</Icon>
         </IconButton>
       )}
+      <Box sx={{ flex: 1 }}></Box>
+
       <Typography>
         {header}
       </Typography>

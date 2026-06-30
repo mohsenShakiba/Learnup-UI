@@ -42,7 +42,7 @@ export function Scaffold ({
           py: disablePadding ? 0 : 2,
           px: disablePadding ? 0 : 2,
           boxSizing: "border-box",
-          pb: 10,
+          pb: 9,
 
         }}
       >

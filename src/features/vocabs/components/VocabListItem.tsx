@@ -24,11 +24,22 @@ const VOCAB_TYPE_LABELS: Record<VocabType, string> = {
   [VocabType.ADVERB]: "adverb",
 };
 
+const VOCAB_TYPE_COLORS: Record<
+  VocabType,
+  "default" | "primary" | "secondary" | "success" | "warning"
+> = {
+  [VocabType.UNKNOWN]: "default",
+  [VocabType.NOUN]: "primary",
+  [VocabType.VERB]: "secondary",
+  [VocabType.ADJECTIVE]: "success",
+  [VocabType.ADVERB]: "warning",
+};
+
 type Props = {
   vocab: VocabResponse;
 };
 
-export function VocabListItem({ vocab }: Props) {
+export function VocabListItem ({ vocab }: Props) {
   const [open, setOpen] = useState(false);
 
   const addToLeitnerMutation = useMutation({
@@ -75,24 +86,26 @@ export function VocabListItem({ vocab }: Props) {
         <Stack spacing={1.5} sx={{ mt: 1.5 }}>
           {vocab.senses.map((sense) => {
             const typeLabel = VOCAB_TYPE_LABELS[sense.type];
+            const typeColor = VOCAB_TYPE_COLORS[sense.type];
 
             return (
-              <Box key={sense.id}>
-                <Divider sx={{ mb: 1 }} />
+              <Box key={sense.id} >
+                <Divider sx={{ mb: 2 }} />
                 <Stack
                   direction="row"
-                  sx={{ alignItems: "center", direction: "rtl", gap: 1 }}
+                  sx={{ alignItems: "center", gap: 1, direction: "rtl" }}
                 >
                   {typeLabel && (
                     <Chip
                       label={typeLabel}
                       size="small"
-                      variant="outlined"
-                      sx={{ height: 20, fontSize: 11 }}
+                      variant="filled"
+                      color={typeColor}
+                      sx={{ height: 20, fontSize: 12 }}
                     />
                   )}
                   {sense.translation && (
-                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                    <Typography variant="body2" sx={{ direction: 'ltr' }} >
                       {sense.translation}
                     </Typography>
                   )}
@@ -101,29 +114,31 @@ export function VocabListItem({ vocab }: Props) {
                 {sense.description && (
                   <Typography
                     variant="body2"
-                    sx={{ color: "text.secondary", direction: "rtl", mt: 0.5 }}
+                    sx={{ color: "text.secondary", mt: 1 }}
                   >
                     {sense.description}
                   </Typography>
                 )}
 
-                {sense.example && (
-                  <Typography
-                    variant="body2"
-                    sx={{ fontStyle: "italic", mt: 0.5 }}
-                  >
-                    {sense.example}
-                  </Typography>
-                )}
+                <Stack spacing={0.5} sx={{ mt: 2 }}>
+                  {sense.example && (
+                    <Typography
+                      variant="body2"
+                      sx={{ fontStyle: "italic", direction: "rtl" }}
+                    >
+                      {sense.example}
+                    </Typography>
+                  )}
 
-                {sense.exampleTranslation && (
-                  <Typography
-                    variant="caption"
-                    sx={{ color: "text.secondary", direction: "rtl" }}
-                  >
-                    {sense.exampleTranslation}
-                  </Typography>
-                )}
+                  {sense.exampleTranslation && (
+                    <Typography
+                      variant="body2"
+                      sx={{ color: "text.secondary", direction: "rtl" }}
+                    >
+                      {sense.exampleTranslation}
+                    </Typography>
+                  )}
+                </Stack>
               </Box>
             );
           })}

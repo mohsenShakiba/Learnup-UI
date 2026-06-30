@@ -1,8 +1,7 @@
-import { Box, Button, Card, Icon, Stack, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { GlowOrbs } from '../../../shared/components/GlowOrbs';
-import FormatNumber from '../../../utils/NumberFmt';
 import { TypeWriter } from '../../../components/TypeWriter';
+import { ActionCard } from '../../../shared/components/ActionCard';
 
 interface Props {
   totalItems: number;
@@ -17,22 +16,23 @@ export function LeitnerStatsCard({ totalItems, dueItems }: Props) {
   const isTotalEmpty = totalItems === 0;
 
   const vocabs = isTodayEmpty ? ['you', 'are', 'the', 'best'] : [`${dueItems} due`, `${totalItems} total`]
+  const actionLabel = isTotalEmpty ? 'آشنایی با لاینتر' : 'بریم مرور کنیم';
 
   return (
-    <Card sx={{ position: 'relative' }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-        <Stack spacing={1} sx={{ flex: 1, alignItems: 'start' }}>
+    <ActionCard
+      aria-label={actionLabel}
+      onClick={() => navigate('/leitner-box')}
+      sx={{ overflow: 'hidden', position: 'relative', p: 2 }}
+    >
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, minHeight: 64 }}>
+        <Stack spacing={0.5} sx={{ flex: 1, alignItems: 'start', minWidth: 0, position: 'relative', zIndex: 1 }}>
           <Typography variant="body1">
             جعبه لایتنر
           </Typography>
 
-          <Button
-            endIcon={<Icon>arrow_backward</Icon>}
-            onClick={() => navigate('/leitner-box')}
-            sx={{ bgcolor: 'primary.main' }}
-          >
-            {isTotalEmpty ? 'آشنایی با لاینتر' : 'بریم مرور کنیم'}
-          </Button>
+          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+            {actionLabel}
+          </Typography>
         </Stack>
 
         <TypeWriter sx={{
@@ -45,6 +45,6 @@ export function LeitnerStatsCard({ totalItems, dueItems }: Props) {
         }}
           words={vocabs} />
       </Box>
-    </Card>
+    </ActionCard>
   );
 }

@@ -4,6 +4,7 @@ import setupOpenApi from "./api/setup";
 import "./App.css";
 import LoginPage from "./features/auth/LoginPage";
 import { RequireAuth } from "./features/auth/RequireAuth";
+import SignupPage from "./features/auth/SignupPage";
 import CourseDetailPage from "./features/courses/CourseDetailPage";
 import ListCoursesPage from "./features/courses/ListCoursesPage";
 import DashboardPage from "./features/dashboard/DashboardPage";
@@ -25,7 +26,7 @@ import LessonVocabTestsPage from "./features/VocabTests/LessonVocabTestsPage";
 import { BottomNav, isBottomNavVisible } from "./shared/components/BottomNav";
 setupOpenApi();
 
-function AppLayout () {
+function AppLayout() {
   const location = useLocation();
   const hasBottomNav = isBottomNavVisible(location.pathname);
 
@@ -41,8 +42,12 @@ function AppLayout () {
       >
         <Routes>
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
           <Route element={<RequireAuth />}>
-            <Route path="/lessons/:lessonId/stories/:id" element={<StoryDetailPage />} />
+            <Route
+              path="/lessons/:lessonId/stories/:id"
+              element={<StoryDetailPage />}
+            />
             <Route path="/courses/:id" element={<CourseDetailPage />} />
             <Route path="/grammar" element={<ListGrammarPage />} />
             <Route path="/grammars/:id" element={<GrammarDetailPage />} />
@@ -51,10 +56,7 @@ function AppLayout () {
               element={<ListCoursesPage />}
             />
             <Route path="/lessons/:id" element={<LessonDetailPage />} />
-            <Route
-              path="/lessons/:id/vocabs"
-              element={<LessonVocabsPage />}
-            />
+            <Route path="/lessons/:id/vocabs" element={<LessonVocabsPage />} />
             <Route
               path="/lessons/:id/vocab-tests"
               element={<LessonVocabTestsPage />}
@@ -65,12 +67,12 @@ function AppLayout () {
             />
             <Route path="/vocab" element={<VocabSearchPage />} />
             <Route path="/leitner-box" element={<LeitnerBoxPage />} />
-            <Route
-              path="/boxlevel/:id"
-              element={<BoxLevelReviewPage />}
-            />
+            <Route path="/boxlevel/:id" element={<BoxLevelReviewPage />} />
             <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/settings/subscriptions" element={<SubscriptionsPage />} />
+            <Route
+              path="/settings/subscriptions"
+              element={<SubscriptionsPage />}
+            />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/library/book/:bookId" element={<BookDetailPage />} />
             <Route path="/library" element={<ListBooksPage />} />
@@ -89,7 +91,7 @@ function AppLayout () {
   );
 }
 
-function App () {
+function App() {
   return (
     <BrowserRouter>
       <AppLayout />

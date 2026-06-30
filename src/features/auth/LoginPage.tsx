@@ -50,6 +50,19 @@ export default function LoginPage () {
   const verifyOtpMutation = useMutation({
     mutationFn: () => AuthService.verifyOtp({ mobileNumber, code }),
     onSuccess: (response) => {
+      if (response.requiresSignup) {
+        navigate("/signup", {
+          replace: true,
+          state: { mobileNumber, code, from: redirectTo },
+        });
+        return;
+      }
+
+      if (!response.accessToken || !response.expiresAt) {
+        toast.error("ورود کامل نشد. دوباره کد تایید بگیرید.");
+        return;
+      }
+
       setAuth(response.accessToken, response.expiresAt);
       navigate(redirectTo, { replace: true });
     },

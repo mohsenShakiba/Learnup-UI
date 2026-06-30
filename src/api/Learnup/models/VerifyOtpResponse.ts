@@ -4,6 +4,7 @@
 /* eslint-disable */
 
 export type VerifyOtpResponse = {
-    accessToken: string;
-    expiresAt: string;
+    accessToken: string | null;
+    expiresAt: string | null;
+    requiresSignup: boolean;
 };

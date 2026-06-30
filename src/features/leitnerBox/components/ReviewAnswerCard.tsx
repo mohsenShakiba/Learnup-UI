@@ -14,7 +14,12 @@ type DetailBlockProps = {
   direction?: "ltr" | "rtl";
 };
 
-function DetailBlock({ icon, label, children, direction = "ltr" }: DetailBlockProps) {
+function DetailBlock({
+  icon,
+  label,
+  children,
+  direction = "ltr",
+}: DetailBlockProps) {
   return (
     <Box
       sx={{
@@ -25,7 +30,11 @@ function DetailBlock({ icon, label, children, direction = "ltr" }: DetailBlockPr
         bgcolor: "background.default",
       }}
     >
-      <Stack direction="row" spacing={1} sx={{ alignItems: "center", mb: 0.75 }}>
+      <Stack
+        direction="row"
+        spacing={1}
+        sx={{ alignItems: "center", mb: 0.75 }}
+      >
         <Icon sx={{ fontSize: 18, color: "text.secondary" }}>{icon}</Icon>
         <Typography
           variant="caption"
@@ -53,12 +62,11 @@ export function ReviewAnswerCard({
     <Card
       onClick={onHide}
       sx={{
-        minHeight: 320,
+        height: "100%",
         borderRadius: 4,
         cursor: isPending ? "progress" : "pointer",
+        mt: 1,
         p: 2,
-        mt: 3,
-        flex: 1,
       }}
     >
       <Stack spacing={2.25} sx={{ minHeight: 280 }}>

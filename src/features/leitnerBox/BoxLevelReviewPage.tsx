@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   LinearProgress,
   Snackbar,
@@ -6,8 +7,11 @@ import {
   Typography,
 } from "@mui/material";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import type { Swiper as SwiperType } from "swiper";
+import "swiper/css";
+import { Swiper, SwiperSlide } from "swiper/react";
 import { AnswerQuality, LeitnerBoxService } from "../../api/Learnup";
 import { AppLoader } from "../../shared/components/AppLoader";
 import { DefaultHeader } from "../../shared/components/DefaultHeader";
@@ -52,8 +56,10 @@ export default function BoxLevelReviewPage() {
   const boxLevelId = Number(id);
 
   const [isAnswerVisible, setIsAnswerVisible] = useState(false);
+  const [activeCardIndex, setActiveCardIndex] = useState(0);
   const [reviews, setReviews] = useState<Record<number, string>>({});
   const [showErrorMessage, setShowErrorMessage] = useState(false);
+  const swiperRef = useRef<SwiperType | null>(null);
 
   const dueCardsQuery = useQuery({
     queryKey: ["leitner-box-level-due-cards", boxLevelId],
@@ -105,8 +111,27 @@ export default function BoxLevelReviewPage() {
 
   const reviewedCount = Object.keys(reviews).length;
   const totalCards = reviewedCount + pendingCards.length;
-  const activeCard = pendingCards[0] ?? null;
+  const safeActiveCardIndex =
+    pendingCards.length > 0
+      ? Math.min(activeCardIndex, pendingCards.length - 1)
+      : 0;
+  const activeCard = pendingCards[safeActiveCardIndex] ?? null;
   const isCompleted = totalCards > 0 && pendingCards.length === 0;
+
+  useEffect(() => {
+    if (pendingCards.length === 0) {
+      if (activeCardIndex !== 0) {
+        setActiveCardIndex(0);
+      }
+      return;
+    }
+
+    if (activeCardIndex > pendingCards.length - 1) {
+      const nextIndex = pendingCards.length - 1;
+      setActiveCardIndex(nextIndex);
+      swiperRef.current?.slideTo(nextIndex, 0);
+    }
+  }, [activeCardIndex, pendingCards.length]);
 
   function handleReveal() {
     if (!activeCard || reviewMutation.isPending) return;
@@ -128,11 +153,26 @@ export default function BoxLevelReviewPage() {
       },
       {
         onSuccess: () => {
+          const nextPendingLength = pendingCards.length - 1;
+          const nextIndex =
+            nextPendingLength <= 0
+              ? 0
+              : Math.min(safeActiveCardIndex, nextPendingLength - 1);
+
           setReviews((prev) => ({ ...prev, [activeCard.id]: choice.id }));
+          setActiveCardIndex(nextIndex);
+          window.requestAnimationFrame(() => {
+            swiperRef.current?.slideTo(nextIndex, 0);
+          });
           setIsAnswerVisible(false);
         },
       },
     );
+  }
+
+  function handleSlideChange(swiper: SwiperType) {
+    setActiveCardIndex(swiper.activeIndex);
+    setIsAnswerVisible(false);
   }
 
   if (!Number.isFinite(boxLevelId) || boxLevelId <= 0) {
@@ -161,17 +201,15 @@ export default function BoxLevelReviewPage() {
   return (
     <Scaffold
       maxWidth="sm"
+      disablePadding
       header={
-        <DefaultHeader
-          header={`Box Level ${levelNumber ?? boxLevelId}`}
-          subtitle={`${levelInfo?.dueItemsCount ?? pendingCards.length} ready cards`}
-        />
+        <DefaultHeader header={`Box Level ${levelNumber ?? boxLevelId}`} />
       }
     >
       {totalCards === 0 ? (
         <EmptyList message="No cards are due for review in this box level right now." />
       ) : isCompleted ? (
-        <FancyCard sx={{ borderRadius: 4 }}>
+        <FancyCard sx={{ borderRadius: 4, p: 2 }}>
           <Stack spacing={2} sx={{ p: 3, textAlign: "center" }}>
             <Typography variant="h6" sx={{ fontWeight: 700 }}>
               Review completed
@@ -193,52 +231,112 @@ export default function BoxLevelReviewPage() {
         <Stack
           spacing={3}
           sx={{
-            minHeight: "calc(100dvh - 140px)",
+            height: "100%",
             justifyContent: "space-between",
           }}
         >
           <Stack sx={{ flex: 1 }}>
             <LinearProgress
               variant="determinate"
-              value={totalCards === 0 ? 0 : (reviewedCount / totalCards) * 100}
+              value={
+                totalCards === 0
+                  ? 0
+                  : ((activeCardIndex + 1) / totalCards) * 100
+              }
               sx={{ mb: 1.25, borderRadius: 999 }}
             />
-            <Typography variant="caption" color="text.secondary">
-              Card {reviewedCount + 1} of {totalCards}
-            </Typography>
-            {isAnswerVisible ? (
-              <ReviewAnswerCard
-                card={activeCard}
-                isPending={reviewMutation.isPending}
-                onHide={handleHideAnswer}
-              />
-            ) : (
-              <ReviewQuestionCard
-                card={activeCard}
-                isPending={reviewMutation.isPending}
-                onReveal={handleReveal}
-              />
-            )}
-          </Stack>
+            <Box sx={{ px: 2 }}>
+              <Typography variant="caption" color="text.secondary">
+                Card {safeActiveCardIndex + 1} of {pendingCards.length}
+                {reviewedCount > 0 ? ` - ${reviewedCount} reviewed` : ""}
+              </Typography>
+            </Box>
+            <Box
+              sx={{
+                flex: 1,
+                display: "flex",
+                minWidth: 0,
+                overflow: "hidden",
+              }}
+            >
+              <Swiper
+                direction="horizontal"
+                slidesPerView={1}
+                allowTouchMove={!reviewMutation.isPending}
+                onSwiper={(swiper) => {
+                  swiperRef.current = swiper;
+                  setActiveCardIndex(swiper.activeIndex);
+                }}
+                onSlideChange={handleSlideChange}
+              >
+                {pendingCards.map((card, index) => {
+                  const isActiveCard = index === safeActiveCardIndex;
 
-          {isAnswerVisible && (
-            <Stack spacing={1.5} sx={{ mt: "auto", pb: 2 }}>
-              <Stack direction="row" spacing={1} sx={{ width: "100%" }}>
-                {qualityChoices.map((choice) => (
-                  <Button
-                    key={choice.id}
-                    variant="contained"
-                    color={choice.color}
-                    disabled={reviewMutation.isPending}
-                    onClick={() => handleQualitySelect(choice)}
-                    sx={{ flex: 1, minWidth: 0, borderRadius: 999 }}
-                  >
-                    {choice.label}
-                  </Button>
-                ))}
-              </Stack>
-            </Stack>
-          )}
+                  return (
+                    <SwiperSlide key={card.id}>
+                      <Box
+                        sx={{
+                          height: "100%",
+                          overflow: "hidden",
+                          p: 2,
+                          pt: 1,
+                          boxSizing: "border-box",
+                        }}
+                        id={"test"}
+                      >
+                        {isActiveCard && isAnswerVisible ? (
+                          <Stack
+                            sx={{
+                              flexDirection: "column",
+                              height: "100%",
+                              gap: 2,
+                            }}
+                          >
+                            <ReviewAnswerCard
+                              card={card}
+                              isPending={reviewMutation.isPending}
+                              onHide={handleHideAnswer}
+                            />
+
+                            <Stack spacing={1.5} sx={{ mt: "auto" }}>
+                              <Stack
+                                direction="row"
+                                spacing={1}
+                                sx={{ width: "100%" }}
+                              >
+                                {qualityChoices.map((choice) => (
+                                  <Button
+                                    key={choice.id}
+                                    variant="contained"
+                                    color={choice.color}
+                                    disabled={reviewMutation.isPending}
+                                    onClick={() => handleQualitySelect(choice)}
+                                    sx={{
+                                      flex: 1,
+                                      minWidth: 0,
+                                      borderRadius: 999,
+                                    }}
+                                  >
+                                    {choice.label}
+                                  </Button>
+                                ))}
+                              </Stack>
+                            </Stack>
+                          </Stack>
+                        ) : (
+                          <ReviewQuestionCard
+                            card={card}
+                            isPending={reviewMutation.isPending}
+                            onReveal={handleReveal}
+                          />
+                        )}
+                      </Box>
+                    </SwiperSlide>
+                  );
+                })}
+              </Swiper>
+            </Box>
+          </Stack>
         </Stack>
       )}
 

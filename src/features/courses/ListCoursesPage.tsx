@@ -1,16 +1,16 @@
-import { Box } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
-import { useRef, useState } from 'react';
-import type { Swiper as SwiperType } from 'swiper';
-import 'swiper/css';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { CoursesService } from '../../api/Learnup';
-import { AppLoader } from '../../shared/components/AppLoader';
-import { DefaultHeader } from '../../shared/components/DefaultHeader';
-import { ErrorPage } from '../../shared/components/ErrorPage';
-import { Scaffold } from '../../shared/components/Scaffold';
-import { CourseListItem } from './components/CourseListItem';
-import { CoursePagination } from './components/CoursePagination';
+import { Box } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
+import { useRef, useState } from "react";
+import type { Swiper as SwiperType } from "swiper";
+import "swiper/css";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { CoursesService } from "../../api/Learnup";
+import { AppLoader } from "../../shared/components/AppLoader";
+import { DefaultHeader } from "../../shared/components/DefaultHeader";
+import { ErrorPage } from "../../shared/components/ErrorPage";
+import { Scaffold } from "../../shared/components/Scaffold";
+import { CourseListItem } from "./components/CourseListItem";
+import { CoursePagination } from "./components/CoursePagination";
 
 export default function ListCoursesPage () {
   const swiperRef = useRef<SwiperType | null>(null);
@@ -33,14 +33,19 @@ export default function ListCoursesPage () {
 
   return (
     <Scaffold disablePadding header={<DefaultHeader header="لیست دوره ها" />}>
-      <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', pt: 2, }}>
-
-        <Box sx={{ position: 'relative', flex: 1, width: '100%', display: 'flex' }}>
+      <Box
+        sx={{ display: "flex", flexDirection: "column", height: "100%" }}
+      >
+        <Box
+          sx={{ position: "relative", flex: 1, width: "100%", display: "flex" }}
+        >
           <Swiper
-            direction='horizontal'
+            direction="horizontal"
             slidesPerView={1}
-            style={{ flex: 1, width: '100%' }}
-            onSwiper={(swiper) => { swiperRef.current = swiper; }}
+            style={{ flex: 1, width: "100%" }}
+            onSwiper={(swiper) => {
+              swiperRef.current = swiper;
+            }}
             onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
           >
             {courses.map((course) => (

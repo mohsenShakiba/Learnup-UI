@@ -1,12 +1,11 @@
-import SettingsIcon from "@mui/icons-material/Settings";
 import {
   alpha,
   Box,
   Button,
-  Fab,
   Icon,
+  IconButton,
   Stack,
-  Typography,
+  Typography
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
@@ -128,6 +127,11 @@ export default function LeitnerBoxPage () {
               Leitner box
             </Typography>
           </Box>
+
+          <IconButton onClick={() => setIsSettingsOpen(true)}>
+
+            <Icon>settings</Icon>
+          </IconButton>
 
           <Box
             sx={{
@@ -269,18 +273,7 @@ export default function LeitnerBoxPage () {
         </Stack>
       </Stack>
 
-      <Fab
-        color="primary"
-        onClick={() => setIsSettingsOpen(true)}
-        aria-label="Open Leitner settings"
-        sx={{
-          position: "fixed",
-          right: 16,
-          bottom: 81,
-        }}
-      >
-        <SettingsIcon />
-      </Fab>
+
 
       <LeitnerBoxSettingsDrawer
         boxId={leitnerBoxQuery.data.id}

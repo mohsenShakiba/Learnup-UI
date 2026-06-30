@@ -26,8 +26,8 @@ export function GrammarListItem ({ grammar, lessonId }: Props) {
             <Stack spacing={2}>
                 <LessonListItemHeader
                     icon='menu_book'
-                    label='گرامر'
-                    durationMinutes={5}
+                    label='Grammar'
+                    durationMinutes={grammar.duration}
                     color='secondary.main'
                 />
 

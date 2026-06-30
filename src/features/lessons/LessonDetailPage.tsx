@@ -4,8 +4,8 @@ import { AppLoader } from "../../shared/components/AppLoader";
 import { DefaultHeader } from "../../shared/components/DefaultHeader";
 import { ErrorPage } from "../../shared/components/ErrorPage";
 import { Scaffold } from "../../shared/components/Scaffold";
+import { ConversationListItem } from "./components/ConversationListItem";
 import { GrammarListItem } from "./components/GrammarListItem";
-import { StoryListItem } from "./components/StoryListItem";
 import { TestListItem } from "./components/TestListItem";
 import { VocabListItem } from "./components/VocabListItem";
 import { useLesson } from "./hooks/useLesson";
@@ -106,10 +106,10 @@ export default function LessonDetailPage () {
               spacing={1.5}
               sx={{ alignItems: "stretch" }}
             >
-              <TimelineColumn completed={story.isCompleted} isLast={isLast} />
               <Box sx={{ flex: 1 }}>
-                <StoryListItem story={story} lessonId={lesson.id} />
+                <ConversationListItem story={story} lessonId={lesson.id} />
               </Box>
+              <TimelineColumn completed={story.isCompleted} isLast={isLast} />
             </Stack>
           );
         })}
@@ -124,29 +124,29 @@ export default function LessonDetailPage () {
               spacing={1.5}
               sx={{ alignItems: "stretch" }}
             >
-              <TimelineColumn completed={false} isLast={isLast} />
               <Box sx={{ flex: 1 }}>
                 <GrammarListItem grammar={grammar} lessonId={lesson.id} />
               </Box>
+              <TimelineColumn completed={false} isLast={isLast} />
             </Stack>
           );
         })}
 
         {hasVocabs && (
           <Stack direction="row" spacing={1.5} sx={{ alignItems: "stretch" }}>
-            <TimelineColumn completed={false} isLast={!hasTests} />
             <Box sx={{ flex: 1 }}>
               <VocabListItem lessonId={lesson.id} vocabs={lesson.vocabs} />
             </Box>
+            <TimelineColumn completed={false} isLast={!hasTests} />
           </Stack>
         )}
 
         {hasTests && (
           <Stack direction="row" spacing={1.5} sx={{ alignItems: "stretch" }}>
-            <TimelineColumn completed={false} isLast={true} />
             <Box sx={{ flex: 1 }}>
               <TestListItem lessonId={lesson.id} tests={lesson.tests} />
             </Box>
+            <TimelineColumn completed={false} isLast={true} />
           </Stack>
         )}
 
@@ -161,7 +161,7 @@ export default function LessonDetailPage () {
               onClick={() => navigate(`/lessons/${lesson.nextLessonId}`)}
               sx={{ alignSelf: "center", mt: 2 }}
             >
-              درس بعدی
+              شروع درس بعدی
             </Button>
           </Stack>
 

@@ -9,7 +9,7 @@ type StoryListItemProps = {
   lessonId: number;
 };
 
-export function StoryListItem ({ story, lessonId }: StoryListItemProps) {
+export function ConversationListItem ({ story, lessonId }: StoryListItemProps) {
   const navigate = useNavigate();
 
   const goToStory = () => navigate(`/lessons/${lessonId}/stories/${story.id}`);
@@ -19,7 +19,7 @@ export function StoryListItem ({ story, lessonId }: StoryListItemProps) {
       <Stack spacing={2}>
         <LessonListItemHeader
           icon='auto_stories'
-          label='داستان'
+          label='Conversation'
           durationMinutes={story.duration}
         />
 
@@ -28,9 +28,12 @@ export function StoryListItem ({ story, lessonId }: StoryListItemProps) {
             {story.title}
           </Typography>
 
-          <Typography variant='body2' sx={{ color: 'text.secondary' }} >
-            {story.description}
-          </Typography>
+          <Stack direction='row' sx={{ gap: 0.5, alignItems: 'center' }}>
+            <Typography variant='body2' sx={{ color: 'text.secondary' }}>
+              مکالمه برای آشنایی با لغات و تمرین شنیداری
+            </Typography>
+
+          </Stack>
         </Stack>
 
       </Stack>

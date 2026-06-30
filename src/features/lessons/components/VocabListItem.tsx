@@ -23,8 +23,8 @@ export function VocabListItem ({ vocabs, lessonId }: Props) {
             <Stack spacing={2} >
                 <LessonListItemHeader
                     icon='translate'
-                    label='مرور لغات'
-                    durationMinutes={5}
+                    label='Vocabulary'
+                    durationMinutes={3}
                     color='success.main'
                 />
 

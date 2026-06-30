@@ -7,10 +7,10 @@ type Props = {
 export function DurationBadge ({ minutes }: Props) {
     return (
         <Stack direction='row' sx={{ alignItems: 'center', opacity: 0.4, gap: 0.5 }}>
-            <Typography sx={{ fontSize: '0.7rem', fontFamily: 'arial', direction: 'rtl' }}>
-                {minutes} MIN
+            <Typography sx={{ fontSize: '0.8rem', fontFamily: 'arial', direction: 'rtl' }}>
+                {minutes} Min
             </Typography>
-            <Icon sx={{ fontSize: '0.8rem' }}>timer</Icon>
+            <Icon sx={{ fontSize: '1.2rem' }}>timer</Icon>
         </Stack>
     );
 }

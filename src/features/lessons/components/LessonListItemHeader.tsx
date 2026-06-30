@@ -16,11 +16,11 @@ export function LessonListItemHeader ({
 }: LessonListItemHeaderProps) {
     return (
         <Stack spacing={1} >
-            <Stack direction='row' spacing={1} sx={{ alignItems: 'center' }}>
+            <Stack direction='row' spacing={1} sx={{ alignItems: 'center', direction: 'rtl' }}>
                 <Stack
                     direction='row'
-                    spacing={0.5}
                     sx={{
+                        gap: 1,
                         alignItems: 'center',
                         color,
                     }}

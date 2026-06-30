@@ -7,6 +7,7 @@ export const ROOT_TABS = [
   { label: 'Leitner', icon: 'layers', path: '/leitner-box' },
   { label: 'Library', icon: 'menu_book', path: '/library' },
   { label: 'Vocab', icon: 'search', path: '/vocab' },
+  { label: 'Vocab', icon: 'chat_bubble', path: '/vocab' },
 ];
 
 const tabs = ROOT_TABS;
@@ -60,11 +61,11 @@ export function BottomNav () {
           pointerEvents: 'auto',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-around',
+          justifyContent: 'space-between',
           gap: 0.5,
-          px: 1,
-          py: 0.75,
-          borderRadius: 2,
+          px: 2,
+          py: 1,
+          borderRadius: 3,
           border: '1px solid',
           borderColor: isDark ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.6)',
           backgroundColor: isDark ? 'rgba(40,38,46,0.55)' : 'rgba(255,255,255,0.55)',
@@ -84,8 +85,8 @@ export function BottomNav () {
               aria-label={tab.label}
               sx={{
                 position: 'relative',
-                width: 48,
-                height: 48,
+                width: 40,
+                height: 40,
                 borderRadius: 2,
                 color: isActive ? 'primary.contrastText' : 'text.secondary',
                 backgroundColor: isActive ? 'primary.main' : 'transparent',

@@ -1,4 +1,4 @@
-import { Button, Divider, Stack, Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { GrammarResponse } from '../../../api/Learnup/models/GrammarResponse';
 import { ActionCard } from '../../../shared/components/ActionCard';
@@ -23,7 +23,7 @@ export function GrammarListItem ({ grammar, lessonId }: Props) {
 
     return (
         <ActionCard sx={{ p: 2 }} onClick={handleNavigateToGrammarPage}>
-            <Stack spacing={2} sx={{}}>
+            <Stack spacing={2}>
                 <LessonListItemHeader
                     icon='menu_book'
                     label='گرامر'
@@ -31,23 +31,10 @@ export function GrammarListItem ({ grammar, lessonId }: Props) {
                     color='secondary.main'
                 />
 
-                <Divider />
-
                 <Typography sx={{ lineHeight: '15px', fontSize: '1.1rem', direction: 'rtl' }}>{grammar.name}</Typography>
 
-                <Typography sx={{ color: 'text.secondary', fontSize: '0.9rem' }}>{grammar.description}</Typography>
+                <Typography variant='body2' sx={{ color: 'text.secondary' }}>{grammar.description}</Typography>
 
-                <Stack direction='row' spacing={1}>
-                    <Button
-                        fullWidth
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            handleNavigateToGrammarPage();
-                        }}
-                    >
-                        مطالعه گرامر
-                    </Button>
-                </Stack>
             </Stack>
         </ActionCard>
     );

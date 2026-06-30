@@ -1,4 +1,4 @@
-import { Button, Divider, Stack, Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { TestResponse } from '../../../api/Learnup/models/TestResponse';
 import { ActionCard } from '../../../shared/components/ActionCard';
@@ -9,7 +9,7 @@ type Props = {
     lessonId: number;
 };
 
-export function TestListItem({ tests, lessonId }: Props) {
+export function TestListItem ({ tests, lessonId }: Props) {
 
     const navigate = useNavigate();
     if (!tests.length) return null;
@@ -28,19 +28,8 @@ export function TestListItem({ tests, lessonId }: Props) {
                     color='warning.main'
                 />
 
-                <Divider />
+                <Typography variant='caption' sx={{ color: 'text.secondary' }}>آزمون مروری گرامر و لغلت</Typography>
 
-                <Typography variant='caption' sx={{ color: 'text.secondary' }}>آزمون پایانی این درس</Typography>
-
-                <Button
-                    size='small'
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        handleNavigateToTest();
-                    }}
-                >
-                    شروع آزمون
-                </Button>
             </Stack>
         </ActionCard>
     );

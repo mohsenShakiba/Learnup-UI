@@ -1,4 +1,4 @@
-import { Button, Divider, Stack, Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { VocabResponse } from '../../../api/Learnup/models/VocabResponse';
 import { ActionCard } from '../../../shared/components/ActionCard';
@@ -18,10 +18,6 @@ export function VocabListItem ({ vocabs, lessonId }: Props) {
         navigate(`/lessons/${lessonId}/vocabs`);
     };
 
-    const handleNavigateToVocabTest = () => {
-        navigate(`/lessons/${lessonId}/vocab-tests`);
-    };
-
     return (
         <ActionCard sx={{ borderRadius: 2, p: 2 }} onClick={handleNavigateToVocabPage}>
             <Stack spacing={2} >
@@ -32,19 +28,7 @@ export function VocabListItem ({ vocabs, lessonId }: Props) {
                     color='success.main'
                 />
 
-                <Divider />
-
-                <Typography variant='caption' sx={{ color: 'text.secondary' }}>مرور لغات استفاده شده در این درس</Typography>
-
-                <Stack direction='row' spacing={1}>
-                    <Button
-                        fullWidth
-                        onClick={(e) => {
-                        }}
-                    >
-                        مطالعه لغات
-                    </Button>
-                </Stack>
+                <Typography variant='body2' sx={{ color: 'text.secondary' }}>مرور لغات استفاده شده در این درس</Typography>
             </Stack>
         </ActionCard>
     );

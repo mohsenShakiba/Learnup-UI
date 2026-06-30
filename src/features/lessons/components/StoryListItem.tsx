@@ -1,4 +1,4 @@
-import { Button, Divider, Stack, Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { StoryResponse } from '../../../api/Learnup';
 import { ActionCard } from '../../../shared/components/ActionCard';
@@ -16,26 +16,23 @@ export function StoryListItem ({ story, lessonId }: StoryListItemProps) {
 
   return (
     <ActionCard onClick={goToStory} sx={{ p: 2 }}>
-      <Stack spacing={1}>
+      <Stack spacing={2}>
         <LessonListItemHeader
           icon='auto_stories'
           label='داستان'
           durationMinutes={story.duration}
         />
 
-        <Divider />
-
         <Stack spacing={1}>
           <Typography sx={{ direction: 'rtl' }} >
             {story.title}
           </Typography>
 
-          <Typography variant='caption' sx={{ color: 'text.secondary' }} >
+          <Typography variant='body2' sx={{ color: 'text.secondary' }} >
             {story.description}
           </Typography>
         </Stack>
 
-        <Button fullWidth>مطالعه داستان</Button>
       </Stack>
     </ActionCard >
   );

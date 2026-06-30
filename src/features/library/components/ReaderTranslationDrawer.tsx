@@ -9,7 +9,7 @@ import {
   Typography
 } from '@mui/material';
 import { useState } from 'react';
-import { LeitnerBoxService, SendAiTextResponse, VocabLevel, VocabsService, VocabType } from '../../../api/Learnup';
+import { LeitnerBoxService, SendAiTextResponse, VocabsService } from '../../../api/Learnup';
 import { AppLoader } from '../../../shared/components/AppLoader';
 
 interface Props {
@@ -23,7 +23,7 @@ interface Props {
   result: SendAiTextResponse | null;
 }
 
-function getTranslationText(
+function getTranslationText (
   result: SendAiTextResponse | null,
   camelCaseKey: keyof SendAiTextResponse,
   pascalCaseKey: string,
@@ -35,13 +35,13 @@ function getTranslationText(
 
 type BookmarkState = 'idle' | 'loading' | 'saved' | 'error';
 
-export function ReaderTranslationDrawer({ open, onOpen, onClose, word, sentence, loading, error, result }: Props) {
+export function ReaderTranslationDrawer ({ open, onOpen, onClose, word, sentence, loading, error, result }: Props) {
   const wordTranslation = getTranslationText(result, 'wordTranslation', 'WordTranslation');
   const sentenceTranslation = getTranslationText(result, 'sentenceTranslation', 'SentenceTranslation');
   const [bookmarkState, setBookmarkState] = useState<BookmarkState>('idle');
 
   const handleBookmark = async () => {
-    console.log('word 2', word, bookmarkState, bookmarkState)
+    console.log('word 2', word, bookmarkState, bookmarkState);
     if (!word || bookmarkState === 'loading' || bookmarkState === 'saved') return;
     setBookmarkState('loading');
     try {
@@ -53,13 +53,6 @@ export function ReaderTranslationDrawer({ open, onOpen, onClose, word, sentence,
         vocabId = await VocabsService.createVocab({
           languageId: 1,
           word,
-          translation: wordTranslation || null,
-          type: VocabType.UNKNOWN,
-          level: VocabLevel.UNKNOWN,
-          description: null,
-          example: sentence || null,
-          exampleTranslation: sentenceTranslation || null,
-          voiceId: null,
         });
       }
       await LeitnerBoxService.addVocabToLeitnerBox(vocabId);

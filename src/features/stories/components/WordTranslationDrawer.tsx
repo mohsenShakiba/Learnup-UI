@@ -48,16 +48,6 @@ export function WordTranslationDrawer ({ word }: Props) {
                   {vocab.description}
                 </Typography>
               )}
-              {vocab.example && (
-                <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
-                  {vocab.example}
-                </Typography>
-              )}
-              {vocab.exampleTranslation && (
-                <Typography variant="caption" sx={{ color: 'text.secondary', direction: 'rtl' }}>
-                  {vocab.exampleTranslation}
-                </Typography>
-              )}
             </Stack>
           ))}
         </Stack>

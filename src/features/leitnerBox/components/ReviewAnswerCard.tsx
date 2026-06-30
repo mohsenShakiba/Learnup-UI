@@ -14,7 +14,7 @@ type DetailBlockProps = {
   direction?: "ltr" | "rtl";
 };
 
-function DetailBlock({
+function DetailBlock ({
   icon,
   label,
   children,
@@ -48,15 +48,12 @@ function DetailBlock({
   );
 }
 
-export function ReviewAnswerCard({
+export function ReviewAnswerCard ({
   card,
   isPending,
   onHide,
 }: ReviewAnswerCardProps) {
-  const hasDetails =
-    Boolean(card.description?.trim()) ||
-    Boolean(card.example?.trim()) ||
-    Boolean(card.exampleTranslation?.trim());
+  const hasDetails = Boolean(card.description?.trim());
 
   return (
     <Card
@@ -92,21 +89,6 @@ export function ReviewAnswerCard({
               </DetailBlock>
             )}
 
-            {card.example?.trim() && (
-              <DetailBlock icon="format_quote" label="Example sentence">
-                {card.example}
-              </DetailBlock>
-            )}
-
-            {card.exampleTranslation?.trim() && (
-              <DetailBlock
-                icon="translate"
-                label="Example translation"
-                direction="rtl"
-              >
-                {card.exampleTranslation}
-              </DetailBlock>
-            )}
           </Stack>
         ) : (
           <Box

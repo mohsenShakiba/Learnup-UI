@@ -23,8 +23,8 @@ interface ISpeechRecognition extends EventTarget {
   lang: string;
   interimResults: boolean;
   maxAlternatives: number;
-  start(): void;
-  stop(): void;
+  start (): void;
+  stop (): void;
   onresult: ((event: SpeechRecognitionEvent) => void) | null;
   onend: (() => void) | null;
   onerror: (() => void) | null;
@@ -41,7 +41,7 @@ declare global {
   }
 }
 
-export default function VocabSearchPage() {
+export default function VocabSearchPage () {
   const [input, setInput] = useState('');
   const [searchWord, setSearchWord] = useState('');
   const [isListening, setIsListening] = useState(false);
@@ -50,6 +50,10 @@ export default function VocabSearchPage() {
   const recognitionRef = useRef<ISpeechRecognition | null>(null);
 
   useEffect(() => {
+    if (input.trim().length <= 1) {
+      setSearchWord('');
+      return;
+    }
     const timer = setTimeout(() => setSearchWord(input.trim()), 200);
     return () => clearTimeout(timer);
   }, [input]);

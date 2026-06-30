@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export enum VocabStatus {
-    PENDING = 0,
-    PUBLISHED = 1,
-}
+export type ImportLessonGrammarsResponse = {
+    parsedCount: number;
+    importedCount: number;
+};

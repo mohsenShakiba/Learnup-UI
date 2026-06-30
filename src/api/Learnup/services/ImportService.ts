@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { ImportGrammarRequest } from '../models/ImportGrammarRequest';
+import type { ImportLessonGrammarsResponse } from '../models/ImportLessonGrammarsResponse';
 import type { ImportVocabsResponse } from '../models/ImportVocabsResponse';
 import type { StoryRequest } from '../models/StoryRequest';
 
@@ -69,6 +70,24 @@ requestBody?: ImportGrammarRequest,
             url: '/Admin/Import/grammars',
             body: requestBody,
             mediaType: 'application/json',
+        });
+    }
+
+    /**
+     * @param formData 
+     * @returns ImportLessonGrammarsResponse OK
+     * @throws ApiError
+     */
+    public static importLessonGrammars(
+formData?: {
+File?: Blob;
+},
+): CancelablePromise<ImportLessonGrammarsResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/Admin/Import/lesson-grammars',
+            formData: formData,
+            mediaType: 'multipart/form-data',
         });
     }
 

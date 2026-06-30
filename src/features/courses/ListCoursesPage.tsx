@@ -1,4 +1,4 @@
-import { Box, Icon } from '@mui/material';
+import { Box } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import type { Swiper as SwiperType } from 'swiper';
@@ -34,26 +34,6 @@ export default function ListCoursesPage () {
   return (
     <Scaffold disablePadding header={<DefaultHeader header="لیست دوره ها" />}>
       <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', pt: 2, }}>
-
-        {activeIndex < courses.length - 1 && (
-          <Box
-            sx={{
-              position: 'absolute',
-              right: 18,
-              top: 72,
-              display: 'flex',
-              alignItems: 'center',
-              color: 'text.secondary',
-              '@keyframes bounceLeft': {
-                '0%, 100%': { transform: 'translateX(0)' },
-                '50%': { transform: 'translateX(-6px)' },
-              },
-              animation: 'bounceLeft 1.2s ease-in-out infinite',
-            }}
-          >
-            <Icon>arrow_backward</Icon>
-          </Box>
-        )}
 
         <Box sx={{ position: 'relative', flex: 1, width: '100%', display: 'flex' }}>
           <Swiper

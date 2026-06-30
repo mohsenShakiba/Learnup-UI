@@ -22,6 +22,7 @@ export type { GrammarRequest } from './models/GrammarRequest';
 export type { GrammarResponse } from './models/GrammarResponse';
 export { HTMLTag } from './models/HTMLTag';
 export type { ImportGrammarRequest } from './models/ImportGrammarRequest';
+export type { ImportLessonGrammarsResponse } from './models/ImportLessonGrammarsResponse';
 export type { ImportVocabsResponse } from './models/ImportVocabsResponse';
 export type { LeitnerBoxItemResponse } from './models/LeitnerBoxItemResponse';
 export type { LeitnerBoxResponse } from './models/LeitnerBoxResponse';
@@ -63,7 +64,7 @@ export type { VerifyOtpRequest } from './models/VerifyOtpRequest';
 export type { VerifyOtpResponse } from './models/VerifyOtpResponse';
 export { VocabLevel } from './models/VocabLevel';
 export type { VocabResponse } from './models/VocabResponse';
-export { VocabStatus } from './models/VocabStatus';
+export type { VocabSenseResponse } from './models/VocabSenseResponse';
 export { VocabType } from './models/VocabType';
 
 export { AiService } from './services/AiService';

@@ -3,8 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState, type ReactNode } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { UsersService } from '../../api/Learnup';
-import { getFileById } from '../../services/fetchFile';
 import { SettingsDrawer } from '../../features/settings/SettingsDrawer';
+import { getFileById } from '../../services/fetchFile';
 import { ROOT_TABS } from './BottomNav';
 
 type DefaultHeaderProps = {
@@ -69,7 +69,7 @@ export function DefaultHeader ({ header, subtitle, children }: DefaultHeaderProp
       py: 1,
       px: 2,
       height: 60,
-      bgcolor: 'background.default'
+      bgcolor: 'background.paper'
     }}>
       {!isRootTab ? (
         <IconButton onClick={() => navigate(-1)}>

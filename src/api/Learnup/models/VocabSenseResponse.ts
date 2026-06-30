@@ -3,11 +3,13 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type DueLeitnerBoxItemResponse = {
+import type { VocabType } from './VocabType';
+
+export type VocabSenseResponse = {
     id: number;
-    vocabId: number;
-    word: string;
     translation: string | null;
     description: string | null;
-    nextReviewAt: string | null;
+    example: string | null;
+    exampleTranslation: string | null;
+    type: VocabType;
 };

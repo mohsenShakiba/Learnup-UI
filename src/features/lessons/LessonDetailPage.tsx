@@ -1,11 +1,12 @@
-import { Box, Icon, Stack } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { Box, Button, Divider, Icon, Stack, Typography } from "@mui/material";
+import { useNavigate, useParams } from "react-router-dom";
 import { AppLoader } from "../../shared/components/AppLoader";
 import { DefaultHeader } from "../../shared/components/DefaultHeader";
 import { ErrorPage } from "../../shared/components/ErrorPage";
 import { Scaffold } from "../../shared/components/Scaffold";
 import { GrammarListItem } from "./components/GrammarListItem";
 import { StoryListItem } from "./components/StoryListItem";
+import { TestListItem } from "./components/TestListItem";
 import { VocabListItem } from "./components/VocabListItem";
 import { useLesson } from "./hooks/useLesson";
 
@@ -70,6 +71,7 @@ function TimelineColumn ({
 export default function LessonDetailPage () {
   const { id: lessonId } = useParams<{ id: string; }>();
   const lessonIdNumber = Number(lessonId);
+  const navigate = useNavigate();
 
   const lessonQuery = useLesson(lessonIdNumber);
 
@@ -83,8 +85,12 @@ export default function LessonDetailPage () {
 
   const lesson = lessonQuery.data;
   const hasVocabs = lesson.vocabs.length > 0;
+  const hasTests = lesson.tests.length > 0;
   const totalItems =
-    lesson.stories.length + lesson.grammars.length + (hasVocabs ? 1 : 0);
+    lesson.stories.length +
+    lesson.grammars.length +
+    (hasVocabs ? 1 : 0) +
+    (hasTests ? 1 : 0);
   let itemIndex = 0;
 
   return (
@@ -128,11 +134,37 @@ export default function LessonDetailPage () {
 
         {hasVocabs && (
           <Stack direction="row" spacing={1.5} sx={{ alignItems: "stretch" }}>
-            <TimelineColumn completed={false} isLast={true} />
+            <TimelineColumn completed={false} isLast={!hasTests} />
             <Box sx={{ flex: 1 }}>
               <VocabListItem lessonId={lesson.id} vocabs={lesson.vocabs} />
             </Box>
           </Stack>
+        )}
+
+        {hasTests && (
+          <Stack direction="row" spacing={1.5} sx={{ alignItems: "stretch" }}>
+            <TimelineColumn completed={false} isLast={true} />
+            <Box sx={{ flex: 1 }}>
+              <TestListItem lessonId={lesson.id} tests={lesson.tests} />
+            </Box>
+          </Stack>
+        )}
+
+        {lesson.nextLessonId !== null && (
+          <Stack spacing={1}>
+            <Divider />
+            <Typography variant='caption' sx={{ color: 'text.secondary' }}>برای درس بعدی آماده ای؟</Typography>
+            <Button
+              variant="outlined"
+              fullWidth
+              endIcon={<Icon>arrow_back</Icon>}
+              onClick={() => navigate(`/lessons/${lesson.nextLessonId}`)}
+              sx={{ alignSelf: "center", mt: 2 }}
+            >
+              درس بعدی
+            </Button>
+          </Stack>
+
         )}
       </Stack>
     </Scaffold>

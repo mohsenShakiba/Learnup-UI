@@ -1,14 +1,13 @@
-import { Box, Button, Divider, Icon, Stack, Typography } from '@mui/material';
+import { Button, Divider, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { StoryResponse } from '../../../api/Learnup';
 import { ActionCard } from '../../../shared/components/ActionCard';
-import { DurationBadge } from '../../../shared/components/DurationBadge';
+import { LessonListItemHeader } from './LessonListItemHeader';
 
 type StoryListItemProps = {
   story: StoryResponse;
   lessonId: number;
 };
-
 
 export function StoryListItem ({ story, lessonId }: StoryListItemProps) {
   const navigate = useNavigate();
@@ -16,21 +15,13 @@ export function StoryListItem ({ story, lessonId }: StoryListItemProps) {
   const goToStory = () => navigate(`/lessons/${lessonId}/stories/${story.id}`);
 
   return (
-    <ActionCard onClick={goToStory}>
-
+    <ActionCard onClick={goToStory} sx={{ p: 2 }}>
       <Stack spacing={1}>
-
-        <Stack direction='row' spacing={1} sx={{ alignItems: 'center' }}>
-
-          <Stack direction='row' spacing={0.5} sx={{ alignItems: 'center', borderRadius: 1, bgcolor: 'info.main', fontSize: '0.7rem', px: 0.8, py: 0.3, color: 'white' }}>
-            <Icon sx={{ fontSize: '0.8rem' }}>auto_stories</Icon>
-            <Box>داستان</Box>
-          </Stack>
-
-          <Box sx={{ flex: 1 }}></Box>
-
-          <DurationBadge minutes={5} />
-        </Stack>
+        <LessonListItemHeader
+          icon='auto_stories'
+          label='داستان'
+          durationMinutes={story.duration}
+        />
 
         <Divider />
 
@@ -40,22 +31,12 @@ export function StoryListItem ({ story, lessonId }: StoryListItemProps) {
           </Typography>
 
           <Typography variant='caption' sx={{ color: 'text.secondary' }} >
-            {story.title}
+            {story.description}
           </Typography>
-
         </Stack>
 
-        <Button
-          size='small'
-          onClick={(e) => {
-            e.stopPropagation();
-            goToStory();
-          }}
-        >
-          شروع مکالمه
-        </Button>
+        <Button fullWidth>مطالعه داستان</Button>
       </Stack>
-
     </ActionCard >
   );
 }

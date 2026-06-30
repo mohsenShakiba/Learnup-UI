@@ -17,4 +17,6 @@
 [x] update the button's color in leitner box in dashboard
 [x] in book detail page, hide the book until the font is loaded.
 [x] in book detail page, long click on a word will cause the word to be selected by the os, not opening the translation drawer. if it is poissble to overcome this, do it, otherwise a single click shoule open the drawer.
-[] add a next lesson page to lesson detail page, use the LessonDetailResponse next lesson id
+[x] add a next lesson page to lesson detail page, use the LessonDetailResponse next lesson id
+[x] remove the arrow from list courses page.
+[] Update vocab search page, make sure vocabs senses are also included.

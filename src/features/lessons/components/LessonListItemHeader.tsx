@@ -1,0 +1,34 @@
+import { Box, Icon, Stack, Typography } from '@mui/material';
+import { DurationBadge } from '../../../shared/components/DurationBadge';
+
+type LessonListItemHeaderProps = {
+    icon: string;
+    label: string;
+    durationMinutes: number | null | undefined;
+    color?: string;
+};
+
+export function LessonListItemHeader ({
+    icon,
+    label,
+    durationMinutes,
+    color = 'primary.main',
+}: LessonListItemHeaderProps) {
+    return (
+        <Stack direction='row' spacing={1} sx={{ alignItems: 'center' }}>
+            <Stack
+                direction='row'
+                spacing={0.5}
+                sx={{
+                    alignItems: 'center',
+                    color,
+                }}
+            >
+                <Icon>{icon}</Icon>
+                <Typography>{label}</Typography>
+            </Stack>
+            <Box sx={{ flex: 1 }} />
+            <DurationBadge minutes={durationMinutes ?? 0} />
+        </Stack>
+    );
+}

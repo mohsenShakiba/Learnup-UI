@@ -1,15 +1,15 @@
-import { Box, Button, Divider, Icon, Stack, Typography } from '@mui/material';
+import { Button, Divider, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { VocabResponse } from '../../../api/Learnup/models/VocabResponse';
 import { ActionCard } from '../../../shared/components/ActionCard';
-import { DurationBadge } from '../../../shared/components/DurationBadge';
+import { LessonListItemHeader } from './LessonListItemHeader';
 
 type Props = {
     vocabs: Array<VocabResponse>;
     lessonId: number;
 };
 
-export function VocabListItem({ vocabs, lessonId }: Props) {
+export function VocabListItem ({ vocabs, lessonId }: Props) {
 
     const navigate = useNavigate();
     if (!vocabs.length) return null;
@@ -23,19 +23,14 @@ export function VocabListItem({ vocabs, lessonId }: Props) {
     };
 
     return (
-        <ActionCard sx={{ overflow: 'hidden', borderRadius: 2 }} onClick={handleNavigateToVocabPage}>
+        <ActionCard sx={{ borderRadius: 2, p: 2 }} onClick={handleNavigateToVocabPage}>
             <Stack spacing={2} >
-                <Stack direction='row' spacing={1} sx={{ alignItems: 'center' }}>
-
-                    <Stack direction='row' spacing={0.5} sx={{ alignItems: 'center', borderRadius: 1, bgcolor: 'success.main', fontSize: '0.7rem', px: 0.8, py: 0.3, color: 'white' }}>
-                        <Icon sx={{ fontSize: '0.8rem' }}>translate</Icon>
-                        <Box>مرور لغات</Box>
-                    </Stack>
-
-                    <Box sx={{ flex: 1 }}></Box>
-
-                    <DurationBadge minutes={5} />
-                </Stack>
+                <LessonListItemHeader
+                    icon='translate'
+                    label='مرور لغات'
+                    durationMinutes={5}
+                    color='success.main'
+                />
 
                 <Divider />
 
@@ -43,30 +38,14 @@ export function VocabListItem({ vocabs, lessonId }: Props) {
 
                 <Stack direction='row' spacing={1}>
                     <Button
-                        sx={{ flex: 2 }}
-                        size='small'
+                        fullWidth
                         onClick={(e) => {
-                            e.stopPropagation();
-                            handleNavigateToVocabPage();
                         }}
                     >
-                        مرور کلمات
-                    </Button>
-                    <Button
-                        sx={{ flex: 1 }}
-                        size='small'
-                        variant='outlined'
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            handleNavigateToVocabTest();
-                        }}
-                    >
-                        آزمون
+                        مطالعه لغات
                     </Button>
                 </Stack>
-
             </Stack>
-
         </ActionCard>
     );
 }

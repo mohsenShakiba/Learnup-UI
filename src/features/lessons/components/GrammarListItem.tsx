@@ -1,15 +1,15 @@
-import { Box, Button, Divider, Icon, Stack, Typography } from '@mui/material';
+import { Button, Divider, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { GrammarResponse } from '../../../api/Learnup/models/GrammarResponse';
 import { ActionCard } from '../../../shared/components/ActionCard';
-import { DurationBadge } from '../../../shared/components/DurationBadge';
+import { LessonListItemHeader } from './LessonListItemHeader';
 
 type Props = {
     grammar: GrammarResponse;
     lessonId: number;
 };
 
-export function GrammarListItem({ grammar, lessonId }: Props) {
+export function GrammarListItem ({ grammar, lessonId }: Props) {
 
     const navigate = useNavigate();
 
@@ -22,20 +22,14 @@ export function GrammarListItem({ grammar, lessonId }: Props) {
     };
 
     return (
-        <ActionCard sx={{ overflow: 'hidden', borderRadius: 2, }} onClick={handleNavigateToGrammarPage}>
-
-            <Stack spacing={1} sx={{}}>
-
-                <Stack direction='row' spacing={1} sx={{ alignItems: 'center' }}>
-                    <Stack direction='row' spacing={0.5} sx={{ alignItems: 'center', borderRadius: 1, bgcolor: 'secondary.main', fontSize: '0.7rem', px: 0.8, py: 0.3, color: 'white' }}>
-                        <Icon sx={{ fontSize: '0.8rem' }}>menu_book</Icon>
-                        <Box>گرامر</Box>
-                    </Stack>
-
-                    <Box sx={{ flex: 1 }}></Box>
-
-                    <DurationBadge minutes={5} />
-                </Stack>
+        <ActionCard sx={{ p: 2 }} onClick={handleNavigateToGrammarPage}>
+            <Stack spacing={2} sx={{}}>
+                <LessonListItemHeader
+                    icon='menu_book'
+                    label='گرامر'
+                    durationMinutes={5}
+                    color='secondary.main'
+                />
 
                 <Divider />
 
@@ -45,8 +39,7 @@ export function GrammarListItem({ grammar, lessonId }: Props) {
 
                 <Stack direction='row' spacing={1}>
                     <Button
-                        sx={{ flex: 2 }}
-                        size='small'
+                        fullWidth
                         onClick={(e) => {
                             e.stopPropagation();
                             handleNavigateToGrammarPage();
@@ -54,19 +47,7 @@ export function GrammarListItem({ grammar, lessonId }: Props) {
                     >
                         مطالعه گرامر
                     </Button>
-                    <Button
-                        sx={{ flex: 1 }}
-                        size='small'
-                        variant='outlined'
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            handleNavigateToGrammarTest();
-                        }}
-                    >
-                        آزمون
-                    </Button>
                 </Stack>
-
             </Stack>
         </ActionCard>
     );

@@ -80,14 +80,12 @@ export function DefaultHeader ({ header, subtitle, children }: DefaultHeaderProp
           <Icon>menu</Icon>
         </IconButton>
       )}
-      <Box sx={{ flex: 1 }}></Box>
 
-      <Typography>
+      <Typography variant='body1' sx={{ flex: 1, textAlign: 'center' }}>
         {header}
       </Typography>
-      <Box sx={{ flex: 1 }}></Box>
 
-      {isRootTab && (
+      {isRootTab && !children && (
         <Avatar src={avatarUrl ?? undefined} sx={{ width: 32, height: 32, fontSize: '0.875rem' }}>
           {!avatarUrl && (profile?.displayName?.[0]?.toUpperCase() ?? undefined)}
         </Avatar>

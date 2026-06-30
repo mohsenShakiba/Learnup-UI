@@ -1,4 +1,4 @@
-import { BottomNavigation, BottomNavigationAction, Icon } from "@mui/material";
+import { Box, ButtonBase, Icon, useTheme } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export const ROOT_TABS = [
@@ -12,13 +12,22 @@ export const ROOT_TABS = [
 const tabs = ROOT_TABS;
 const LEITNER_REVIEW_PATH_PREFIX = "/boxlevel/";
 
+export function isBottomNavVisible (pathname: string) {
+  return (
+    pathname.startsWith(LEITNER_REVIEW_PATH_PREFIX) ||
+    tabs.some(t => t.path === pathname)
+  );
+}
+
 
 export function BottomNav () {
+  const theme = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
+  const isDark = theme.palette.mode === 'dark';
   const isLeitnerReviewRoute = location.pathname.startsWith(LEITNER_REVIEW_PATH_PREFIX);
 
-  if (!isLeitnerReviewRoute && !tabs.some(t => t.path === location.pathname)) {
+  if (!isBottomNavVisible(location.pathname)) {
     return null;
   }
 
@@ -33,21 +42,75 @@ export function BottomNav () {
   });
 
   return (
-    <BottomNavigation
-      sx={{ px: 2, pb: 0.5, height: 65 }}
-      value={currentTab === -1 ? false : currentTab}
-      onChange={(_, newValue) => navigate(tabs[newValue].path)}
+    <Box
+      sx={{
+        position: 'absolute',
+        left: '12px',
+        right: '12px',
+        bottom: 'calc(env(safe-area-inset-bottom, 0px) + 12px)',
+        display: 'flex',
+        justifyContent: 'center',
+        pointerEvents: 'none',
+        zIndex: theme.zIndex.appBar,
+      }}
     >
-      {tabs.map((tab) => (
-        <BottomNavigationAction
-          sx={{
-            minWidth: 0,
-            px: 0.5,
-          }}
-          key={tab.path}
-          icon={<Icon>{tab.icon}</Icon>}
-        />
-      ))}
-    </BottomNavigation>
+      <Box
+        sx={{
+          width: '100%',
+          pointerEvents: 'auto',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-around',
+          gap: 0.5,
+          px: 1,
+          py: 0.75,
+          borderRadius: 2,
+          border: '1px solid',
+          borderColor: isDark ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.6)',
+          backgroundColor: isDark ? 'rgba(40,38,46,0.55)' : 'rgba(255,255,255,0.55)',
+          backdropFilter: 'blur(24px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+          boxShadow: isDark
+            ? '0 8px 32px rgba(0,0,0,0.45)'
+            : '0 8px 32px rgba(0,0,0,0.12)',
+        }}
+      >
+        {tabs.map((tab, index) => {
+          const isActive = index === currentTab;
+          return (
+            <ButtonBase
+              key={tab.path}
+              onClick={() => navigate(tab.path)}
+              aria-label={tab.label}
+              sx={{
+                position: 'relative',
+                width: 48,
+                height: 48,
+                borderRadius: 2,
+                color: isActive ? 'primary.contrastText' : 'text.secondary',
+                backgroundColor: isActive ? 'primary.main' : 'transparent',
+                boxShadow: isActive ? '0 4px 12px rgba(52,88,235,0.4)' : 'none',
+                transition: theme.transitions.create(
+                  ['background-color', 'color', 'transform', 'box-shadow'],
+                  { duration: theme.transitions.duration.shorter }
+                ),
+                '&:hover': {
+                  backgroundColor: isActive
+                    ? 'primary.main'
+                    : isDark
+                      ? 'rgba(255,255,255,0.08)'
+                      : 'rgba(0,0,0,0.04)',
+                },
+                '&:active': {
+                  transform: 'scale(0.92)',
+                },
+              }}
+            >
+              <Icon sx={{ fontSize: 24 }}>{tab.icon}</Icon>
+            </ButtonBase>
+          );
+        })}
+      </Box>
+    </Box>
   );
 }

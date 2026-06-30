@@ -1,5 +1,5 @@
 import { Box, Stack } from "@mui/material";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import setupOpenApi from "./api/setup";
 import "./App.css";
 import LoginPage from "./features/auth/LoginPage";
@@ -23,20 +23,31 @@ import StoryDetailPage from "./features/stories/StoryDetailPage";
 import LessonVocabsPage from "./features/vocabs/LessonVocabsPage";
 import VocabSearchPage from "./features/vocabs/VocabSearchPage";
 import LessonVocabTestsPage from "./features/VocabTests/LessonVocabTestsPage";
-import { BottomNav } from "./shared/components/BottomNav";
+import { BottomNav, isBottomNavVisible } from "./shared/components/BottomNav";
 setupOpenApi();
 
-function App () {
-  return (
-    <BrowserRouter>
-      <Stack sx={{ height: "100dvh", overflow: "hidden" }}>
-        <Box sx={{ flex: 1, overflowY: "auto", position: "relative" }}>
+function AppLayout() {
+  const location = useLocation();
+  const hasBottomNav = isBottomNavVisible(location.pathname);
 
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignupPage />} />
-            <Route element={<RequireAuth />}>
-            <Route path="/lessons/:lessonId/stories/:id" element={<StoryDetailPage />} />
+  return (
+    <Stack sx={{ height: "100dvh", overflow: "hidden", position: "relative" }}>
+      <Box
+        sx={{
+          flex: 1,
+          overflowY: "auto",
+          position: "relative",
+          pb: hasBottomNav ? "calc(env(safe-area-inset-bottom, 0px))" : 0,
+        }}
+      >
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route element={<RequireAuth />}>
+            <Route
+              path="/lessons/:lessonId/stories/:id"
+              element={<StoryDetailPage />}
+            />
             <Route path="/courses/:id" element={<CourseDetailPage />} />
             <Route path="/grammar" element={<ListGrammarPage />} />
             <Route path="/grammars/:id" element={<GrammarDetailPage />} />
@@ -45,10 +56,7 @@ function App () {
               element={<ListCoursesPage />}
             />
             <Route path="/lessons/:id" element={<LessonDetailPage />} />
-            <Route
-              path="/lessons/:id/vocabs"
-              element={<LessonVocabsPage />}
-            />
+            <Route path="/lessons/:id/vocabs" element={<LessonVocabsPage />} />
             <Route
               path="/lessons/:id/vocab-tests"
               element={<LessonVocabTestsPage />}
@@ -59,12 +67,12 @@ function App () {
             />
             <Route path="/vocab" element={<VocabSearchPage />} />
             <Route path="/leitner-box" element={<LeitnerBoxPage />} />
-            <Route
-              path="/boxlevel/:id"
-              element={<BoxLevelReviewPage />}
-            />
+            <Route path="/boxlevel/:id" element={<BoxLevelReviewPage />} />
             <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/settings/subscriptions" element={<SubscriptionsPage />} />
+            <Route
+              path="/settings/subscriptions"
+              element={<SubscriptionsPage />}
+            />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/library/book/:bookId" element={<BookDetailPage />} />
             <Route path="/library" element={<ListBooksPage />} />
@@ -74,12 +82,19 @@ function App () {
             />
             <Route path="/" element={<ListCoursesPage />} />
             <Route path="*" element={<h1>404 - Not Found</h1>} />
-            </Route>
-          </Routes>
-        </Box>
+          </Route>
+        </Routes>
+      </Box>
 
-        <BottomNav />
-      </Stack>
+      <BottomNav />
+    </Stack>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppLayout />
     </BrowserRouter>
   );
 }

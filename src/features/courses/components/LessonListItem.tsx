@@ -2,7 +2,6 @@ import { Box, Icon, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { LessonResponse } from '../../../api/Learnup';
 import { ActionCard } from '../../../shared/components/ActionCard';
-import { DurationBadge } from '../../../shared/components/DurationBadge';
 
 type LessonListItemProps = {
   lesson: LessonResponse;
@@ -13,7 +12,7 @@ const CIRCLE_SIZE = 28;
 // matches the parent Stack `spacing={2}` (16px) so the line bridges the gap to the next circle
 const ITEM_GAP = 16;
 
-function LessonTimeline({ completed, isLast }: { completed: boolean; isLast: boolean; }) {
+function LessonTimeline ({ completed, isLast }: { completed: boolean; isLast: boolean; }) {
   const color = completed ? 'success.main' : 'warning.main';
   return (
     <Box sx={{
@@ -56,7 +55,7 @@ function LessonTimeline({ completed, isLast }: { completed: boolean; isLast: boo
 }
 
 
-export function LessonListItem({ lesson, isLast = false }: LessonListItemProps) {
+export function LessonListItem ({ lesson, isLast = false }: LessonListItemProps) {
 
   const navigate = useNavigate();
   const navigateToLesson = () => {
@@ -67,13 +66,12 @@ export function LessonListItem({ lesson, isLast = false }: LessonListItemProps) 
   return (
     <Stack direction="row" spacing={1.5} sx={{ alignItems: 'stretch' }}>
 
-      <LessonTimeline completed={lesson.isCompleted} isLast={isLast} />
 
       <ActionCard onClick={navigateToLesson} sx={{ flex: 1, borderRadius: 2 }}>
 
-        <Stack spacing={1} sx={{ alignItems: 'flex-start' }}>
-          <Typography sx={{ px: 0.8, py: 0.4, bgcolor: 'secondary.main', color: 'white', borderRadius: 1, fontSize: '0.7rem', fontFamily: 'IranSans' }} >
-            درس {lesson.order}
+        <Stack spacing={1} sx={{ alignItems: 'flex-end' }}>
+          <Typography sx={{ px: 0.8, py: 0.4, bgcolor: 'secondary.main', color: 'white', borderRadius: 1, fontSize: '0.7rem', fontFamily: 'Roboto' }} >
+            Lesson {lesson.order}
           </Typography>
           <Typography sx={{ color: 'text.secondary', direction: 'rtl' }}>
             {lesson.title}
@@ -81,6 +79,9 @@ export function LessonListItem({ lesson, isLast = false }: LessonListItemProps) 
         </Stack>
 
       </ActionCard >
+
+      <LessonTimeline completed={lesson.isCompleted} isLast={isLast} />
+
 
     </Stack>
   );

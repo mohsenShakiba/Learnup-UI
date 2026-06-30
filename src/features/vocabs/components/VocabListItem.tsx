@@ -1,6 +1,8 @@
 import {
   Box,
   Card,
+  Chip,
+  Divider,
   Icon,
   IconButton,
   Snackbar,
@@ -11,13 +13,33 @@ import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { LeitnerBoxService } from "../../../api/Learnup";
 import type { VocabResponse } from "../../../api/Learnup/models/VocabResponse";
+import { VocabType } from "../../../api/Learnup/models/VocabType";
 import { VocabPlayButton } from "./VocabPlayButton";
+
+const VOCAB_TYPE_LABELS: Record<VocabType, string> = {
+  [VocabType.UNKNOWN]: "",
+  [VocabType.NOUN]: "noun",
+  [VocabType.VERB]: "verb",
+  [VocabType.ADJECTIVE]: "adjective",
+  [VocabType.ADVERB]: "adverb",
+};
+
+const VOCAB_TYPE_COLORS: Record<
+  VocabType,
+  "default" | "primary" | "secondary" | "success" | "warning"
+> = {
+  [VocabType.UNKNOWN]: "default",
+  [VocabType.NOUN]: "primary",
+  [VocabType.VERB]: "secondary",
+  [VocabType.ADJECTIVE]: "success",
+  [VocabType.ADVERB]: "warning",
+};
 
 type Props = {
   vocab: VocabResponse;
 };
 
-export function VocabListItem({ vocab }: Props) {
+export function VocabListItem ({ vocab }: Props) {
   const [open, setOpen] = useState(false);
 
   const addToLeitnerMutation = useMutation({
@@ -54,9 +76,74 @@ export function VocabListItem({ vocab }: Props) {
         </Stack>
       </Stack>
 
-      <Typography variant="body2" sx={{ color: "text.secondary" }}>
-        {vocab.description}
-      </Typography>
+      {vocab.description && (
+        <Typography variant="body2" sx={{ color: "text.secondary" }}>
+          {vocab.description}
+        </Typography>
+      )}
+
+      {vocab.senses.length > 0 && (
+        <Stack spacing={1.5} sx={{ mt: 1.5 }}>
+          {vocab.senses.map((sense) => {
+            const typeLabel = VOCAB_TYPE_LABELS[sense.type];
+            const typeColor = VOCAB_TYPE_COLORS[sense.type];
+
+            return (
+              <Box key={sense.id} >
+                <Divider sx={{ mb: 2 }} />
+                <Stack
+                  direction="row"
+                  sx={{ alignItems: "center", gap: 1, direction: "rtl" }}
+                >
+                  {typeLabel && (
+                    <Chip
+                      label={typeLabel}
+                      size="small"
+                      variant="filled"
+                      color={typeColor}
+                      sx={{ height: 20, fontSize: 12 }}
+                    />
+                  )}
+                  {sense.translation && (
+                    <Typography variant="body2" sx={{ direction: 'ltr' }} >
+                      {sense.translation}
+                    </Typography>
+                  )}
+                </Stack>
+
+                {sense.description && (
+                  <Typography
+                    variant="body2"
+                    sx={{ color: "text.secondary", mt: 1 }}
+                  >
+                    {sense.description}
+                  </Typography>
+                )}
+
+                <Stack spacing={0.5} sx={{ mt: 2 }}>
+                  {sense.example && (
+                    <Typography
+                      variant="body2"
+                      sx={{ fontStyle: "italic", direction: "rtl" }}
+                    >
+                      {sense.example}
+                    </Typography>
+                  )}
+
+                  {sense.exampleTranslation && (
+                    <Typography
+                      variant="body2"
+                      sx={{ color: "text.secondary", direction: "rtl" }}
+                    >
+                      {sense.exampleTranslation}
+                    </Typography>
+                  )}
+                </Stack>
+              </Box>
+            );
+          })}
+        </Stack>
+      )}
 
       <Snackbar
         open={open}

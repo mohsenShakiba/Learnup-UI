@@ -1,11 +1,13 @@
-import { Box, Button, Card, Chip, Icon, Stack, Typography } from '@mui/material';
+import { Box, Chip, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { UserSubscriptionResponse } from '../../../api/Learnup';
 import {
   SubscriptionDuration,
   UserSubscriptionStatus,
 } from '../../../api/Learnup';
-import { FancyButton } from '../../../shared/components/FancyButton';
+import { ActionCard } from '../../../shared/components/ActionCard';
+
+const subscriptionsPath = '/settings/subscriptions';
 
 function durationLabel(duration: SubscriptionDuration): string {
   switch (duration) {
@@ -47,14 +49,17 @@ function timeUntilExpiry(expiresAt: string, status: UserSubscriptionStatus): str
 }
 
 function SubscriptionCardContent({ sub }: { sub: UserSubscriptionResponse; }) {
+  const navigate = useNavigate();
   const remaining = timeUntilExpiry(sub.expiresAt, sub.status);
 
-  console.log('duration', sub.duration);
-
   return (
-    <Card sx={{ overflow: 'hidden', position: 'relative' }}>
-      <Box sx={{ display: 'flex' }}>
-        <Box sx={{ flex: 1 }}>
+    <ActionCard
+      aria-label="مشاهده لیست اشتراک ها"
+      onClick={() => navigate(subscriptionsPath)}
+      sx={{ overflow: 'hidden', position: 'relative', p: 2 }}
+    >
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, minHeight: 72 }}>
+        <Box sx={{ flex: 1, position: 'relative', zIndex: 1 }}>
           <Stack direction="column" spacing={1} >
 
             <Typography sx={{ height: 30 }}>{sub.subscriptionTitle}</Typography>
@@ -74,11 +79,13 @@ function SubscriptionCardContent({ sub }: { sub: UserSubscriptionResponse; }) {
                 <Typography variant="caption" color="success">{remaining}</Typography>
               </Stack>
             )}
+
           </Stack>
 
         </Box>
         <Box
           component="img"
+          alt=""
           src="/images/subscriptions/plant.png"
           sx={{
             position: 'absolute',
@@ -92,15 +99,19 @@ function SubscriptionCardContent({ sub }: { sub: UserSubscriptionResponse; }) {
           }}
         />
       </Box>
-    </Card>
+    </ActionCard>
   );
 }
 
 function NoSubscriptionCard() {
   const navigate = useNavigate();
   return (
-    <Card sx={{ overflow: 'hidden', position: 'relative' }}>
-      <Stack spacing={1} sx={{ flex: 1, alignItems: 'start' }}>
+    <ActionCard
+      aria-label="مشاهده لیست اشتراک ها"
+      onClick={() => navigate(subscriptionsPath)}
+      sx={{ overflow: 'hidden', position: 'relative', p: 2 }}
+    >
+      <Stack spacing={1} sx={{ flex: 1, alignItems: 'start', position: 'relative', zIndex: 1 }}>
         <Typography gutterBottom>
           اشتراک پایه
         </Typography>
@@ -109,16 +120,9 @@ function NoSubscriptionCard() {
           شما به اشتراک پایه دسترسی دارید.
         </Typography>
 
-        <Button
-          variant="contained"
-          endIcon={<Icon>arrow_backward</Icon>}
-          onClick={() => navigate('/settings/subscriptions')}
-        >
-          مشاهده لیست اشتراک ها
-        </Button>
-
         <Box
           component="img"
+          alt=""
           src="/images/subscriptions/book.png"
           sx={{
             position: 'absolute',
@@ -132,7 +136,7 @@ function NoSubscriptionCard() {
           }}
         />
       </Stack>
-    </Card>
+    </ActionCard>
   );
 }
 

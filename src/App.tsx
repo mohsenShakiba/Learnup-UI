@@ -4,6 +4,7 @@ import setupOpenApi from "./api/setup";
 import "./App.css";
 import LoginPage from "./features/auth/LoginPage";
 import { RequireAuth } from "./features/auth/RequireAuth";
+import SignupPage from "./features/auth/SignupPage";
 import CourseDetailPage from "./features/courses/CourseDetailPage";
 import ListCoursesPage from "./features/courses/ListCoursesPage";
 import DashboardPage from "./features/dashboard/DashboardPage";
@@ -33,6 +34,7 @@ function App () {
 
           <Routes>
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
             <Route element={<RequireAuth />}>
             <Route path="/lessons/:lessonId/stories/:id" element={<StoryDetailPage />} />
             <Route path="/courses/:id" element={<CourseDetailPage />} />

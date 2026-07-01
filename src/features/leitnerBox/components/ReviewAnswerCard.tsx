@@ -1,5 +1,27 @@
-import { Box, Card, Divider, Icon, Stack, Typography } from "@mui/material";
+import { Box, Card, Chip, Divider, Icon, Stack, Typography } from "@mui/material";
+import type { ReactNode } from "react";
 import type { DueLeitnerBoxItemResponse } from "../../../api/Learnup";
+import { VocabType } from "../../../api/Learnup";
+import { VocabPlayButton } from "../../vocabs/components/VocabPlayButton";
+
+const VOCAB_TYPE_LABELS: Record<VocabType, string> = {
+  [VocabType.UNKNOWN]: "",
+  [VocabType.NOUN]: "noun",
+  [VocabType.VERB]: "verb",
+  [VocabType.ADJECTIVE]: "adjective",
+  [VocabType.ADVERB]: "adverb",
+};
+
+const VOCAB_TYPE_COLORS: Record<
+  VocabType,
+  "default" | "primary" | "secondary" | "success" | "warning"
+> = {
+  [VocabType.UNKNOWN]: "default",
+  [VocabType.NOUN]: "primary",
+  [VocabType.VERB]: "secondary",
+  [VocabType.ADJECTIVE]: "success",
+  [VocabType.ADVERB]: "warning",
+};
 
 type ReviewAnswerCardProps = {
   card: DueLeitnerBoxItemResponse;
@@ -10,7 +32,7 @@ type ReviewAnswerCardProps = {
 type DetailBlockProps = {
   icon: string;
   label: string;
-  children: string;
+  children: ReactNode;
   direction?: "ltr" | "rtl";
 };
 
@@ -43,7 +65,9 @@ function DetailBlock ({
           {label}
         </Typography>
       </Stack>
-      <Typography sx={{ direction, lineHeight: 1.7 }}>{children}</Typography>
+      <Typography component="div" sx={{ direction, lineHeight: 1.7 }}>
+        {children}
+      </Typography>
     </Box>
   );
 }
@@ -53,7 +77,8 @@ export function ReviewAnswerCard ({
   isPending,
   onHide,
 }: ReviewAnswerCardProps) {
-  const hasDetails = Boolean(card.description?.trim());
+  const hasDetails =
+    Boolean(card.description?.trim()) || card.senses.length > 0;
 
   return (
     <Card
@@ -71,6 +96,11 @@ export function ReviewAnswerCard ({
           <Typography variant="overline" color="text.secondary">
             Answer
           </Typography>
+          {card.voiceId && (
+            <Box onClick={(event) => event.stopPropagation()}>
+              <VocabPlayButton voiceId={card.voiceId} />
+            </Box>
+          )}
           <Typography variant="h4" sx={{ fontWeight: 800 }}>
             {card.translation || "No translation available"}
           </Typography>
@@ -89,6 +119,96 @@ export function ReviewAnswerCard ({
               </DetailBlock>
             )}
 
+            {card.senses.map((sense) => {
+              const typeLabel = VOCAB_TYPE_LABELS[sense.type];
+              const typeColor = VOCAB_TYPE_COLORS[sense.type];
+
+              return (
+                <Box
+                  key={sense.id}
+                  sx={{
+                    border: "1px solid",
+                    borderColor: "divider",
+                    borderRadius: 2,
+                    p: 1.5,
+                    bgcolor: "background.default",
+                  }}
+                >
+                  <Stack spacing={1.25}>
+                    <Stack
+                      direction="row"
+                      sx={{ alignItems: "center", gap: 1, direction: "rtl" }}
+                    >
+                      {typeLabel && (
+                        <Chip
+                          label={typeLabel}
+                          size="small"
+                          variant="filled"
+                          color={typeColor}
+                          sx={{ height: 20, fontSize: 12 }}
+                        />
+                      )}
+                      {sense.translation && (
+                        <Typography
+                          variant="body2"
+                          sx={{ direction: "ltr", fontWeight: 700 }}
+                        >
+                          {sense.translation}
+                        </Typography>
+                      )}
+                    </Stack>
+
+                    {sense.description && (
+                      <Typography
+                        variant="body2"
+                        sx={{ color: "text.secondary", direction: "rtl" }}
+                      >
+                        {sense.description}
+                      </Typography>
+                    )}
+
+                    {(sense.example || sense.exampleTranslation) && (
+                      <Stack
+                        spacing={0.75}
+                        sx={{
+                          borderTop: "1px solid",
+                          borderColor: "divider",
+                          pt: 1.25,
+                        }}
+                      >
+                        {sense.example && (
+                          <Stack direction="row" spacing={1}>
+                            <Icon sx={{ fontSize: 18, color: "text.secondary" }}>
+                              format_quote
+                            </Icon>
+                            <Typography
+                              variant="body2"
+                              sx={{ fontStyle: "italic", direction: "rtl" }}
+                            >
+                              {sense.example}
+                            </Typography>
+                          </Stack>
+                        )}
+
+                        {sense.exampleTranslation && (
+                          <Stack direction="row" spacing={1}>
+                            <Icon sx={{ fontSize: 18, color: "text.secondary" }}>
+                              translate
+                            </Icon>
+                            <Typography
+                              variant="body2"
+                              sx={{ color: "text.secondary", direction: "rtl" }}
+                            >
+                              {sense.exampleTranslation}
+                            </Typography>
+                          </Stack>
+                        )}
+                      </Stack>
+                    )}
+                  </Stack>
+                </Box>
+              );
+            })}
           </Stack>
         ) : (
           <Box

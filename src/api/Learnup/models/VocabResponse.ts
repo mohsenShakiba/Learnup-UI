@@ -13,5 +13,6 @@ export type VocabResponse = {
     voiceId: string | null;
     description: string | null;
     level: VocabLevel;
+    isInLeitnerBox: boolean;
     senses: Array<VocabSenseResponse>;
 };

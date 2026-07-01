@@ -1,4 +1,5 @@
-import { Box, Icon, IconButton, Stack, Typography, useTheme } from '@mui/material';
+import { Icon } from '../../shared/components/Icon';
+import { Box, IconButton, Stack, Typography, useTheme } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';

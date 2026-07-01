@@ -1,4 +1,5 @@
-import { Avatar, Box, Icon, IconButton, Typography } from '@mui/material';
+import { Icon } from './Icon';
+import { Avatar, Box, IconButton, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState, type ReactNode } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';

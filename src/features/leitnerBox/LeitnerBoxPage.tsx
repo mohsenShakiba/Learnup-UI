@@ -1,8 +1,8 @@
+import { Icon } from '../../shared/components/Icon';
 import {
   alpha,
   Box,
   Button,
-  Icon,
   IconButton,
   Stack,
   Typography
@@ -186,21 +186,20 @@ export default function LeitnerBoxPage () {
             <Box sx={{ minWidth: 0, flex: 1 }}>
               <Typography
                 sx={{
-                  fontFamily: "Georgia, Merriweather, serif",
                   fontSize: 42,
                   lineHeight: 0.9,
                 }}
               >
                 {formatNumber(dueItems)}
               </Typography>
-              <Typography sx={{ mt: 1.1, fontSize: 12.5, fontWeight: 900 }}>
+              <Typography sx={{ mt: 1.1, fontSize: 12.5 }}>
                 cards due today
               </Typography>
             </Box>
 
             <Stack spacing={1.2} sx={{ alignItems: "flex-end" }}>
               <Box sx={{ textAlign: "right" }}>
-                <Typography sx={{ fontSize: 13, fontWeight: 900 }}>
+                <Typography sx={{ fontSize: 13 }}>
                   {formatNumber(dueLevels.length)} of{" "}
                   {formatNumber(levels.length)} levels
                 </Typography>
@@ -208,7 +207,6 @@ export default function LeitnerBoxPage () {
                   sx={{
                     mt: 0.35,
                     fontSize: 12,
-                    fontWeight: 800,
                     opacity: 0.82,
                   }}
                 >

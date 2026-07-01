@@ -1,4 +1,5 @@
-import { CircularProgress, Icon, IconButton } from "@mui/material";
+import { Icon } from '../../../shared/components/Icon';
+import { CircularProgress, IconButton } from "@mui/material";
 import { useState } from "react";
 import { playAudio } from "../../../services/audioService";
 

@@ -1,4 +1,5 @@
-import { Box, ButtonBase, Icon, useTheme } from "@mui/material";
+import { Icon } from './Icon';
+import { Box, ButtonBase, useTheme } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export const ROOT_TABS = [
@@ -58,12 +59,13 @@ export function BottomNav () {
       <Box
         sx={{
           width: '100%',
+          maxWidth: 500,
           pointerEvents: 'auto',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           gap: 0.5,
-          px: 2,
+          px: 1,
           py: 1,
           borderRadius: '999px',
           border: '1px solid',
@@ -85,7 +87,7 @@ export function BottomNav () {
               aria-label={tab.label}
               sx={{
                 position: 'relative',
-                width: 40,
+                width: 60,
                 height: 40,
                 borderRadius: '999px',
                 color: isActive ? 'primary.contrastText' : 'text.secondary',

@@ -1,5 +1,6 @@
+import { Icon } from '../../../shared/components/Icon';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { Box, Card, Icon, Stack, Typography } from '@mui/material';
+import { Box, Card, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { CurrentLessonProgressResponse } from '../../../api/Learnup';
 import { FancyButton } from '../../../shared/components/FancyButton';

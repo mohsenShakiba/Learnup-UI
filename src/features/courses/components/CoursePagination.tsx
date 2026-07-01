@@ -6,7 +6,7 @@ type CoursePaginationProps = {
   onDotClick: (index: number) => void;
 };
 
-export function CoursePagination({ count, activeIndex, onDotClick }: CoursePaginationProps) {
+export function CoursePagination ({ count, activeIndex, onDotClick }: CoursePaginationProps) {
   return (
     <Stack
       direction='row'
@@ -14,7 +14,7 @@ export function CoursePagination({ count, activeIndex, onDotClick }: CoursePagin
       sx={{
         justifyContent: 'center',
         alignItems: 'center',
-        py: 1.5,
+        pt: 1,
       }}
     >
       {Array.from({ length: count }, (_, i) => {

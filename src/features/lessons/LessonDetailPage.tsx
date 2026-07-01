@@ -1,4 +1,5 @@
-import { Box, Button, Divider, Icon, Stack, Typography } from "@mui/material";
+import { Icon } from '../../shared/components/Icon';
+import { Box, Button, Divider, Stack, Typography } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { AppLoader } from "../../shared/components/AppLoader";
 import { DefaultHeader } from "../../shared/components/DefaultHeader";

@@ -1,4 +1,5 @@
-import { Box, Button, Fab, Icon, Stack, Typography } from '@mui/material';
+import { Box, Button, Fab, Stack, Typography } from '@mui/material';
+import { Icon } from '../../shared/components/Icon';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { BooksControllersService } from '../../api/Learnup';
@@ -38,7 +39,7 @@ export default function ListBooksPage() {
 
         {books.length === 0 ? (
           <Stack sx={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 1, opacity: 0.6 }}>
-            <span className="material-icons" style={{ fontSize: 48 }}>menu_book</span>
+            <Icon sx={{ fontSize: 48 }}>menu_book</Icon>
             <Typography variant="body2">هنوز کتابی اضافه نکرده‌ای</Typography>
           </Stack>
         ) : (

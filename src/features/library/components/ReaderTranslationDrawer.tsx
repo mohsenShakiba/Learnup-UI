@@ -1,8 +1,8 @@
+import { Icon } from '../../../shared/components/Icon';
 import {
   Box,
   CircularProgress,
   Divider,
-  Icon,
   IconButton,
   Stack,
   SwipeableDrawer,

@@ -1,10 +1,10 @@
+import { Icon } from '../../shared/components/Icon';
 import {
   Avatar,
   Box,
   Button,
   CircularProgress,
   Divider,
-  Icon,
   IconButton,
   Paper,
   Stack,

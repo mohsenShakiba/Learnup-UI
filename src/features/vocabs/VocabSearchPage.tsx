@@ -1,8 +1,8 @@
+import { Icon } from '../../shared/components/Icon';
 import {
   Box,
   Dialog,
   DialogContent,
-  Icon,
   IconButton,
   InputAdornment,
   Stack,

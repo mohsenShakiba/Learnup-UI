@@ -1,4 +1,5 @@
-import { Box, Card, Divider, Icon, Stack, Typography } from "@mui/material";
+import { Icon } from '../../../shared/components/Icon';
+import { Box, Card, Divider, Stack, Typography } from "@mui/material";
 import type { DueLeitnerBoxItemResponse } from "../../../api/Learnup";
 
 type ReviewAnswerCardProps = {

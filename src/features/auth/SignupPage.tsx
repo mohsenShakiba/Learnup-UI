@@ -1,4 +1,5 @@
-import { Box, Button, Icon, Paper, Stack, TextField, Typography } from "@mui/material";
+import { Icon } from '../../shared/components/Icon';
+import { Box, Button, Paper, Stack, TextField, Typography } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";

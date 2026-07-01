@@ -1,4 +1,5 @@
-import { Box, Card, Chip, Divider, Icon, Stack, Typography } from '@mui/material';
+import { Icon } from '../../shared/components/Icon';
+import { alpha, Box, Card, Chip, Divider, Stack, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import type { SubscriptionResponse, UserSubscriptionResponse } from '../../api/Learnup';
 import {
@@ -54,14 +55,27 @@ function formatDate (dateStr: string): string {
 
 function CurrentPlanCard ({ sub }: { sub: UserSubscriptionResponse; }) {
   return (
-    <Card variant="outlined">
-      <Box sx={{ p: 2 }}>
-        <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'flex-start', mb: 1.5 }}>
-          <Stack>
-            <Typography variant="caption" color="text.secondary">Your Plan</Typography>
-            <Typography variant="h6">{sub.subscriptionTitle}</Typography>
+    <Card
+      variant="outlined"
+      sx={{
+        p: 0,
+        overflow: 'hidden',
+        borderColor: (theme) => alpha(theme.palette.primary.main, 0.32),
+      }}
+    >
+      <Box
+        sx={{
+          p: 2,
+          borderLeft: '4px solid',
+          borderColor: 'primary.main',
+        }}
+      >
+        <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'flex-start', gap: 1.5, mb: 1.5 }}>
+          <Stack spacing={0.35} sx={{ minWidth: 0 }}>
+            <Typography variant="caption" color="text.secondary">Current plan</Typography>
+            <Typography variant="h6" sx={{ lineHeight: 1.15 }}>{sub.subscriptionTitle}</Typography>
           </Stack>
-          <Stack spacing={0.5} >
+          <Stack spacing={0.5} sx={{ alignItems: 'flex-end', flexShrink: 0 }}>
             <Chip label={statusLabel(sub.status)} size="small" color={statusColor(sub.status)} />
             <Chip label={durationLabel(sub.duration)} size="small" variant="outlined" />
           </Stack>
@@ -86,53 +100,82 @@ function PlanCard ({ plan, isActive }: { plan: SubscriptionResponse; isActive: b
   const discountedPrice = plan.discountPercent > 0
     ? plan.price * (1 - plan.discountPercent / 100)
     : plan.price;
+  const sortedFeatures = [...plan.features].sort((a, b) => a.order - b.order);
 
   return (
-    <Card variant={isActive ? 'elevation' : 'outlined'} sx={isActive ? { borderColor: 'primary.main', border: '1px solid' } : {}}>
+    <Card
+      variant="outlined"
+      sx={{
+        p: 0,
+        overflow: 'hidden',
+        borderColor: isActive ? 'primary.main' : 'divider',
+        boxShadow: isActive
+          ? (theme) => `0 10px 24px ${alpha(theme.palette.primary.main, 0.12)}`
+          : 'none',
+      }}
+    >
       <Box sx={{ p: 2 }}>
-        <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
-          <Typography variant="h6">{plan.title}</Typography>
-          <Stack direction="row" spacing={0.5}>
-            <Chip label={typeLabel(plan.type)} size="small" color="primary" />
+        <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'flex-start', gap: 1.5, mb: 1.25 }}>
+          <Stack spacing={0.65} sx={{ minWidth: 0 }}>
+            <Stack direction="row" spacing={0.75} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+              <Typography variant="h6" sx={{ lineHeight: 1.15 }}>{plan.title}</Typography>
+              {isActive && <Chip label="Active" size="small" color="success" />}
+            </Stack>
+            {plan.description && (
+              <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.45 }}>
+                {plan.description}
+              </Typography>
+            )}
+          </Stack>
+          <Stack direction="row" spacing={0.5} sx={{ flexShrink: 0, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+            <Chip label={typeLabel(plan.type)} size="small" color="primary" variant={isActive ? 'filled' : 'outlined'} />
             <Chip label={durationLabel(plan.duration)} size="small" variant="outlined" />
           </Stack>
         </Stack>
 
-        {plan.description && (
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-            {plan.description}
-          </Typography>
-        )}
-
-        <Stack direction="row" spacing={1} sx={{ mb: 1.5 }}>
-          <Typography variant="h5" color="primary">
-            {discountedPrice.toLocaleString()}
-          </Typography>
+        <Box
+          sx={{
+            my: 1.5,
+            p: 1.5,
+            borderRadius: 2,
+            bgcolor: (theme) => alpha(theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.12 : 0.07),
+          }}
+        >
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'baseline', flexWrap: 'wrap' }}>
+            <Typography variant="h5" color="primary" sx={{ lineHeight: 1 }}>
+              {Math.round(discountedPrice).toLocaleString()}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              تومان
+            </Typography>
+          </Stack>
           {plan.discountPercent > 0 && (
-            <>
+            <Stack direction="row" spacing={0.75} sx={{ alignItems: 'center', mt: 0.75 }}>
               <Typography variant="body2" color="text.secondary" sx={{ textDecoration: 'line-through' }}>
                 {plan.price.toLocaleString()}
               </Typography>
               <Chip label={`-${plan.discountPercent}%`} size="small" color="warning" />
-            </>
+            </Stack>
           )}
-        </Stack>
+        </Box>
 
         <Divider sx={{ mb: 1.5 }} />
 
-        <Stack spacing={0.5}>
-          {[...plan.features]
-            .sort((a, b) => a.order - b.order)
-            .map((feature) => (
-              <Stack key={feature.id} direction="row" spacing={1} >
-                <Icon sx={{ fontSize: 16 }} color={feature.isIncluded ? 'success' : 'disabled'}>
-                  {feature.isIncluded ? 'check_circle' : 'cancel'}
-                </Icon>
-                <Typography variant="body2" color={feature.isIncluded ? 'text.primary' : 'text.secondary'}>
-                  {feature.description}
-                </Typography>
-              </Stack>
-            ))}
+        <Stack spacing={0.9}>
+          {sortedFeatures.map((feature) => (
+            <Stack key={feature.id} direction="row" spacing={1} sx={{ alignItems: 'flex-start' }}>
+              <Icon sx={{ fontSize: 18, mt: 0.15 }} color={feature.isIncluded ? 'success' : 'disabled'}>
+                {feature.isIncluded ? 'check_circle' : 'remove_circle'}
+              </Icon>
+              <Typography
+                variant="body2"
+                color={feature.isIncluded ? 'text.primary' : 'text.secondary'}
+                sx={{ lineHeight: 1.45 }}
+              >
+                {feature.description}
+              </Typography>
+            </Stack>
+          ))}
         </Stack>
       </Box>
     </Card>

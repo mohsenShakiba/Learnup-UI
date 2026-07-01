@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LeitnerBoxService } from "../../../api/Learnup";
 import type { VocabResponse } from "../../../api/Learnup/models/VocabResponse";
 import { VocabType } from "../../../api/Learnup/models/VocabType";
@@ -41,13 +41,24 @@ type Props = {
 
 export function VocabListItem ({ vocab }: Props) {
   const [open, setOpen] = useState(false);
+  const [isInLeitnerBox, setIsInLeitnerBox] = useState(vocab.isInLeitnerBox);
+
+  useEffect(() => {
+    setIsInLeitnerBox(vocab.isInLeitnerBox);
+  }, [vocab.isInLeitnerBox]);
 
   const addToLeitnerMutation = useMutation({
     mutationFn: () => LeitnerBoxService.addVocabToLeitnerBox(vocab.id),
     onSuccess: () => {
+      setIsInLeitnerBox(true);
       setOpen(true);
     },
   });
+
+  const handleAddToLeitner = () => {
+    if (isInLeitnerBox || addToLeitnerMutation.isPending) return;
+    addToLeitnerMutation.mutate();
+  };
 
   return (
     <Card sx={{ p: 2 }}>
@@ -67,11 +78,13 @@ export function VocabListItem ({ vocab }: Props) {
         <Stack direction="row" sx={{ alignItems: "center", gap: 0.5 }}>
           {vocab.voiceId && <VocabPlayButton voiceId={vocab.voiceId} />}
           <IconButton
-            onClick={() => addToLeitnerMutation.mutate()}
+            onClick={handleAddToLeitner}
+            disabled={addToLeitnerMutation.isPending}
             size="small"
-            aria-label="Save to Leitner box"
+            aria-label={isInLeitnerBox ? "Saved in Leitner box" : "Save to Leitner box"}
+            sx={{ color: isInLeitnerBox ? "primary.main" : "text.secondary" }}
           >
-            <Icon>bookmark_border</Icon>
+            <Icon>{isInLeitnerBox ? "bookmark" : "bookmark_border"}</Icon>
           </IconButton>
         </Stack>
       </Stack>

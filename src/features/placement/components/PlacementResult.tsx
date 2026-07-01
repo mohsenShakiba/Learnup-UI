@@ -40,14 +40,14 @@ export default function PlacementResult ({ result, onRetake }: Props) {
           </Typography>
 
           {bands.length > 0 && (
-            <Stack spacing={0.5} sx={{ direction: 'rtl' }}>
+            <Stack spacing={0.5} sx={{ direction: 'ltr' }}>
               {bands.map(([band, correct]) => (
-                <Stack key={band} direction="row">
-                  <Typography variant="body2" sx={{ color: 'text.secondary', direction: 'ltr' }}>
-                    {band}
+                <Stack key={band} direction="row" sx={{ gap: 1 }}>
+                  <Typography variant="body1" sx={{ color: 'text.secondary', direction: 'ltr' }}>
+                    {band}:
                   </Typography>
-                  <Typography variant="body2" sx={{ color: 'text.secondary', direction: 'ltr' }}>
-                    {correct}
+                  <Typography variant="body1" sx={{ color: 'text.secondary', direction: 'ltr' }}>
+                    {correct} جواب صحیح
                   </Typography>
                 </Stack>
               ))}

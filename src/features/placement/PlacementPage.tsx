@@ -17,7 +17,7 @@ import { usePlacementResult, usePlacementTest } from './hooks/usePlacement';
 
 type Phase = 'intro' | 'in-progress' | 'result';
 
-export default function PlacementPage() {
+export default function PlacementPage () {
   const testQuery = usePlacementTest();
   const resultQuery = usePlacementResult();
 
@@ -120,26 +120,26 @@ export default function PlacementPage() {
   }
 
   return (
-    <Stack sx={{ height: '100%' }}>
+    <Stack>
       <DefaultHeader header="آزمون تعیین سطح" />
 
       <Box sx={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
 
         {phase === 'intro' && testQuery.data && (
-          <Stack spacing={2} sx={{ p: 3, direction: 'rtl', textAlign: 'right', overflow: 'auto', flex: 1 }}>
+          <Stack spacing={1} sx={{ p: 3, overflow: 'auto', flex: 1 }}>
+
             <Typography variant="h6">{testQuery.data.title}</Typography>
+
             {testQuery.data.description && (
               <Typography variant="body1" sx={{ color: 'text.secondary' }}>
                 {testQuery.data.description}
               </Typography>
             )}
-            {testQuery.data.instructions && (
-              <Typography variant="body2" sx={{ color: 'text.secondary', whiteSpace: 'pre-line' }}>
-                {testQuery.data.instructions}
-              </Typography>
-            )}
+
             <Box sx={{ flex: 1 }} />
-            <FancyButton onClick={handleStart} sx={{ borderRadius: 999 }}>
+            <FancyButton
+              onClick={handleStart}
+              sx={{ borderRadius: 999 }}>
               شروع آزمون
             </FancyButton>
           </Stack>

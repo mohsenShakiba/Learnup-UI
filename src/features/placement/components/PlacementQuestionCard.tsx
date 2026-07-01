@@ -9,21 +9,21 @@ type Props = {
 };
 
 const SKILL_LABELS: Record<PlacementSkill, string> = {
-  [PlacementSkill.GRAMMAR]: 'گرامر',
-  [PlacementSkill.VOCABULARY]: 'واژگان',
+  [PlacementSkill.GRAMMAR]: 'Grammar',
+  [PlacementSkill.VOCABULARY]: 'Vocabulary',
 };
 
-export function PlacementQuestionCard({ question, selectedOptionId, onSelect }: Props) {
+export function PlacementQuestionCard ({ question, selectedOptionId, onSelect }: Props) {
   return (
-    <Box sx={{ p: 2, m: 2, height: '100%', boxSizing: 'border-box', overflow: 'auto' }}>
-      <Stack spacing={2} sx={{ alignItems: 'center' }}>
+    <Box sx={{ p: 2, m: 2, height: '100%', boxSizing: 'border-box', direction: 'rtl', overflow: 'auto' }}>
+      <Stack spacing={2} sx={{ alignItems: 'start' }}>
 
         {SKILL_LABELS[question.skill] && (
-          <Chip label={SKILL_LABELS[question.skill]} size="small" sx={{ direction: 'rtl' }} />
+          <Chip label={SKILL_LABELS[question.skill]} size="small" sx={{ fontFamily: 'arial' }} />
         )}
 
         {/* English prompt rendered LTR */}
-        <Typography variant="body1" sx={{ fontWeight: 500, direction: 'ltr', textAlign: 'left', width: '100%' }}>
+        <Typography variant="body1" sx={{ fontWeight: 500, direction: 'rtl', width: '100%' }}>
           {question.prompt}
         </Typography>
 
@@ -37,7 +37,6 @@ export function PlacementQuestionCard({ question, selectedOptionId, onSelect }: 
               onClick={() => onSelect(option.id)}
               sx={{
                 width: '100%',
-                textAlign: 'left',
                 px: 2,
                 py: 1.5,
                 borderRadius: 2,
@@ -53,7 +52,7 @@ export function PlacementQuestionCard({ question, selectedOptionId, onSelect }: 
             >
               <Typography
                 variant="body2"
-                sx={{ direction: 'ltr', color: selected ? 'primary.contrastText' : 'text.primary' }}
+                sx={{ color: selected ? 'primary.contrastText' : 'text.primary', direction: 'rtl', }}
               >
                 {option.text}
               </Typography>

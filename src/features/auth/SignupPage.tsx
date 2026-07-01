@@ -3,8 +3,8 @@ import { useMutation } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AuthService } from "../../api/Learnup";
+import { AppIcon } from '../../shared/components/AppIcon';
 import { FancyButton } from "../../shared/components/FancyButton";
-import { Icon } from '../../shared/components/Icon';
 import { Scaffold } from "../../shared/components/Scaffold";
 import { toast } from "../../shared/toast";
 import { useAuthStore } from "../../stores/authStore";
@@ -96,7 +96,7 @@ export default function SignupPage () {
               color: "primary.contrastText",
             }}
           >
-            <Icon sx={{ fontSize: 30 }}>person_add</Icon>
+            <AppIcon sx={{ fontSize: 30 }}>person_add</AppIcon>
           </Box>
           <Typography variant="h5" sx={{ fontWeight: 700 }}>
             تکمیل ثبت نام
@@ -138,7 +138,7 @@ export default function SignupPage () {
           variant="text"
           size="small"
           onClick={() => navigate("/login", { replace: true, state: { from: redirectTo } })}
-          startIcon={<Icon sx={{ fontSize: 18 }}>arrow_forward</Icon>}
+          startIcon={<AppIcon sx={{ fontSize: 18 }}>arrow_forward</AppIcon>}
         >
           تغییر شماره موبایل
         </Button>

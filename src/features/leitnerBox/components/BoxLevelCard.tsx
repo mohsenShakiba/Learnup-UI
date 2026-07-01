@@ -1,6 +1,6 @@
 import { Box, Card, Stack, Typography, useTheme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { Icon } from '../../../shared/components/Icon';
+import { AppIcon } from '../../../shared/components/AppIcon';
 import { getLevelTone } from "./levelTone";
 
 type BoxLevelCardProps = {
@@ -149,7 +149,7 @@ export function BoxLevelCard ({
             </Typography>
           </Box>
         ) : (
-          <Icon
+          <AppIcon
             sx={{
               width: 48,
               flex: "0 0 48px",
@@ -159,7 +159,7 @@ export function BoxLevelCard ({
             }}
           >
             check
-          </Icon>
+          </AppIcon>
         )}
       </Stack>
     </Card>

@@ -4,8 +4,8 @@ import { makeBook } from 'foliate-js/view.js';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BooksControllersService } from '../../api/Learnup';
+import { AppIcon } from '../../shared/components/AppIcon';
 import { DefaultHeader } from '../../shared/components/DefaultHeader';
-import { Icon } from '../../shared/components/Icon';
 import { Scaffold } from '../../shared/components/Scaffold';
 
 export default function UploadBookPage () {
@@ -145,7 +145,7 @@ function FilePicker ({ label, accept, file, onSelect }: FilePickerProps) {
         cursor: 'pointer',
       }}
     >
-      <Icon sx={{ opacity: 0.6 }}>upload_file</Icon>
+      <AppIcon sx={{ opacity: 0.6 }}>upload_file</AppIcon>
       <Stack sx={{ minWidth: 0, flex: 1 }}>
         <Typography variant="caption" sx={{ opacity: 0.6 }}>{label}</Typography>
         <Typography noWrap sx={{ fontSize: '0.9rem' }}>

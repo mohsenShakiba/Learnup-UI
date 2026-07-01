@@ -1,4 +1,3 @@
-import { Icon } from '../../../shared/components/Icon';
 import {
   Box,
   CircularProgress,
@@ -10,6 +9,7 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { LeitnerBoxService, SendAiTextResponse, VocabsService } from '../../../api/Learnup';
+import { AppIcon } from '../../../shared/components/AppIcon';
 import { AppLoader } from '../../../shared/components/AppLoader';
 
 interface Props {
@@ -84,9 +84,9 @@ export function ReaderTranslationDrawer ({ open, onOpen, onClose, word, sentence
                 {bookmarkState === 'loading' ? (
                   <CircularProgress size={18} />
                 ) : (
-                  <Icon sx={{ color: bookmarkState === 'saved' ? 'success.main' : bookmarkState === 'error' ? 'error.main' : 'text.secondary' }}>
+                  <AppIcon sx={{ color: bookmarkState === 'saved' ? 'success.main' : bookmarkState === 'error' ? 'error.main' : 'text.secondary' }}>
                     {bookmarkState === 'saved' ? 'bookmark' : 'bookmark_border'}
-                  </Icon>
+                  </AppIcon>
                 )}
               </IconButton>
             )}

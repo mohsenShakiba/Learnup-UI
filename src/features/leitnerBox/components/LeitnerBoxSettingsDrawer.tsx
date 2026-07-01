@@ -1,4 +1,3 @@
-import { Icon } from '../../../shared/components/Icon';
 import {
   Box,
   Button,
@@ -14,6 +13,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import type { BoxLevelInfoResponse } from "../../../api/Learnup";
 import { LeitnerBoxService } from "../../../api/Learnup";
+import { AppIcon } from '../../../shared/components/AppIcon';
 import { getLevelTone } from "./levelTone";
 
 type LeitnerBoxSettingsDrawerProps = {
@@ -41,7 +41,7 @@ const LEVEL_HARDNESS_LABELS = [
   "Mastered",
 ] as const;
 
-function parseReviewedDays(value: string): string {
+function parseReviewedDays (value: string): string {
   const match = value.match(/-?\d+/);
   if (!match) {
     return "";
@@ -54,7 +54,7 @@ function parseReviewedDays(value: string): string {
   return match[0];
 }
 
-export function LeitnerBoxSettingsDrawer({
+export function LeitnerBoxSettingsDrawer ({
   boxId,
   levels,
   open,
@@ -153,7 +153,7 @@ export function LeitnerBoxSettingsDrawer({
               <Typography variant="h6">تنظیمات</Typography>
               <Box sx={{ flex: 1 }} />
               <IconButton onClick={onClose} aria-label="Close settings">
-                <Icon>close</Icon>
+                <AppIcon>close</AppIcon>
               </IconButton>
             </Stack>
 

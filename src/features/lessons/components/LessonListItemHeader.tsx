@@ -1,5 +1,5 @@
-import { Icon } from '../../../shared/components/Icon';
 import { Box, Divider, Stack, Typography } from '@mui/material';
+import { AppIcon } from '../../../shared/components/AppIcon';
 import { DurationBadge } from '../../../shared/components/DurationBadge';
 
 type LessonListItemHeaderProps = {
@@ -26,7 +26,7 @@ export function LessonListItemHeader ({
                         color,
                     }}
                 >
-                    <Icon>{icon}</Icon>
+                    <AppIcon>{icon}</AppIcon>
                     <Typography>{label}</Typography>
                 </Stack>
                 <Box sx={{ flex: 1 }} />

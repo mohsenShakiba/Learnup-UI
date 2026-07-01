@@ -1,6 +1,6 @@
-import { Icon } from '../../../shared/components/Icon';
 import { Box, IconButton, Stack } from "@mui/material";
 import { useState } from "react";
+import { AppIcon } from '../../../shared/components/AppIcon';
 import { useStoryAudio } from "../hooks/useStoryAudio";
 
 export function StoryControls () {
@@ -68,13 +68,13 @@ export function StoryControls () {
           onClick={togglePlaybackSpeed}
           title={isSlowSpeed ? "Normal speed" : "Slow speed"}
           sx={{ width: 30, height: 30, borderRadius: 999 }}>
-          <Icon sx={{ fontSize: '25px !important' }}>speed</Icon>
+          <AppIcon sx={{ fontSize: '25px !important' }}>speed</AppIcon>
         </IconButton>
 
         <IconButton
           onClick={playNextItem}
           sx={{ width: 30, height: 30, borderRadius: 999, border: '1px solid', borderColor: ' divider' }}>
-          <Icon sx={{ fontSize: '25px !important' }}>chevron_right</Icon>
+          <AppIcon sx={{ fontSize: '25px !important' }}>chevron_right</AppIcon>
         </IconButton>
 
 
@@ -84,20 +84,20 @@ export function StoryControls () {
               color="warning"
               onClick={pause}
               sx={{ width: 30, height: 30, borderRadius: 999, border: '1px solid', borderColor: ' divider' }}>
-              <Icon sx={{ fontSize: '25px !important' }}>pause</Icon>
+              <AppIcon sx={{ fontSize: '25px !important' }}>pause</AppIcon>
             </IconButton>
             : <IconButton
               color="primary"
               onClick={play}
               sx={{ width: 30, height: 30, borderRadius: 999, border: '1px solid', borderColor: ' divider' }}>
-              <Icon sx={{ fontSize: '25px !important' }}>play_arrow</Icon>
+              <AppIcon sx={{ fontSize: '25px !important' }}>play_arrow</AppIcon>
             </IconButton>
         }
 
         <IconButton
           onClick={playPreviousItem}
           sx={{ width: 30, height: 30, borderRadius: 999, border: '1px solid', borderColor: ' divider' }}>
-          <Icon sx={{ fontSize: '25px !important' }}>chevron_left</Icon>
+          <AppIcon sx={{ fontSize: '25px !important' }}>chevron_left</AppIcon>
         </IconButton>
 
 
@@ -106,9 +106,9 @@ export function StoryControls () {
           onClick={onToggleTranslation}
           title={showTranslation ? "Hide translation" : "Show translation"}
           sx={{ width: 30, height: 30, borderRadius: 999 }}>
-          <Icon sx={{ fontSize: '25px !important' }}>
+          <AppIcon sx={{ fontSize: '25px !important' }}>
             closed_caption
-          </Icon>
+          </AppIcon>
         </IconButton>
 
       </Stack>

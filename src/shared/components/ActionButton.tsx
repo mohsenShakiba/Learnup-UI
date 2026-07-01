@@ -1,5 +1,5 @@
 import { Box, type SxProps, type Theme } from '@mui/material';
-import { Icon } from './Icon';
+import { AppIcon } from './AppIcon';
 
 type Props = {
     pendingText: string;
@@ -13,7 +13,7 @@ const ENERGETIC_GRADIENT = 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)';
 const ENERGETIC_COLOR = '#d97706';
 const DONE_COLOR = '#587a50';
 
-export function ActionButton({ pendingText, completedText, isCompleted, onClick, sx }: Props) {
+export function ActionButton ({ pendingText, completedText, isCompleted, onClick, sx }: Props) {
     return (
         <Box
             onClick={onClick}
@@ -95,7 +95,7 @@ export function ActionButton({ pendingText, completedText, isCompleted, onClick,
 
                 }}
             >
-                <Icon
+                <AppIcon
                     sx={{
                         color: 'white',
                         position: 'relative',
@@ -105,7 +105,7 @@ export function ActionButton({ pendingText, completedText, isCompleted, onClick,
                     }}
                 >
                     {isCompleted ? 'check_circle' : 'arrow_backward'}
-                </Icon>
+                </AppIcon>
             </Box>
         </Box>
     );

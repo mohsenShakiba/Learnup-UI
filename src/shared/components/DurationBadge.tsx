@@ -1,5 +1,5 @@
-import { Icon } from './Icon';
 import { Stack, Typography } from '@mui/material';
+import { AppIcon } from './AppIcon';
 
 type Props = {
     minutes: number | string;
@@ -11,7 +11,7 @@ export function DurationBadge ({ minutes }: Props) {
             <Typography sx={{ fontSize: '0.8rem', fontFamily: 'arial', direction: 'rtl' }}>
                 {minutes} Min
             </Typography>
-            <Icon sx={{ fontSize: '1.2rem' }}>timer</Icon>
+            <AppIcon sx={{ fontSize: '1.2rem' }}>timer</AppIcon>
         </Stack>
     );
 }

@@ -1,4 +1,3 @@
-import { Icon } from '../../shared/components/Icon';
 import { Box, IconButton, Stack, Typography, useTheme } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -6,13 +5,14 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { AiService, BooksControllersService } from '../../api/Learnup';
 import { BookManagarService, BookPageInfo } from '../../services/BookManagarService';
 import type { SentenceDetectionResult } from '../../services/SentenceDetection';
+import { AppIcon } from '../../shared/components/AppIcon';
 import { AppLoader } from '../../shared/components/AppLoader';
 import { useSwipeableDrawerStore } from '../../shared/swipeableDrawer';
-import { ReaderTranslationDrawer } from './components/ReaderTranslationDrawer';
 import { ReaderConfigDrawer } from './components/ReaderConfigDrawer';
+import { ReaderTranslationDrawer } from './components/ReaderTranslationDrawer';
 import { TableOfContentsDrawer } from './components/TableOfContentsDrawer';
 
-export default function BookDetailPage() {
+export default function BookDetailPage () {
 
   // book id
   const { bookId } = useParams<{ bookId: string; }>();
@@ -111,7 +111,7 @@ export default function BookDetailPage() {
 
         <Stack direction='row' sx={{ position: 'fixed', left: 16, right: 16, top: 16, gap: 2, zIndex: 1, alignItems: 'center', justifyContent: 'space-between', }}>
           <IconButton onClick={() => navigate(-1)} sx={{ color: 'inherit' }}>
-            <Icon sx={{ opacity: 0.5 }}>arrow_forward</Icon>
+            <AppIcon sx={{ opacity: 0.5 }}>arrow_forward</AppIcon>
           </IconButton>
 
           <Stack onClick={handleOpenToc}>
@@ -125,7 +125,7 @@ export default function BookDetailPage() {
 
           <IconButton
             onClick={handleOpenSettings}>
-            <Icon sx={{ opacity: 0.5 }}>settings</Icon>
+            <AppIcon sx={{ opacity: 0.5 }}>settings</AppIcon>
           </IconButton>
         </Stack>
 

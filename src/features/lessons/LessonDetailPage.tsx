@@ -1,5 +1,6 @@
 import { Box, Button, Icon, Stack } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
+import { AppIcon } from "../../shared/components/AppIcon";
 import { AppLoader } from "../../shared/components/AppLoader";
 import { DefaultHeader } from "../../shared/components/DefaultHeader";
 import { ErrorPage } from "../../shared/components/ErrorPage";
@@ -13,7 +14,7 @@ import { useLesson } from "./hooks/useLesson";
 const CIRCLE_SIZE = 28;
 const ITEM_GAP = 16;
 
-function TimelineColumn({
+function TimelineColumn ({
   completed,
   isLast,
 }: {
@@ -68,8 +69,8 @@ function TimelineColumn({
   );
 }
 
-export default function LessonDetailPage() {
-  const { id: lessonId } = useParams<{ id: string }>();
+export default function LessonDetailPage () {
+  const { id: lessonId } = useParams<{ id: string; }>();
   const lessonIdNumber = Number(lessonId);
   const navigate = useNavigate();
 
@@ -161,7 +162,7 @@ export default function LessonDetailPage() {
               <Button
                 variant="outlined"
                 fullWidth
-                endIcon={<Icon>arrow_back</Icon>}
+                endIcon={<AppIcon>arrow_back</AppIcon>}
                 onClick={() => navigate(`/lessons/${lesson.nextLessonId}`)}
                 sx={{ alignSelf: "center" }}
               >

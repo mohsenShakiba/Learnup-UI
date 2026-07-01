@@ -1,8 +1,8 @@
-import { Icon } from '../../../shared/components/Icon';
 import { Box, IconButton, Paper, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import type { UserBookResponse } from '../../../api/Learnup';
 import { getFileById } from '../../../services/fetchFile';
+import { AppIcon } from '../../../shared/components/AppIcon';
 
 interface BookListItemProps {
   book: UserBookResponse;
@@ -104,7 +104,7 @@ export function BookListItem ({ book, onClick }: BookListItemProps) {
         </Typography>
         <Box sx={{ flex: 1 }} />
         <IconButton size='small' >
-          <Icon >more_horiz</Icon>
+          <AppIcon >more_horiz</AppIcon>
         </IconButton>
       </Stack>
 

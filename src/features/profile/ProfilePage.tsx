@@ -1,4 +1,3 @@
-import { Icon } from '../../shared/components/Icon';
 import {
   Avatar,
   Box,
@@ -15,6 +14,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 import { UsersService } from '../../api/Learnup';
 import { getFileById } from '../../services/fetchFile';
+import { AppIcon } from '../../shared/components/AppIcon';
 import { DefaultHeader } from '../../shared/components/DefaultHeader';
 import { Scaffold } from '../../shared/components/Scaffold';
 import { toast } from '../../shared/toast/toastStore';
@@ -149,7 +149,7 @@ export default function ProfilePage () {
               {avatarMutation.isPending ? (
                 <CircularProgress size={14} />
               ) : (
-                <Icon sx={{ fontSize: 16 }}>edit</Icon>
+                <AppIcon sx={{ fontSize: 16 }}>edit</AppIcon>
               )}
             </IconButton>
           </Box>

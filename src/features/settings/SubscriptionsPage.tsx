@@ -1,4 +1,3 @@
-import { Icon } from '../../shared/components/Icon';
 import { alpha, Box, Card, Chip, Divider, Stack, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import type { SubscriptionResponse, UserSubscriptionResponse } from '../../api/Learnup';
@@ -8,6 +7,7 @@ import {
   SubscriptionType,
   UserSubscriptionStatus,
 } from '../../api/Learnup';
+import { AppIcon } from '../../shared/components/AppIcon';
 import { AppLoader } from '../../shared/components/AppLoader';
 import { DefaultHeader } from '../../shared/components/DefaultHeader';
 import { ErrorPage } from '../../shared/components/ErrorPage';
@@ -164,9 +164,9 @@ function PlanCard ({ plan, isActive }: { plan: SubscriptionResponse; isActive: b
         <Stack spacing={0.9}>
           {sortedFeatures.map((feature) => (
             <Stack key={feature.id} direction="row" spacing={1} sx={{ alignItems: 'flex-start' }}>
-              <Icon sx={{ fontSize: 18, mt: 0.15 }} color={feature.isIncluded ? 'success' : 'disabled'}>
+              <AppIcon sx={{ fontSize: 18, mt: 0.15 }} color={feature.isIncluded ? 'success' : 'disabled'}>
                 {feature.isIncluded ? 'check_circle' : 'remove_circle'}
-              </Icon>
+              </AppIcon>
               <Typography
                 variant="body2"
                 color={feature.isIncluded ? 'text.primary' : 'text.secondary'}

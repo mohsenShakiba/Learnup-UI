@@ -1,10 +1,11 @@
-import { Avatar, Box, Grid, Icon, IconButton, Typography } from "@mui/material";
+import { Avatar, Box, Grid, IconButton, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState, type ReactNode } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { UsersService } from "../../api/Learnup";
 import { SettingsDrawer } from "../../features/settings/SettingsDrawer";
 import { getFileById } from "../../services/fetchFile";
+import { AppIcon } from "./AppIcon";
 import { ROOT_TABS } from "./BottomNav";
 
 type DefaultHeaderProps = {
@@ -13,7 +14,7 @@ type DefaultHeaderProps = {
   children?: ReactNode;
 };
 
-export function DefaultHeader({
+export function DefaultHeader ({
   header,
   subtitle,
   children,
@@ -83,11 +84,11 @@ export function DefaultHeader({
         <Grid size={2} sx={{ display: "flex", justifyContent: "flex-start" }}>
           {!isRootTab ? (
             <IconButton onClick={() => navigate(-1)}>
-              <Icon>arrow_forward</Icon>
+              <AppIcon>arrow_forward</AppIcon>
             </IconButton>
           ) : (
             <IconButton onClick={() => setSettingsOpen(true)}>
-              <Icon>menu</Icon>
+              <AppIcon>menu</AppIcon>
             </IconButton>
           )}
         </Grid>

@@ -1,4 +1,3 @@
-import { Icon } from '../../../shared/components/Icon';
 import {
   Box,
   Card,
@@ -14,6 +13,7 @@ import { useEffect, useState } from "react";
 import { LeitnerBoxService } from "../../../api/Learnup";
 import type { VocabResponse } from "../../../api/Learnup/models/VocabResponse";
 import { VocabType } from "../../../api/Learnup/models/VocabType";
+import { AppIcon } from '../../../shared/components/AppIcon';
 import { VocabPlayButton } from "./VocabPlayButton";
 
 const VOCAB_TYPE_LABELS: Record<VocabType, string> = {
@@ -84,7 +84,7 @@ export function VocabListItem ({ vocab }: Props) {
             aria-label={isInLeitnerBox ? "Saved in Leitner box" : "Save to Leitner box"}
             sx={{ color: isInLeitnerBox ? "primary.main" : "text.secondary" }}
           >
-            <Icon>{isInLeitnerBox ? "bookmark" : "bookmark_border"}</Icon>
+            <AppIcon>{isInLeitnerBox ? "bookmark" : "bookmark_border"}</AppIcon>
           </IconButton>
         </Stack>
       </Stack>

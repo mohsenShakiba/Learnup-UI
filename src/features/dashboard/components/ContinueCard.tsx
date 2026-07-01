@@ -1,10 +1,9 @@
-import { Icon } from '../../../shared/components/Icon';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Box, Card, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { CurrentLessonProgressResponse } from '../../../api/Learnup';
+import { AppIcon } from '../../../shared/components/AppIcon';
 import { FancyButton } from '../../../shared/components/FancyButton';
-import { RadarPulse } from '../../../shared/components/RadarPulse';
 
 type Props = {
   lesson?: CurrentLessonProgressResponse;
@@ -16,26 +15,26 @@ type CompletionBoxProps = {
   done: boolean;
 };
 
-function CompletionBox({ label, icon, done }: CompletionBoxProps) {
+function CompletionBox ({ label, icon, done }: CompletionBoxProps) {
   return (
     <Box
       sx={{
 
       }}
     >
-      <Icon sx={{
+      <AppIcon sx={{
         bgcolor: done ? 'success.main' : 'rgba(0,0,0,0.15)',
         width: 25,
         height: 25,
         lineHeight: '25px',
         borderRadius: 1,
         fontSize: '1rem', color: done ? 'white' : 'rgba(255,255,255,0.5)'
-      }}>{icon}</Icon>
+      }}>{icon}</AppIcon>
     </Box>
   );
 }
 
-export function ContinueCard({ lesson }: Props) {
+export function ContinueCard ({ lesson }: Props) {
   const navigate = useNavigate();
 
   const storyDone = lesson?.isStoryCompleted ?? false;

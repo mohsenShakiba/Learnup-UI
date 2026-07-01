@@ -1,7 +1,7 @@
-import { Icon } from '../../../shared/components/Icon';
 import { CircularProgress, IconButton } from "@mui/material";
 import { useState } from "react";
 import { playAudio } from "../../../services/audioService";
+import { AppIcon } from '../../../shared/components/AppIcon';
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? "";
 
@@ -25,7 +25,7 @@ export function VocabPlayButton ({ voiceId }: Props) {
 
   return (
     <IconButton size="small" onClick={handlePlay}>
-      {isLoading ? <CircularProgress size={20} /> : <Icon>volume_up</Icon>}
+      {isLoading ? <CircularProgress size={20} /> : <AppIcon>volume_up</AppIcon>}
     </IconButton>
   );
 }

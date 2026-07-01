@@ -1,8 +1,8 @@
-import { Icon } from '../../../shared/components/Icon';
 import { Box, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { LessonResponse } from '../../../api/Learnup';
 import { ActionCard } from '../../../shared/components/ActionCard';
+import { AppIcon } from '../../../shared/components/AppIcon';
 
 type LessonListItemProps = {
   lesson: LessonResponse;
@@ -37,9 +37,9 @@ function LessonTimeline ({ completed, isLast }: { completed: boolean; isLast: bo
         zIndex: 1,
       }}>
         {completed ? (
-          <Icon sx={{ fontSize: 16, color: 'white' }}>check</Icon>
+          <AppIcon sx={{ fontSize: 16, color: 'white' }}>check</AppIcon>
         ) : (
-          <Icon sx={{ fontSize: 16, color: 'warning.main' }}>hourglass</Icon>
+          <AppIcon sx={{ fontSize: 16, color: 'warning.main' }}>hourglass</AppIcon>
         )}
       </Box>
       {!isLast && (

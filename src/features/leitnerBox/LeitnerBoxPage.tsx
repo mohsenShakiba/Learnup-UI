@@ -10,12 +10,12 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LeitnerBoxService, UsersService } from "../../api/Learnup";
+import { AppIcon } from '../../shared/components/AppIcon';
 import { AppLoader } from "../../shared/components/AppLoader";
 import { DefaultHeader } from "../../shared/components/DefaultHeader";
 import { DotGrid } from "../../shared/components/DotGrid";
 import { EmptyList } from "../../shared/components/EmptyList";
 import { ErrorPage } from "../../shared/components/ErrorPage";
-import { Icon } from '../../shared/components/Icon';
 import { Scaffold } from "../../shared/components/Scaffold";
 import { BoxLevelCard } from "./components/BoxLevelCard";
 import { LeitnerBoxSettingsDrawer } from "./components/LeitnerBoxSettingsDrawer";
@@ -130,7 +130,7 @@ export default function LeitnerBoxPage () {
           </Box>
 
           <IconButton onClick={() => setIsSettingsOpen(true)}>
-            <Icon>settings</Icon>
+            <AppIcon>settings</AppIcon>
           </IconButton>
         </Stack>
 
@@ -172,7 +172,7 @@ export default function LeitnerBoxPage () {
               </Box>
               <Button
                 disabled={!firstDueLevel}
-                startIcon={<Icon>arrow_forward</Icon>}
+                startIcon={<AppIcon>arrow_forward</AppIcon>}
                 onClick={() => {
                   navigate(`/boxlevel/${firstDueLevel.id}`);
                 }}

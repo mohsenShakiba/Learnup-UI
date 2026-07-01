@@ -13,7 +13,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { Icon } from '../../shared/components/Icon';
+import { AppIcon } from '../../shared/components/AppIcon';
 import { useThemeMode } from '../../shared/theme/themeMode';
 import { clearAuth } from '../../stores/authStore';
 
@@ -57,7 +57,7 @@ export function SettingsDrawer ({ open, onClose }: SettingsDrawerProps) {
         <Typography variant="h6">تنظیمات</Typography>
         <Box sx={{ flex: 1 }} />
         <IconButton onClick={onClose} aria-label="Close settings">
-          <Icon>close</Icon>
+          <AppIcon>close</AppIcon>
         </IconButton>
       </Stack>
 
@@ -66,34 +66,34 @@ export function SettingsDrawer ({ open, onClose }: SettingsDrawerProps) {
       <Paper sx={{ p: 0, overflow: 'hidden' }}>
         <ListItemButton onClick={() => go('/profile')}>
           <ListItemIcon>
-            <Icon>account_circle</Icon>
+            <AppIcon>account_circle</AppIcon>
           </ListItemIcon>
           <ListItemText primary="پروفایل" />
-          <Icon sx={{ opacity: 0.4, fontSize: 18 }}>chevron_left</Icon>
+          <AppIcon sx={{ opacity: 0.4, fontSize: 18 }}>chevron_left</AppIcon>
         </ListItemButton>
         <Divider />
         <ListItemButton onClick={() => go('/settings/subscriptions')}>
           <ListItemIcon>
-            <Icon>workspace_premium</Icon>
+            <AppIcon>workspace_premium</AppIcon>
           </ListItemIcon>
           <ListItemText primary="لیست اشتراک ها" />
-          <Icon sx={{ opacity: 0.4, fontSize: 18 }}>chevron_left</Icon>
+          <AppIcon sx={{ opacity: 0.4, fontSize: 18 }}>chevron_left</AppIcon>
         </ListItemButton>
         <Divider />
         <ListItemButton onClick={() => go('/placement')}>
           <ListItemIcon>
-            <Icon>quiz</Icon>
+            <AppIcon>quiz</AppIcon>
           </ListItemIcon>
           <ListItemText primary="آزمون تعیین سطح" />
-          <Icon sx={{ opacity: 0.4, fontSize: 18 }}>chevron_left</Icon>
+          <AppIcon sx={{ opacity: 0.4, fontSize: 18 }}>chevron_left</AppIcon>
         </ListItemButton>
         <Divider />
         <ListItemButton onClick={() => go('/grammar')}>
           <ListItemIcon>
-            <Icon>menu_book</Icon>
+            <AppIcon>menu_book</AppIcon>
           </ListItemIcon>
           <ListItemText primary="گرامرها" />
-          <Icon sx={{ opacity: 0.4, fontSize: 18 }}>chevron_left</Icon>
+          <AppIcon sx={{ opacity: 0.4, fontSize: 18 }}>chevron_left</AppIcon>
         </ListItemButton>
       </Paper>
 
@@ -110,7 +110,7 @@ export function SettingsDrawer ({ open, onClose }: SettingsDrawerProps) {
           }
         >
           <ListItemIcon>
-            <Icon>{isDark ? 'dark_mode' : 'light_mode'}</Icon>
+            <AppIcon>{isDark ? 'dark_mode' : 'light_mode'}</AppIcon>
           </ListItemIcon>
           <ListItemText primary={isDark ? 'حالت تاریک' : 'حالت روشن'} />
         </ListItem>
@@ -120,7 +120,7 @@ export function SettingsDrawer ({ open, onClose }: SettingsDrawerProps) {
       <Paper sx={{ p: 0, overflow: 'hidden', mt: 2 }}>
         <ListItemButton onClick={handleLogout}>
           <ListItemIcon>
-            <Icon sx={{ color: 'error.main' }}>logout</Icon>
+            <AppIcon sx={{ color: 'error.main' }}>logout</AppIcon>
           </ListItemIcon>
           <ListItemText primary={<Typography color="error">خروج از حساب</Typography>} />
         </ListItemButton>

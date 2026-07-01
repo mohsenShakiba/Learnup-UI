@@ -1,6 +1,6 @@
-import { Icon } from './Icon';
 import { Box, ButtonBase, useTheme } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
+import { AppIcon } from './AppIcon';
 
 export const ROOT_TABS = [
   { label: 'Dashboard', icon: 'dashboard', path: '/dashboard' },
@@ -122,7 +122,7 @@ export function BottomNav () {
                   }),
                 }}
               />
-              <Icon
+              <AppIcon
                 sx={{
                   position: 'relative',
                   zIndex: 1,
@@ -137,7 +137,7 @@ export function BottomNav () {
                 }}
               >
                 {tab.icon}
-              </Icon>
+              </AppIcon>
             </ButtonBase>
           );
         })}

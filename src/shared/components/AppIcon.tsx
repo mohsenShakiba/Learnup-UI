@@ -115,7 +115,7 @@ export type IconProps = Omit<SvgIconProps, 'children'> & {
  * by tree-shaken `@mui/icons-material` SVGs instead of the icon font. All SvgIcon
  * props (`sx`, `color`, `fontSize`, …) are forwarded unchanged.
  */
-export function Icon ({ children, ...props }: IconProps) {
+export function AppIcon ({ children, ...props }: IconProps) {
   const Component = ICONS[children as IconName] as
     | ComponentType<SvgIconProps>
     | undefined;

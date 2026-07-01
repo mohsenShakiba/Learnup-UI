@@ -1,4 +1,3 @@
-import { Icon } from '../../shared/components/Icon';
 import {
   Box,
   Dialog,
@@ -14,6 +13,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 import { VocabsService } from '../../api/Learnup';
+import { AppIcon } from '../../shared/components/AppIcon';
 import { AppLoader } from '../../shared/components/AppLoader';
 import { DefaultHeader } from '../../shared/components/DefaultHeader';
 import { Scaffold } from '../../shared/components/Scaffold';
@@ -132,7 +132,7 @@ export default function VocabSearchPage () {
                 <InputAdornment position="end">
                   {isMicSupported && (
                     <IconButton onClick={openMicDialog} size="small">
-                      <Icon>mic_none</Icon>
+                      <AppIcon>mic_none</AppIcon>
                     </IconButton>
                   )}
                 </InputAdornment>
@@ -143,7 +143,7 @@ export default function VocabSearchPage () {
 
         {input.length === 0 && (
           <Stack spacing={1} sx={{ alignItems: 'center', py: 4, color: 'text.secondary' }}>
-            <Icon sx={{ fontSize: 48, opacity: 0.3 }}>search</Icon>
+            <AppIcon sx={{ fontSize: 48, opacity: 0.3 }}>search</AppIcon>
             <Typography variant="body2" sx={{ textAlign: 'center' }}>
               کلمه‌ای را به فارسی یا انگلیسی تایپ کنید
             </Typography>
@@ -159,7 +159,7 @@ export default function VocabSearchPage () {
 
         {query.data && query.data.length === 0 && (
           <Stack spacing={1} sx={{ alignItems: 'center', py: 4, color: 'text.secondary' }}>
-            <Icon sx={{ fontSize: 48, opacity: 0.3 }}>sentiment_dissatisfied</Icon>
+            <AppIcon sx={{ fontSize: 48, opacity: 0.3 }}>sentiment_dissatisfied</AppIcon>
             <Typography variant="body2">نتیجه‌ای برای «{searchWord}» یافت نشد</Typography>
             <Typography variant="caption" sx={{ opacity: 0.7 }}>املای کلمه را بررسی کنید یا کلمه دیگری امتحان کنید</Typography>
           </Stack>
@@ -209,7 +209,7 @@ export default function VocabSearchPage () {
                   },
                 }}
               >
-                <Icon sx={{ fontSize: 36 }}>{isListening ? 'mic' : 'mic_none'}</Icon>
+                <AppIcon sx={{ fontSize: 36 }}>{isListening ? 'mic' : 'mic_none'}</AppIcon>
               </IconButton>
             </Box>
 

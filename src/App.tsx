@@ -14,6 +14,7 @@ import LessonGrammarTestsPage from "./features/GrammarTests/LessonGrammarTestsPa
 import BoxLevelReviewPage from "./features/leitnerBox/BoxLevelReviewPage";
 import LeitnerBoxPage from "./features/leitnerBox/LeitnerBoxPage";
 import LessonDetailPage from "./features/lessons/LessonDetailPage";
+import PlacementPage from "./features/placement/PlacementPage";
 import BookDetailPage from "./features/library/BookDetailPage";
 import ListBooksPage from "./features/library/ListBooksPage";
 import UploadBookPage from "./features/library/UploadBookPage";
@@ -74,6 +75,7 @@ function AppLayout() {
               element={<SubscriptionsPage />}
             />
             <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/placement" element={<PlacementPage />} />
             <Route path="/library/book/:bookId" element={<BookDetailPage />} />
             <Route path="/library" element={<ListBooksPage />} />
             <Route

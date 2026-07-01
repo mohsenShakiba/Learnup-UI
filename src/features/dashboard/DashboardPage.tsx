@@ -4,12 +4,13 @@ import { Scaffold } from '../../shared/components/Scaffold';
 import { ContinueCard } from './components/ContinueCard';
 import { Greeting } from './components/Greeting';
 import { LeitnerStatsCard } from './components/LeitnerStatsCard';
+import { PlacementCard } from './components/PlacementCard';
 import { StreakCardBlaze } from './components/StreakCardBlaze';
 import { UserSubscriptionCard } from './components/UserSubscriptionCard';
 import { useDashboardData } from './hooks/useDashboardData';
 
 export default function DashboardPage() {
-  const { profileName, streak, subscription, currentLesson, motivationalSentence, leitnerTotalItems, leitnerDueItems, isLoading } = useDashboardData();
+  const { profileName, streak, subscription, currentLesson, motivationalSentence, leitnerTotalItems, leitnerDueItems, placementLevel, isLoading } = useDashboardData();
 
   if (isLoading) return null;
 
@@ -31,6 +32,9 @@ export default function DashboardPage() {
           <div><LeitnerStatsCard totalItems={leitnerTotalItems} dueItems={leitnerDueItems} /></div>
         </Fade>
         <Fade in timeout={500} style={{ transitionDelay: '500ms' }}>
+          <div><PlacementCard placementLevel={placementLevel} /></div>
+        </Fade>
+        <Fade in timeout={500} style={{ transitionDelay: '600ms' }}>
           <div><UserSubscriptionCard subscription={subscription} /></div>
         </Fade>
       </Stack>

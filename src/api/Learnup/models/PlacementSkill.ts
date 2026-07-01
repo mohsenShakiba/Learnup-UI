@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type VerifyOtpResponse = {
-    accessToken: string;
-    expiresAt: string;
-};
+export enum PlacementSkill {
+    GRAMMAR = 1,
+    VOCABULARY = 2,
+}

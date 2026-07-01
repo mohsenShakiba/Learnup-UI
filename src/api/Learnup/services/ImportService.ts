@@ -5,6 +5,7 @@
 import type { ImportGrammarRequest } from '../models/ImportGrammarRequest';
 import type { ImportLessonGrammarsResponse } from '../models/ImportLessonGrammarsResponse';
 import type { ImportVocabsResponse } from '../models/ImportVocabsResponse';
+import type { PlacementTestRequest } from '../models/PlacementTestRequest';
 import type { StoryRequest } from '../models/StoryRequest';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -52,6 +53,22 @@ requestBody?: StoryRequest,
                 'courseId': courseId,
                 'lessonOrder': lessonOrder,
             },
+            body: requestBody,
+            mediaType: 'application/json',
+        });
+    }
+
+    /**
+     * @param requestBody 
+     * @returns number OK
+     * @throws ApiError
+     */
+    public static importPlacementTest(
+requestBody?: PlacementTestRequest,
+): CancelablePromise<number> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/Admin/Import/placement-test',
             body: requestBody,
             mediaType: 'application/json',
         });

@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type VerifyOtpResponse = {
-    accessToken: string;
-    expiresAt: string;
+export type PlacementOptionResponse = {
+    id: number;
+    text: string;
 };

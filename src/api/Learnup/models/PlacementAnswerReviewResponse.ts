@@ -3,7 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type VerifyOtpResponse = {
-    accessToken: string;
-    expiresAt: string;
+export type PlacementAnswerReviewResponse = {
+    questionId: number;
+    selectedOptionId: number | null;
+    isCorrect: boolean;
 };

@@ -10,7 +10,7 @@ type ScaffoldProps = {
   maxWidth?: string | number;
 };
 
-export function Scaffold({
+export function Scaffold ({
   header,
   children,
   disablePadding,
@@ -30,10 +30,10 @@ export function Scaffold({
       }}
     >
       {header && <>{header}</>}
-      <DotGrid />
       <Box
         component="main"
         sx={{
+          position: "relative",
           maxWidth,
           width: "100%",
           flex: 1,
@@ -48,6 +48,7 @@ export function Scaffold({
           pb: disableBottomPadding ? 0 : 10,
         }}
       >
+        <DotGrid />
         {children}
       </Box>
     </Box>

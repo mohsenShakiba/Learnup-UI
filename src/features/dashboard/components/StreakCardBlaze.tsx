@@ -82,7 +82,7 @@ export function StreakCardBlaze ({ streak }: Props) {
     <Card
       elevation={0}
       sx={{
-        p: 3,
+        p: 2,
         background: "linear-gradient(155deg, rgb(255, 154, 61) 0%, rgb(255, 87, 34) 52%, rgb(229, 56, 59) 100%)",
         color: "#fff",
       }}
@@ -127,7 +127,7 @@ export function StreakCardBlaze ({ streak }: Props) {
             <Typography
               sx={{
                 fontFamily: "FredokaOne",
-                fontSize: 60,
+                fontSize: 50,
                 lineHeight: 0.85,
                 textShadow: '0 0 10px rgba(0,0,0,0.4)',
               }}
@@ -137,7 +137,7 @@ export function StreakCardBlaze ({ streak }: Props) {
             <Typography sx={{
               fontFamily: "FredokaOne",
               fontSize: 12,
-              lineHeight: '16px',
+              lineHeight: '14px',
               textShadow: '0 0 10px rgba(0,0,0,0.4)'
             }}>
               DAYS

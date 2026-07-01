@@ -50,7 +50,6 @@ export function BottomNav () {
         left: '10px',
         right: '10px',
         bottom: 'calc(env(safe-area-inset-bottom, 0px) + 12px)',
-        transform: 'translateZ(0)',
         display: 'flex',
         justifyContent: 'center',
         pointerEvents: 'none',

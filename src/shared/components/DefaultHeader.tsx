@@ -1,5 +1,4 @@
 import { Avatar, Box, Grid, IconButton, Typography } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState, type ReactNode } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -20,7 +19,6 @@ export function DefaultHeader ({
   subtitle,
   children,
 }: DefaultHeaderProps) {
-  const theme = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
   const isRootTab = ROOT_TABS.some((tab) => tab.path === location.pathname);
@@ -74,13 +72,12 @@ export function DefaultHeader ({
         top: 0,
         left: 0,
         right: 0,
-        zIndex: theme.zIndex.appBar,
         borderBottom: "1px solid",
         borderColor: "divider",
         py: 1,
         px: 2,
         height: 60,
-        bgcolor: "background.paper",
+        bgcolor: "background.surface",
       }}
     >
       <Grid container sx={{ width: "100%", alignItems: "center" }}>

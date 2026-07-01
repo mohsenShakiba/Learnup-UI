@@ -8,14 +8,14 @@ interface Props {
   dueItems: number;
 }
 
-export function LeitnerStatsCard({ totalItems, dueItems }: Props) {
+export function LeitnerStatsCard ({ totalItems, dueItems }: Props) {
 
   const navigate = useNavigate();
 
   const isTodayEmpty = dueItems === 0;
   const isTotalEmpty = totalItems === 0;
 
-  const vocabs = isTodayEmpty ? ['you', 'are', 'the', 'best'] : [`${dueItems} due`, `${totalItems} total`]
+  const vocabs = isTodayEmpty ? ['you', 'are', 'the', 'best'] : [`${dueItems} due`, `${totalItems} total`];
   const actionLabel = isTotalEmpty ? 'آشنایی با لاینتر' : 'بریم مرور کنیم';
 
   return (
@@ -24,12 +24,11 @@ export function LeitnerStatsCard({ totalItems, dueItems }: Props) {
       onClick={() => navigate('/leitner-box')}
       sx={{ overflow: 'hidden', position: 'relative', p: 2 }}
     >
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, minHeight: 64 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
         <Stack spacing={0.5} sx={{ flex: 1, alignItems: 'start', minWidth: 0, position: 'relative', zIndex: 1 }}>
-          <Typography variant="body1">
+          <Typography variant="body1" sx={{ fontWeight: 700 }}>
             جعبه لایتنر
           </Typography>
-
           <Typography variant="caption" sx={{ color: 'text.secondary' }}>
             {actionLabel}
           </Typography>

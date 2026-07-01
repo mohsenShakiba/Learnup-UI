@@ -1,5 +1,4 @@
-import { Icon } from './Icon';
-import { Avatar, Box, IconButton, Typography } from '@mui/material';
+import { Avatar, Box, IconButton, Stack, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState, type ReactNode } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -7,6 +6,7 @@ import { UsersService } from '../../api/Learnup';
 import { SettingsDrawer } from '../../features/settings/SettingsDrawer';
 import { getFileById } from '../../services/fetchFile';
 import { ROOT_TABS } from './BottomNav';
+import { Icon } from './Icon';
 
 type DefaultHeaderProps = {
   header: string;
@@ -60,9 +60,6 @@ export function DefaultHeader ({ header, subtitle, children }: DefaultHeaderProp
 
   return (
     <Box sx={{
-      alignItems: 'center',
-      display: 'flex',
-      flexDirection: 'row',
       position: 'sticky', top: 0, left: 0, right: 0,
       zIndex: 1,
       borderBottom: '1px solid',
@@ -72,29 +69,32 @@ export function DefaultHeader ({ header, subtitle, children }: DefaultHeaderProp
       height: 60,
       bgcolor: 'background.paper'
     }}>
-      {!isRootTab ? (
-        <IconButton onClick={() => navigate(-1)}>
-          <Icon>arrow_forward</Icon>
-        </IconButton>
-      ) : (
-        <IconButton onClick={() => setSettingsOpen(true)}>
-          <Icon>menu</Icon>
-        </IconButton>
-      )}
+      <Stack direction='row' sx={{ maxWidth: 500, width: '100%', alignItems: 'center', gap: 1, mx: 'auto' }}>
 
-      <Typography variant='body1' sx={{ flex: 1, textAlign: 'center' }}>
-        {header}
-      </Typography>
+        {!isRootTab ? (
+          <IconButton onClick={() => navigate(-1)}>
+            <Icon>arrow_forward</Icon>
+          </IconButton>
+        ) : (
+          <IconButton onClick={() => setSettingsOpen(true)}>
+            <Icon>menu</Icon>
+          </IconButton>
+        )}
 
-      {isRootTab && !children && (
-        <Avatar src={avatarUrl ?? undefined} sx={{ width: 32, height: 32, fontSize: '0.875rem' }}>
-          {!avatarUrl && (profile?.displayName?.[0]?.toUpperCase() ?? undefined)}
-        </Avatar>
-      )}
+        <Typography variant='body1' sx={{ flex: 1, textAlign: 'center' }}>
+          {header}
+        </Typography>
 
-      {children}
+        {isRootTab && !children && (
+          <Avatar src={avatarUrl ?? undefined} sx={{ width: 32, height: 32, fontSize: '0.875rem' }}>
+            {!avatarUrl && (profile?.displayName?.[0]?.toUpperCase() ?? undefined)}
+          </Avatar>
+        )}
 
-      <SettingsDrawer open={settingsOpen} onClose={() => setSettingsOpen(false)} />
+        {children}
+
+        <SettingsDrawer open={settingsOpen} onClose={() => setSettingsOpen(false)} />
+      </Stack>
     </Box>
   );
 }

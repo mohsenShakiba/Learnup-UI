@@ -10,7 +10,7 @@ type Props = {
   onRetake: () => void;
 };
 
-export default function PlacementResult({ result, onRetake }: Props) {
+export default function PlacementResult ({ result, onRetake }: Props) {
   const navigate = useNavigate();
 
   const bands = Object.entries(result.correctByBand);
@@ -42,7 +42,7 @@ export default function PlacementResult({ result, onRetake }: Props) {
           {bands.length > 0 && (
             <Stack spacing={0.5} sx={{ direction: 'rtl' }}>
               {bands.map(([band, correct]) => (
-                <Stack key={band} direction="row" justifyContent="space-between">
+                <Stack key={band} direction="row">
                   <Typography variant="body2" sx={{ color: 'text.secondary', direction: 'ltr' }}>
                     {band}
                   </Typography>

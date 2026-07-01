@@ -1,16 +1,16 @@
-import type { ComponentType } from 'react';
 import type { SvgIconProps } from '@mui/material';
+import type { ComponentType } from 'react';
 
 import AccountCircle from '@mui/icons-material/AccountCircleOutlined';
 import Add from '@mui/icons-material/AddOutlined';
 import ArrowBack from '@mui/icons-material/ArrowBackOutlined';
 import ArrowForward from '@mui/icons-material/ArrowForwardOutlined';
 import AutoStories from '@mui/icons-material/AutoStoriesOutlined';
-import Bookmark from '@mui/icons-material/BookmarkOutlined';
 import BookmarkBorder from '@mui/icons-material/BookmarkBorderOutlined';
+import Bookmark from '@mui/icons-material/BookmarkOutlined';
 import ChatBubble from '@mui/icons-material/ChatBubbleOutlineOutlined';
-import Check from '@mui/icons-material/CheckOutlined';
 import CheckCircle from '@mui/icons-material/CheckCircleOutlined';
+import Check from '@mui/icons-material/CheckOutlined';
 import ChevronLeft from '@mui/icons-material/ChevronLeft';
 import ChevronRight from '@mui/icons-material/ChevronRight';
 import Close from '@mui/icons-material/CloseOutlined';
@@ -23,10 +23,10 @@ import Layers from '@mui/icons-material/LayersOutlined';
 import LightMode from '@mui/icons-material/LightModeOutlined';
 import LocalFireDepartment from '@mui/icons-material/LocalFireDepartmentOutlined';
 import Logout from '@mui/icons-material/LogoutOutlined';
-import Menu from '@mui/icons-material/MenuOutlined';
 import MenuBook from '@mui/icons-material/MenuBookOutlined';
-import Mic from '@mui/icons-material/MicOutlined';
+import Menu from '@mui/icons-material/MenuOutlined';
 import MicNone from '@mui/icons-material/MicNoneOutlined';
+import Mic from '@mui/icons-material/MicOutlined';
 import MoreHoriz from '@mui/icons-material/MoreHorizOutlined';
 import Notes from '@mui/icons-material/NotesOutlined';
 import Pause from '@mui/icons-material/PauseOutlined';
@@ -115,7 +115,7 @@ export type IconProps = Omit<SvgIconProps, 'children'> & {
  * by tree-shaken `@mui/icons-material` SVGs instead of the icon font. All SvgIcon
  * props (`sx`, `color`, `fontSize`, …) are forwarded unchanged.
  */
-export function Icon({ children, ...props }: IconProps) {
+export function Icon ({ children, ...props }: IconProps) {
   const Component = ICONS[children as IconName] as
     | ComponentType<SvgIconProps>
     | undefined;

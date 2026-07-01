@@ -12,6 +12,7 @@ export type { AnswerTestRequest } from './models/AnswerTestRequest';
 export type { AnswerTestResponse } from './models/AnswerTestResponse';
 export type { BoxLevelInfoResponse } from './models/BoxLevelInfoResponse';
 export type { BoxLevelResponse } from './models/BoxLevelResponse';
+export type { CompleteSignupRequest } from './models/CompleteSignupRequest';
 export type { CourseResponse } from './models/CourseResponse';
 export type { CreateVocabRequest } from './models/CreateVocabRequest';
 export type { CurrentLessonProgressResponse } from './models/CurrentLessonProgressResponse';

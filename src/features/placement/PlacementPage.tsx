@@ -120,7 +120,7 @@ export default function PlacementPage () {
   }
 
   return (
-    <Stack>
+    <Stack sx={{ minHeight: '100%', height: '100%' }}>
       <DefaultHeader header="آزمون تعیین سطح" />
 
       <Box sx={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>

@@ -25,10 +25,26 @@ export default function PlacementResult ({ result, onRetake }: Props) {
   };
 
   return (
-    <Stack sx={{ height: '100%', alignItems: 'stretch', m: 4, justifyContent: 'center' }}>
+    <Stack
+      sx={{
+        flex: 1,
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        p: 4,
+      }}
+    >
       <ConfettiOverlay />
 
-      <ResultCard sx={{ position: 'relative' }} icon="🎯" iconLabel="target">
+      <ResultCard
+        sx={{
+          position: 'relative',
+          width: '100%',
+          maxWidth: 420,
+        }}
+        icon="🎯"
+        iconLabel="target"
+      >
         <Stack direction="column" spacing={2}>
 
           <Typography variant="body1" sx={{ color: 'text.secondary' }}>

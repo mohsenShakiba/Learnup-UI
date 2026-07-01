@@ -17,13 +17,13 @@ type DotGridProps = {
 type Size = { width: number; height: number; };
 
 export function DotGrid ({
-  gap = 30,
+  gap = 20,
   dotSize = 3,
   color,
   style,
   className,
   zIndex = -1,
-  opacity = 0.1
+  opacity = 0.05
 }: DotGridProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState<Size>({ width: 0, height: 0 });

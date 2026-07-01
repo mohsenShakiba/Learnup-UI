@@ -2,6 +2,7 @@ import type { SvgIconProps } from '@mui/material';
 import type { ComponentType } from 'react';
 
 import AccountCircle from '@mui/icons-material/AccountCircleOutlined';
+import AcUnit from '@mui/icons-material/AcUnitOutlined';
 import Add from '@mui/icons-material/AddOutlined';
 import ArrowBack from '@mui/icons-material/ArrowBackOutlined';
 import ArrowForward from '@mui/icons-material/ArrowForwardOutlined';
@@ -53,6 +54,7 @@ import WorkspacePremium from '@mui/icons-material/WorkspacePremiumOutlined';
 // need a new icon; `IconName` below then flags any typo'd usage at build time.
 const ICONS = {
   account_circle: AccountCircle,
+  ac_unit: AcUnit,
   add: Add,
   arrow_back: ArrowBack,
   arrow_backward: ArrowBack,

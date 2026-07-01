@@ -5,6 +5,7 @@ import {
   Typography
 } from "@mui/material";
 import type { UserStreakResponse } from "../../../api/Learnup";
+import { AppIcon } from "../../../shared/components/AppIcon";
 
 interface Props {
   streak: UserStreakResponse | undefined;
@@ -72,9 +73,25 @@ export function StreakCardBlaze ({ streak }: Props) {
     };
   });
 
-  function getCellContent (day: typeof days[0]): string {
-    if (day.active) return "🔥";
-    if (day.isPast) return "❄️";
+  function getCellContent (day: typeof days[0]) {
+    if (day.active) {
+      return (
+        <AppIcon
+          sx={{ color: "rgb(255, 87, 34)", fontSize: 20 }}
+        >
+          local_fire_department
+        </AppIcon>
+      );
+    }
+    if (day.isPast) {
+      return (
+        <AppIcon
+          sx={{ color: "rgba(255,255,255,.85)", fontSize: 18 }}
+        >
+          ac_unit
+        </AppIcon>
+      );
+    }
     return String(day.dayNumber);
   }
 

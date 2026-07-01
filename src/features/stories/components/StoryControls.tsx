@@ -1,4 +1,5 @@
-import { Box, Icon, IconButton, Stack } from "@mui/material";
+import { Icon } from '../../../shared/components/Icon';
+import { Box, IconButton, Stack } from "@mui/material";
 import { useState } from "react";
 import { useStoryAudio } from "../hooks/useStoryAudio";
 

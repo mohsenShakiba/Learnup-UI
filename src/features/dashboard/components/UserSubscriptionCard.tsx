@@ -9,7 +9,7 @@ import { ActionCard } from '../../../shared/components/ActionCard';
 
 const subscriptionsPath = '/settings/subscriptions';
 
-function durationLabel(duration: SubscriptionDuration): string {
+function durationLabel (duration: SubscriptionDuration): string {
   switch (duration) {
     case SubscriptionDuration.LIFETIME: return 'برای همیشه';
     case SubscriptionDuration.ONE_MONTH: return 'یک ماه';
@@ -17,7 +17,7 @@ function durationLabel(duration: SubscriptionDuration): string {
   }
 }
 
-function statusColor(status: UserSubscriptionStatus): 'success' | 'error' | 'default' {
+function statusColor (status: UserSubscriptionStatus): 'success' | 'error' | 'default' {
   switch (status) {
     case UserSubscriptionStatus.ACTIVE: return 'success';
     case UserSubscriptionStatus.EXPIRED: return 'error';
@@ -25,7 +25,7 @@ function statusColor(status: UserSubscriptionStatus): 'success' | 'error' | 'def
   }
 }
 
-function statusLabel(status: UserSubscriptionStatus): string {
+function statusLabel (status: UserSubscriptionStatus): string {
   switch (status) {
     case UserSubscriptionStatus.ACTIVE: return 'اشتراک فعال';
     case UserSubscriptionStatus.EXPIRED: return 'منقضی شده';
@@ -33,7 +33,7 @@ function statusLabel(status: UserSubscriptionStatus): string {
   }
 }
 
-function timeUntilExpiry(expiresAt: string, status: UserSubscriptionStatus): string | null {
+function timeUntilExpiry (expiresAt: string, status: UserSubscriptionStatus): string | null {
   if (status !== UserSubscriptionStatus.ACTIVE) return null;
   const now = new Date();
   const expiry = new Date(expiresAt);
@@ -48,7 +48,7 @@ function timeUntilExpiry(expiresAt: string, status: UserSubscriptionStatus): str
   return parts.join(' و ');
 }
 
-function SubscriptionCardContent({ sub }: { sub: UserSubscriptionResponse; }) {
+function SubscriptionCardContent ({ sub }: { sub: UserSubscriptionResponse; }) {
   const navigate = useNavigate();
   const remaining = timeUntilExpiry(sub.expiresAt, sub.status);
 
@@ -103,7 +103,7 @@ function SubscriptionCardContent({ sub }: { sub: UserSubscriptionResponse; }) {
   );
 }
 
-function NoSubscriptionCard() {
+function NoSubscriptionCard () {
   const navigate = useNavigate();
   return (
     <ActionCard
@@ -111,8 +111,8 @@ function NoSubscriptionCard() {
       onClick={() => navigate(subscriptionsPath)}
       sx={{ overflow: 'hidden', position: 'relative', p: 2 }}
     >
-      <Stack spacing={1} sx={{ flex: 1, alignItems: 'start', position: 'relative', zIndex: 1 }}>
-        <Typography gutterBottom>
+      <Stack spacing={0.5} sx={{ flex: 1, alignItems: 'start', position: 'relative', zIndex: 1 }}>
+        <Typography variant="body1" sx={{ fontWeight: 700 }}>
           اشتراک پایه
         </Typography>
 
@@ -126,8 +126,8 @@ function NoSubscriptionCard() {
           src="/images/subscriptions/book.png"
           sx={{
             position: 'absolute',
-            bottom: -25,
-            right: -25,
+            bottom: -35,
+            right: -35,
             alignSelf: 'end',
             width: 135,
             objectFit: 'contain',
@@ -144,7 +144,7 @@ interface Props {
   subscription: UserSubscriptionResponse | undefined;
 }
 
-export function UserSubscriptionCard({ subscription }: Props) {
+export function UserSubscriptionCard ({ subscription }: Props) {
   if (!subscription) return <NoSubscriptionCard />;
 
   return <SubscriptionCardContent sub={subscription} />;

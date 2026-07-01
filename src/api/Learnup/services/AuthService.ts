@@ -47,7 +47,7 @@ requestBody?: VerifyOtpRequest,
     }
 
     /**
-     * @param requestBody
+     * @param requestBody 
      * @returns VerifyOtpResponse OK
      * @throws ApiError
      */

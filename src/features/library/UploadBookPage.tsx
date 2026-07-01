@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BooksControllersService } from '../../api/Learnup';
 import { DefaultHeader } from '../../shared/components/DefaultHeader';
+import { Icon } from '../../shared/components/Icon';
 import { Scaffold } from '../../shared/components/Scaffold';
 
 export default function UploadBookPage () {
@@ -144,7 +145,7 @@ function FilePicker ({ label, accept, file, onSelect }: FilePickerProps) {
         cursor: 'pointer',
       }}
     >
-      <span className="material-icons" style={{ opacity: 0.6 }}>upload_file</span>
+      <Icon sx={{ opacity: 0.6 }}>upload_file</Icon>
       <Stack sx={{ minWidth: 0, flex: 1 }}>
         <Typography variant="caption" sx={{ opacity: 0.6 }}>{label}</Typography>
         <Typography noWrap sx={{ fontSize: '0.9rem' }}>

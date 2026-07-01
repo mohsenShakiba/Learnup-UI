@@ -8,7 +8,13 @@ import { LearnupThemeProvider } from "./shared/theme/ThemeContext.tsx";
 import { ToastHost } from "./shared/toast";
 
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 60,
+    },
+  },
+});
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

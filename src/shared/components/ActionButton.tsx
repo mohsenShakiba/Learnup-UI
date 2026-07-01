@@ -1,4 +1,5 @@
-import { Box, Icon, type SxProps, type Theme } from '@mui/material';
+import { Box, type SxProps, type Theme } from '@mui/material';
+import { Icon } from './Icon';
 
 type Props = {
     pendingText: string;

@@ -3,6 +3,7 @@ import { Box, LinearProgress, Paper, Stack, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import type { CourseResponse } from "../../../api/Learnup";
 import { TextCarousel } from "../../../components/TextCarousel";
+import { DotGrid } from "../../../shared/components/DotGrid";
 import { FancyButton } from "../../../shared/components/FancyButton";
 import { ImageLoader } from "../../../shared/components/ImageLoader";
 
@@ -48,8 +49,10 @@ export function CourseListItem ({ course }: CourseListItemProps) {
           sx={{
             flex: 1,
             mb: 2,
+            position: 'relative',
           }}
         >
+          <DotGrid />
           <ImageLoader coverId={course.coverId} />
         </Box>
 

@@ -2,7 +2,6 @@ import {
   Box,
   Divider,
   Drawer,
-  Icon,
   IconButton,
   ListItem,
   ListItemButton,
@@ -14,15 +13,16 @@ import {
   Typography,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { clearAuth } from '../../stores/authStore';
+import { Icon } from '../../shared/components/Icon';
 import { useThemeMode } from '../../shared/theme/themeMode';
+import { clearAuth } from '../../stores/authStore';
 
 type SettingsDrawerProps = {
   open: boolean;
   onClose: () => void;
 };
 
-export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
+export function SettingsDrawer ({ open, onClose }: SettingsDrawerProps) {
   const { isDark, setMode } = useThemeMode();
   const navigate = useNavigate();
 
@@ -44,7 +44,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
       onClose={onClose}
       sx={{
         '& .MuiDrawer-paper': {
-          width: { xs: 320, sm: 380 },
+          width: { xs: 350, sm: 380 },
           height: '100dvh',
           px: 2.5,
           py: 2,
@@ -61,17 +61,45 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
         </IconButton>
       </Stack>
 
-      <Paper sx={{ p: 0, overflow: 'hidden', mb: 2 }}>
+
+
+      <Paper sx={{ p: 0, overflow: 'hidden' }}>
         <ListItemButton onClick={() => go('/profile')}>
           <ListItemIcon>
             <Icon>account_circle</Icon>
           </ListItemIcon>
-          <ListItemText primary="پروفایل" secondary="ویرایش نام و تصویر پروفایل" />
+          <ListItemText primary="پروفایل" />
+          <Icon sx={{ opacity: 0.4, fontSize: 18 }}>chevron_left</Icon>
+        </ListItemButton>
+        <Divider />
+        <ListItemButton onClick={() => go('/settings/subscriptions')}>
+          <ListItemIcon>
+            <Icon>workspace_premium</Icon>
+          </ListItemIcon>
+          <ListItemText primary="لیست اشتراک ها" />
+          <Icon sx={{ opacity: 0.4, fontSize: 18 }}>chevron_left</Icon>
+        </ListItemButton>
+        <Divider />
+        <ListItemButton onClick={() => go('/placement')}>
+          <ListItemIcon>
+            <Icon>quiz</Icon>
+          </ListItemIcon>
+          <ListItemText primary="آزمون تعیین سطح" />
+          <Icon sx={{ opacity: 0.4, fontSize: 18 }}>chevron_left</Icon>
+        </ListItemButton>
+        <Divider />
+        <ListItemButton onClick={() => go('/grammar')}>
+          <ListItemIcon>
+            <Icon>menu_book</Icon>
+          </ListItemIcon>
+          <ListItemText primary="گرامرها" />
           <Icon sx={{ opacity: 0.4, fontSize: 18 }}>chevron_left</Icon>
         </ListItemButton>
       </Paper>
 
-      <Paper sx={{ p: 0, overflow: 'hidden' }}>
+      <Box sx={{ flex: 1 }} />
+
+      <Paper sx={{ p: 0 }}>
         <ListItem
           secondaryAction={
             <Switch
@@ -84,25 +112,10 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
           <ListItemIcon>
             <Icon>{isDark ? 'dark_mode' : 'light_mode'}</Icon>
           </ListItemIcon>
-          <ListItemText primary="Dark mode" secondary={isDark ? 'On' : 'Off'} />
+          <ListItemText primary={isDark ? 'حالت تاریک' : 'حالت روشن'} />
         </ListItem>
-        <Divider />
-        <ListItemButton onClick={() => go('/settings/subscriptions')}>
-          <ListItemIcon>
-            <Icon>workspace_premium</Icon>
-          </ListItemIcon>
-          <ListItemText primary="Subscription" secondary="Manage your plan" />
-          <Icon sx={{ opacity: 0.4, fontSize: 18 }}>chevron_left</Icon>
-        </ListItemButton>
-        <Divider />
-        <ListItemButton onClick={() => go('/grammar')}>
-          <ListItemIcon>
-            <Icon>menu_book</Icon>
-          </ListItemIcon>
-          <ListItemText primary="گرامرها" secondary="مشاهده همه گرامرها" />
-          <Icon sx={{ opacity: 0.4, fontSize: 18 }}>chevron_left</Icon>
-        </ListItemButton>
       </Paper>
+
 
       <Paper sx={{ p: 0, overflow: 'hidden', mt: 2 }}>
         <ListItemButton onClick={handleLogout}>

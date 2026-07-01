@@ -1,4 +1,5 @@
-import { Box, ButtonBase, Icon, useTheme } from "@mui/material";
+import { Icon } from './Icon';
+import { Box, ButtonBase, useTheme } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export const ROOT_TABS = [
@@ -58,12 +59,13 @@ export function BottomNav () {
       <Box
         sx={{
           width: '100%',
+          maxWidth: 500,
           pointerEvents: 'auto',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           gap: 0.5,
-          px: 2,
+          px: 1,
           py: 1,
           borderRadius: '999px',
           border: '1px solid',
@@ -80,34 +82,62 @@ export function BottomNav () {
           const isActive = index === currentTab;
           return (
             <ButtonBase
-              key={tab.path}
+              key={`${tab.path}-${index}`}
               onClick={() => navigate(tab.path)}
               aria-label={tab.label}
               sx={{
                 position: 'relative',
-                width: 40,
+                overflow: 'hidden',
+                width: 60,
                 height: 40,
                 borderRadius: '999px',
-                color: isActive ? 'primary.contrastText' : 'text.secondary',
-                backgroundColor: isActive ? 'primary.main' : 'transparent',
-                boxShadow: isActive ? '0 4px 12px rgba(52,88,235,0.4)' : 'none',
+                color: 'text.secondary',
+                backgroundColor: 'transparent',
                 transition: theme.transitions.create(
-                  ['background-color', 'color', 'transform', 'box-shadow'],
+                  ['background-color', 'transform'],
                   { duration: theme.transitions.duration.shorter }
                 ),
                 '&:hover': {
-                  backgroundColor: isActive
-                    ? 'primary.main'
-                    : isDark
-                      ? 'rgba(255,255,255,0.08)'
-                      : 'rgba(0,0,0,0.04)',
+                  backgroundColor: isDark
+                    ? 'rgba(255,255,255,0.08)'
+                    : 'rgba(0,0,0,0.04)',
                 },
                 '&:active': {
                   transform: 'scale(0.92)',
                 },
               }}
             >
-              <Icon sx={{ fontSize: 24 }}>{tab.icon}</Icon>
+              <Box
+                component="span"
+                sx={{
+                  position: 'absolute',
+                  inset: 0,
+                  borderRadius: 'inherit',
+                  backgroundColor: 'primary.main',
+                  boxShadow: '0 4px 12px rgba(52,88,235,0.4)',
+                  opacity: isActive ? 1 : 0,
+                  transition: theme.transitions.create(['opacity'], {
+                    duration: theme.transitions.duration.shorter,
+                    easing: theme.transitions.easing.easeInOut,
+                  }),
+                }}
+              />
+              <Icon
+                sx={{
+                  position: 'relative',
+                  zIndex: 1,
+                  fontSize: 24,
+                  color: isActive ? 'primary.contrastText' : 'text.secondary',
+                  opacity: isActive ? 1 : 0.72,
+                  transform: isActive ? 'scale(1)' : 'scale(0.94)',
+                  transition: theme.transitions.create(['color', 'opacity', 'transform'], {
+                    duration: theme.transitions.duration.shorter,
+                    easing: theme.transitions.easing.easeInOut,
+                  }),
+                }}
+              >
+                {tab.icon}
+              </Icon>
             </ButtonBase>
           );
         })}

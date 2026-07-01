@@ -1,9 +1,10 @@
-import { Box, Button, Icon, Paper, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, Paper, Stack, TextField, Typography } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AuthService } from "../../api/Learnup";
 import { FancyButton } from "../../shared/components/FancyButton";
+import { Icon } from '../../shared/components/Icon';
 import { Scaffold } from "../../shared/components/Scaffold";
 import { toast } from "../../shared/toast";
 import { useAuthStore } from "../../stores/authStore";
@@ -14,7 +15,7 @@ interface SignupLocationState {
   from?: string;
 }
 
-export default function SignupPage() {
+export default function SignupPage () {
   const navigate = useNavigate();
   const location = useLocation();
   const setAuth = useAuthStore((state) => state.setAuth);

@@ -1,4 +1,5 @@
-import { Icon, Stack, Typography } from '@mui/material';
+import { Icon } from './Icon';
+import { Stack, Typography } from '@mui/material';
 
 type Props = {
     minutes: number | string;

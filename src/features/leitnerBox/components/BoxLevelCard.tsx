@@ -1,4 +1,5 @@
-import { Box, Card, Icon, Stack, Typography, useTheme } from "@mui/material";
+import { Icon } from '../../../shared/components/Icon';
+import { Box, Card, Stack, Typography, useTheme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { getLevelTone } from "./levelTone";
 
@@ -12,11 +13,11 @@ type BoxLevelCardProps = {
 
 const numberFormatter = new Intl.NumberFormat("en-US");
 
-function formatNumber(value: number): string {
+function formatNumber (value: number): string {
   return numberFormatter.format(value);
 }
 
-export function BoxLevelCard({
+export function BoxLevelCard ({
   levelId,
   level,
   totalItems,
@@ -51,12 +52,12 @@ export function BoxLevelCard({
         transition: "transform 160ms ease, box-shadow 160ms ease",
         "&:hover": canReview
           ? {
-              transform: "translateY(-2px)",
-              boxShadow: (theme) =>
-                theme.palette.mode === "dark"
-                  ? "0 12px 24px rgba(0, 0, 0, 0.36)"
-                  : "0 8px 18px rgba(17, 24, 39, 0.1)",
-            }
+            transform: "translateY(-2px)",
+            boxShadow: (theme) =>
+              theme.palette.mode === "dark"
+                ? "0 12px 24px rgba(0, 0, 0, 0.36)"
+                : "0 8px 18px rgba(17, 24, 39, 0.1)",
+          }
           : undefined,
       }}
     >
@@ -72,8 +73,6 @@ export function BoxLevelCard({
             display: "grid",
             placeItems: "center",
             fontSize: 19,
-            fontWeight: 800,
-            fontFamily: "Georgia, Merriweather, serif",
           }}
         >
           {formattedLevel}
@@ -82,14 +81,13 @@ export function BoxLevelCard({
         <Box sx={{ minWidth: 0, flex: 1 }}>
           <Stack
             direction="row"
-            spacing={0.8}
-            sx={{ alignItems: "center", minWidth: 0 }}
+
+            sx={{ alignItems: "center", minWidth: 0, gap: 1 }}
           >
             <Typography
               sx={{
                 fontSize: 14,
                 lineHeight: 1.1,
-                fontWeight: 800,
                 color: "text.primary",
                 whiteSpace: "nowrap",
               }}
@@ -105,7 +103,6 @@ export function BoxLevelCard({
                 color: tone.color,
                 fontSize: 10,
                 lineHeight: 1.3,
-                fontWeight: 800,
                 whiteSpace: "nowrap",
               }}
             >
@@ -118,7 +115,6 @@ export function BoxLevelCard({
               color: "text.secondary",
               fontSize: 11.5,
               lineHeight: 1.25,
-              fontWeight: 700,
               overflow: "hidden",
               textOverflow: "ellipsis",
               whiteSpace: "nowrap",
@@ -140,14 +136,13 @@ export function BoxLevelCard({
               display: "grid",
               placeItems: "center",
               textAlign: "center",
-              fontWeight: 800,
               lineHeight: 1,
             }}
           >
-            <Typography sx={{ fontSize: 17, fontWeight: 900, lineHeight: 1 }}>
+            <Typography sx={{ fontSize: 17, lineHeight: 1 }}>
               {formattedReady}
             </Typography>
-            <Typography sx={{ fontSize: 9.5, fontWeight: 800, lineHeight: 1 }}>
+            <Typography sx={{ fontSize: 9.5, lineHeight: 1 }}>
               due
             </Typography>
           </Box>

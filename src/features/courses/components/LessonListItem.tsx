@@ -1,4 +1,5 @@
-import { Box, Icon, Stack, Typography } from '@mui/material';
+import { Icon } from '../../../shared/components/Icon';
+import { Box, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { LessonResponse } from '../../../api/Learnup';
 import { ActionCard } from '../../../shared/components/ActionCard';

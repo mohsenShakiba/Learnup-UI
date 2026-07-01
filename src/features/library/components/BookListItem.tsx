@@ -1,4 +1,5 @@
-import { Box, Icon, IconButton, Paper, Stack, Typography } from '@mui/material';
+import { Icon } from '../../../shared/components/Icon';
+import { Box, IconButton, Paper, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import type { UserBookResponse } from '../../../api/Learnup';
 import { getFileById } from '../../../services/fetchFile';

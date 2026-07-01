@@ -1,4 +1,12 @@
-import { Box, Card, Chip, Divider, Icon, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  Chip,
+  Divider,
+  Icon,
+  Stack,
+  Typography,
+} from "@mui/material";
 import type { ReactNode } from "react";
 import type { DueLeitnerBoxItemResponse } from "../../../api/Learnup";
 import { VocabType } from "../../../api/Learnup";
@@ -36,7 +44,7 @@ type DetailBlockProps = {
   direction?: "ltr" | "rtl";
 };
 
-function DetailBlock ({
+function DetailBlock({
   icon,
   label,
   children,
@@ -72,7 +80,7 @@ function DetailBlock ({
   );
 }
 
-export function ReviewAnswerCard ({
+export function ReviewAnswerCard({
   card,
   isPending,
   onHide,
@@ -178,7 +186,9 @@ export function ReviewAnswerCard ({
                       >
                         {sense.example && (
                           <Stack direction="row" spacing={1}>
-                            <Icon sx={{ fontSize: 18, color: "text.secondary" }}>
+                            <Icon
+                              sx={{ fontSize: 18, color: "text.secondary" }}
+                            >
                               format_quote
                             </Icon>
                             <Typography
@@ -192,7 +202,9 @@ export function ReviewAnswerCard ({
 
                         {sense.exampleTranslation && (
                           <Stack direction="row" spacing={1}>
-                            <Icon sx={{ fontSize: 18, color: "text.secondary" }}>
+                            <Icon
+                              sx={{ fontSize: 18, color: "text.secondary" }}
+                            >
                               translate
                             </Icon>
                             <Typography

@@ -1,4 +1,5 @@
-import { Box, Divider, Icon, Stack, Typography } from '@mui/material';
+import { Icon } from '../../../shared/components/Icon';
+import { Box, Divider, Stack, Typography } from '@mui/material';
 import { DurationBadge } from '../../../shared/components/DurationBadge';
 
 type LessonListItemHeaderProps = {

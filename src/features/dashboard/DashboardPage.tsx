@@ -9,7 +9,7 @@ import { StreakCardBlaze } from './components/StreakCardBlaze';
 import { UserSubscriptionCard } from './components/UserSubscriptionCard';
 import { useDashboardData } from './hooks/useDashboardData';
 
-export default function DashboardPage() {
+export default function DashboardPage () {
   const { profileName, streak, subscription, currentLesson, motivationalSentence, leitnerTotalItems, leitnerDueItems, placementLevel, isLoading } = useDashboardData();
 
   if (isLoading) return null;

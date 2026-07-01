@@ -127,6 +127,30 @@ export default function PlacementPage () {
 
         {phase === 'intro' && testQuery.data && (
           <Stack spacing={1} sx={{ p: 3, overflow: 'auto', flex: 1 }}>
+            <Box
+              sx={{
+                width: '100%',
+                maxWidth: 360,
+                mx: 'auto',
+                mb: 1,
+                aspectRatio: '16 / 10',
+                borderRadius: 3,
+                overflow: 'hidden',
+                bgcolor: 'background.paper',
+              }}
+            >
+              <Box
+                component="img"
+                src="/images/placement.png"
+                alt=""
+                sx={{
+                  display: 'block',
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                }}
+              />
+            </Box>
 
             <Typography variant="h6">{testQuery.data.title}</Typography>
 

@@ -71,25 +71,31 @@ export function DefaultHeader ({ header, subtitle, children }: DefaultHeaderProp
     }}>
       <Stack direction='row' sx={{ maxWidth: 500, width: '100%', alignItems: 'center', gap: 1, mx: 'auto' }}>
 
-        {!isRootTab ? (
-          <IconButton onClick={() => navigate(-1)}>
-            <Icon>arrow_forward</Icon>
-          </IconButton>
-        ) : (
-          <IconButton onClick={() => setSettingsOpen(true)}>
-            <Icon>menu</Icon>
-          </IconButton>
-        )}
+        <Box sx={{ flex: 1 }}>
 
-        <Typography variant='body1' sx={{ flex: 1, textAlign: 'center' }}>
+          {!isRootTab ? (
+            <IconButton onClick={() => navigate(-1)}>
+              <Icon>arrow_forward</Icon>
+            </IconButton>
+          ) : (
+            <IconButton onClick={() => setSettingsOpen(true)}>
+              <Icon>menu</Icon>
+            </IconButton>
+          )}
+        </Box>
+
+        <Typography variant='body1' sx={{ textAlign: 'center' }}>
           {header}
         </Typography>
 
-        {isRootTab && !children && (
-          <Avatar src={avatarUrl ?? undefined} sx={{ width: 32, height: 32, fontSize: '0.875rem' }}>
-            {!avatarUrl && (profile?.displayName?.[0]?.toUpperCase() ?? undefined)}
-          </Avatar>
-        )}
+        <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+          {isRootTab && !children && (
+            <Avatar src={avatarUrl ?? undefined} sx={{ width: 32, height: 32, fontSize: '0.875rem' }}>
+              {!avatarUrl && (profile?.displayName?.[0]?.toUpperCase() ?? undefined)}
+            </Avatar>
+          )}
+        </Box>
+
 
         {children}
 

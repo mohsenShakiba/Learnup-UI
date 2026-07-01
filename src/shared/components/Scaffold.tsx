@@ -23,9 +23,10 @@ export function Scaffold({
         p: 0,
         position: "relative",
         height: "100%",
+        minHeight: 0,
         display: "flex",
         flexDirection: "column",
-        overflowY: "auto",
+        overflow: "hidden",
       }}
     >
       {header && <>{header}</>}

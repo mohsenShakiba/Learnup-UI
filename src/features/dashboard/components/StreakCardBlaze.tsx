@@ -10,7 +10,7 @@ interface Props {
   streak: UserStreakResponse | undefined;
 }
 
-function getStreakIcon(streakCount: number): string {
+function getStreakIcon (streakCount: number): string {
   if (streakCount === 0) return "🎓";
   if (streakCount <= 1) return "👍";
   if (streakCount <= 2) return "⚡";
@@ -21,7 +21,7 @@ function getStreakIcon(streakCount: number): string {
   return "🎉";
 }
 
-function getStreakCaption(streakCount: number): string {
+function getStreakCaption (streakCount: number): string {
   if (streakCount === 0) return "هنوز شروع نکردی!";
   if (streakCount <= 1) return "شروع خوبیه!";
   if (streakCount <= 2) return "همینجوری ادامه بده!";
@@ -38,11 +38,11 @@ function getStreakCaption(streakCount: number): string {
 const WEEK_LABELS = ["شنبه", "یک‌شنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنج‌شنبه", "جمعه"];
 
 // JS getDay(): 0=Sun,1=Mon,...,6=Sat → Persian index: Sat=0,Sun=1,...,Fri=6
-function jsDayToPersianIndex(jsDay: number): number {
+function jsDayToPersianIndex (jsDay: number): number {
   return (jsDay + 1) % 7;
 }
 
-export function StreakCardBlaze({ streak }: Props) {
+export function StreakCardBlaze ({ streak }: Props) {
   const currentStreak = streak?.currentStreak ?? 0;
 
   // Build lookup: "YYYY-MM-DD" -> isCheckedIn
@@ -72,7 +72,7 @@ export function StreakCardBlaze({ streak }: Props) {
     };
   });
 
-  function getCellContent(day: typeof days[0]): string {
+  function getCellContent (day: typeof days[0]): string {
     if (day.active) return "🔥";
     if (day.isPast) return "❄️";
     return String(day.dayNumber);
@@ -107,7 +107,7 @@ export function StreakCardBlaze({ streak }: Props) {
 
           <Stack>
             <Typography>
-              روزهای استفاده مداوم
+              استفاده مستمر
             </Typography>
 
             <Typography
@@ -119,31 +119,36 @@ export function StreakCardBlaze({ streak }: Props) {
               {getStreakCaption(currentStreak)}
             </Typography>
           </Stack>
+
+          <Box sx={{ flex: 1 }} />
+
+          {/* Count */}
+          <Box sx={{ display: "flex", alignItems: "end", direction: 'rtl', gap: 1 }}>
+            <Typography
+              sx={{
+                fontFamily: "FredokaOne",
+                fontSize: 60,
+                lineHeight: 0.85,
+                textShadow: '0 0 10px rgba(0,0,0,0.4)',
+              }}
+            >
+              {currentStreak}
+            </Typography>
+            <Typography sx={{
+              fontFamily: "FredokaOne",
+              fontSize: 12,
+              lineHeight: '16px',
+              textShadow: '0 0 10px rgba(0,0,0,0.4)'
+            }}>
+              DAYS
+              <br />
+              IN A
+              <br />
+              ROW
+            </Typography>
+          </Box>
         </Box>
 
-        {/* Count */}
-        <Box sx={{ display: "flex", alignItems: "end", direction: 'rtl', gap: 1 }}>
-          <Typography
-            sx={{
-              fontFamily: "FredokaOne",
-              fontSize: 60,
-              lineHeight: 0.85,
-              textShadow: '0 0 10px rgba(0,0,0,0.4)',
-            }}
-          >
-            {currentStreak}
-          </Typography>
-          <Typography sx={{
-            fontFamily: "FredokaOne",
-            fontSize: 16,
-            lineHeight: '20px',
-            textShadow: '0 0 10px rgba(0,0,0,0.4)'
-          }}>
-            DAYS
-            <br />
-            IN A ROW
-          </Typography>
-        </Box>
 
         {/* Week cells */}
         <Box sx={{ display: "flex", justifyContent: "space-between", mt: "22px", mb: "20px" }}>

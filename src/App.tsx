@@ -32,11 +32,20 @@ function AppLayout() {
   const hasBottomNav = isBottomNavVisible(location.pathname);
 
   return (
-    <Stack sx={{ height: "100dvh", overflow: "hidden", position: "relative" }}>
+    <Stack
+      sx={{
+        height: "100dvh",
+        minHeight: 0,
+        overflow: "hidden",
+        position: "relative",
+        overscrollBehavior: "none",
+      }}
+    >
       <Box
         sx={{
           flex: 1,
-          overflowY: "auto",
+          minHeight: 0,
+          overflow: "hidden",
           position: "relative",
           pb: hasBottomNav ? "calc(env(safe-area-inset-bottom, 0px))" : 0,
         }}

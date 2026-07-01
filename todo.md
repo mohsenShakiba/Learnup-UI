@@ -2,4 +2,5 @@
 
 [x] update the LietnerBoxPage and remove the custom fonts and font weights.
 [x] update the subscription page, make sure the subscription items designs are solid.
-[] 
+[x] make the settings drawer swipable
+[x] can you make the appHeader and navbar to never move with the scroll in iphone

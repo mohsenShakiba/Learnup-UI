@@ -1,5 +1,6 @@
 import { Fade, Stack } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { AppLoader } from '../../shared/components/AppLoader';
 import { DefaultHeader } from '../../shared/components/DefaultHeader';
 import { Scaffold } from '../../shared/components/Scaffold';
 import { ContinueCard } from './components/ContinueCard';
@@ -20,32 +21,39 @@ export default function DashboardPage () {
     if (!isLoading && shouldFadeIn) hasDashboardItemsFadedIn = true;
   }, [isLoading, shouldFadeIn]);
 
-  if (isLoading) return null;
 
   return (
     <Scaffold header={<DefaultHeader header="داشبورد" />}>
-      <Stack spacing={2}>
-        <Fade in timeout={shouldFadeIn ? 500 : 0}>
-          <div><Greeting name={profileName} motivationalSentence={motivationalSentence} /></div>
-        </Fade>
-        {currentLesson && (
-          <Fade in timeout={shouldFadeIn ? 500 : 0} style={{ transitionDelay: shouldFadeIn ? '200ms' : undefined }}>
-            <div><ContinueCard lesson={currentLesson} /></div>
-          </Fade>
-        )}
-        <Fade in timeout={shouldFadeIn ? 500 : 0} style={{ transitionDelay: shouldFadeIn ? '300ms' : undefined }}>
-          <div><StreakCardBlaze streak={streak} /></div>
-        </Fade>
-        <Fade in timeout={shouldFadeIn ? 500 : 0} style={{ transitionDelay: shouldFadeIn ? '400ms' : undefined }}>
-          <div><LeitnerStatsCard totalItems={leitnerTotalItems} dueItems={leitnerDueItems} /></div>
-        </Fade>
-        <Fade in timeout={shouldFadeIn ? 500 : 0} style={{ transitionDelay: shouldFadeIn ? '500ms' : undefined }}>
-          <div><PlacementCard placementLevel={placementLevel} /></div>
-        </Fade>
-        <Fade in timeout={shouldFadeIn ? 500 : 0} style={{ transitionDelay: shouldFadeIn ? '600ms' : undefined }}>
-          <div><UserSubscriptionCard subscription={subscription} /></div>
-        </Fade>
-      </Stack>
+      {
+        isLoading && <AppLoader />
+      }
+
+      {
+        !isLoading && (
+          <Stack spacing={2}>
+            <Fade in timeout={shouldFadeIn ? 500 : 0}>
+              <div><Greeting name={profileName} motivationalSentence={motivationalSentence} /></div>
+            </Fade>
+            {currentLesson && (
+              <Fade in timeout={shouldFadeIn ? 500 : 0} style={{ transitionDelay: shouldFadeIn ? '200ms' : undefined }}>
+                <div><ContinueCard lesson={currentLesson} /></div>
+              </Fade>
+            )}
+            <Fade in timeout={shouldFadeIn ? 500 : 0} style={{ transitionDelay: shouldFadeIn ? '300ms' : undefined }}>
+              <div><StreakCardBlaze streak={streak} /></div>
+            </Fade>
+            <Fade in timeout={shouldFadeIn ? 500 : 0} style={{ transitionDelay: shouldFadeIn ? '400ms' : undefined }}>
+              <div><LeitnerStatsCard totalItems={leitnerTotalItems} dueItems={leitnerDueItems} /></div>
+            </Fade>
+            <Fade in timeout={shouldFadeIn ? 500 : 0} style={{ transitionDelay: shouldFadeIn ? '500ms' : undefined }}>
+              <div><PlacementCard placementLevel={placementLevel} /></div>
+            </Fade>
+            <Fade in timeout={shouldFadeIn ? 500 : 0} style={{ transitionDelay: shouldFadeIn ? '600ms' : undefined }}>
+              <div><UserSubscriptionCard subscription={subscription} /></div>
+            </Fade>
+          </Stack>
+        )
+      }
     </Scaffold>
   );
 }

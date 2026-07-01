@@ -1,7 +1,6 @@
 import {
   Box,
   Divider,
-  Drawer,
   IconButton,
   ListItem,
   ListItemButton,
@@ -9,6 +8,7 @@ import {
   ListItemText,
   Paper,
   Stack,
+  SwipeableDrawer,
   Switch,
   Typography,
 } from '@mui/material';
@@ -38,13 +38,19 @@ export function SettingsDrawer ({ open, onClose }: SettingsDrawerProps) {
   };
 
   return (
-    <Drawer
+    <SwipeableDrawer
       anchor="left"
       open={open}
       onClose={onClose}
+      onOpen={() => undefined}
+      disableBackdropTransition
+      ModalProps={{
+        keepMounted: true,
+      }}
       sx={{
         '& .MuiDrawer-paper': {
           width: { xs: 350, sm: 380 },
+          maxWidth: 'calc(100vw - 40px)',
           height: '100dvh',
           px: 2.5,
           py: 2,
@@ -125,6 +131,6 @@ export function SettingsDrawer ({ open, onClose }: SettingsDrawerProps) {
           <ListItemText primary={<Typography color="error">خروج از حساب</Typography>} />
         </ListItemButton>
       </Paper>
-    </Drawer>
+    </SwipeableDrawer>
   );
 }

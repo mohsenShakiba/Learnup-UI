@@ -6,13 +6,15 @@ type ScaffoldProps = {
   header?: ReactNode;
   children: ReactNode;
   disablePadding?: boolean;
+  disableBottomPadding?: boolean;
   maxWidth?: string | number;
 };
 
-export function Scaffold ({
+export function Scaffold({
   header,
   children,
   disablePadding,
+  disableBottomPadding,
   maxWidth = "500px",
 }: ScaffoldProps) {
   return (
@@ -34,16 +36,15 @@ export function Scaffold ({
           maxWidth,
           width: "100%",
           flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
+          display: "flex",
+          flexDirection: "column",
           minHeight: 0,
           overflowY: "auto",
           mx: "auto",
           py: disablePadding ? 0 : 2,
           px: disablePadding ? 0 : 2,
           boxSizing: "border-box",
-          pb: 9,
-
+          pb: disableBottomPadding ? 0 : 9,
         }}
       >
         {children}

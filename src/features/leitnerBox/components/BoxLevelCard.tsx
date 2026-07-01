@@ -1,6 +1,6 @@
-import { Icon } from '../../../shared/components/Icon';
 import { Box, Card, Stack, Typography, useTheme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { Icon } from '../../../shared/components/Icon';
 import { getLevelTone } from "./levelTone";
 
 type BoxLevelCardProps = {
@@ -73,6 +73,7 @@ export function BoxLevelCard ({
             display: "grid",
             placeItems: "center",
             fontSize: 19,
+            fontFamily: 'arial',
           }}
         >
           {formattedLevel}
@@ -90,6 +91,8 @@ export function BoxLevelCard ({
                 lineHeight: 1.1,
                 color: "text.primary",
                 whiteSpace: "nowrap",
+                fontWeight: 600,
+                fontFamily: 'arial',
               }}
             >
               Level {formattedLevel}
@@ -129,20 +132,19 @@ export function BoxLevelCard ({
             sx={{
               width: 48,
               height: 48,
-              flex: "0 0 48px",
               borderRadius: 2,
               bgcolor: tone.color,
               color: "common.white",
-              display: "grid",
-              placeItems: "center",
-              textAlign: "center",
-              lineHeight: 1,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
-            <Typography sx={{ fontSize: 17, lineHeight: 1 }}>
+            <Typography sx={{ fontSize: 18, lineHeight: 1 }}>
               {formattedReady}
             </Typography>
-            <Typography sx={{ fontSize: 9.5, lineHeight: 1 }}>
+            <Typography sx={{ fontSize: 12, lineHeight: 1 }}>
               due
             </Typography>
           </Box>

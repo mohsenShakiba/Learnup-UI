@@ -1,4 +1,3 @@
-import { Icon } from '../../shared/components/Icon';
 import {
   alpha,
   Box,
@@ -13,8 +12,10 @@ import { useNavigate } from "react-router-dom";
 import { LeitnerBoxService, UsersService } from "../../api/Learnup";
 import { AppLoader } from "../../shared/components/AppLoader";
 import { DefaultHeader } from "../../shared/components/DefaultHeader";
+import { DotGrid } from "../../shared/components/DotGrid";
 import { EmptyList } from "../../shared/components/EmptyList";
 import { ErrorPage } from "../../shared/components/ErrorPage";
+import { Icon } from '../../shared/components/Icon';
 import { Scaffold } from "../../shared/components/Scaffold";
 import { BoxLevelCard } from "./components/BoxLevelCard";
 import { LeitnerBoxSettingsDrawer } from "./components/LeitnerBoxSettingsDrawer";
@@ -129,122 +130,57 @@ export default function LeitnerBoxPage () {
           </Box>
 
           <IconButton onClick={() => setIsSettingsOpen(true)}>
-
             <Icon>settings</Icon>
           </IconButton>
-
-          <Box
-            sx={{
-              width: 46,
-              height: 46,
-              borderRadius: "50%",
-              bgcolor: "warning.main",
-              color: "warning.contrastText",
-              position: "relative",
-              gap: 0.25,
-              fontSize: 13,
-              boxShadow: (theme) =>
-                `0 8px 18px ${alpha(theme.palette.warning.main, 0.24)}`,
-            }}
-          >
-            <Icon
-              sx={{
-                fontSize: 17,
-                position: "absolute",
-                top: "50%",
-                right: "50%",
-                transform: "translate(85%, -60%)",
-              }}
-            >
-              local_fire_department
-            </Icon>
-            <span
-              style={{
-                position: "absolute",
-                top: "50%",
-                right: "50%",
-                transform: "translate(140%, -40%)",
-              }}
-            >
-              {formatNumber(currentStreak)}
-            </span>
-          </Box>
         </Stack>
 
         <Box
           sx={{
-            bgcolor: "warning.main",
+            bgcolor: "secondary.main",
+            position: "relative",
             color: "warning.contrastText",
-            borderRadius: 3.2,
+            borderRadius: 2,
             px: 2.35,
             py: 2.4,
             boxShadow: (theme) =>
               `0 12px 26px ${alpha(theme.palette.warning.main, 0.22)}`,
           }}
         >
-          <Stack direction="row" sx={{ alignItems: "center", gap: 2 }}>
+          <DotGrid zIndex={1} gap={20} opacity={0.1} color="white" />
+          <Stack direction="row" sx={{ alignItems: "center" }}>
             <Box sx={{ minWidth: 0, flex: 1 }}>
               <Typography
                 sx={{
                   fontSize: 42,
-                  lineHeight: 0.9,
+                  lineHeight: 0.7,
+                  fontFamily: 'FredokaOne',
                 }}
               >
                 {formatNumber(dueItems)}
               </Typography>
-              <Typography sx={{ mt: 1.1, fontSize: 12.5 }}>
-                cards due today
+              <Typography sx={{ mt: 1.1, fontSize: 18 }}>
+                Cards due today
               </Typography>
             </Box>
 
-            <Stack spacing={1.2} sx={{ alignItems: "flex-end" }}>
+            <Stack spacing={1.2} sx={{ alignItems: "center" }}>
               <Box sx={{ textAlign: "right" }}>
                 <Typography sx={{ fontSize: 13 }}>
                   {formatNumber(dueLevels.length)} of{" "}
                   {formatNumber(levels.length)} levels
                 </Typography>
-                <Typography
-                  sx={{
-                    mt: 0.35,
-                    fontSize: 12,
-                    opacity: 0.82,
-                  }}
-                >
-                  {formatNumber(totalItems)} cards total
-                </Typography>
               </Box>
               <Button
                 disabled={!firstDueLevel}
+                startIcon={<Icon>arrow_forward</Icon>}
                 onClick={() => {
-                  if (!firstDueLevel) {
-                    return;
-                  }
-
                   navigate(`/boxlevel/${firstDueLevel.id}`);
                 }}
-                endIcon={<Icon>arrow_forward</Icon>}
                 sx={{
-                  minHeight: 36,
-                  borderRadius: 999,
-                  px: 2,
-                  bgcolor: (theme) =>
-                    alpha(theme.palette.warning.contrastText, 0.2),
-                  color: "warning.contrastText",
-                  fontSize: 12,
-                  textTransform: "none",
-                  "&:hover": {
-                    bgcolor: (theme) =>
-                      alpha(theme.palette.warning.contrastText, 0.28),
-                  },
-                  "&.Mui-disabled": {
-                    bgcolor: (theme) =>
-                      alpha(theme.palette.warning.contrastText, 0.16),
-                    color: (theme) =>
-                      alpha(theme.palette.warning.contrastText, 0.72),
-                  },
-                  "& .MuiButton-endIcon": {
-                    ml: 0.45,
-                  },
+                  direction: "ltr",
+                  fontFamily: 'arial',
+                  bgcolor: (theme) => alpha(theme.palette.warning.contrastText, 0.2),
+                  color: "common.white",
                 }}
               >
                 {firstDueLevel ? "Review now" : "All done"}
@@ -271,14 +207,13 @@ export default function LeitnerBoxPage () {
         </Stack>
       </Stack>
 
-
-
       <LeitnerBoxSettingsDrawer
         boxId={leitnerBoxQuery.data.id}
         levels={levels}
         open={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
       />
+
     </Scaffold>
   );
 }

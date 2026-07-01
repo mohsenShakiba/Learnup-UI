@@ -11,6 +11,7 @@ type DotGridProps = {
   opacity?: number;
   style?: CSSProperties;
   className?: string;
+  zIndex?: number;
 };
 
 type Size = { width: number; height: number; };
@@ -21,6 +22,8 @@ export function DotGrid ({
   color,
   style,
   className,
+  zIndex = -1,
+  opacity = 0.1
 }: DotGridProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState<Size>({ width: 0, height: 0 });
@@ -30,7 +33,7 @@ export function DotGrid ({
   let dotColor = color;
 
   if (!dotColor) {
-    dotColor = palette.mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
+    dotColor = palette.mode === 'dark' ? 'rgba(255,255,255)' : 'rgba(0,0,0)';
   }
 
   useEffect(() => {
@@ -69,9 +72,10 @@ export function DotGrid ({
       className={className}
       aria-hidden
       style={{
+        opacity: opacity ?? 0.1,
         position: 'absolute',
         inset: 0,
-        zIndex: -1,
+        zIndex: zIndex,
         overflow: 'hidden',
         pointerEvents: 'none',
         ...style,

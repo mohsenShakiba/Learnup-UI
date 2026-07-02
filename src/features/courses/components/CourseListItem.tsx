@@ -77,7 +77,7 @@ export function CourseListItem({ course }: CourseListItemProps) {
         }
       >
         <Box />
-        <Box sx={{ position: 'absolute', top: 16, right: 16, width: 80, height: 80, zIndex: 0 }}>
+        <Box sx={{ position: 'absolute', top: 16, right: 16, width: 140, height: 140, zIndex: 0 }}>
           <DotGrid zIndex={1} />
         </Box>
         {/* Header: big course code + level chip and English title */}
@@ -160,7 +160,7 @@ export function CourseListItem({ course }: CourseListItemProps) {
             position: 'relative',
             zIndex: 1,
             fontSize: 130,
-            color: theme.palette.mode === 'dark' ? '#e8ebf2' : '#122444',
+            color: theme.palette.mode === 'dark' ? '#e8ebf2' : '#18376e',
             fontFamily: 'Roboto',
             lineHeight: '100px',
             width: 60,

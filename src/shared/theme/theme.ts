@@ -11,9 +11,9 @@ export const createLearnupTheme = (mode: PaletteMode) => {
     palette: {
       mode,
       primary: {
-        main: '#3458eb',
-        light: '#3458eb',
-        dark: '#3458eb',
+        main: '#005eff',
+        light: '#4d8eff',
+        dark: '#0444b3',
         contrastText: '#ffffff',
       },
       secondary: {

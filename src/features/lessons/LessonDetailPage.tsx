@@ -1,4 +1,4 @@
-import { Box, Button, Icon, Stack } from "@mui/material";
+import { Box, Button, Stack } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { AppIcon } from "../../shared/components/AppIcon";
 import { AppLoader } from "../../shared/components/AppLoader";
@@ -48,9 +48,9 @@ function TimelineColumn ({
         }}
       >
         {completed ? (
-          <Icon sx={{ fontSize: 16, color: "white" }}>check</Icon>
+          <AppIcon sx={{ fontSize: 16, color: "white" }}>check</AppIcon>
         ) : (
-          <Icon sx={{ fontSize: 16, color: "warning.main" }}>hourglass</Icon>
+          <AppIcon sx={{ fontSize: 16, color: "warning.main" }}>hourglass</AppIcon>
         )}
       </Box>
       {!isLast && (

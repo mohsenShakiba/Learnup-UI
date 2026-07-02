@@ -17,20 +17,13 @@ type CompletionBoxProps = {
 
 function CompletionBox ({ label, icon, done }: CompletionBoxProps) {
   return (
-    <Box
-      sx={{
-
-      }}
-    >
-      <AppIcon sx={{
-        bgcolor: done ? 'success.main' : 'rgba(0,0,0,0.15)',
-        width: 25,
-        height: 25,
-        lineHeight: '25px',
-        borderRadius: 1,
-        fontSize: '1rem', color: done ? 'white' : 'rgba(255,255,255,0.5)'
-      }}>{icon}</AppIcon>
-    </Box>
+    <AppIcon sx={{
+      bgcolor: done ? 'success.main' : 'rgba(125,125,125,0.30)',
+      p: 0.5,
+      lineHeight: '25px',
+      borderRadius: 1,
+      color: 'white'
+    }}>{icon}</AppIcon>
   );
 }
 

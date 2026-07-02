@@ -1,20 +1,29 @@
 import type { SxProps, Theme } from "@mui/material";
-import { Box, LinearProgress, Paper, Stack, Typography } from "@mui/material";
+import { Box, LinearProgress, Paper, Stack, Typography, useTheme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import type { CourseResponse } from "../../../api/Learnup";
-import { TextCarousel } from "../../../components/TextCarousel";
 import { DotGrid } from "../../../shared/components/DotGrid";
 import { FancyButton } from "../../../shared/components/FancyButton";
-import { ImageLoader } from "../../../shared/components/ImageLoader";
 
 type CourseListItemProps = {
   course: CourseResponse;
   sx?: SxProps<Theme>;
 };
 
+const courseCodeColors: Record<string, string> = {
+  A1: "#269e5a",
+  A2: "#269e82",
+  B1: "#268a9e",
+  B2: "#26669e",
+  C1: "#263e9e",
+};
+
+const defaultCourseCodeColor = "#d683b9";
+
 export function CourseListItem ({ course }: CourseListItemProps) {
 
   const navigate = useNavigate();
+  const theme = useTheme();
 
   const progress = course.totalLessonsCount > 0
     ? (course.completedLessonsCount / course.totalLessonsCount) * 100
@@ -23,6 +32,9 @@ export function CourseListItem ({ course }: CourseListItemProps) {
   const handleNavigateToCourseDetail = () => {
     navigate(`/courses/${course.id}`);
   };
+
+  const imageUrl = theme.palette.mode === 'dark' ? `url(/images/courses/v2/${course.code.toLowerCase()}_dark.png)` : `url(/images/courses/v2/${course.code.toLowerCase()}.png)`;
+  const courseCodeColor = courseCodeColors[course.code.toUpperCase()] ?? defaultCourseCodeColor;
 
   return (
     <Box sx={{
@@ -48,12 +60,22 @@ export function CourseListItem ({ course }: CourseListItemProps) {
         <Box
           sx={{
             flex: 1,
-            mb: 2,
             position: 'relative',
+
           }}
         >
-          <DotGrid />
-          <ImageLoader coverId={course.coverId} />
+          <Box sx={{
+            backgroundImage: imageUrl,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            width: '100%',
+            height: '100%',
+            zIndex: 2,
+            position: 'absolute',
+          }}>
+
+          </Box>
+          <DotGrid gap={15} zIndex={1} />
         </Box>
 
         <Stack
@@ -63,43 +85,33 @@ export function CourseListItem ({ course }: CourseListItemProps) {
           }}
         >
           <Stack spacing={1}>
-            <Stack
-              direction="row"
-              sx={{ borderRadius: 0.5, overflow: "hidden", fontSize: "0.9rem" }}
-            >
+
+
+            <Stack direction="row" sx={{ alignItems: "center", gap: 1 }}>
               <Box
                 sx={{
-                  background: "#d683b9",
+                  background: courseCodeColor,
                   color: "black",
                   px: 0.8,
                   py: 0.4,
-                  fontFamily: "arial",
+                  borderRadius: 1,
                 }}
               >
-                {course.code}
+                <Typography>
+                  {course.code}
+                </Typography>
               </Box>
-              <Box
+              <Typography
                 sx={{
-                  bgcolor: "background.default",
+                  fontSize: "1.2rem",
                   color: "text.primary",
-                  px: 0.8,
-                  py: 0.4,
                 }}
               >
-                {course.slug}
-              </Box>
+                {course.title}
+              </Typography>
+
             </Stack>
-
-            <Typography
-              sx={{
-                fontSize: "1.2rem",
-                color: "text.primary",
-              }}
-            >
-              {course.title}
-            </Typography>
-
-            <TextCarousel items={
+            {/* <TextCarousel items={
               [
                 <Stack direction='row' sx={{ gap: 0.5 }}>
                   <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>در این دوره</Typography>
@@ -117,7 +129,23 @@ export function CourseListItem ({ course }: CourseListItemProps) {
                   <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>یاد میگیری</Typography>
                 </Stack>,
               ]}
-            />
+            /> */}
+
+            <Stack direction='row' sx={{ gap: 0.5 }}>
+              <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>در این دوره</Typography>
+              <Typography sx={{ fontSize: '0.9rem', color: 'orange' }}>{course.totalLessonsCount} تا داستان</Typography>
+              <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>میخونی</Typography>
+            </Stack>
+            <Stack direction='row' sx={{ gap: 0.5 }}>
+              <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>در این دوره</Typography>
+              <Typography sx={{ fontSize: '0.9rem', color: 'orange' }}>{course.totalLessonsCount} تا گرامر مهم</Typography>
+              <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>یاد میگیری</Typography>
+            </Stack>
+            <Stack direction='row' sx={{ gap: 0.5 }}>
+              <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>در این دوره</Typography>
+              <Typography sx={{ fontSize: '0.9rem', color: 'orange' }}>{course.totalLessonsCount} تا کلمه</Typography>
+              <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>یاد میگیری</Typography>
+            </Stack>
 
             <Typography
               sx={{
@@ -130,6 +158,7 @@ export function CourseListItem ({ course }: CourseListItemProps) {
 
           <Stack spacing={1} sx={{ width: "100%" }}>
             <LinearProgress
+              color="info"
               variant="determinate"
               value={progress}
               sx={{ borderRadius: 1 }}
@@ -139,11 +168,11 @@ export function CourseListItem ({ course }: CourseListItemProps) {
               direction="row"
               sx={{ color: "text.secondary", fontSize: "0.8rem", gap: 1 }}
             >
-              <Typography sx={{ fontSize: "inherit", color: "primary.main" }}>
+              <Typography sx={{ fontSize: "inherit", color: "secondary.main" }}>
                 {course.completedLessonsCount}
               </Typography>
               <Typography sx={{ fontSize: "inherit" }}>درس از مجموع</Typography>
-              <Typography sx={{ fontSize: "inherit", color: "primary.main" }}>
+              <Typography sx={{ fontSize: "inherit", color: "secondary.main" }}>
                 {course.totalLessonsCount}
               </Typography>
               <Typography sx={{ fontSize: "inherit" }}>درس</Typography>

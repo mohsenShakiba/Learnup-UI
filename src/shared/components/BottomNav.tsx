@@ -1,6 +1,13 @@
-import { Box, ButtonBase, useTheme } from "@mui/material";
+import type { SvgIconProps } from "@mui/material";
+import { Box, ButtonBase, SvgIcon, useTheme } from "@mui/material";
+import type { MaterialSymbolsComponent } from "@material-symbols-svg/react";
+import { ChatBubble } from "@material-symbols-svg/react/icons/chat-bubble";
+import { Dashboard } from "@material-symbols-svg/react/icons/dashboard";
+import { Layers } from "@material-symbols-svg/react/icons/layers";
+import { MenuBook } from "@material-symbols-svg/react/icons/menu-book";
+import { School } from "@material-symbols-svg/react/icons/school";
+import { Search } from "@material-symbols-svg/react/icons/search";
 import { useLocation, useNavigate } from "react-router-dom";
-import { AppIcon } from './AppIcon';
 
 export const ROOT_TABS = [
   { label: 'Dashboard', icon: 'dashboard', path: '/dashboard' },
@@ -9,10 +16,39 @@ export const ROOT_TABS = [
   { label: 'Library', icon: 'menu_book', path: '/library' },
   { label: 'Vocab', icon: 'search', path: '/vocab' },
   { label: 'Vocab', icon: 'chat_bubble', path: '/vocab' },
-];
+] as const;
 
 const tabs = ROOT_TABS;
 const LEITNER_REVIEW_PATH_PREFIX = "/boxlevel/";
+const NAV_SYMBOLS = {
+  chat_bubble: ChatBubble,
+  dashboard: Dashboard,
+  layers: Layers,
+  menu_book: MenuBook,
+  school: School,
+  search: Search,
+} satisfies Record<string, MaterialSymbolsComponent>;
+
+type BottomNavSymbolProps = Omit<SvgIconProps, "children"> & {
+  name: keyof typeof NAV_SYMBOLS;
+};
+
+function BottomNavSymbol ({ name, sx, ...props }: BottomNavSymbolProps) {
+  const Symbol = NAV_SYMBOLS[name];
+
+  return (
+    <SvgIcon
+      {...props}
+      component={Symbol}
+      inheritViewBox
+      sx={{
+        fontSize: 24,
+        fill: "currentColor",
+        ...sx,
+      }}
+    />
+  );
+}
 
 export function isBottomNavVisible (pathname: string) {
   return (
@@ -122,7 +158,8 @@ export function BottomNav () {
                   }),
                 }}
               />
-              <AppIcon
+              <BottomNavSymbol
+                name={tab.icon}
                 sx={{
                   position: 'relative',
                   color: isActive ? 'primary.contrastText' : 'text.secondary',
@@ -131,9 +168,7 @@ export function BottomNav () {
                     easing: theme.transitions.easing.easeInOut,
                   }),
                 }}
-              >
-                {tab.icon}
-              </AppIcon>
+              />
             </ButtonBase>
           );
         })}

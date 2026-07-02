@@ -1,3 +1,5 @@
+import type { SvgIconProps } from "@mui/material";
+import { Box, ButtonBase, SvgIcon, Typography, useTheme } from "@mui/material";
 import type { MaterialSymbolsComponent } from "@material-symbols-svg/react";
 import { ChatBubble } from "@material-symbols-svg/react/icons/chat-bubble";
 import { Dashboard } from "@material-symbols-svg/react/icons/dashboard";
@@ -5,17 +7,15 @@ import { Layers } from "@material-symbols-svg/react/icons/layers";
 import { MenuBook } from "@material-symbols-svg/react/icons/menu-book";
 import { School } from "@material-symbols-svg/react/icons/school";
 import { Search } from "@material-symbols-svg/react/icons/search";
-import type { SvgIconProps } from "@mui/material";
-import { Box, ButtonBase, SvgIcon, useTheme } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export const ROOT_TABS = [
-  { label: 'Dashboard', icon: 'dashboard', path: '/dashboard' },
-  { label: 'Courses', icon: 'school', path: '/' },
-  { label: 'Leitner', icon: 'layers', path: '/leitner-box' },
-  { label: 'Library', icon: 'menu_book', path: '/library' },
-  { label: 'Vocab', icon: 'search', path: '/vocab' },
-  { label: 'Vocab', icon: 'chat_bubble', path: '/vocab' },
+  { label: 'داشبورد', icon: 'dashboard', path: '/dashboard' },
+  { label: 'دوره ها', icon: 'school', path: '/' },
+  { label: 'لایتنر', icon: 'layers', path: '/leitner-box' },
+  { label: 'کتابخانه', icon: 'menu_book', path: '/library' },
+  { label: 'جستجو', icon: 'search', path: '/vocab' },
+  { label: 'مکالمه', icon: 'chat_bubble', path: '/vocab' },
 ] as const;
 
 const tabs = ROOT_TABS;
@@ -33,7 +33,7 @@ type BottomNavSymbolProps = Omit<SvgIconProps, "children"> & {
   name: keyof typeof NAV_SYMBOLS;
 };
 
-function BottomNavSymbol ({ name, sx, ...props }: BottomNavSymbolProps) {
+function BottomNavSymbol({ name, sx, ...props }: BottomNavSymbolProps) {
   const Symbol = NAV_SYMBOLS[name];
 
   return (
@@ -50,7 +50,7 @@ function BottomNavSymbol ({ name, sx, ...props }: BottomNavSymbolProps) {
   );
 }
 
-export function isBottomNavVisible (pathname: string) {
+export function isBottomNavVisible(pathname: string) {
   return (
     pathname.startsWith(LEITNER_REVIEW_PATH_PREFIX) ||
     tabs.some(t => t.path === pathname)
@@ -58,7 +58,7 @@ export function isBottomNavVisible (pathname: string) {
 }
 
 
-export function BottomNav () {
+export function BottomNav() {
   const theme = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
@@ -83,9 +83,9 @@ export function BottomNav () {
     <Box
       sx={{
         position: 'absolute',
-        left: '16px',
-        right: '16px',
-        bottom: 'calc(env(safe-area-inset-bottom, 0px) + 16px)',
+        left: '10px',
+        right: '10px',
+        bottom: 'calc(env(safe-area-inset-bottom, 0px) + 12px)',
         display: 'flex',
         justifyContent: 'center',
         pointerEvents: 'none',
@@ -103,7 +103,7 @@ export function BottomNav () {
           gap: 0.5,
           px: 1,
           py: 1,
-          borderRadius: '999px',
+          borderRadius: '24px',
           border: '1px solid',
           borderColor: isDark ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.6)',
           backgroundColor: isDark ? 'rgba(40,38,46,0.55)' : 'rgba(255,255,255,0.55)',
@@ -124,9 +124,13 @@ export function BottomNav () {
               sx={{
                 position: 'relative',
                 overflow: 'hidden',
-                width: 60,
-                height: 40,
-                borderRadius: '999px',
+                flex: 1,
+                minWidth: 0,
+                height: 52,
+                flexDirection: 'column',
+                gap: 0.25,
+                px: 0.5,
+                borderRadius: '16px',
                 color: 'text.secondary',
                 backgroundColor: 'transparent',
                 transition: theme.transitions.create(
@@ -162,6 +166,7 @@ export function BottomNav () {
                 name={tab.icon}
                 sx={{
                   position: 'relative',
+                  fontSize: 22,
                   color: isActive ? 'primary.contrastText' : 'text.secondary',
                   transition: theme.transitions.create(['color', 'opacity'], {
                     duration: theme.transitions.duration.shorter,
@@ -169,6 +174,23 @@ export function BottomNav () {
                   }),
                 }}
               />
+              <Typography
+                noWrap
+                sx={{
+                  position: 'relative',
+                  maxWidth: '100%',
+                  fontSize: 10,
+                  lineHeight: 1.2,
+                  fontWeight: isActive ? 600 : 500,
+                  color: isActive ? 'primary.contrastText' : 'text.secondary',
+                  transition: theme.transitions.create(['color'], {
+                    duration: theme.transitions.duration.shorter,
+                    easing: theme.transitions.easing.easeInOut,
+                  }),
+                }}
+              >
+                {tab.label}
+              </Typography>
             </ButtonBase>
           );
         })}

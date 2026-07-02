@@ -73,18 +73,18 @@ export function CourseListItem ({ course }: CourseListItemProps) {
             textAlign: 'LEFT',
             color: '#363a45',
             fontFamily: 'SpaceMono',
-            height: '160px',
+            height: '150px',
             width: '85px',
-            lineHeight: '160px',
+            lineHeight: '140px',
           }}>{course.code[0]}</Typography>
           <Typography sx={{
             fontSize: 175,
             textAlign: 'LEFT',
             color: '#686b75',
             fontFamily: 'SpaceMono',
-            height: '160px',
+            height: '150px',
             width: '8px',
-            lineHeight: '160px',
+            lineHeight: '140px',
           }}>{course.code[1]}</Typography>
           <Box sx={{ flex: 1 }} />
 
@@ -124,16 +124,26 @@ export function CourseListItem ({ course }: CourseListItemProps) {
           <Typography
             sx={{
               color: "text.secondary",
+              whiteSpace: "pre-line",
             }}
           >
             {course.description}
           </Typography>
 
+          <Typography
+            sx={{
+              color: "text.secondary",
+              whiteSpace: "pre-line",
+            }}
+          >
+            {course.coverId}
+          </Typography>
+
           <Stack direction='column' sx={{}}>
             <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}> این دوره شامل</Typography>
             <Typography sx={{ fontSize: '0.9rem', color: '#001457' }}>{course.totalLessonsCount} تا داستان</Typography>
-            <Typography sx={{ fontSize: '0.9rem', color: '#001457' }}>{course.totalLessonsCount} تا گرامر مهم</Typography>
-            <Typography sx={{ fontSize: '0.9rem', color: '#001457' }}>{course.totalLessonsCount} تا کلمه</Typography>
+            <Typography sx={{ fontSize: '0.9rem', color: '#001457' }}>15 تا گرامر مهم</Typography>
+            <Typography sx={{ fontSize: '0.9rem', color: '#001457' }}>1000 تا کلمه</Typography>
             <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>میشود</Typography>
           </Stack>
         </Stack>

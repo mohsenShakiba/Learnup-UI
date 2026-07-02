@@ -3,36 +3,46 @@ body {
   font-family: 'IranSans Roboto';
   background-color: rgb(250, 250, 250);
 }
+
 html {
   background-color: rgb(250, 250, 250);
 }
 
 @font-face {
-font-family: 'IranSans';
-font-style: normal;
-font-display: swap;
-src: url(/fonts/IranSans.woff2) format('woff2');
-}
-@font-face {
-font-family: 'Roboto';
-font-style: normal;
-font-weight: 400;
-font-display: swap;
-src: url('/fonts/Roboto-Regular.ttf') format('truetype');
-}
-@font-face {
-font-family: 'Roboto';
-font-style: normal;
-font-weight: 300;
-font-display: swap;
-src: url('/fonts/Roboto-Light.ttf') format('truetype');
-}
-@font-face {
-font-family: 'FredokaOne';
-font-style: normal;
-font-weight: 300;
-font-display: swap;
-src: url('/fonts/FredokaOne.ttf') format('truetype');
+  font-family: 'IranSans';
+  font-style: normal;
+  font-display: swap;
+  src: url(/fonts/IranSans.woff2) format('woff2');
 }
 
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/Roboto-Regular.ttf') format('truetype');
+}
 
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('/fonts/Roboto-Light.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'FredokaOne';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('/fonts/FredokaOne.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'SpaceMono';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('/fonts/SpaceMono-Regular.ttf') format('truetype');
+}

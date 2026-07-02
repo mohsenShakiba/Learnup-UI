@@ -1,7 +1,8 @@
 import type { SxProps, Theme } from "@mui/material";
-import { Box, Divider, LinearProgress, Paper, Stack, Typography, useTheme } from "@mui/material";
+import { Box, LinearProgress, Stack, Typography, useTheme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import type { CourseResponse } from "../../../api/Learnup";
+import { AppIcon } from "../../../shared/components/AppIcon";
 import { DotGrid } from "../../../shared/components/DotGrid";
 import { FancyButton } from "../../../shared/components/FancyButton";
 
@@ -42,150 +43,134 @@ export function CourseListItem ({ course }: CourseListItemProps) {
       pb: 0,
       display: 'flex',
       height: '100%',
-      boxSizing: 'border-box'
+      boxSizing: 'border-box',
     }}>
 
-      <Paper
+      <Box
         sx={
           {
+            position: 'relative',
             borderRadius: 2,
+            border: `1px solid ${theme.palette.divider}`,
             flex: 1,
-            p: 0,
             display: 'flex',
             flexDirection: 'column',
-            overflow: 'hidden'
+            justifyContent: 'space-between',
+            gap: 2,
+            p: 2
           }
         }
       >
-        <Box
-          sx={{
-            flex: 1,
-            position: 'relative',
+        <DotGrid />
 
-          }}
-        >
-          <Box sx={{
-            backgroundImage: imageUrl,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            width: '100%',
-            height: '100%',
-            zIndex: 2,
-            position: 'absolute',
-          }}>
+        <Stack direction="row" sx={{
+          gap: 2,
+          position: 'relative',
+          alignItems: 'end', justifyContent: 'flex-end', direction: 'rtl', borderBottom: '15px solid', borderColor: 'divider'
+        }}>
+          <Typography sx={{
+            fontSize: 175,
+            textAlign: 'LEFT',
+            color: '#363a45',
+            fontFamily: 'SpaceMono',
+            height: '160px',
+            width: '85px',
+            lineHeight: '160px',
+          }}>{course.code[0]}</Typography>
+          <Typography sx={{
+            fontSize: 175,
+            textAlign: 'LEFT',
+            color: '#686b75',
+            fontFamily: 'SpaceMono',
+            height: '160px',
+            width: '8px',
+            lineHeight: '160px',
+          }}>{course.code[1]}</Typography>
+          <Box sx={{ flex: 1 }} />
 
-          </Box>
-          <DotGrid gap={15} zIndex={1} />
-        </Box>
+          <Stack sx={{ alignItems: 'flex-start', }}>
+            <Typography sx={{
+              fontSize: 25,
+              textAlign: 'LEFT',
+              color: 'primary.main',
+              lineHeight: '30px',
+              fontFamily: 'SpaceMono',
+            }}>Starter</Typography>
+            <Typography sx={{
+              fontSize: 25,
+              textAlign: 'LEFT',
+              color: '#999',
+              lineHeight: '30px',
+              fontFamily: 'SpaceMono',
+            }}>English</Typography>
+            <Typography sx={{
+              pb: 1,
+              fontSize: 25,
+              textAlign: 'LEFT',
+              color: '#999',
+              lineHeight: '30px',
+              fontFamily: 'SpaceMono',
+            }}>Course</Typography>
+          </Stack>
+        </Stack>
 
-        <Stack
-          sx={{
-            p: 2,
-            gap: 2,
-          }}
-        >
-          <Stack spacing={1}>
+        <Stack direction="column" sx={{ gap: 2 }}>
+
+          <Typography variant="h2"          >
+            {course.title}
+          </Typography>
 
 
-            <Stack direction="row" sx={{ alignItems: "center", gap: 1 }}>
-              <Box
-                sx={{
-                  background: courseCodeColor,
-                  color: "black",
-                  px: 0.8,
-                  py: 0.4,
-                  borderRadius: 1,
-                }}
-              >
-                <Typography>
-                  {course.code}
-                </Typography>
-              </Box>
-              <Typography
-                sx={{
-                  fontSize: "1.2rem",
-                  color: "text.primary",
-                }}
-              >
-                {course.title}
+          <Typography
+            sx={{
+              color: "text.secondary",
+            }}
+          >
+            {course.description}
+          </Typography>
+
+          <Stack direction='column' sx={{}}>
+            <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}> این دوره شامل</Typography>
+            <Typography sx={{ fontSize: '0.9rem', color: '#001457' }}>{course.totalLessonsCount} تا داستان</Typography>
+            <Typography sx={{ fontSize: '0.9rem', color: '#001457' }}>{course.totalLessonsCount} تا گرامر مهم</Typography>
+            <Typography sx={{ fontSize: '0.9rem', color: '#001457' }}>{course.totalLessonsCount} تا کلمه</Typography>
+            <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>میشود</Typography>
+          </Stack>
+        </Stack>
+
+
+
+        <Stack spacing={3}>
+          <Stack spacing={1} sx={{ width: "100%" }}>
+            <Stack direction="row" sx={{ justifyContent: "space-between", alignItems: "center" }}>
+              <Typography variant="caption" sx={{ fontFamily: "SpaceMono", color: "text.secondary", }}>
+                10%
               </Typography>
 
+              <Typography variant="caption" sx={{ fontFamily: "SpaceMono", color: "text.secondary", direction: "rtl", textAlign: "right" }}>
+                {course.completedLessonsCount} of {course.totalLessonsCount} lessons
+              </Typography>
             </Stack>
-            {/* <TextCarousel items={
-              [
-                <Stack direction='row' sx={{ gap: 0.5 }}>
-                  <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>در این دوره</Typography>
-                  <Typography sx={{ fontSize: '0.9rem', color: 'orange' }}>{course.totalLessonsCount} تا داستان</Typography>
-                  <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>میخونی</Typography>
-                </Stack>,
-                <Stack direction='row' sx={{ gap: 0.5 }}>
-                  <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>در این دوره</Typography>
-                  <Typography sx={{ fontSize: '0.9rem', color: 'orange' }}>{course.totalLessonsCount} تا گرامر مهم</Typography>
-                  <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>یاد میگیری</Typography>
-                </Stack>,
-                <Stack direction='row' sx={{ gap: 0.5 }}>
-                  <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>در این دوره</Typography>
-                  <Typography sx={{ fontSize: '0.9rem', color: 'orange' }}>{course.totalLessonsCount} تا کلمه</Typography>
-                  <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>یاد میگیری</Typography>
-                </Stack>,
-              ]}
-            /> */}
-
-
-
-            <Typography
-              sx={{
-                color: "text.secondary",
-              }}
-            >
-              {course.description}
-            </Typography>
-          </Stack>
-
-          <Divider />
-
-          <Stack direction='row' sx={{ gap: 0.5, flexWrap: 'wrap' }}>
-            <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>در این دوره</Typography>
-            <Typography sx={{ fontSize: '0.9rem', color: 'secondary.main' }}>{course.totalLessonsCount} تا داستان</Typography>
-            <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>,</Typography>
-            <Typography sx={{ fontSize: '0.9rem', color: 'secondary.main' }}>{course.totalLessonsCount} تا گرامر مهم</Typography>
-            <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>و</Typography>
-            <Typography sx={{ fontSize: '0.9rem', color: 'secondary.main' }}>{course.totalLessonsCount} تا کلمه</Typography>
-            <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>یاد میگیری</Typography>
-          </Stack>
-
-
-          <Stack spacing={1} sx={{ width: "100%" }}>
             <LinearProgress
               color="info"
               variant="determinate"
               value={progress}
               sx={{ borderRadius: 1 }}
             />
-            {/* <DottedProgress value={progress} /> */}
-            <Stack
-              direction="row"
-              sx={{ color: "text.secondary", fontSize: "0.8rem", gap: 1 }}
-            >
-              <Typography sx={{ fontSize: "inherit", color: "secondary.main" }}>
-                {course.completedLessonsCount}
-              </Typography>
-              <Typography sx={{ fontSize: "inherit" }}>درس از مجموع</Typography>
-              <Typography sx={{ fontSize: "inherit", color: "secondary.main" }}>
-                {course.totalLessonsCount}
-              </Typography>
-              <Typography sx={{ fontSize: "inherit" }}>درس</Typography>
-            </Stack>
           </Stack>
 
           <FancyButton
+            size="large"
+            endIcon={
+              <AppIcon>arrow_backward</AppIcon>
+            }
             fullWidth
             onClick={handleNavigateToCourseDetail}
             variant='contained' >
             {course.completedLessonsCount > 0 ? 'ادامه بده' : 'بریم شروع کنیم'}
           </FancyButton>
         </Stack>
-      </Paper>
+      </Box>
     </Box>
   );
 }

@@ -19,6 +19,7 @@ import Close from '@mui/icons-material/CloseOutlined';
 import DarkMode from '@mui/icons-material/DarkModeOutlined';
 import Dashboard from '@mui/icons-material/DashboardOutlined';
 import Edit from '@mui/icons-material/EditOutlined';
+import Forum from '@mui/icons-material/ForumOutlined';
 import HourglassEmpty from '@mui/icons-material/HourglassEmptyOutlined';
 import Layers from '@mui/icons-material/LayersOutlined';
 import LightMode from '@mui/icons-material/LightModeOutlined';
@@ -35,6 +36,8 @@ import PersonAdd from '@mui/icons-material/PersonAddOutlined';
 import PlayArrow from '@mui/icons-material/PlayArrowOutlined';
 import Quiz from '@mui/icons-material/QuizOutlined';
 import RemoveCircle from '@mui/icons-material/RemoveCircleOutlined';
+import RocketLaunch from '@mui/icons-material/RocketLaunchOutlined';
+import Schedule from '@mui/icons-material/ScheduleOutlined';
 import School from '@mui/icons-material/SchoolOutlined';
 import Search from '@mui/icons-material/SearchOutlined';
 import SentimentDissatisfied from '@mui/icons-material/SentimentDissatisfiedOutlined';
@@ -60,6 +63,7 @@ const ICONS = {
   arrow_backward: ArrowBack,
   arrow_forward: ArrowForward,
   auto_stories: AutoStories,
+  book_ribbon: MenuBook,
   bookmark: Bookmark,
   bookmark_border: BookmarkBorder,
   chat_bubble: ChatBubble,
@@ -69,6 +73,7 @@ const ICONS = {
   chevron_right: ChevronRight,
   close: Close,
   closed_caption: ClosedCaption,
+  conversation: Forum,
   dark_mode: DarkMode,
   dashboard: Dashboard,
   edit: Edit,
@@ -88,6 +93,8 @@ const ICONS = {
   play_arrow: PlayArrow,
   quiz: Quiz,
   remove_circle: RemoveCircle,
+  rocket_launch: RocketLaunch,
+  schedule: Schedule,
   school: School,
   search: Search,
   sentiment_dissatisfied: SentimentDissatisfied,
@@ -117,7 +124,7 @@ export type IconProps = Omit<SvgIconProps, 'children'> & {
  * by tree-shaken `@mui/icons-material` SVGs instead of the icon font. All SvgIcon
  * props (`sx`, `color`, `fontSize`, …) are forwarded unchanged.
  */
-export function AppIcon ({ children, ...props }: IconProps) {
+export function AppIcon({ children, ...props }: IconProps) {
   const Component = ICONS[children as IconName] as
     | ComponentType<SvgIconProps>
     | undefined;

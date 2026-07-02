@@ -1,4 +1,4 @@
-import { Box, Card, Stack, Typography, useTheme } from "@mui/material";
+import { alpha, Box, Card, Stack, Typography, useTheme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { AppIcon } from '../../../shared/components/AppIcon';
 import { getLevelTone } from "./levelTone";
@@ -15,6 +15,10 @@ const numberFormatter = new Intl.NumberFormat("en-US");
 
 function formatNumber (value: number): string {
   return numberFormatter.format(value);
+}
+
+function capitalize (value: string): string {
+  return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
 export function BoxLevelCard ({
@@ -39,6 +43,8 @@ export function BoxLevelCard ({
         navigate(`/boxlevel/${levelId}`);
       }}
       sx={{
+        position: "relative",
+        zIndex: 1,
         p: 1.45,
         minHeight: 64,
         borderRadius: 2,
@@ -64,15 +70,16 @@ export function BoxLevelCard ({
       <Stack direction="row" sx={{ alignItems: "center", gap: 1.6 }}>
         <Box
           sx={{
-            width: 46,
-            height: 46,
-            flex: "0 0 46px",
-            borderRadius: 2.25,
+            width: 44,
+            height: 44,
+            flex: "0 0 44px",
+            borderRadius: "50%",
             bgcolor: tone.color,
             color: "common.white",
             display: "grid",
             placeItems: "center",
-            fontSize: 19,
+            fontSize: 18,
+            fontWeight: 700,
             fontFamily: 'arial',
           }}
         >
@@ -82,7 +89,6 @@ export function BoxLevelCard ({
         <Box sx={{ minWidth: 0, flex: 1 }}>
           <Stack
             direction="row"
-
             sx={{ alignItems: "center", minWidth: 0, gap: 1 }}
           >
             <Typography
@@ -123,44 +129,51 @@ export function BoxLevelCard ({
               whiteSpace: "nowrap",
             }}
           >
-            {reviewInterval} - {formattedTotal} cards
+            {capitalize(reviewInterval)} · {formattedTotal} cards
           </Typography>
         </Box>
 
-        {canReview ? (
-          <Box
-            sx={{
-              width: 48,
-              height: 48,
-              borderRadius: 2,
-              bgcolor: tone.color,
-              color: "common.white",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Typography sx={{ fontSize: 18, lineHeight: 1 }}>
-              {formattedReady}
-            </Typography>
-            <Typography sx={{ fontSize: 12, lineHeight: 1 }}>
-              due
-            </Typography>
-          </Box>
-        ) : (
-          <AppIcon
-            sx={{
-              width: 48,
-              flex: "0 0 48px",
-              textAlign: "center",
-              color: "success.main",
-              fontSize: 23,
-            }}
-          >
-            check
+        <Stack direction="row" sx={{ alignItems: "center", gap: 0.75 }}>
+          {canReview ? (
+            <Box
+              sx={{
+                px: 1.35,
+                py: 0.6,
+                borderRadius: 1.75,
+                bgcolor: tone.softColor,
+                color: tone.color,
+                textAlign: "center",
+                minWidth: 40,
+              }}
+            >
+              <Typography sx={{ fontSize: 16, fontWeight: 700, lineHeight: 1 }}>
+                {formattedReady}
+              </Typography>
+              <Typography sx={{ fontSize: 11, lineHeight: 1.1, mt: 0.35 }}>
+                due
+              </Typography>
+            </Box>
+          ) : (
+            <Box
+              sx={{
+                width: 32,
+                height: 32,
+                borderRadius: "50%",
+                bgcolor: (theme) => alpha(theme.palette.success.main, 0.14),
+                display: "grid",
+                placeItems: "center",
+              }}
+            >
+              <AppIcon sx={{ color: "success.main", fontSize: 20 }}>
+                check
+              </AppIcon>
+            </Box>
+          )}
+
+          <AppIcon sx={{ color: "text.secondary", fontSize: 22 }}>
+            chevron_right
           </AppIcon>
-        )}
+        </Stack>
       </Stack>
     </Card>
   );

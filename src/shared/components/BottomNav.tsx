@@ -83,9 +83,9 @@ export function BottomNav() {
     <Box
       sx={{
         position: 'absolute',
-        left: '10px',
-        right: '10px',
-        bottom: 'calc(env(safe-area-inset-bottom, 0px) + 12px)',
+        left: '16px',
+        right: '16px',
+        bottom: 'calc(env(safe-area-inset-bottom, 0px) + 16px)',
         display: 'flex',
         justifyContent: 'center',
         pointerEvents: 'none',
@@ -101,8 +101,8 @@ export function BottomNav() {
           alignItems: 'center',
           justifyContent: 'space-between',
           gap: 0.5,
-          px: 1,
-          py: 1,
+          px: 0.7,
+          py: 0.7,
           borderRadius: '24px',
           border: '1px solid',
           borderColor: isDark ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.6)',

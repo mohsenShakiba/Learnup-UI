@@ -125,12 +125,8 @@ export function BottomNav () {
               <AppIcon
                 sx={{
                   position: 'relative',
-                  zIndex: 1,
-                  fontSize: 24,
                   color: isActive ? 'primary.contrastText' : 'text.secondary',
-                  opacity: isActive ? 1 : 0.72,
-                  transform: isActive ? 'scale(1)' : 'scale(0.94)',
-                  transition: theme.transitions.create(['color', 'opacity', 'transform'], {
+                  transition: theme.transitions.create(['color', 'opacity'], {
                     duration: theme.transitions.duration.shorter,
                     easing: theme.transitions.easing.easeInOut,
                   }),

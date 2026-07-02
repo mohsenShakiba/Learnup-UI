@@ -1,5 +1,5 @@
 import type { SxProps, Theme } from "@mui/material";
-import { Box, LinearProgress, Paper, Stack, Typography, useTheme } from "@mui/material";
+import { Box, Divider, LinearProgress, Paper, Stack, Typography, useTheme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import type { CourseResponse } from "../../../api/Learnup";
 import { DotGrid } from "../../../shared/components/DotGrid";
@@ -131,21 +131,7 @@ export function CourseListItem ({ course }: CourseListItemProps) {
               ]}
             /> */}
 
-            <Stack direction='row' sx={{ gap: 0.5 }}>
-              <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>در این دوره</Typography>
-              <Typography sx={{ fontSize: '0.9rem', color: 'orange' }}>{course.totalLessonsCount} تا داستان</Typography>
-              <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>میخونی</Typography>
-            </Stack>
-            <Stack direction='row' sx={{ gap: 0.5 }}>
-              <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>در این دوره</Typography>
-              <Typography sx={{ fontSize: '0.9rem', color: 'orange' }}>{course.totalLessonsCount} تا گرامر مهم</Typography>
-              <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>یاد میگیری</Typography>
-            </Stack>
-            <Stack direction='row' sx={{ gap: 0.5 }}>
-              <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>در این دوره</Typography>
-              <Typography sx={{ fontSize: '0.9rem', color: 'orange' }}>{course.totalLessonsCount} تا کلمه</Typography>
-              <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>یاد میگیری</Typography>
-            </Stack>
+
 
             <Typography
               sx={{
@@ -155,6 +141,19 @@ export function CourseListItem ({ course }: CourseListItemProps) {
               {course.description}
             </Typography>
           </Stack>
+
+          <Divider />
+
+          <Stack direction='row' sx={{ gap: 0.5, flexWrap: 'wrap' }}>
+            <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>در این دوره</Typography>
+            <Typography sx={{ fontSize: '0.9rem', color: 'secondary.main' }}>{course.totalLessonsCount} تا داستان</Typography>
+            <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>,</Typography>
+            <Typography sx={{ fontSize: '0.9rem', color: 'secondary.main' }}>{course.totalLessonsCount} تا گرامر مهم</Typography>
+            <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>و</Typography>
+            <Typography sx={{ fontSize: '0.9rem', color: 'secondary.main' }}>{course.totalLessonsCount} تا کلمه</Typography>
+            <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>یاد میگیری</Typography>
+          </Stack>
+
 
           <Stack spacing={1} sx={{ width: "100%" }}>
             <LinearProgress

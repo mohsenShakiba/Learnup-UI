@@ -1,5 +1,3 @@
-import type { SvgIconProps } from "@mui/material";
-import { Box, ButtonBase, SvgIcon, useTheme } from "@mui/material";
 import type { MaterialSymbolsComponent } from "@material-symbols-svg/react";
 import { ChatBubble } from "@material-symbols-svg/react/icons/chat-bubble";
 import { Dashboard } from "@material-symbols-svg/react/icons/dashboard";
@@ -7,6 +5,8 @@ import { Layers } from "@material-symbols-svg/react/icons/layers";
 import { MenuBook } from "@material-symbols-svg/react/icons/menu-book";
 import { School } from "@material-symbols-svg/react/icons/school";
 import { Search } from "@material-symbols-svg/react/icons/search";
+import type { SvgIconProps } from "@mui/material";
+import { Box, ButtonBase, SvgIcon, useTheme } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export const ROOT_TABS = [
@@ -83,9 +83,9 @@ export function BottomNav () {
     <Box
       sx={{
         position: 'absolute',
-        left: '10px',
-        right: '10px',
-        bottom: 'calc(env(safe-area-inset-bottom, 0px) + 12px)',
+        left: '16px',
+        right: '16px',
+        bottom: 'calc(env(safe-area-inset-bottom, 0px) + 16px)',
         display: 'flex',
         justifyContent: 'center',
         pointerEvents: 'none',

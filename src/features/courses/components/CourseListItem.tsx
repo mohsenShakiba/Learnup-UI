@@ -114,7 +114,7 @@ export function CourseListItem ({ course }: CourseListItemProps) {
           </Stack>
         </Stack>
 
-        <Stack direction="column" sx={{ gap: 2 }}>
+        <Stack direction="column" sx={{ gap: 1.5 }}>
 
           <Typography variant="h2"          >
             {course.title}
@@ -141,16 +141,16 @@ export function CourseListItem ({ course }: CourseListItemProps) {
 
           <Stack direction='column' sx={{}}>
             <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}> این دوره شامل</Typography>
-            <Typography sx={{ fontSize: '0.9rem', color: '#001457' }}>{course.totalLessonsCount} تا داستان</Typography>
-            <Typography sx={{ fontSize: '0.9rem', color: '#001457' }}>15 تا گرامر مهم</Typography>
-            <Typography sx={{ fontSize: '0.9rem', color: '#001457' }}>1000 تا کلمه</Typography>
+            <Typography sx={{ fontSize: '0.9rem', color: 'primary.main' }}>{course.totalLessonsCount} تا داستان</Typography>
+            <Typography sx={{ fontSize: '0.9rem', color: 'primary.main' }}>15 تا گرامر مهم</Typography>
+            <Typography sx={{ fontSize: '0.9rem', color: 'primary.main' }}>1000 تا کلمه</Typography>
             <Typography sx={{ fontSize: '0.9rem', opacity: 0.4 }}>میشود</Typography>
           </Stack>
         </Stack>
 
 
 
-        <Stack spacing={3}>
+        <Stack spacing={2}>
           <Stack spacing={1} sx={{ width: "100%" }}>
             <Stack direction="row" sx={{ justifyContent: "space-between", alignItems: "center" }}>
               <Typography variant="caption" sx={{ fontFamily: "SpaceMono", color: "text.secondary", }}>

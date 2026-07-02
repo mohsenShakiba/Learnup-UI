@@ -51,6 +51,15 @@ export default function DashboardPage () {
             <Fade in timeout={shouldFadeIn ? 500 : 0} style={{ transitionDelay: shouldFadeIn ? '600ms' : undefined }}>
               <div><UserSubscriptionCard subscription={subscription} /></div>
             </Fade>
+            <Fade in timeout={shouldFadeIn ? 500 : 0} style={{ transitionDelay: shouldFadeIn ? '600ms' : undefined }}>
+              <div><UserSubscriptionCard subscription={subscription} /></div>
+            </Fade>
+            <Fade in timeout={shouldFadeIn ? 500 : 0} style={{ transitionDelay: shouldFadeIn ? '600ms' : undefined }}>
+              <div><UserSubscriptionCard subscription={subscription} /></div>
+            </Fade>
+            <Fade in timeout={shouldFadeIn ? 500 : 0} style={{ transitionDelay: shouldFadeIn ? '600ms' : undefined }}>
+              <div><UserSubscriptionCard subscription={subscription} /></div>
+            </Fade>
           </Stack>
         )
       }

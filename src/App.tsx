@@ -14,10 +14,10 @@ import LessonGrammarTestsPage from "./features/GrammarTests/LessonGrammarTestsPa
 import BoxLevelReviewPage from "./features/leitnerBox/BoxLevelReviewPage";
 import LeitnerBoxPage from "./features/leitnerBox/LeitnerBoxPage";
 import LessonDetailPage from "./features/lessons/LessonDetailPage";
-import PlacementPage from "./features/placement/PlacementPage";
 import BookDetailPage from "./features/library/BookDetailPage";
 import ListBooksPage from "./features/library/ListBooksPage";
 import UploadBookPage from "./features/library/UploadBookPage";
+import PlacementPage from "./features/placement/PlacementPage";
 import ProfilePage from "./features/profile/ProfilePage";
 import SubscriptionsPage from "./features/settings/SubscriptionsPage";
 import StoryDetailPage from "./features/stories/StoryDetailPage";
@@ -27,7 +27,7 @@ import LessonVocabTestsPage from "./features/VocabTests/LessonVocabTestsPage";
 import { BottomNav, isBottomNavVisible } from "./shared/components/BottomNav";
 setupOpenApi();
 
-function AppLayout() {
+function AppLayout () {
   const location = useLocation();
   const hasBottomNav = isBottomNavVisible(location.pathname);
 
@@ -102,7 +102,7 @@ function AppLayout() {
   );
 }
 
-function App() {
+function App () {
   return (
     <BrowserRouter>
       <AppLayout />

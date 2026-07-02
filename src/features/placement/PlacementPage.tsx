@@ -8,8 +8,11 @@ import { PlacementService } from '../../api/Learnup';
 import type { SubmitPlacementRequest } from '../../api/Learnup/models/SubmitPlacementRequest';
 import { AppLoader } from '../../shared/components/AppLoader';
 import { DefaultHeader } from '../../shared/components/DefaultHeader';
+import { DotGrid } from '../../shared/components/DotGrid';
+import { DurationBadge } from '../../shared/components/DurationBadge';
 import { ErrorPage } from '../../shared/components/ErrorPage';
 import { FancyButton } from '../../shared/components/FancyButton';
+import { Scaffold } from '../../shared/components/Scaffold';
 import { toast } from '../../shared/toast';
 import { PlacementQuestionCard } from './components/PlacementQuestionCard';
 import PlacementResult from './components/PlacementResult';
@@ -120,23 +123,23 @@ export default function PlacementPage () {
   }
 
   return (
-    <Stack sx={{ minHeight: '100%', height: '100%' }}>
-      <DefaultHeader header="آزمون تعیین سطح" />
+    <Scaffold header={<DefaultHeader header="آزمون تعیین سطح" />}>
+
+      <DotGrid />
 
       <Box sx={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
 
         {phase === 'intro' && testQuery.data && (
-          <Stack spacing={1} sx={{ p: 3, overflow: 'auto', flex: 1 }}>
+          <Stack spacing={2} sx={{ p: 3, overflow: 'auto', flex: 1 }}>
             <Box
               sx={{
                 width: '100%',
                 maxWidth: 360,
                 mx: 'auto',
                 mb: 1,
-                aspectRatio: '16 / 10',
+                aspectRatio: '3/2.2',
                 borderRadius: 3,
                 overflow: 'hidden',
-                bgcolor: 'background.paper',
               }}
             >
               <Box
@@ -144,6 +147,7 @@ export default function PlacementPage () {
                 src="/images/placement.png"
                 alt=""
                 sx={{
+                  bgcolor: 'transparent',
                   display: 'block',
                   width: '100%',
                   height: '100%',
@@ -152,7 +156,10 @@ export default function PlacementPage () {
               />
             </Box>
 
-            <Typography variant="h6">{testQuery.data.title}</Typography>
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'end', justifyContent: 'space-between' }}>
+              <Typography variant="h6">{testQuery.data.title}</Typography>
+              <DurationBadge minutes={'10'} />
+            </Stack>
 
             {testQuery.data.description && (
               <Typography variant="body1" sx={{ color: 'text.secondary' }}>
@@ -160,10 +167,9 @@ export default function PlacementPage () {
               </Typography>
             )}
 
-            <Box sx={{ flex: 1 }} />
+            <Box />
             <FancyButton
-              onClick={handleStart}
-              sx={{ borderRadius: 999 }}>
+              onClick={handleStart}>
               شروع آزمون
             </FancyButton>
           </Stack>
@@ -212,7 +218,7 @@ export default function PlacementPage () {
                       disabled={!allAnswered || submitMutation.isPending}
                       onClick={handleSubmit}
                     >
-                      پایان / ثبت
+                      بررسی و ثبت
                     </Button>
                   ) : (
                     <Button
@@ -243,6 +249,6 @@ export default function PlacementPage () {
         )}
 
       </Box>
-    </Stack>
+    </Scaffold>
   );
 }

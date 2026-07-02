@@ -6,6 +6,7 @@ import type { IconName } from "../../../shared/components/AppIcon";
 import { AppIcon } from "../../../shared/components/AppIcon";
 import { DotGrid } from "../../../shared/components/DotGrid";
 import { FancyButton } from "../../../shared/components/FancyButton";
+import { DurationBadge } from "../../../shared/components/DurationBadge";
 
 type CourseListItemProps = {
   course: CourseResponse;
@@ -24,7 +25,7 @@ const courseLevelLabels: Record<string, string> = {
 const defaultCourseLevelLabel = "سطح مبتدی";
 
 type CourseStat = {
-  icon: IconName;
+  icon: string;
   value: number;
   label: string;
   hint: string;
@@ -46,9 +47,9 @@ export function CourseListItem({ course }: CourseListItemProps) {
   const levelLabel = courseLevelLabels[course.code.toUpperCase()] ?? defaultCourseLevelLabel;
 
   const stats: CourseStat[] = [
-    { icon: "menu_book", value: course.totalLessonsCount, label: "تا کلمه", hint: "واژگان کلیدی" },
-    { icon: "chat_bubble", value: course.totalLessonsCount, label: "تا گرامر مهم", hint: "ساختارهای کاربردی" },
-    { icon: "schedule", value: course.totalLessonsCount, label: "تا داستان", hint: "داستان‌های جذاب" },
+    { icon: "translate", value: course.totalLessonsCount, label: "کلمه", hint: "واژگان کلیدی" },
+    { icon: "book_ribbon", value: course.totalLessonsCount, label: "گرامر", hint: "ساختارهای کاربردی" },
+    { icon: "conversation", value: course.totalLessonsCount, label: "مکالمه", hint: "داستان‌های جذاب" },
   ];
 
   return (
@@ -75,6 +76,10 @@ export function CourseListItem({ course }: CourseListItemProps) {
           }
         }
       >
+        <Box />
+        <Box sx={{ position: 'absolute', top: 16, right: 16, width: 80, height: 80, zIndex: 0 }}>
+          <DotGrid zIndex={1} />
+        </Box>
         {/* Header: big course code + level chip and English title */}
         <Stack direction="row" sx={{
           gap: 2,
@@ -83,28 +88,72 @@ export function CourseListItem({ course }: CourseListItemProps) {
           justifyContent: 'center',
           direction: 'rtl',
         }}>
-          {/* Decorative circles behind the course code */}
+          {/* Decorative blobs behind the course code */}
           <Box aria-hidden sx={{
             position: 'absolute',
-            right: -10,
+            right: 5,
             top: -10,
             width: 140,
             height: 140,
-            borderRadius: '50%',
             bgcolor: 'primary.main',
-            opacity: 0.06,
+            opacity: 0.07,
             zIndex: 0,
+            borderRadius: '42% 58% 63% 37% / 41% 44% 56% 59%',
+            animation: 'courseBlobA 22s ease-in-out infinite',
+            '@keyframes courseBlobA': {
+              '0%, 100%': {
+                borderRadius: '42% 58% 63% 37% / 41% 44% 56% 59%',
+                transform: 'rotate(0deg) scale(1)',
+              },
+              '20%': {
+                borderRadius: '67% 33% 41% 59% / 58% 41% 59% 42%',
+                transform: 'rotate(6deg) scale(1.04)',
+              },
+              '40%': {
+                borderRadius: '38% 62% 71% 29% / 63% 34% 66% 37%',
+                transform: 'rotate(14deg) scale(1.07)',
+              },
+              '60%': {
+                borderRadius: '59% 41% 32% 68% / 44% 62% 38% 56%',
+                transform: 'rotate(9deg) scale(1.02)',
+              },
+              '80%': {
+                borderRadius: '48% 52% 57% 43% / 36% 55% 45% 64%',
+                transform: 'rotate(-5deg) scale(1.05)',
+              },
+            },
+            '@media (prefers-reduced-motion: reduce)': { animation: 'none' },
           }} />
           <Box aria-hidden sx={{
             position: 'absolute',
             right: 90,
             bottom: 10,
-            width: 70,
-            height: 70,
-            borderRadius: '50%',
+            width: 80,
+            height: 80,
             bgcolor: 'primary.main',
             opacity: 0.05,
             zIndex: 0,
+            borderRadius: '63% 37% 44% 56% / 49% 55% 45% 51%',
+            animation: 'courseBlobB 18s ease-in-out infinite',
+            '@keyframes courseBlobB': {
+              '0%, 100%': {
+                borderRadius: '63% 37% 44% 56% / 49% 55% 45% 51%',
+                transform: 'translateY(0) rotate(0deg) scale(1)',
+              },
+              '25%': {
+                borderRadius: '34% 66% 61% 39% / 62% 38% 63% 37%',
+                transform: 'translateY(-5px) rotate(-9deg) scale(1.06)',
+              },
+              '50%': {
+                borderRadius: '37% 63% 56% 44% / 55% 45% 55% 45%',
+                transform: 'translateY(-8px) rotate(-14deg) scale(1.03)',
+              },
+              '75%': {
+                borderRadius: '58% 42% 33% 67% / 41% 58% 43% 60%',
+                transform: 'translateY(-3px) rotate(-4deg) scale(1.05)',
+              },
+            },
+            '@media (prefers-reduced-motion: reduce)': { animation: 'none' },
           }} />
 
           <Typography sx={{
@@ -126,17 +175,18 @@ export function CourseListItem({ course }: CourseListItemProps) {
             lineHeight: '100px',
           }}>{course.code[1]}</Typography>
 
-
           <Stack sx={{ alignItems: 'flex-start', gap: 1, position: 'relative', zIndex: 1 }}>
             <Box sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 0.75,
               px: 1,
-              py: 0.25,
+              py: 0.5,
               borderRadius: '4px',
-              bgcolor: 'primary.main',
-              color: 'primary.contrastText',
-              opacity: 0.9,
+              bgcolor: 'rgba(0,94,255,0.1)',
             }}>
-              <Typography sx={{ fontSize: '0.75rem' }}>{levelLabel}</Typography>
+              <Typography sx={{ fontSize: '0.75rem', color: 'primary.main' }}>{levelLabel}</Typography>
+              <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: 'primary.main' }} />
             </Box>
             <Stack sx={{ alignItems: 'flex-start' }}>
               <Typography sx={{
@@ -164,19 +214,21 @@ export function CourseListItem({ course }: CourseListItemProps) {
             <Typography variant="h6">شروع مسیر</Typography>
 
             <Box sx={{ flex: 1 }} />
-            <Typography variant="body2" sx={{ color: "text.secondary" }}>
-              20 ساعت
-            </Typography>
+            <DurationBadge minutes={"15"} unit="hour" />
           </Stack>
 
-          <Typography variant="caption" sx={{ color: "text.secondary" }}>
+          <Typography variant="body2" sx={{ color: "text.secondary" }}>
             {course.description}
+          </Typography>
+
+          <Typography variant="body2" sx={{ color: "text.secondary" }}>
+            {course.coverId}
           </Typography>
 
         </Stack>
 
         {/* Stats */}
-        <Stack direction="row" sx={{ gap: 1.5, position: 'relative' }}>
+        <Stack direction="row" sx={{ gap: 1, position: 'relative' }}>
           {stats.map((stat) => (
             <Stack
               key={stat.label}
@@ -191,9 +243,9 @@ export function CourseListItem({ course }: CourseListItemProps) {
               }}
             >
               <Box sx={{
-                width: 40,
-                height: 40,
-                borderRadius: '50%',
+                width: 42,
+                height: 42,
+                borderRadius: 1,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -201,16 +253,10 @@ export function CourseListItem({ course }: CourseListItemProps) {
               }}>
                 <AppIcon sx={{ color: 'primary.main' }}>{stat.icon}</AppIcon>
               </Box>
-              <Typography sx={{
-                fontFamily: 'SpaceMono',
-                fontSize: '1.25rem',
-                fontWeight: 600,
-                color: theme.palette.mode === 'dark' ? '#e8ebf2' : '#122444',
+              <Typography variant="caption" sx={{
+                color: 'text.secondary',
               }}>
-                {stat.value}
-              </Typography>
-              <Typography sx={{ fontSize: '0.8rem', color: theme.palette.mode === 'dark' ? '#e8ebf2' : '#122444' }}>
-                {stat.label}
+                {stat.value}  {stat.label}
               </Typography>
 
             </Stack>
@@ -219,15 +265,8 @@ export function CourseListItem({ course }: CourseListItemProps) {
 
         <Stack spacing={2} sx={{ position: 'relative' }}>
           <Box sx={{
-            p: 1.5,
-            borderRadius: 2,
-            bgcolor: (t) => t.palette.mode === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)',
-            border: `1px solid ${theme.palette.divider}`,
           }}>
             <Stack spacing={1} sx={{ width: "100%" }}>
-              <Typography variant="caption" sx={{ color: "text.secondary", direction: "rtl", textAlign: "right" }}>
-                پیشرفت شما
-              </Typography>
               <Stack direction="row" sx={{ justifyContent: "space-between", alignItems: "center" }}>
                 <Typography variant="caption" sx={{ fontFamily: "SpaceMono", color: "text.secondary" }}>
                   {Math.round(progress)}%

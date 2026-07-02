@@ -77,7 +77,6 @@ export function DefaultHeader ({
         py: 1,
         px: 2,
         height: 60,
-        bgcolor: "background.surface",
       }}
     >
       <Grid container sx={{ width: "100%", alignItems: "center" }}>

@@ -35,6 +35,8 @@ import PersonAdd from '@mui/icons-material/PersonAddOutlined';
 import PlayArrow from '@mui/icons-material/PlayArrowOutlined';
 import Quiz from '@mui/icons-material/QuizOutlined';
 import RemoveCircle from '@mui/icons-material/RemoveCircleOutlined';
+import RocketLaunch from '@mui/icons-material/RocketLaunchOutlined';
+import Schedule from '@mui/icons-material/ScheduleOutlined';
 import School from '@mui/icons-material/SchoolOutlined';
 import Search from '@mui/icons-material/SearchOutlined';
 import SentimentDissatisfied from '@mui/icons-material/SentimentDissatisfiedOutlined';
@@ -88,6 +90,8 @@ const ICONS = {
   play_arrow: PlayArrow,
   quiz: Quiz,
   remove_circle: RemoveCircle,
+  rocket_launch: RocketLaunch,
+  schedule: Schedule,
   school: School,
   search: Search,
   sentiment_dissatisfied: SentimentDissatisfied,

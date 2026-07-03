@@ -4,7 +4,8 @@ import {
   Button,
   IconButton,
   Stack,
-  Typography
+  Typography,
+  useTheme
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
@@ -22,11 +23,11 @@ import { LeitnerBoxSettingsDrawer } from "./components/LeitnerBoxSettingsDrawer"
 
 const numberFormatter = new Intl.NumberFormat("en-US");
 
-function formatNumber (value: number): string {
+function formatNumber(value: number): string {
   return numberFormatter.format(value);
 }
 
-function getIntervalDays (value: string): number {
+function getIntervalDays(value: string): number {
   const dayPart = value.match(/^(-?\d+)\./);
   if (dayPart) {
     return Number(dayPart[1]);
@@ -44,7 +45,7 @@ function getIntervalDays (value: string): number {
   return Number(parts[0]);
 }
 
-function formatReviewInterval (value: string): string {
+function formatReviewInterval(value: string): string {
   const days = getIntervalDays(value);
 
   if (days <= 0) {
@@ -72,8 +73,9 @@ function formatReviewInterval (value: string): string {
   return `every ${days} days`;
 }
 
-export default function LeitnerBoxPage () {
+export default function LeitnerBoxPage() {
   const navigate = useNavigate();
+  const theme = useTheme();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const leitnerBoxQuery = useQuery({
@@ -101,33 +103,26 @@ export default function LeitnerBoxPage () {
   const dueItems = levels.reduce((sum, level) => sum + level.dueItemsCount, 0);
   const dueLevels = levels.filter((level) => level.dueItemsCount > 0);
   const firstDueLevel = dueLevels[0];
-  const levelProgress =
-    levels.length === 0
-      ? 0
-      : dueLevels.length / levels.length;
 
   return (
     <Scaffold
       header={<DefaultHeader header="لایتنر باکس" />}
     >
       <Stack dir="ltr" spacing={2.15} sx={{ width: "100%", mx: "auto" }}>
-        <Stack direction="row" sx={{ alignItems: "flex-start", gap: 1.5 }}>
+        <Stack direction="row" sx={{ alignItems: "flex-end", gap: 1.5 }}>
           <Box sx={{ minWidth: 0, flex: 1 }}>
             <Typography
-              component="h1"
+              component="h6"
               sx={{
-                fontSize: 30,
-                lineHeight: 1.1,
                 fontWeight: 700,
-                color: "text.primary",
               }}
             >
               Leitner box
             </Typography>
             <Typography
+              variant="caption"
               sx={{
                 mt: 0.5,
-                fontSize: 13.5,
                 color: "text.secondary",
               }}
             >
@@ -153,13 +148,9 @@ export default function LeitnerBoxPage () {
             position: "relative",
             overflow: "hidden",
             color: "common.white",
-            borderRadius: 3,
-            px: 2.5,
-            py: 2.6,
-            background:
-              "linear-gradient(135deg, #7A55E0 0%, #5B34C6 100%)",
-            boxShadow: (theme) =>
-              `0 16px 30px ${alpha(theme.palette.secondary.main, 0.32)}`,
+            borderRadius: 2,
+            p: 2,
+            bgcolor: 'primary.main',
           }}
         >
           <DotGrid zIndex={1} gap={20} opacity={0.1} color="white" />
@@ -168,113 +159,89 @@ export default function LeitnerBoxPage () {
             aria-hidden
             sx={{
               position: "absolute",
-              top: "50%",
-              right: 20,
-              transform: "translateY(-50%)",
-              width: 128,
-              height: 104,
+              top: 16,
+              left: 16,
+              width: 80,
+              height: 80,
               pointerEvents: "none",
             }}
           >
             <Box
               sx={{
                 position: "absolute",
-                top: 6,
-                right: 14,
-                width: 92,
-                height: 74,
-                borderRadius: 3,
-                bgcolor: alpha("#ffffff", 0.14),
+                top: 0,
+                right: 0,
+                width: 80,
+                height: 80,
+                borderRadius: 2,
+                bgcolor: alpha("#ffffff", 0.35),
+                backdropFilter: 'blur(20px)',
               }}
             />
+
             <Box
               sx={{
                 position: "absolute",
-                top: 22,
-                right: 0,
-                width: 110,
-                height: 78,
-                borderRadius: 3,
-                bgcolor: alpha("#ffffff", 0.22),
-                display: "grid",
-                placeItems: "center",
+                top: 8,
+                left: 8,
+                width: 80,
+                height: 80,
+                borderRadius: 2,
+                bgcolor: alpha("#ffffff", 0.35),
+                backdropFilter: 'blur(20px)',
+              }}
+            />
+
+            <Box
+              sx={{
+                position: "absolute",
+                top: 16,
+                left: 16,
+                width: 80,
+                height: 80,
+                borderRadius: 2,
+                bgcolor: alpha("#ffffff", 0.35),
+                backdropFilter: 'blur(20px)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'common.black'
               }}
             >
-              <Box
-                component="svg"
-                viewBox="0 0 24 24"
-                sx={{ width: 40, height: 40, fill: alpha("#ffffff", 0.7) }}
-              >
-                <path d="M12 2l2.9 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l7.1-1.01L12 2z" />
-              </Box>
+              Word
             </Box>
+
           </Box>
 
-          <Stack
-            spacing={1.4}
-            sx={{ position: "relative", zIndex: 2, maxWidth: "62%" }}
-          >
-            <Box>
+          <Stack spacing={1} >
+            <Stack direction='row' sx={{ gap: 1, alignItems: 'end' }}>
               <Typography
                 sx={{
-                  fontSize: 54,
+                  fontSize: 60,
                   lineHeight: 0.9,
-                  fontFamily: 'FredokaOne',
+                  fontFamily: 'Roboto',
                 }}
               >
                 {formatNumber(dueItems)}
               </Typography>
-              <Typography sx={{ mt: 0.8, fontSize: 18, fontWeight: 600 }}>
-                Cards due today
+              <Typography variant="body1" >
+                Cards<br />
+                due today
               </Typography>
-            </Box>
-
-            <Box>
-              <Box
-                sx={{
-                  height: 5,
-                  borderRadius: 999,
-                  bgcolor: alpha("#ffffff", 0.25),
-                  overflow: "hidden",
-                }}
-              >
-                <Box
-                  sx={{
-                    height: "100%",
-                    width: `${levelProgress * 100}%`,
-                    borderRadius: 999,
-                    bgcolor: "common.white",
-                    transition: "width 240ms ease",
-                  }}
-                />
-              </Box>
-              <Typography sx={{ mt: 0.9, fontSize: 13, opacity: 0.9 }}>
-                {formatNumber(dueLevels.length)} of{" "}
-                {formatNumber(levels.length)} levels
-              </Typography>
-            </Box>
+            </Stack>
 
             <Button
               disabled={!firstDueLevel}
-              endIcon={<AppIcon>arrow_forward</AppIcon>}
+              startIcon={<AppIcon>arrow_forward</AppIcon>}
               onClick={() => {
                 navigate(`/boxlevel/${firstDueLevel.id}`);
               }}
               sx={{
-                alignSelf: "flex-start",
-                direction: "ltr",
-                fontFamily: 'arial',
-                fontWeight: 700,
-                px: 2.25,
-                py: 1,
-                borderRadius: 2,
-                bgcolor: "common.white",
-                color: "secondary.main",
-                "&:hover": { bgcolor: alpha("#ffffff", 0.9) },
-                "&.Mui-disabled": {
-                  bgcolor: alpha("#ffffff", 0.4),
-                  color: alpha("#ffffff", 0.8),
-                },
+                direction: 'ltr',
+                width: 'fit-content',
+                bgcolor: 'white',
+                color: 'primary.main',
+                fontFamily: 'Roboto'
               }}
             >
               {firstDueLevel ? "Review now" : "All done"}
@@ -282,34 +249,20 @@ export default function LeitnerBoxPage () {
           </Stack>
         </Box>
 
-        <Stack spacing={1.15} sx={{ position: "relative" }}>
+        <Stack spacing={1} sx={{ position: "relative" }}>
           {levels.length === 0 ? (
             <EmptyList message="No words in your Leitner box yet. Saved vocabulary will appear here and be grouped by level." />
           ) : (
-            <>
-              <Box
-                aria-hidden
-                sx={{
-                  position: "absolute",
-                  left: 34,
-                  top: 34,
-                  bottom: 34,
-                  borderLeft: "2px dashed",
-                  borderColor: "divider",
-                  zIndex: 0,
-                }}
+            levels.map((level) => (
+              <BoxLevelCard
+                key={level.id}
+                levelId={level.id}
+                level={Number(level.level)}
+                totalItems={level.itemsCount}
+                readyToReview={level.dueItemsCount}
+                reviewInterval={formatReviewInterval(level.willReviewedIn)}
               />
-              {levels.map((level) => (
-                <BoxLevelCard
-                  key={level.id}
-                  levelId={level.id}
-                  level={Number(level.level)}
-                  totalItems={level.itemsCount}
-                  readyToReview={level.dueItemsCount}
-                  reviewInterval={formatReviewInterval(level.willReviewedIn)}
-                />
-              ))}
-            </>
+            ))
           )}
         </Stack>
       </Stack>

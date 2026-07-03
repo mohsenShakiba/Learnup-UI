@@ -13,15 +13,15 @@ type BoxLevelCardProps = {
 
 const numberFormatter = new Intl.NumberFormat("en-US");
 
-function formatNumber (value: number): string {
+function formatNumber(value: number): string {
   return numberFormatter.format(value);
 }
 
-function capitalize (value: string): string {
+function capitalize(value: string): string {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
-export function BoxLevelCard ({
+export function BoxLevelCard({
   levelId,
   level,
   totalItems,
@@ -50,21 +50,6 @@ export function BoxLevelCard ({
         borderRadius: 2,
         borderColor: "divider",
         bgcolor: "background.paper",
-        cursor: canReview ? "pointer" : "default",
-        boxShadow: (theme) =>
-          theme.palette.mode === "dark"
-            ? "0 8px 18px rgba(0, 0, 0, 0.28)"
-            : "0 2px 8px rgba(17, 24, 39, 0.06)",
-        transition: "transform 160ms ease, box-shadow 160ms ease",
-        "&:hover": canReview
-          ? {
-            transform: "translateY(-2px)",
-            boxShadow: (theme) =>
-              theme.palette.mode === "dark"
-                ? "0 12px 24px rgba(0, 0, 0, 0.36)"
-                : "0 8px 18px rgba(17, 24, 39, 0.1)",
-          }
-          : undefined,
       }}
     >
       <Stack direction="row" sx={{ alignItems: "center", gap: 1.6 }}>
@@ -93,12 +78,9 @@ export function BoxLevelCard ({
           >
             <Typography
               sx={{
-                fontSize: 14,
-                lineHeight: 1.1,
                 color: "text.primary",
                 whiteSpace: "nowrap",
-                fontWeight: 600,
-                fontFamily: 'arial',
+                fontFamily: 'Roboto',
               }}
             >
               Level {formattedLevel}

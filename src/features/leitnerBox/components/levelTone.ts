@@ -10,7 +10,7 @@ export type LevelTone = {
 export function getLevelTone(level: number, theme: Theme): LevelTone {
   if (level <= 5) {
     return {
-      color: theme.palette.warning.main,
+      color: '#fc8f30',
       softColor: alpha(theme.palette.warning.main, 0.14),
       status: "Learning",
     };
@@ -18,14 +18,14 @@ export function getLevelTone(level: number, theme: Theme): LevelTone {
 
   if (level <= 10) {
     return {
-      color: theme.palette.success.main,
+      color: '#31c48c',
       softColor: alpha(theme.palette.success.main, 0.14),
       status: "Reviewing",
     };
   }
 
   return {
-    color: theme.palette.primary.main,
+    color: '#246cc9',
     softColor: alpha(theme.palette.primary.main, 0.14),
     status: "Mastered",
   };

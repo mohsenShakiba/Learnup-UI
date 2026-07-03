@@ -12,7 +12,7 @@ const wave = keyframes`
   to { transform: translateX(-50%); }
 `;
 
-export function WaveProgress ({ value, size = 64, sx }: WaveProgressProps) {
+export function WaveProgress({ value, size = 64, sx }: WaveProgressProps) {
 
   const clamped = Math.min(100, Math.max(0, value));
   // Fill level rises from the bottom as value increases.
@@ -48,7 +48,7 @@ export function WaveProgress ({ value, size = 64, sx }: WaveProgressProps) {
           right: 0,
           bottom: 0,
           top: `${fillTop}%`,
-          backgroundColor: alpha(theme.palette.success.main, 1),
+          backgroundColor: alpha(theme.palette.primary.main, 1),
           transition: theme.transitions.create('top', {
             duration: theme.transitions.duration.standard,
           }),
@@ -70,7 +70,7 @@ export function WaveProgress ({ value, size = 64, sx }: WaveProgressProps) {
             left: 0,
             width: '200%',
             height: 10,
-            color: alpha(theme.palette.success.main, 1),
+            color: alpha(theme.palette.primary.main, 1),
             animation: `${wave} 2s linear infinite`,
           })}
         >

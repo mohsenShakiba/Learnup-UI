@@ -13,8 +13,8 @@ const CIRCLE_SIZE = 28;
 // matches the parent Stack `spacing={2}` (16px) so the line bridges the gap to the next circle
 const ITEM_GAP = 16;
 
-function LessonTimeline ({ completed, isLast }: { completed: boolean; isLast: boolean; }) {
-  const color = completed ? 'success.main' : 'warning.main';
+function LessonTimeline({ completed, isLast }: { completed: boolean; isLast: boolean; }) {
+  const color = completed ? 'success.main' : 'text.secondary';
   return (
     <Box sx={{
       position: 'relative',
@@ -34,12 +34,13 @@ function LessonTimeline ({ completed, isLast }: { completed: boolean; isLast: bo
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        opacity: completed ? 1 : 0.3,
         zIndex: 1,
       }}>
         {completed ? (
           <AppIcon sx={{ fontSize: 16, color: 'white' }}>check</AppIcon>
         ) : (
-          <AppIcon sx={{ fontSize: 16, color: 'warning.main' }}>hourglass</AppIcon>
+          <AppIcon sx={{ fontSize: 16, color: 'text.secondary' }}>hourglass</AppIcon>
         )}
       </Box>
       {!isLast && (
@@ -47,8 +48,9 @@ function LessonTimeline ({ completed, isLast }: { completed: boolean; isLast: bo
           position: 'absolute',
           top: CIRCLE_SIZE,
           bottom: -ITEM_GAP,
-          width: 2,
-          bgcolor: color,
+          borderLeft: '2px dashed ',
+          borderColor: color,
+          opacity: 0.3
         }} />
       )}
     </Box>
@@ -56,34 +58,26 @@ function LessonTimeline ({ completed, isLast }: { completed: boolean; isLast: bo
 }
 
 
-export function LessonListItem ({ lesson, isLast = false }: LessonListItemProps) {
+export function LessonListItem({ lesson, isLast = false }: LessonListItemProps) {
 
   const navigate = useNavigate();
   const navigateToLesson = () => {
     navigate(`/lessons/${lesson.id}`);
   };
 
-
   return (
     <Stack direction="row" spacing={1.5} sx={{ alignItems: 'stretch' }}>
-
-
       <ActionCard onClick={navigateToLesson} sx={{ flex: 1, borderRadius: 2 }}>
-
         <Stack spacing={1} sx={{ alignItems: 'flex-end' }}>
-          <Typography sx={{ px: 0.8, py: 0.4, bgcolor: 'secondary.main', color: 'white', borderRadius: 1, fontSize: '0.7rem', fontFamily: 'Roboto' }} >
+          <Typography variant='caption' sx={{ color: 'primary.main', fontFamily: 'Roboto' }} >
             Lesson {lesson.order}
           </Typography>
-          <Typography sx={{ color: 'text.secondary', direction: 'rtl' }}>
+          <Typography variant='body1' sx={{ direction: 'rtl' }}>
             {lesson.title}
           </Typography>
         </Stack>
-
       </ActionCard >
-
       <LessonTimeline completed={lesson.isCompleted} isLast={isLast} />
-
-
     </Stack>
   );
 }

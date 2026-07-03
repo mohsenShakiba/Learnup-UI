@@ -4,3 +4,7 @@
 [x] update the subscription page, make sure the subscription items designs are solid.
 [x] make the settings drawer swipable
 [x] can you make the appHeader and navbar to never move with the scroll in iphone
+[x] when opening a grammar page in LessonDetailPage, the grammar should be marked as completed using LessonService.OnLessonCompleted.
+[x] when opening a vocab page in LessonDetailPage, the grammar should be marked as completed using LessonService.OnLessonCompleted.
+[x] The TestsPage doesn't work in LessonDetailPage.
+[x] The TimelineColumn in LessonDetailPage should match the CourseDetailPage->LessonTimeline, in fact marge them together.

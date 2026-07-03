@@ -6,7 +6,6 @@ import { AppLoader } from "../../shared/components/AppLoader";
 import { DefaultHeader } from "../../shared/components/DefaultHeader";
 import { ErrorPage } from "../../shared/components/ErrorPage";
 import { Scaffold } from "../../shared/components/Scaffold";
-import { WaveProgress } from "../../shared/components/WaveProgress";
 import { LessonListItem } from "./components/LessonListItem";
 
 export default function CourseDetailPage () {
@@ -45,9 +44,7 @@ export default function CourseDetailPage () {
     <Scaffold
       header={
         <DefaultHeader header={`درس های ${course?.code}`}
-          children={
-            <WaveProgress value={40} size={40} />
-          } />
+        />
       }>
       <Stack>
         <Stack spacing={2}>

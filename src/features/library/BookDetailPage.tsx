@@ -1,8 +1,8 @@
 import { Box, IconButton, Stack, Typography, useTheme } from '@mui/material';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { AiService, BooksControllersService } from '../../api/Learnup';
+import { BooksControllersService } from '../../api/Learnup';
 import { BookManagarService, BookPageInfo } from '../../services/BookManagarService';
 import type { SentenceDetectionResult } from '../../services/SentenceDetection';
 import { AppIcon } from '../../shared/components/AppIcon';
@@ -21,9 +21,6 @@ export default function BookDetailPage () {
   const bookManagerRef = useRef<BookManagarService | null>(null);
   const [readerContainer, setReaderContainer] = useState<HTMLDivElement | null>(null);
   const [pageInfo, setPageInfo] = useState<BookPageInfo | null>(null);
-  const [selectedText, setSelectedText] = useState<SentenceDetectionResult | null>(null);
-  const [aiDrawerOpen, setAiDrawerOpen] = useState(false);
-  const drawerOpenedAtRef = useRef(0);
 
   const navigate = useNavigate();
   const { show, close } = useSwipeableDrawerStore();
@@ -37,14 +34,6 @@ export default function BookDetailPage () {
   });
 
   const book = booksQuery.data;
-  const {
-    mutate: sendAiText,
-    data: aiResult,
-    isPending: aiLoading,
-    isError: aiError,
-  } = useMutation({
-    mutationFn: AiService.postMobileAiProcess,
-  });
 
   // loading: wait for the book query as well as the reader revealing itself
   // (which only happens once the configured font has finished loading).
@@ -58,19 +47,8 @@ export default function BookDetailPage () {
   const bookManager = bookManagerRef.current;
 
   const handleWordSelect = useCallback((selection: SentenceDetectionResult) => {
-    setSelectedText(selection);
-    drawerOpenedAtRef.current = Date.now();
-    setAiDrawerOpen(true);
-    sendAiText(selection);
-  }, [sendAiText]);
-
-  // Ignore the ghost click/touch release that immediately follows opening the
-  // drawer via long-press, which would otherwise close it the instant the
-  // thumb lifts.
-  const handleDrawerClose = useCallback(() => {
-    if (Date.now() - drawerOpenedAtRef.current < 500) return;
-    setAiDrawerOpen(false);
-  }, []);
+    show(<ReaderTranslationDrawer selection={selection} />);
+  }, [show]);
 
   useEffect(() => {
     if (!readerContainer) return;
@@ -149,17 +127,6 @@ export default function BookDetailPage () {
         </Typography>
 
       </Box>
-
-      <ReaderTranslationDrawer
-        open={aiDrawerOpen}
-        onOpen={() => setAiDrawerOpen(true)}
-        onClose={handleDrawerClose}
-        word={selectedText?.word ?? ''}
-        sentence={selectedText?.sentence ?? ''}
-        loading={aiLoading}
-        error={aiError}
-        result={aiResult ?? null}
-      />
     </Box>
   );
 }

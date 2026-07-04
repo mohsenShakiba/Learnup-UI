@@ -4,26 +4,20 @@ import {
   Divider,
   IconButton,
   Stack,
-  SwipeableDrawer,
   Typography
 } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { LeitnerBoxService, SendAiTextResponse, VocabsService } from '../../../api/Learnup';
+import { AiService, LeitnerBoxService, SendAiTextResponse, VocabsService } from '../../../api/Learnup';
+import type { SentenceDetectionResult } from '../../../services/SentenceDetection';
 import { AppIcon } from '../../../shared/components/AppIcon';
 import { AppLoader } from '../../../shared/components/AppLoader';
 
 interface Props {
-  open: boolean;
-  onOpen: () => void;
-  onClose: () => void;
-  word: string;
-  sentence: string;
-  loading: boolean;
-  error: boolean;
-  result: SendAiTextResponse | null;
+  selection: SentenceDetectionResult;
 }
 
-function getTranslationText (
+function getTranslationText(
   result: SendAiTextResponse | null,
   camelCaseKey: keyof SendAiTextResponse,
   pascalCaseKey: string,
@@ -35,13 +29,20 @@ function getTranslationText (
 
 type BookmarkState = 'idle' | 'loading' | 'saved' | 'error';
 
-export function ReaderTranslationDrawer ({ open, onOpen, onClose, word, sentence, loading, error, result }: Props) {
+export function ReaderTranslationDrawer({ selection }: Props) {
+  const { word, sentence } = selection;
+  const { data: result = null, isPending: loading, isError: error } = useQuery({
+    queryKey: ['readerTranslation', word, sentence],
+    queryFn: () => AiService.postMobileAiProcess(selection),
+    refetchOnWindowFocus: false,
+    retry: false,
+  });
+
   const wordTranslation = getTranslationText(result, 'wordTranslation', 'WordTranslation');
   const sentenceTranslation = getTranslationText(result, 'sentenceTranslation', 'SentenceTranslation');
   const [bookmarkState, setBookmarkState] = useState<BookmarkState>('idle');
 
   const handleBookmark = async () => {
-    console.log('word 2', word, bookmarkState, bookmarkState);
     if (!word || bookmarkState === 'loading' || bookmarkState === 'saved') return;
     setBookmarkState('loading');
     try {
@@ -63,17 +64,7 @@ export function ReaderTranslationDrawer ({ open, onOpen, onClose, word, sentence
   };
 
   return (
-    <SwipeableDrawer
-      anchor="bottom"
-      open={open}
-      onOpen={onOpen}
-      onClose={onClose}
-      disableSwipeToOpen
-
-    >
-      <Box sx={{ width: 40, height: 4, borderRadius: 2, bgcolor: 'divider', mx: 'auto', my: 1.5 }} />
-
-      <Box sx={{ px: 2, pb: 3, overflowY: 'auto' }}>
+    <Box sx={{ px: 2, pb: 3 }}>
         {word && (
           <Stack direction="row" sx={{ alignItems: 'center', mb: 1, direction: 'rtl' }}>
             <Typography variant="h6" sx={{ fontWeight: 700, flex: 1 }}>
@@ -132,7 +123,6 @@ export function ReaderTranslationDrawer ({ open, onOpen, onClose, word, sentence
             </Stack>
           </Stack>
         )}
-      </Box>
-    </SwipeableDrawer>
+    </Box>
   );
 }

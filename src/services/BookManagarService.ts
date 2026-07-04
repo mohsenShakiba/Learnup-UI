@@ -46,11 +46,11 @@ export class BookManagarService {
 
   navItems: EpubNavItem[] = [];
 
-  public isReady (): boolean {
+  public isReady(): boolean {
     return !!this.bookData;
   }
 
-  public async display (
+  public async display(
     bookResponse: UserBookResponse,
     element: HTMLElement,
     theme: Theme,
@@ -141,13 +141,13 @@ export class BookManagarService {
     this.onWordSelect = null;
   };
 
-  private setupClickEvent () {
+  private setupClickEvent() {
 
     const view = this.view;
     if (view === null) return;
 
-    const LONG_PRESS_DURATION = 1000;
-    const MOVE_TOLERANCE = 10;
+    const LONG_PRESS_DURATION = 500;
+    const MOVE_TOLERANCE = 25;
 
     view.addEventListener('load', ((event: CustomEvent<FoliateLoadDetail>) => {
       const doc = event.detail.doc;
@@ -196,12 +196,12 @@ export class BookManagarService {
   // foliate creates one Overlayer per rendered section; find the one whose
   // document matches the section the long-press happened in, so highlights are
   // drawn into the correct overlay.
-  private getOverlayerForDoc (doc: Document): SectionOverlayer | null {
+  private getOverlayerForDoc(doc: Document): SectionOverlayer | null {
     const contents = this.view?.renderer?.getContents?.() ?? [];
     return contents.find((content) => content.doc === doc)?.overlayer ?? null;
   }
 
-  private setupRelocateEvent () {
+  private setupRelocateEvent() {
     const view = this.view;
     const bookResponse = this.bookResponse;
 
@@ -217,7 +217,7 @@ export class BookManagarService {
     }) as EventListener);
   }
 
-  private setupVisualPageEvent () {
+  private setupVisualPageEvent() {
     const renderer = this.view?.renderer;
     if (!renderer) return;
 
@@ -255,7 +255,7 @@ export class BookManagarService {
     });
   };
 
-  private scheduleProgressSave (bookId: number, location: SectionLocation): void {
+  private scheduleProgressSave(bookId: number, location: SectionLocation): void {
     if (!location.cfi) return;
 
     const progress = this.getLocationProgress(location);
@@ -279,7 +279,7 @@ export class BookManagarService {
     }, 1000);
   }
 
-  private emitPageInfo (): void {
+  private emitPageInfo(): void {
     if (!this.onPageInfoChange) return;
     const { currentPage, totalPages } = this.getPageCounts(this.currentLocation);
     this.onPageInfoChange({
@@ -290,7 +290,7 @@ export class BookManagarService {
     });
   }
 
-  private getPageCounts (location: SectionLocation | null): Pick<BookPageInfo, 'currentPage' | 'totalPages'> {
+  private getPageCounts(location: SectionLocation | null): Pick<BookPageInfo, 'currentPage' | 'totalPages'> {
     if (!location) {
       return { currentPage: null, totalPages: null };
     }
@@ -311,7 +311,7 @@ export class BookManagarService {
     return { currentPage: null, totalPages: null };
   }
 
-  private getVisualPageCounts (): Pick<BookPageInfo, 'currentPage' | 'totalPages'> {
+  private getVisualPageCounts(): Pick<BookPageInfo, 'currentPage' | 'totalPages'> {
     if (!this.visualPageLocation || !this.book?.sections?.length) {
       return { currentPage: null, totalPages: null };
     }
@@ -326,7 +326,7 @@ export class BookManagarService {
     };
   }
 
-  private getPageCountBeforeSection (sectionIndex: number): number {
+  private getPageCountBeforeSection(sectionIndex: number): number {
     let total = 0;
     for (let index = 0; index < sectionIndex; index += 1) {
       total += this.getSectionPageCount(index);
@@ -334,12 +334,12 @@ export class BookManagarService {
     return total;
   }
 
-  private getEstimatedTotalPageCount (): number {
+  private getEstimatedTotalPageCount(): number {
     const sections = this.book?.sections ?? [];
     return sections.reduce((total, _section, index) => total + this.getSectionPageCount(index), 0);
   }
 
-  private getSectionPageCount (sectionIndex: number): number {
+  private getSectionPageCount(sectionIndex: number): number {
     const knownCount = this.sectionPageCounts.get(sectionIndex);
     if (knownCount) return knownCount;
 
@@ -359,12 +359,12 @@ export class BookManagarService {
     return Math.max(1, Math.round((section?.size ?? 1500) * averagePagesPerSize));
   }
 
-  private getLocationProgress (location: SectionLocation | null): number {
+  private getLocationProgress(location: SectionLocation | null): number {
     if (location?.fraction == null) return 0;
     return Math.max(1, Math.min(100, Math.round(location.fraction * 100)));
   }
 
-  private setupReaderStyles (): void {
+  private setupReaderStyles(): void {
     const view = this.view;
     if (view === null) {
       return;
@@ -382,7 +382,7 @@ export class BookManagarService {
 
   // resolves once the configured reader font has finished loading in the
   // section document, so the book is only revealed with its final font applied.
-  private async waitForFontReady (doc: Document): Promise<void> {
+  private async waitForFontReady(doc: Document): Promise<void> {
     const fonts = (doc as Document & { fonts?: FontFaceSet; }).fonts;
     if (!fonts) return;
 
@@ -398,14 +398,14 @@ export class BookManagarService {
     }
   }
 
-  private applyConfigToDocument (document: Document, config: ReaderConfig): void {
+  private applyConfigToDocument(document: Document, config: ReaderConfig): void {
     const style = document.getElementById('learnup-reader-config') ?? document.createElement('style');
     style.id = 'learnup-reader-config';
     style.textContent = this.getReaderCss(config);
     document.head.appendChild(style);
   }
 
-  private applyConfig (config: ReaderConfig): void {
+  private applyConfig(config: ReaderConfig): void {
     const view = this.view;
     if (view === null) return;
     const css = this.getReaderCss(config);
@@ -416,7 +416,7 @@ export class BookManagarService {
     }
   }
 
-  private getReaderCss (config: ReaderConfig): string {
+  private getReaderCss(config: ReaderConfig): string {
     const fontFamily = JSON.stringify(config.fontFamily);
     const fontStack = `${fontFamily}, serif`;
     const fontSize = `${config.fontSize}px`;
@@ -468,7 +468,7 @@ export class BookManagarService {
   }
 
   // returns the current chapter title
-  private getCurrentSection () {
+  private getCurrentSection() {
     const currentHref = this.currentLocation?.tocItem?.href ?? '';
     const currentNav = this.navItems.find(n => hrefKey(n.href) === hrefKey(currentHref));
     if (this.currentLocation?.tocItem?.label) return this.currentLocation.tocItem.label;
@@ -477,11 +477,11 @@ export class BookManagarService {
 
 }
 
-function hrefKey (href: string): string {
+function hrefKey(href: string): string {
   return href.split('#')[0].split('/').pop() ?? href;
 }
 
-function getLastPageLabel (pageList: EpubNavItem[]): string | null {
+function getLastPageLabel(pageList: EpubNavItem[]): string | null {
   for (let i = pageList.length - 1; i >= 0; i -= 1) {
     const item = pageList[i];
     if (item.label) return item.label;

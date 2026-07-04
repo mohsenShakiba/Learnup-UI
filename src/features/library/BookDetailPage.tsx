@@ -110,6 +110,24 @@ export default function BookDetailPage () {
 
         <Box ref={setReaderContainer} sx={{ width: '100%', direction: 'rtl', position: 'fixed', left: 0, right: 0, top: 16, bottom: 8, }} />
 
+        {/* Invisible overlay covering the bottom 100px. It sits above the epub
+            iframe and swallows pointer/touch events so gestures in this area do
+            not reach (and scroll) the reader. */}
+        <Box
+          sx={{
+            position: 'fixed',
+            left: 0,
+            right: 0,
+            bottom: 0,
+            height: 100,
+            zIndex: 1,
+          }}
+          onClick={(e) => e.stopPropagation()}
+          onTouchStart={(e) => e.stopPropagation()}
+          onTouchMove={(e) => e.stopPropagation()}
+          onPointerDown={(e) => e.stopPropagation()}
+        />
+
         <Typography
           variant="caption"
           sx={{

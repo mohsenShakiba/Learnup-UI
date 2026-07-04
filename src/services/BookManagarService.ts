@@ -146,7 +146,7 @@ export class BookManagarService {
     const view = this.view;
     if (view === null) return;
 
-    const LONG_PRESS_DURATION = 1000;
+    const LONG_PRESS_DURATION = 500;
     const MOVE_TOLERANCE = 10;
 
     view.addEventListener('load', ((event: CustomEvent<FoliateLoadDetail>) => {
@@ -209,7 +209,6 @@ export class BookManagarService {
     if (bookResponse === null) return;
 
     view.addEventListener('relocate', ((event: CustomEvent<SectionLocation>) => {
-      console.log('relocate', event.detail);
       if (!event.detail?.cfi) return;
       this.currentLocation = event.detail;
       this.emitPageInfo();

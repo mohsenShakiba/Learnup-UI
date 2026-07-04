@@ -12,7 +12,7 @@ import { ReaderConfigDrawer } from './components/ReaderConfigDrawer';
 import { ReaderTranslationDrawer } from './components/ReaderTranslationDrawer';
 import { TableOfContentsDrawer } from './components/TableOfContentsDrawer';
 
-export default function BookDetailPage () {
+export default function BookDetailPage() {
 
   // book id
   const { bookId } = useParams<{ bookId: string; }>();

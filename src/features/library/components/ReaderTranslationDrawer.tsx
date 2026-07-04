@@ -65,64 +65,62 @@ export function ReaderTranslationDrawer({ selection }: Props) {
 
   return (
     <Box sx={{ px: 2, pb: 3 }}>
-        {word && (
-          <Stack direction="row" sx={{ alignItems: 'center', mb: 1, direction: 'rtl' }}>
-            <Typography variant="h6" sx={{ fontWeight: 700, flex: 1 }}>
-              {word}
-            </Typography>
-            {result != null && (
-              <IconButton onClick={() => void handleBookmark()} disabled={bookmarkState === 'loading'} size="small">
-                {bookmarkState === 'loading' ? (
-                  <CircularProgress size={18} />
-                ) : (
-                  <AppIcon sx={{ color: bookmarkState === 'saved' ? 'success.main' : bookmarkState === 'error' ? 'error.main' : 'text.secondary' }}>
-                    {bookmarkState === 'saved' ? 'bookmark' : 'bookmark_border'}
-                  </AppIcon>
-                )}
-              </IconButton>
-            )}
-          </Stack>
-        )}
-
-        {sentence && (
-          <>
-            <Typography variant="body2" sx={{ mb: 2, fontStyle: 'italic', direction: 'rtl' }}>
-              {sentence}
-            </Typography>
-            <Divider sx={{ mb: 2 }} />
-          </>
-        )}
-
-        {loading && (
-          <AppLoader fullHeight={false} />
-        )}
-
-        {!loading && error && (
-          <Typography variant="body2" color="error">
-            خطا در دریافت پاسخ. لطفاً دوباره تلاش کنید.
+      {word && (
+        <Stack direction="row" sx={{ alignItems: 'center', mb: 1, direction: 'rtl' }}>
+          <Typography variant="h6" sx={{ fontWeight: 700, flex: 1 }}>
+            {word}
           </Typography>
-        )}
+          {result != null && (
+            <IconButton
+              onClick={() => void handleBookmark()}
+              disabled={bookmarkState === 'loading'} size="small">
+              <AppIcon sx={{ color: bookmarkState === 'saved' ? 'success.main' : bookmarkState === 'error' ? 'error.main' : 'text.secondary' }}>
+                {bookmarkState === 'saved' ? 'bookmark' : 'bookmark_border'}
+              </AppIcon>
+            </IconButton>
+          )}
+        </Stack>
+      )}
 
-        {!loading && !error && result != null && (
-          <Stack spacing={2}>
-            <Stack >
-              <Typography variant='caption' sx={{ color: "text.secondary" }}>
-                ترجمه
-              </Typography>
-              <Typography sx={{ whiteSpace: 'pre-wrap' }}>
-                {wordTranslation || 'ترجمه‌ای دریافت نشد.'}
-              </Typography>
-            </Stack>
-            <Stack sx={{ flexWrap: 'wrap' }}>
-              <Typography variant='caption' sx={{ color: "text.secondary" }}>
-                ترجمه جمله
-              </Typography>
-              <Typography sx={{ whiteSpace: 'pre-wrap' }}>
-                {sentenceTranslation || 'ترجمه‌ای دریافت نشد.'}
-              </Typography>
-            </Stack>
+      {sentence && (
+        <>
+          <Typography variant="body2" sx={{ mb: 2, fontStyle: 'italic', direction: 'rtl' }}>
+            {sentence}
+          </Typography>
+          <Divider sx={{ mb: 2 }} />
+        </>
+      )}
+
+      {loading && (
+        <AppLoader fullHeight={false} />
+      )}
+
+      {!loading && error && (
+        <Typography variant="body2" color="error">
+          خطا در دریافت پاسخ. لطفاً دوباره تلاش کنید.
+        </Typography>
+      )}
+
+      {!loading && !error && result != null && (
+        <Stack spacing={2}>
+          <Stack >
+            <Typography variant='caption' sx={{ color: "text.secondary" }}>
+              ترجمه
+            </Typography>
+            <Typography sx={{ whiteSpace: 'pre-wrap' }}>
+              {wordTranslation || 'ترجمه‌ای دریافت نشد.'}
+            </Typography>
           </Stack>
-        )}
+          <Stack sx={{ flexWrap: 'wrap' }}>
+            <Typography variant='caption' sx={{ color: "text.secondary" }}>
+              ترجمه جمله
+            </Typography>
+            <Typography sx={{ whiteSpace: 'pre-wrap' }}>
+              {sentenceTranslation || 'ترجمه‌ای دریافت نشد.'}
+            </Typography>
+          </Stack>
+        </Stack>
+      )}
     </Box>
   );
 }

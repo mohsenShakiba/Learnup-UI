@@ -146,8 +146,8 @@ export class BookManagarService {
     const view = this.view;
     if (view === null) return;
 
-    const LONG_PRESS_DURATION = 500;
-    const MOVE_TOLERANCE = 25;
+    const LONG_PRESS_DURATION = 1000;
+    const MOVE_TOLERANCE = 10;
 
     view.addEventListener('load', ((event: CustomEvent<FoliateLoadDetail>) => {
       const doc = event.detail.doc;

@@ -33,7 +33,6 @@ export function TestListItem ({ tests, lessonId }: Props) {
                     icon='quiz'
                     label='Test'
                     durationMinutes={5}
-                    color='warning.main'
                 />
                 <Typography variant='body2' sx={{ color: 'text.secondary' }}>آزمون مروری گرامر و لغات</Typography>
             </Stack>

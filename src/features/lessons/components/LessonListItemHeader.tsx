@@ -6,14 +6,12 @@ type LessonListItemHeaderProps = {
     icon: string;
     label: string;
     durationMinutes: number | null | undefined;
-    color?: string;
 };
 
 export function LessonListItemHeader ({
     icon,
     label,
     durationMinutes,
-    color = 'primary.main',
 }: LessonListItemHeaderProps) {
     return (
         <Stack spacing={1} >
@@ -23,7 +21,7 @@ export function LessonListItemHeader ({
                     sx={{
                         gap: 1,
                         alignItems: 'center',
-                        color,
+                        color: 'primary.main',
                     }}
                 >
                     <AppIcon>{icon}</AppIcon>

@@ -11,6 +11,9 @@ export type CourseResponse = {
     description: string;
     order: number;
     totalLessonsCount: number;
+    totalStories: number;
+    totalGrammars: number;
+    totalVocabs: number;
     completedLessonsCount: number;
     languageId: number;
     coverId: string | null;

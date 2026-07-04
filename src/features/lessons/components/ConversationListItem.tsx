@@ -18,7 +18,7 @@ export function ConversationListItem ({ story, lessonId }: StoryListItemProps) {
     <ActionCard onClick={goToStory} sx={{ p: 2 }}>
       <Stack spacing={2}>
         <LessonListItemHeader
-          icon='auto_stories'
+          icon='conversation'
           label='Conversation'
           durationMinutes={story.duration}
         />

@@ -40,15 +40,15 @@ export function StoryControls () {
         position: 'fixed',
         bottom: 24,
         borderRadius: 2,
-        left: { xs: 24, md: 'auto' },
-        right: { xs: 24, md: '50%' },
+        left: 32,
+        right: 32,
         width: 'auto',
         px: 3,
         py: 1.5,
-        transform: { xs: 'none', md: 'translate(50%)' },
         border: '1px solid',
         borderColor: 'divider',
-        boxShadow: '0 0 10px rgba(0,0,0,0.15)',
+        bgcolor: 'background.paper',
+        boxShadow: '0 1px 1px rgba(0,0,0,0.15)',
         backdropFilter: 'blur(20px)'
       }}
     >

@@ -22,17 +22,6 @@ export const createLearnupTheme = (mode: PaletteMode) => {
         dark: '#392375',
         contrastText: '#ffffff',
       },
-      success: {
-        light: '#587a50',
-        main: '#587a50',
-        dark: '#587a50',
-      },
-      warning: {
-        main: '#ff7300',
-      },
-      error: {
-        main: '#dc2626',
-      },
       background: {
         default: sufaceBackground,
         paper: paperBackgorund,

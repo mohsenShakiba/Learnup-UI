@@ -28,7 +28,6 @@ export function GrammarListItem ({ grammar, lessonId }: Props) {
                     icon='menu_book'
                     label='Grammar'
                     durationMinutes={grammar.duration}
-                    color='secondary.main'
                 />
 
                 <Typography sx={{ lineHeight: '15px', fontSize: '1.1rem', direction: 'rtl' }}>{grammar.name}</Typography>

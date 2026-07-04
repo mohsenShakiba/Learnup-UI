@@ -8,8 +8,5 @@ export type LessonResponse = {
     title: string;
     order: number;
     courseId: number;
-    isStoryCompleted: boolean;
-    isGrammarCompleted: boolean;
-    isVocabCompleted: boolean;
-    readonly isCompleted: boolean;
+    isCompleted: boolean;
 };

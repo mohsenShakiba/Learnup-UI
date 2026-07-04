@@ -2,24 +2,14 @@ import type { SxProps, Theme } from "@mui/material";
 import { Box, LinearProgress, Stack, Typography, useTheme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import type { CourseResponse } from "../../../api/Learnup";
-import type { IconName } from "../../../shared/components/AppIcon";
 import { AppIcon } from "../../../shared/components/AppIcon";
 import { DotGrid } from "../../../shared/components/DotGrid";
-import { FancyButton } from "../../../shared/components/FancyButton";
 import { DurationBadge } from "../../../shared/components/DurationBadge";
+import { FancyButton } from "../../../shared/components/FancyButton";
 
 type CourseListItemProps = {
   course: CourseResponse;
   sx?: SxProps<Theme>;
-};
-
-const courseLevelLabels: Record<string, string> = {
-  A1: "سطح مبتدی",
-  A2: "سطح مبتدی",
-  B1: "سطح متوسط",
-  B2: "سطح متوسط",
-  C1: "سطح پیشرفته",
-  C2: "سطح پیشرفته",
 };
 
 const defaultCourseLevelLabel = "سطح مبتدی";
@@ -31,7 +21,7 @@ type CourseStat = {
   hint: string;
 };
 
-export function CourseListItem({ course }: CourseListItemProps) {
+export function CourseListItem ({ course }: CourseListItemProps) {
 
   const navigate = useNavigate();
   const theme = useTheme();
@@ -44,12 +34,10 @@ export function CourseListItem({ course }: CourseListItemProps) {
     navigate(`/courses/${course.id}`);
   };
 
-  const levelLabel = courseLevelLabels[course.code.toUpperCase()] ?? defaultCourseLevelLabel;
-
   const stats: CourseStat[] = [
-    { icon: "translate", value: course.totalLessonsCount, label: "کلمه", hint: "واژگان کلیدی" },
-    { icon: "book_ribbon", value: course.totalLessonsCount, label: "گرامر", hint: "ساختارهای کاربردی" },
-    { icon: "conversation", value: course.totalLessonsCount, label: "مکالمه", hint: "داستان‌های جذاب" },
+    { icon: "conversation", value: course.totalStories, label: "مکالمه", hint: "داستان‌های جذاب" },
+    { icon: "book_ribbon", value: course.totalGrammars, label: "گرامر", hint: "ساختارهای کاربردی" },
+    { icon: "translate", value: course.totalVocabs, label: "کلمه", hint: "واژگان کلیدی" },
   ];
 
   return (
@@ -185,7 +173,7 @@ export function CourseListItem({ course }: CourseListItemProps) {
               borderRadius: '4px',
               bgcolor: 'rgba(0,94,255,0.1)',
             }}>
-              <Typography sx={{ fontSize: '0.75rem', color: 'primary.main' }}>{levelLabel}</Typography>
+              <Typography sx={{ fontSize: '0.75rem', color: 'primary.main' }}>{course.slug}</Typography>
               <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: 'primary.main' }} />
             </Box>
             <Stack sx={{ alignItems: 'flex-start' }}>
@@ -210,7 +198,6 @@ export function CourseListItem({ course }: CourseListItemProps) {
         {/* Section heading + description */}
         <Stack direction="column" sx={{ gap: 1.5, position: 'relative' }}>
           <Stack direction="row" sx={{ alignItems: 'center', gap: 1 }}>
-            <AppIcon sx={{ color: 'primary.main' }}>rocket_launch</AppIcon>
             <Typography variant="h6">شروع مسیر</Typography>
 
             <Box sx={{ flex: 1 }} />
@@ -253,7 +240,7 @@ export function CourseListItem({ course }: CourseListItemProps) {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-                <AppIcon sx={{ color: 'text.secondary', opacity: 0.5 }}>{stat.icon}</AppIcon>
+                <AppIcon sx={{ color: 'primary.main' }}>{stat.icon}</AppIcon>
               </Box>
               <Typography variant="caption" sx={{
                 color: 'text.primary',

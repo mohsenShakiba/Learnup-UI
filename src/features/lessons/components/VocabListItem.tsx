@@ -25,7 +25,6 @@ export function VocabListItem ({ vocabs, lessonId }: Props) {
                     icon='translate'
                     label='Vocabulary'
                     durationMinutes={3}
-                    color='success.main'
                 />
 
                 <Typography variant='body2' sx={{ color: 'text.secondary' }}>مرور لغات استفاده شده در این درس</Typography>

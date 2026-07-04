@@ -18,7 +18,7 @@ type CompletionBoxProps = {
 function CompletionBox ({ label, icon, done }: CompletionBoxProps) {
   return (
     <AppIcon sx={{
-      bgcolor: done ? 'success.main' : 'rgba(125,125,125,0.30)',
+      bgcolor: done ? 'success.main' : 'rgba(125,125,125,0.50)',
       p: 0.5,
       lineHeight: '25px',
       borderRadius: 1,
@@ -48,23 +48,28 @@ export function ContinueCard ({ lesson }: Props) {
         {/* Lesson info */}
         <Box sx={{ display: 'flex', alignItems: 'start', gap: 1.5 }}>
 
-          <Stack>
-            <Typography variant="body1">
-              درس {lesson?.order}
-            </Typography>
-            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-              ادامه درس؟
-            </Typography>
+          <Stack spacing={0.5}>
+            <Typography variant='body2' sx={{}}>برای ادامه درس آماده اید؟</Typography>
+            <Stack direction='row' sx={{ gap: 0.5 }}>
+              <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                {lesson?.courseSlug}
+              </Typography>
+              <Typography variant="caption" sx={{ color: 'text.secondary' }}>-</Typography>
+              <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                درس {lesson?.order}
+              </Typography>
+            </Stack>
           </Stack>
+
 
           <Box sx={{ flex: 1 }} />
 
           {/* Completion boxes */}
           <Stack direction="row" spacing={1}>
-            <CompletionBox label="داستان" icon="menu_book" done={storyDone} />
-            <CompletionBox label="گرامر" icon="spellcheck" done={grammarDone} />
+            <CompletionBox label="داستان" icon="conversation" done={storyDone} />
+            <CompletionBox label="گرامر" icon="menu_book" done={grammarDone} />
             <CompletionBox label="لغات" icon="translate" done={vocabDone} />
-            <CompletionBox label="تست" icon="translate" done={vocabDone} />
+            <CompletionBox label="تست" icon="quiz" done={vocabDone} />
           </Stack>
         </Box>
 

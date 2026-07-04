@@ -9,6 +9,7 @@ export type CourseResponse = {
     slug: string;
     title: string;
     description: string;
+    brief: string;
     order: number;
     totalLessonsCount: number;
     totalStories: number;
@@ -16,6 +17,5 @@ export type CourseResponse = {
     totalVocabs: number;
     completedLessonsCount: number;
     languageId: number;
-    coverId: string | null;
     lastVisitedAt: string | null;
 };

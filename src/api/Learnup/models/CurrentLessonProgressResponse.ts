@@ -6,6 +6,8 @@
 export type CurrentLessonProgressResponse = {
     lessonId: number;
     title: string;
+    courseCode: string;
+    courseSlug: string;
     order: number;
     courseId: number;
     isStoryCompleted: boolean;

@@ -137,7 +137,7 @@ export function CourseListItem ({ course }: CourseListItemProps) {
           </Typography>
 
           <Typography variant="body2" sx={{ color: "text.secondary" }}>
-            {course.coverId}
+            {course.brief}
           </Typography>
 
         </Stack>

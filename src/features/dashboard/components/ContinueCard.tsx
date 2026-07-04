@@ -15,7 +15,7 @@ type CompletionBoxProps = {
   done: boolean;
 };
 
-function CompletionBox ({ label, icon, done }: CompletionBoxProps) {
+function CompletionBox({ label, icon, done }: CompletionBoxProps) {
   return (
     <AppIcon sx={{
       bgcolor: done ? 'success.main' : 'rgba(125,125,125,0.30)',
@@ -27,7 +27,7 @@ function CompletionBox ({ label, icon, done }: CompletionBoxProps) {
   );
 }
 
-export function ContinueCard ({ lesson }: Props) {
+export function ContinueCard({ lesson }: Props) {
   const navigate = useNavigate();
 
   const storyDone = lesson?.isStoryCompleted ?? false;
@@ -47,28 +47,13 @@ export function ContinueCard ({ lesson }: Props) {
 
         {/* Lesson info */}
         <Box sx={{ display: 'flex', alignItems: 'start', gap: 1.5 }}>
-          <Box
-            sx={{
-              fontSize: 26,
-              width: 40,
-              height: 40,
-              borderRadius: 1,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              background: 'rgba(0,0,0,0.2)',
-              flexShrink: 0,
-            }}
-          >
-            📖
-          </Box>
 
           <Stack>
             <Typography variant="body1">
-              {lesson ? `LESSON ${lesson.order}` : '...'}
+              درس {lesson?.order}
             </Typography>
             <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-              {lesson?.title ?? ''}
+              ادامه درس؟
             </Typography>
           </Stack>
 

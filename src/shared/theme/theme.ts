@@ -28,7 +28,7 @@ export const createLearnupTheme = (mode: PaletteMode) => {
         dark: '#587a50',
       },
       warning: {
-        main: '#d97706',
+        main: '#ff7300',
       },
       error: {
         main: '#dc2626',

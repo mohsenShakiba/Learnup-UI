@@ -228,16 +228,19 @@ export function CourseListItem({ course }: CourseListItemProps) {
         </Stack>
 
         {/* Stats */}
-        <Stack direction="row" sx={{ gap: 1, position: 'relative' }}>
+        <Stack direction="row" sx={{
+          justifyContent: 'space-between',
+          position: 'relative'
+        }}>
           {stats.map((stat) => (
             <Stack
               key={stat.label}
               sx={{
-                flex: 1,
+                aspectRatio: '1/1',
                 alignItems: 'center',
                 textAlign: 'center',
-                gap: 0.75,
                 p: 1.5,
+                bgcolor: (t) => t.palette.mode === 'dark' ? 'rgba(0,94,255,0.15)' : 'rgba(0,94,255,0.02)',
                 borderRadius: 2,
                 border: `1px solid ${theme.palette.divider}`,
               }}
@@ -249,12 +252,11 @@ export function CourseListItem({ course }: CourseListItemProps) {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                bgcolor: (t) => t.palette.mode === 'dark' ? 'rgba(0,94,255,0.15)' : 'rgba(0,94,255,0.08)',
               }}>
-                <AppIcon sx={{ color: 'primary.main' }}>{stat.icon}</AppIcon>
+                <AppIcon sx={{ color: 'text.secondary', opacity: 0.5 }}>{stat.icon}</AppIcon>
               </Box>
               <Typography variant="caption" sx={{
-                color: 'text.secondary',
+                color: 'text.primary',
               }}>
                 {stat.value}  {stat.label}
               </Typography>
@@ -268,11 +270,11 @@ export function CourseListItem({ course }: CourseListItemProps) {
           }}>
             <Stack spacing={1} sx={{ width: "100%" }}>
               <Stack direction="row" sx={{ justifyContent: "space-between", alignItems: "center" }}>
-                <Typography variant="caption" sx={{ fontFamily: "SpaceMono", color: "text.secondary" }}>
+                <Typography variant="caption" sx={{ fontFamily: "Roboto", color: "text.secondary" }}>
                   {Math.round(progress)}%
                 </Typography>
 
-                <Typography variant="caption" sx={{ fontFamily: "SpaceMono", color: "text.secondary", direction: "rtl", textAlign: "right" }}>
+                <Typography variant="caption" sx={{ fontFamily: "Roboto", color: "text.secondary", direction: "rtl", textAlign: "right" }}>
                   {course.completedLessonsCount} of {course.totalLessonsCount} lessons
                 </Typography>
               </Stack>

@@ -20,6 +20,9 @@ export default function CourseDetailPage () {
   const lessonsQuery = useQuery({
     queryKey: ["lessons", "course", courseIdNumber],
     queryFn: () => LessonsService.getLessonsByCourseId(courseIdNumber),
+    // Lesson completion changes elsewhere, so always refetch on mount to keep
+    // the list's progress state fresh.
+    refetchOnMount: "always",
   });
 
   if (courseQuery.isLoading || lessonsQuery.isLoading) {

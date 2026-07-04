@@ -23,7 +23,9 @@ export function useSectionCompleted (
 
     notifiedRef.current = true;
     LessonsService.onLessonSectionCompleted(lessonId, status)
-      .then(() => queryClient.invalidateQueries({ queryKey: ['lesson', lessonId] }))
+      .then(() => {
+        queryClient.invalidateQueries({ queryKey: ['lesson', lessonId] });
+      })
       .catch((err) => {
         console.error('Failed to report lesson section completion:', err);
       });

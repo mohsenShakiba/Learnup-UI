@@ -103,9 +103,9 @@ export class BookManagarService {
     view.renderer?.setAttribute('animated', '');
     this.setupVisualPageEvent();
 
+    console.log('ref', this.initialCfi);
+
     this.applyConfig(config);
-    // await view.init({ lastLocation: 'epubcfi(/6/14!/4/4[id70270868511660],/6/1:146,/12/3:22)', showTextStart: !this.initialCfi });
-    // await view.init({ lastLocation: 'epubcfi(/6/14!/4/4[id70270868511660],/6/1:146,/12/1:113)', showTextStart: !this.initialCfi });
     await view.init({ lastLocation: this.initialCfi, showTextStart: !this.initialCfi });
   }
 
@@ -123,7 +123,6 @@ export class BookManagarService {
     }
     const nextConfig = { ...(existingConfig), ...config };
     this.config = nextConfig;
-    console.log('config', this.config);
     saveReaderConfig(nextConfig);
     this.applyConfig(nextConfig);
   };
@@ -293,13 +292,11 @@ export class BookManagarService {
 
   private getPageCounts (location: SectionLocation | null): Pick<BookPageInfo, 'currentPage' | 'totalPages'> {
     if (!location) {
-      console.log('null1');
       return { currentPage: null, totalPages: null };
     }
 
     const visualPages = this.getVisualPageCounts();
     if (visualPages.currentPage !== null) {
-      console.log('null2');
       return visualPages;
     }
 

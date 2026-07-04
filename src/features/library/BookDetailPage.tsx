@@ -33,6 +33,7 @@ export default function BookDetailPage () {
   const booksQuery = useQuery({
     queryKey: ['userBook', parsedBookId],
     queryFn: () => BooksControllersService.getUserBookById(parsedBookId),
+    refetchOnMount: "always",
   });
 
   const book = booksQuery.data;

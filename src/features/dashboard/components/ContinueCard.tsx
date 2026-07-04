@@ -15,7 +15,7 @@ type CompletionBoxProps = {
   done: boolean;
 };
 
-function CompletionBox({ label, icon, done }: CompletionBoxProps) {
+function CompletionBox ({ label, icon, done }: CompletionBoxProps) {
   return (
     <AppIcon sx={{
       bgcolor: done ? 'success.main' : 'rgba(125,125,125,0.30)',
@@ -27,7 +27,7 @@ function CompletionBox({ label, icon, done }: CompletionBoxProps) {
   );
 }
 
-export function ContinueCard({ lesson }: Props) {
+export function ContinueCard ({ lesson }: Props) {
   const navigate = useNavigate();
 
   const storyDone = lesson?.isStoryCompleted ?? false;
@@ -64,6 +64,7 @@ export function ContinueCard({ lesson }: Props) {
             <CompletionBox label="داستان" icon="menu_book" done={storyDone} />
             <CompletionBox label="گرامر" icon="spellcheck" done={grammarDone} />
             <CompletionBox label="لغات" icon="translate" done={vocabDone} />
+            <CompletionBox label="تست" icon="translate" done={vocabDone} />
           </Stack>
         </Box>
 

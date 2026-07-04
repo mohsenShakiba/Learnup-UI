@@ -1,12 +1,12 @@
 import { Stack } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { StorySection } from '../../api/Learnup';
-import { useLesson } from '../lessons/hooks/useLesson';
-import { useSectionCompleted } from '../lessons/hooks/useSectionCompleted';
+import { UserLessonStatus } from '../../api/Learnup';
 import { AppLoader } from '../../shared/components/AppLoader';
 import { DefaultHeader } from '../../shared/components/DefaultHeader';
 import { ErrorPage } from '../../shared/components/ErrorPage';
 import { Scaffold } from '../../shared/components/Scaffold';
+import { useLesson } from '../lessons/hooks/useLesson';
+import { useSectionCompleted } from '../lessons/hooks/useSectionCompleted';
 import { StoryControls } from './components/StoryControls';
 import { StoryItem } from './components/StoryItem';
 import { StoryAudioProvider } from './hooks/useStoryAudio';
@@ -20,7 +20,7 @@ export default function StoryDetailPage () {
   const story = lessonQuery.data?.stories.find((item) => item.id === storyIdNumber);
   const storyItems = story?.items ?? [];
 
-  useSectionCompleted(lessonIdNumber, StorySection.STORY, story != null);
+  useSectionCompleted(lessonIdNumber, UserLessonStatus.STORY_COMPLETED, story != null);
 
   if (lessonQuery.isLoading) {
     return <AppLoader />;

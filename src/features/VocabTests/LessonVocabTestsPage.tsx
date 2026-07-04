@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import type { Swiper as SwiperType } from 'swiper';
 import 'swiper/css';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { StorySection, TestsService, TestType } from '../../api/Learnup';
+import { TestsService, TestType, UserLessonStatus } from '../../api/Learnup';
 import { AppLoader } from '../../shared/components/AppLoader';
 import { DefaultHeader } from '../../shared/components/DefaultHeader';
 import { ErrorPage } from '../../shared/components/ErrorPage';
@@ -68,7 +68,7 @@ export default function LessonVocabTestsPage () {
     [tests, answers],
   );
 
-  useSectionCompleted(lessonIdNumber, StorySection.VOCAB_TEST, isCompleted);
+  useSectionCompleted(lessonIdNumber, UserLessonStatus.TEST_COMPLETED, isCompleted);
 
   // Refetch when all tests answered in this session to transition to results screen
   useEffect(() => {

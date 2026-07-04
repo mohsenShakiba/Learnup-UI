@@ -5,7 +5,7 @@
 import type { CurrentLessonProgressResponse } from '../models/CurrentLessonProgressResponse';
 import type { LessonDetailResponse } from '../models/LessonDetailResponse';
 import type { LessonResponse } from '../models/LessonResponse';
-import type { StorySection } from '../models/StorySection';
+import type { UserLessonStatus } from '../models/UserLessonStatus';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -66,7 +66,7 @@ id: number,
      */
     public static onLessonSectionCompleted(
 id: number,
-section?: StorySection,
+section?: UserLessonStatus,
 ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',

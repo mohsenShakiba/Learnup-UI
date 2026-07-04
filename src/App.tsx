@@ -10,7 +10,6 @@ import ListCoursesPage from "./features/courses/ListCoursesPage";
 import DashboardPage from "./features/dashboard/DashboardPage";
 import GrammarDetailPage from "./features/grammar/pages/GrammarDetailPage";
 import ListGrammarPage from "./features/grammar/pages/ListGrammarPage";
-import LessonGrammarTestsPage from "./features/GrammarTests/LessonGrammarTestsPage";
 import BoxLevelReviewPage from "./features/leitnerBox/BoxLevelReviewPage";
 import LeitnerBoxPage from "./features/leitnerBox/LeitnerBoxPage";
 import LessonDetailPage from "./features/lessons/LessonDetailPage";
@@ -70,10 +69,6 @@ function AppLayout () {
             <Route
               path="/lessons/:id/vocab-tests"
               element={<LessonVocabTestsPage />}
-            />
-            <Route
-              path="/lessons/:id/grammar-tests"
-              element={<LessonGrammarTestsPage />}
             />
             <Route path="/vocab" element={<VocabSearchPage />} />
             <Route path="/leitner-box" element={<LeitnerBoxPage />} />

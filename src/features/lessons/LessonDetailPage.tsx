@@ -1,6 +1,5 @@
 import { Box, Button, Stack } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
-import { TestType } from "../../api/Learnup";
 import { AppIcon } from "../../shared/components/AppIcon";
 import { AppLoader } from "../../shared/components/AppLoader";
 import { DefaultHeader } from "../../shared/components/DefaultHeader";
@@ -29,23 +28,6 @@ export default function LessonDetailPage () {
   }
 
   const lesson = lessonQuery.data;
-  const hasVocabs = lesson.vocabs.length > 0;
-  const hasTests = lesson.tests.length > 0;
-  const hasGrammarTests = lesson.tests.some((test) => test.type === TestType.GRAMMAR);
-  const hasVocabTests = lesson.tests.some((test) => test.type === TestType.VOCAB);
-  const hasIncompleteGrammarTests = lesson.tests.some((test) => test.type === TestType.GRAMMAR && test.isCorrect === null);
-  const hasIncompleteVocabTests = lesson.tests.some((test) => test.type === TestType.VOCAB && test.isCorrect === null);
-  const testsCompleted =
-    (!hasGrammarTests || lesson.userLesson.isGrammarTestCompleted) &&
-    (!hasVocabTests || lesson.userLesson.isVocabTestCompleted) &&
-    !hasIncompleteGrammarTests &&
-    !hasIncompleteVocabTests;
-  const totalItems =
-    lesson.stories.length +
-    lesson.grammars.length +
-    (hasVocabs ? 1 : 0) +
-    (hasTests ? 1 : 0);
-  let itemIndex = 0;
 
   return (
     <Scaffold
@@ -55,8 +37,6 @@ export default function LessonDetailPage () {
       <Stack sx={{ height: "100%", gap: 2 }}>
         <Stack sx={{ flex: 1, gap: 2, overflowY: "auto" }}>
           {lesson.stories.map((story) => {
-            const isLast = itemIndex === totalItems - 1;
-            itemIndex++;
             return (
               <Stack
                 key={story.id}
@@ -67,14 +47,12 @@ export default function LessonDetailPage () {
                 <Box sx={{ flex: 1 }}>
                   <ConversationListItem story={story} lessonId={lesson.id} />
                 </Box>
-                <LessonTimeline completed={story.isCompleted} isLast={isLast} />
+                <LessonTimeline completed={lesson.userLesson.isStoryCompleted} isLast={false} />
               </Stack>
             );
           })}
 
           {lesson.grammars.map((grammar) => {
-            const isLast = itemIndex === totalItems - 1;
-            itemIndex++;
             return (
               <Stack
                 key={grammar.id}
@@ -85,28 +63,24 @@ export default function LessonDetailPage () {
                 <Box sx={{ flex: 1 }}>
                   <GrammarListItem grammar={grammar} lessonId={lesson.id} />
                 </Box>
-                <LessonTimeline completed={lesson.userLesson.isGrammarCompleted} isLast={isLast} />
+                <LessonTimeline completed={lesson.userLesson.isGrammarCompleted} isLast={false} />
               </Stack>
             );
           })}
 
-          {hasVocabs && (
-            <Stack direction="row" spacing={1.5} sx={{ alignItems: "stretch" }}>
-              <Box sx={{ flex: 1 }}>
-                <VocabListItem lessonId={lesson.id} vocabs={lesson.vocabs} />
-              </Box>
-              <LessonTimeline completed={lesson.userLesson.isVocabCompleted} isLast={!hasTests} />
-            </Stack>
-          )}
+          <Stack direction="row" spacing={1.5} sx={{ alignItems: "stretch" }}>
+            <Box sx={{ flex: 1 }}>
+              <VocabListItem lessonId={lesson.id} vocabs={lesson.vocabs} />
+            </Box>
+            <LessonTimeline completed={lesson.userLesson.isVocabCompleted} isLast={false} />
+          </Stack>
 
-          {hasTests && (
-            <Stack direction="row" spacing={1.5} sx={{ alignItems: "stretch" }}>
-              <Box sx={{ flex: 1 }}>
-                <TestListItem lessonId={lesson.id} tests={lesson.tests} />
-              </Box>
-              <LessonTimeline completed={testsCompleted} isLast={true} />
-            </Stack>
-          )}
+          <Stack direction="row" spacing={1.5} sx={{ alignItems: "stretch" }}>
+            <Box sx={{ flex: 1 }}>
+              <TestListItem lessonId={lesson.id} tests={lesson.tests} />
+            </Box>
+            <LessonTimeline completed={lesson.userLesson.isTestCompleted} isLast={true} />
+          </Stack>
         </Stack>
 
         {lesson.nextLessonId !== null && (

@@ -1,12 +1,12 @@
 import { Stack } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { StorySection } from '../../api/Learnup';
-import { useLesson } from '../lessons/hooks/useLesson';
-import { useSectionCompleted } from '../lessons/hooks/useSectionCompleted';
+import { UserLessonStatus } from '../../api/Learnup';
 import { AppLoader } from '../../shared/components/AppLoader';
 import { DefaultHeader } from '../../shared/components/DefaultHeader';
 import { ErrorPage } from '../../shared/components/ErrorPage';
 import { Scaffold } from '../../shared/components/Scaffold';
+import { useLesson } from '../lessons/hooks/useLesson';
+import { useSectionCompleted } from '../lessons/hooks/useSectionCompleted';
 import { VocabListItem } from './components/VocabListItem';
 
 export default function LessonVocabsPage () {
@@ -15,7 +15,7 @@ export default function LessonVocabsPage () {
 
   const lessonQuery = useLesson(lessonIdNumber);
 
-  useSectionCompleted(lessonIdNumber, StorySection.VOCAB, lessonQuery.data != null);
+  useSectionCompleted(lessonIdNumber, UserLessonStatus.VOCAB_COMPLETED, lessonQuery.data != null);
 
   if (lessonQuery.isLoading) {
     return <AppLoader />;

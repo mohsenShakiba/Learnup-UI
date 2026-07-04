@@ -3,8 +3,6 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { ImportGrammarRequest } from '../models/ImportGrammarRequest';
-import type { ImportLessonGrammarsResponse } from '../models/ImportLessonGrammarsResponse';
-import type { ImportVocabsResponse } from '../models/ImportVocabsResponse';
 import type { PlacementTestRequest } from '../models/PlacementTestRequest';
 import type { StoryRequest } from '../models/StoryRequest';
 
@@ -16,7 +14,7 @@ export class ImportService {
 
     /**
      * @param formData 
-     * @returns ImportVocabsResponse OK
+     * @returns number OK
      * @throws ApiError
      */
     public static importVocabs(
@@ -25,7 +23,7 @@ File?: Blob;
 LevelId?: number;
 LanguageId?: number;
 },
-): CancelablePromise<ImportVocabsResponse> {
+): CancelablePromise<number> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/Admin/Import/vocabs',
@@ -92,14 +90,14 @@ requestBody?: ImportGrammarRequest,
 
     /**
      * @param formData 
-     * @returns ImportLessonGrammarsResponse OK
+     * @returns number OK
      * @throws ApiError
      */
     public static importLessonGrammars(
 formData?: {
 File?: Blob;
 },
-): CancelablePromise<ImportLessonGrammarsResponse> {
+): CancelablePromise<number> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/Admin/Import/lesson-grammars',

@@ -11,5 +11,6 @@ export type CurrentLessonProgressResponse = {
     isStoryCompleted: boolean;
     isGrammarCompleted: boolean;
     isVocabCompleted: boolean;
+    isTestCompleted: boolean;
     nextLessonId: number | null;
 };

@@ -7,7 +7,6 @@ export enum UserLessonStatus {
     NONE = 0,
     STORY_COMPLETED = 1,
     GRAMMAR_COMPLETED = 2,
-    GRAMMAR_TEST_COMPLETED = 4,
-    VOCAB_COMPLETED = 8,
-    VOCAB_TEST_COMPLETED = 16,
+    VOCAB_COMPLETED = 4,
+    TEST_COMPLETED = 8,
 }

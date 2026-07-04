@@ -31,6 +31,20 @@ export default function ListCoursesPage () {
 
   const courses = coursesQuery.data ?? [];
 
+  const initialSlide = courses.reduce(
+    (bestIndex, course, index) => {
+      if (!course.lastVisitedAt) {
+        return bestIndex;
+      }
+      const best = courses[bestIndex]?.lastVisitedAt;
+      if (!best || course.lastVisitedAt > best) {
+        return index;
+      }
+      return bestIndex;
+    },
+    0,
+  );
+
   return (
     <Scaffold disablePadding header={<DefaultHeader header="لیست دوره ها" />}>
       <Box
@@ -42,9 +56,11 @@ export default function ListCoursesPage () {
           <Swiper
             direction="horizontal"
             slidesPerView={1}
+            initialSlide={initialSlide}
             style={{ flex: 1, width: "100%" }}
             onSwiper={(swiper) => {
               swiperRef.current = swiper;
+              setActiveIndex(swiper.activeIndex);
             }}
             onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
           >

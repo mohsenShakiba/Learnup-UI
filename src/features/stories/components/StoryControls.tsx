@@ -1,4 +1,4 @@
-import { Box, IconButton, Stack } from "@mui/material";
+import { Box, IconButton, Stack, useTheme } from "@mui/material";
 import { useState } from "react";
 import { AppIcon } from '../../../shared/components/AppIcon';
 import { useStoryAudio } from "../hooks/useStoryAudio";
@@ -19,6 +19,9 @@ export function StoryControls () {
     showTranslation,
     onToggleTranslation,
   } = useStoryAudio();
+
+  const theme = useTheme();
+  const isDark = theme.palette.mode === 'dark';
 
   const isPlaying = playbackStatus === 'playing';
   const [isSlowSpeed, setIsSlowSpeed] = useState(false);
@@ -48,7 +51,9 @@ export function StoryControls () {
         border: '1px solid',
         borderColor: 'divider',
         bgcolor: 'background.paper',
-        boxShadow: '0 1px 1px rgba(0,0,0,0.15)',
+        boxShadow: isDark
+          ? '0 8px 32px rgba(0,0,0,0.45)'
+          : '0 8px 32px rgba(0,0,0,0.12)',
         backdropFilter: 'blur(20px)'
       }}
     >

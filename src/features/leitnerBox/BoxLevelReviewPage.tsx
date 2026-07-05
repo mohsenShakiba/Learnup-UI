@@ -1,8 +1,13 @@
 import {
   Box,
   Button,
-  Icon,
+  Divider,
+  IconButton,
   LinearProgress,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
   Snackbar,
   Stack,
   Typography,
@@ -19,36 +24,50 @@ import { DefaultHeader } from "../../shared/components/DefaultHeader";
 import { EmptyList } from "../../shared/components/EmptyList";
 import { ErrorPage } from "../../shared/components/ErrorPage";
 import { FancyCard } from "../../shared/components/FancyCard";
+import { AppIcon } from "../../shared/components/AppIcon";
 import { Scaffold } from "../../shared/components/Scaffold";
 import { ReviewAnswerCard } from "./components/ReviewAnswerCard";
 import { ReviewQuestionCard } from "./components/ReviewQuestionCard";
 
-const qualityChoices = [
-  {
-    id: "again",
-    label: "دوباره",
-    color: "error" as const,
-    answerQuality: AnswerQuality.NO_IDEA,
-  },
-  {
-    id: "hard",
-    label: "سخت",
-    color: "warning" as const,
-    answerQuality: AnswerQuality.HARD,
-  },
-  {
-    id: "good",
-    label: "خوب",
-    color: "success" as const,
-    answerQuality: AnswerQuality.MILD,
-  },
-  {
-    id: "easy",
-    label: "ساده",
-    color: "info" as const,
-    answerQuality: AnswerQuality.PEACE_OF_CAKE,
-  },
-];
+type QualityChoice = {
+  id: string;
+  answerQuality: AnswerQuality;
+};
+
+// دکمه‌ی اصلی: پاسخ درست، واژه را به سطح بعد منتقل می‌کند.
+const advanceChoice: QualityChoice = {
+  id: "good",
+  answerQuality: AnswerQuality.MILD,
+};
+
+// گزینه‌های منو برای درجه‌بندی‌های دیگر.
+const menuQualityChoices: (QualityChoice & {
+  label: string;
+  icon: string;
+  color: string;
+})[] = [
+    {
+      id: "again",
+      label: "دوباره",
+      icon: "replay",
+      color: "error.main",
+      answerQuality: AnswerQuality.NO_IDEA,
+    },
+    {
+      id: "hard",
+      label: "سخت",
+      icon: "trending_down",
+      color: "warning.main",
+      answerQuality: AnswerQuality.HARD,
+    },
+    {
+      id: "easy",
+      label: "ساده",
+      icon: "bolt",
+      color: "info.main",
+      answerQuality: AnswerQuality.PEACE_OF_CAKE,
+    },
+  ];
 
 export default function BoxLevelReviewPage() {
   const navigate = useNavigate();
@@ -61,6 +80,7 @@ export default function BoxLevelReviewPage() {
   const [reviews, setReviews] = useState<Record<number, string>>({});
   const [removedCardIds, setRemovedCardIds] = useState<Set<number>>(new Set());
   const [showErrorMessage, setShowErrorMessage] = useState(false);
+  const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const swiperRef = useRef<SwiperType | null>(null);
 
   const dueCardsQuery = useQuery({
@@ -164,7 +184,7 @@ export default function BoxLevelReviewPage() {
     setIsAnswerVisible(false);
   }
 
-  function handleQualitySelect(choice: (typeof qualityChoices)[number]) {
+  function handleQualitySelect(choice: QualityChoice) {
     if (!activeCard) return;
 
     reviewMutation.mutate(
@@ -223,10 +243,27 @@ export default function BoxLevelReviewPage() {
     setIsAnswerVisible(false);
   }
 
+  // دکمه‌ی اصلی: ابتدا ترجمه را نشان می‌دهد، سپس واژه را به سطح بعد می‌برد.
+  function handleMainAction() {
+    if (!activeCard || reviewMutation.isPending || removeMutation.isPending)
+      return;
+
+    if (isAnswerVisible) {
+      handleQualitySelect(advanceChoice);
+    } else {
+      setIsAnswerVisible(true);
+    }
+  }
+
+  function handleMenuSelect(action: () => void) {
+    setMenuAnchor(null);
+    action();
+  }
+
   if (!Number.isFinite(boxLevelId) || boxLevelId <= 0) {
     return (
-      <Scaffold header={<DefaultHeader header="Box Level" />} maxWidth="sm">
-        <EmptyList message="Invalid box level." />
+      <Scaffold header={<DefaultHeader header="جعبه‌ی لایتنر" />} maxWidth="sm">
+        <EmptyList message="سطح انتخاب‌شده نامعتبر است." />
       </Scaffold>
     );
   }
@@ -249,154 +286,159 @@ export default function BoxLevelReviewPage() {
   return (
     <Scaffold
       header={
-        <DefaultHeader header={`Box Level ${levelNumber ?? boxLevelId}`} />
+        <DefaultHeader header={`سطح ${levelNumber ?? boxLevelId}`} />
       }
     >
       {totalCards === 0 ? (
-        <EmptyList message="No cards are due for review in this box level right now." />
+        <EmptyList message="در حال حاضر واژه‌ای برای مرور در این سطح وجود ندارد." />
       ) : isCompleted ? (
-        <FancyCard sx={{ borderRadius: 4, p: 2 }}>
-          <Stack spacing={2} sx={{ p: 3, textAlign: "center" }}>
+        <FancyCard sx={{ borderRadius: 2, p: 2 }}>
+          <Stack spacing={2} sx={{ p: 2, textAlign: "center" }}>
             <Typography variant="h6" sx={{ fontWeight: 700 }}>
-              Review completed
+              مرور این سطح کامل شد
             </Typography>
             <Typography color="text.secondary">
-              You reviewed {reviewedCount} card{reviewedCount === 1 ? "" : "s"}{" "}
-              in this box level.
+              شما {reviewedCount} واژه را در این سطح مرور کردید.
             </Typography>
             <Button
               variant="contained"
               onClick={() => navigate("/leitner-box")}
               sx={{ alignSelf: "center", borderRadius: 999 }}
             >
-              Back to Leitner Box
+              بازگشت به جعبه‌ی لایتنر
             </Button>
           </Stack>
         </FancyCard>
       ) : (
         <Stack
-          spacing={3}
+          spacing={1}
           sx={{
             height: "100%",
             justifyContent: "space-between",
           }}
         >
-          <Stack sx={{ flex: 1 }}>
-            <LinearProgress
-              variant="determinate"
-              value={
-                totalCards === 0
-                  ? 0
-                  : ((activeCardIndex + 1) / totalCards) * 100
+          <Swiper
+            direction="horizontal"
+            slidesPerView={1}
+            style={{ flex: 1, width: "100%" }}
+            allowTouchMove={!reviewMutation.isPending}
+            onSwiper={(swiper) => {
+              swiperRef.current = swiper;
+              setActiveCardIndex(swiper.activeIndex);
+            }}
+            onSlideChange={handleSlideChange}
+          >
+            {pendingCards.map((card, index) => {
+              const isActiveCard = index === safeActiveCardIndex;
+
+              return (
+                <SwiperSlide key={card.id}>
+                  <Box
+                    sx={{
+                      width: '100%',
+                      height: "100%",
+                      overflow: "hidden",
+                      boxSizing: "border-box",
+                    }}
+                    id={"test"}
+                  >
+                    {isActiveCard && isAnswerVisible ? (
+                      <ReviewAnswerCard
+                        card={card}
+                        isPending={reviewMutation.isPending}
+                        onHide={handleHideAnswer}
+                      />
+                    ) : (
+                      <ReviewQuestionCard
+                        card={card}
+                        isPending={reviewMutation.isPending}
+                        onReveal={handleReveal}
+                      />
+                    )}
+                  </Box>
+                </SwiperSlide>
+              );
+            })}
+          </Swiper>
+
+          <Stack
+            direction="row"
+            spacing={1}
+            sx={{ alignItems: "center" }}
+          >
+            <Button
+              variant="contained"
+              disabled={
+                !activeCard ||
+                reviewMutation.isPending ||
+                removeMutation.isPending
               }
-              sx={{ mb: 1.25, borderRadius: 999 }}
-            />
-            <Box sx={{ px: 2 }}>
-              <Typography variant="caption" color="text.secondary">
-                Card {safeActiveCardIndex + 1} of {pendingCards.length}
-                {reviewedCount > 0 ? ` - ${reviewedCount} reviewed` : ""}
-              </Typography>
-            </Box>
-            <Box
+              onClick={handleMainAction}
               sx={{
                 flex: 1,
-                display: "flex",
-                minWidth: 0,
-                overflow: "hidden",
+                borderRadius: 1,
               }}
             >
-              <Swiper
-                direction="horizontal"
-                slidesPerView={1}
-                allowTouchMove={!reviewMutation.isPending}
-                onSwiper={(swiper) => {
-                  swiperRef.current = swiper;
-                  setActiveCardIndex(swiper.activeIndex);
-                }}
-                onSlideChange={handleSlideChange}
-              >
-                {pendingCards.map((card, index) => {
-                  const isActiveCard = index === safeActiveCardIndex;
+              {isAnswerVisible ? "انتقال به سطح بعد" : "نمایش ترجمه"}
+            </Button>
 
-                  return (
-                    <SwiperSlide key={card.id}>
-                      <Box
-                        sx={{
-                          height: "100%",
-                          overflow: "hidden",
-                          pt: 1,
-                          boxSizing: "border-box",
-                        }}
-                        id={"test"}
-                      >
-                        {isActiveCard && isAnswerVisible ? (
-                          <Stack
-                            sx={{
-                              flexDirection: "column",
-                              height: "100%",
-                              gap: 2,
-                            }}
-                          >
-                            <ReviewAnswerCard
-                              card={card}
-                              isPending={reviewMutation.isPending}
-                              onHide={handleHideAnswer}
-                            />
+            <IconButton
+              aria-label="گزینه‌های بیشتر"
+              disabled={
+                !activeCard ||
+                reviewMutation.isPending ||
+                removeMutation.isPending
+              }
+              onClick={(event) => setMenuAnchor(event.currentTarget)}
+              sx={{
+                border: "1px solid",
+                borderColor: "divider",
+                borderRadius: 1,
+              }}
+            >
+              <AppIcon>more_vert</AppIcon>
+            </IconButton>
 
-                            <Stack spacing={1.5} sx={{ mt: "auto" }}>
-                              <Stack
-                                direction="row"
-                                spacing={1}
-                                sx={{ width: "100%" }}
-                              >
-                                {qualityChoices.map((choice) => (
-                                  <Button
-                                    key={choice.id}
-                                    variant="contained"
-                                    color={choice.color}
-                                    disabled={
-                                      reviewMutation.isPending ||
-                                      removeMutation.isPending
-                                    }
-                                    onClick={() => handleQualitySelect(choice)}
-                                    sx={{
-                                      flex: 1,
-                                      minWidth: 0,
-                                      borderRadius: 999,
-                                    }}
-                                  >
-                                    {choice.label}
-                                  </Button>
-                                ))}
-                              </Stack>
-                              <Button
-                                variant="text"
-                                color="error"
-                                startIcon={<Icon>delete_outline</Icon>}
-                                disabled={
-                                  reviewMutation.isPending ||
-                                  removeMutation.isPending
-                                }
-                                onClick={handleRemove}
-                                sx={{ alignSelf: "center", borderRadius: 999 }}
-                              >
-                                حذف از جعبه
-                              </Button>
-                            </Stack>
-                          </Stack>
-                        ) : (
-                          <ReviewQuestionCard
-                            card={card}
-                            isPending={reviewMutation.isPending}
-                            onReveal={handleReveal}
-                          />
-                        )}
-                      </Box>
-                    </SwiperSlide>
-                  );
-                })}
-              </Swiper>
-            </Box>
+            <Menu
+              anchorEl={menuAnchor}
+              open={Boolean(menuAnchor)}
+              onClose={() => setMenuAnchor(null)}
+              anchorOrigin={{ vertical: "top", horizontal: "right" }}
+              transformOrigin={{ vertical: "bottom", horizontal: "right" }}
+              slotProps={{
+                list: { dense: true },
+                paper: { sx: { minWidth: 180, borderRadius: 2 } },
+              }}
+            >
+              {menuQualityChoices.map((choice) => (
+                <MenuItem
+                  key={choice.id}
+                  onClick={() =>
+                    handleMenuSelect(() => handleQualitySelect(choice))
+                  }
+                >
+                  <ListItemIcon sx={{ minWidth: 32 }}>
+                    <AppIcon sx={{ color: choice.color, fontSize: 20 }}>
+                      {choice.icon}
+                    </AppIcon>
+                  </ListItemIcon>
+                  <ListItemText>{choice.label}</ListItemText>
+                </MenuItem>
+              ))}
+
+              <Divider />
+
+              <MenuItem onClick={() => handleMenuSelect(handleRemove)}>
+                <ListItemIcon sx={{ minWidth: 32 }}>
+                  <AppIcon sx={{ color: "error.main", fontSize: 20 }}>
+                    delete
+                  </AppIcon>
+                </ListItemIcon>
+                <ListItemText sx={{ color: "error.main" }}>
+                  حذف از جعبه
+                </ListItemText>
+              </MenuItem>
+            </Menu>
           </Stack>
         </Stack>
       )}
@@ -405,7 +447,7 @@ export default function BoxLevelReviewPage() {
         open={showErrorMessage}
         autoHideDuration={4000}
         onClose={() => setShowErrorMessage(false)}
-        message="Failed to submit review."
+        message="ثبت مرور با خطا مواجه شد."
       />
     </Scaffold>
   );

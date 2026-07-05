@@ -7,6 +7,7 @@ import Add from '@mui/icons-material/AddOutlined';
 import ArrowBack from '@mui/icons-material/ArrowBackOutlined';
 import ArrowForward from '@mui/icons-material/ArrowForwardOutlined';
 import AutoStories from '@mui/icons-material/AutoStoriesOutlined';
+import Bolt from '@mui/icons-material/BoltOutlined';
 import BookmarkBorder from '@mui/icons-material/BookmarkBorderOutlined';
 import Bookmark from '@mui/icons-material/BookmarkOutlined';
 import ChatBubble from '@mui/icons-material/ChatBubbleOutlineOutlined';
@@ -31,12 +32,14 @@ import Menu from '@mui/icons-material/MenuOutlined';
 import MicNone from '@mui/icons-material/MicNoneOutlined';
 import Mic from '@mui/icons-material/MicOutlined';
 import MoreHoriz from '@mui/icons-material/MoreHorizOutlined';
+import MoreVert from '@mui/icons-material/MoreVertOutlined';
 import Notes from '@mui/icons-material/NotesOutlined';
 import Pause from '@mui/icons-material/PauseOutlined';
 import PersonAdd from '@mui/icons-material/PersonAddOutlined';
 import PlayArrow from '@mui/icons-material/PlayArrowOutlined';
 import Quiz from '@mui/icons-material/QuizOutlined';
 import RemoveCircle from '@mui/icons-material/RemoveCircleOutlined';
+import Replay from '@mui/icons-material/ReplayOutlined';
 import RocketLaunch from '@mui/icons-material/RocketLaunchOutlined';
 import Schedule from '@mui/icons-material/ScheduleOutlined';
 import School from '@mui/icons-material/SchoolOutlined';
@@ -47,6 +50,7 @@ import Speed from '@mui/icons-material/SpeedOutlined';
 import Spellcheck from '@mui/icons-material/SpellcheckOutlined';
 import Timer from '@mui/icons-material/TimerOutlined';
 import Translate from '@mui/icons-material/TranslateOutlined';
+import TrendingDown from '@mui/icons-material/TrendingDownOutlined';
 import UploadFile from '@mui/icons-material/UploadFileOutlined';
 import VolumeUp from '@mui/icons-material/VolumeUpOutlined';
 import WorkspacePremium from '@mui/icons-material/WorkspacePremiumOutlined';
@@ -64,6 +68,7 @@ const ICONS = {
   arrow_backward: ArrowBack,
   arrow_forward: ArrowForward,
   auto_stories: AutoStories,
+  bolt: Bolt,
   book_ribbon: MenuBook,
   bookmark: Bookmark,
   bookmark_border: BookmarkBorder,
@@ -89,12 +94,14 @@ const ICONS = {
   mic: Mic,
   mic_none: MicNone,
   more_horiz: MoreHoriz,
+  more_vert: MoreVert,
   notes: Notes,
   pause: Pause,
   person_add: PersonAdd,
   play_arrow: PlayArrow,
   quiz: Quiz,
   remove_circle: RemoveCircle,
+  replay: Replay,
   rocket_launch: RocketLaunch,
   schedule: Schedule,
   school: School,
@@ -105,6 +112,7 @@ const ICONS = {
   spellcheck: Spellcheck,
   timer: Timer,
   translate: Translate,
+  trending_down: TrendingDown,
   upload_file: UploadFile,
   volume_up: VolumeUp,
   workspace_premium: WorkspacePremium,

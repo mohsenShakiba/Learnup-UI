@@ -14,10 +14,10 @@ import { VocabPlayButton } from "../../vocabs/components/VocabPlayButton";
 
 const VOCAB_TYPE_LABELS: Record<VocabType, string> = {
   [VocabType.UNKNOWN]: "",
-  [VocabType.NOUN]: "noun",
-  [VocabType.VERB]: "verb",
-  [VocabType.ADJECTIVE]: "adjective",
-  [VocabType.ADVERB]: "adverb",
+  [VocabType.NOUN]: "اسم",
+  [VocabType.VERB]: "فعل",
+  [VocabType.ADJECTIVE]: "صفت",
+  [VocabType.ADVERB]: "قید",
 };
 
 const VOCAB_TYPE_COLORS: Record<
@@ -93,16 +93,15 @@ export function ReviewAnswerCard({
       onClick={onHide}
       sx={{
         height: "100%",
-        borderRadius: 4,
+        borderRadius: 1,
         cursor: isPending ? "progress" : "pointer",
-        mt: 1,
         p: 2,
       }}
     >
-      <Stack spacing={2.25} sx={{ minHeight: 280 }}>
+      <Stack spacing={2.25}>
         <Stack spacing={1.2} sx={{ textAlign: "center", alignItems: "center" }}>
           <Typography variant="overline" color="text.secondary">
-            Answer
+            ترجمه
           </Typography>
           {card.voiceId && (
             <Box onClick={(event) => event.stopPropagation()}>
@@ -110,7 +109,7 @@ export function ReviewAnswerCard({
             </Box>
           )}
           <Typography variant="h4" sx={{ fontWeight: 800 }}>
-            {card.translation || "No translation available"}
+            {card.translation || "ترجمه‌ای موجود نیست"}
           </Typography>
           <Typography color="text.secondary" sx={{ fontWeight: 700 }}>
             {card.word}
@@ -122,7 +121,7 @@ export function ReviewAnswerCard({
         {hasDetails ? (
           <Stack spacing={1.25}>
             {card.description?.trim() && (
-              <DetailBlock icon="notes" label="Meaning" direction="rtl">
+              <DetailBlock icon="notes" label="معنی" direction="rtl">
                 {card.description}
               </DetailBlock>
             )}
@@ -234,7 +233,7 @@ export function ReviewAnswerCard({
               bgcolor: "background.default",
             }}
           >
-            <Typography>No extra details for this word.</Typography>
+            <Typography>جزئیات بیشتری برای این واژه موجود نیست.</Typography>
           </Box>
         )}
 
@@ -242,7 +241,7 @@ export function ReviewAnswerCard({
           variant="caption"
           sx={{ mt: "auto", color: "text.secondary", textAlign: "center" }}
         >
-          Choose how well you remembered it.
+          برای ادامه، از دکمه‌ی پایین استفاده کنید.
         </Typography>
       </Stack>
     </Card>

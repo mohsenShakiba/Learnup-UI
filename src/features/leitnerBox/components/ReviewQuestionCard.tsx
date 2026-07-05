@@ -18,7 +18,7 @@ export function ReviewQuestionCard({
       sx={{
         height: "100%",
         boxSizing: "border-box",
-        borderRadius: 4,
+        borderRadius: 1,
         cursor: isPending ? "progress" : "pointer",
         p: 2,
         display: "flex",
@@ -30,22 +30,16 @@ export function ReviewQuestionCard({
         spacing={3}
         sx={{
           height: "100%",
-          minHeight: 280,
           justifyContent: "center",
           alignItems: "center",
           textAlign: "center",
         }}
       >
-        <Typography variant="overline" color="text.secondary">
-          Word
+        <Typography variant="caption" sx={{ color: "text.secondary" }}>
+          واژه
         </Typography>
-
-        <Typography variant="h4" sx={{ fontWeight: 800 }}>
+        <Typography variant="h4" sx={{ fontWeight: 600, textTransform: 'capitalize' }}>
           {card.word}
-        </Typography>
-
-        <Typography sx={{ direction: "rtl" }} color="text.secondary">
-          Tap the card to reveal the answer.
         </Typography>
       </Stack>
     </Card>

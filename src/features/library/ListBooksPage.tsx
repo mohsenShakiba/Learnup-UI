@@ -1,7 +1,8 @@
 import { Box, Button, Stack, Typography } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { BooksControllersService } from '../../api/Learnup';
+import type { UserBookResponse } from '../../api/Learnup';
 import { AppIcon } from '../../shared/components/AppIcon';
 import { AppLoader } from '../../shared/components/AppLoader';
 import { DefaultHeader } from '../../shared/components/DefaultHeader';
@@ -10,11 +11,25 @@ import { BookListItem } from './components/BookListItem';
 
 export default function ListBooksPage () {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const booksQuery = useQuery({
     queryKey: ['userBooks'],
     queryFn: () => BooksControllersService.getUserBooks(),
   });
+
+  const removeMutation = useMutation({
+    mutationFn: (id: number) => BooksControllersService.deleteUserBook(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['userBooks'] });
+    },
+  });
+
+  const handleRemove = (book: UserBookResponse) => {
+    if (book.id == null) return;
+    if (!window.confirm(`آیا از حذف «${book.title}» مطمئن هستید؟`)) return;
+    removeMutation.mutate(book.id);
+  };
 
   if (booksQuery.isLoading || booksQuery.isFetching) {
     return <AppLoader />;
@@ -58,6 +73,7 @@ export default function ListBooksPage () {
                 key={book.id}
                 book={book}
                 onClick={(b) => navigate(`/library/book/${b.id}`)}
+                onRemove={handleRemove}
               />
             ))}
           </Box>

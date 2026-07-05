@@ -18,6 +18,7 @@ import ClosedCaption from '@mui/icons-material/ClosedCaptionOutlined';
 import Close from '@mui/icons-material/CloseOutlined';
 import DarkMode from '@mui/icons-material/DarkModeOutlined';
 import Dashboard from '@mui/icons-material/DashboardOutlined';
+import Delete from '@mui/icons-material/DeleteOutlined';
 import Edit from '@mui/icons-material/EditOutlined';
 import Forum from '@mui/icons-material/ForumOutlined';
 import HourglassEmpty from '@mui/icons-material/HourglassEmptyOutlined';
@@ -76,6 +77,7 @@ const ICONS = {
   conversation: Forum,
   dark_mode: DarkMode,
   dashboard: Dashboard,
+  delete: Delete,
   edit: Edit,
   hourglass: HourglassEmpty,
   layers: Layers,

@@ -61,6 +61,23 @@ export class BooksControllersService {
 
     /**
      * @param id
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static deleteUserBook(
+        id: number,
+    ): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/Mobile/BooksControllers/{id}',
+            path: {
+                'id': id,
+            },
+        });
+    }
+
+    /**
+     * @param id
      * @param requestBody
      * @returns any OK
      * @throws ApiError

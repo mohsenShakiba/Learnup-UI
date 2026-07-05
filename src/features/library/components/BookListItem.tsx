@@ -1,4 +1,4 @@
-import { Box, IconButton, Paper, Stack, Typography } from '@mui/material';
+import { Box, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import type { UserBookResponse } from '../../../api/Learnup';
 import { getFileById } from '../../../services/fetchFile';
@@ -7,10 +7,12 @@ import { AppIcon } from '../../../shared/components/AppIcon';
 interface BookListItemProps {
   book: UserBookResponse;
   onClick?: (book: UserBookResponse) => void;
+  onRemove?: (book: UserBookResponse) => void;
 }
 
-export function BookListItem ({ book, onClick }: BookListItemProps) {
+export function BookListItem({ book, onClick, onRemove }: BookListItemProps) {
   const [coverUrl, setCoverUrl] = useState<string | null>(null);
+  const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
     if (!book.coverId) {
@@ -94,8 +96,6 @@ export function BookListItem ({ book, onClick }: BookListItemProps) {
           </Stack>
         )}
 
-
-
       </Box>
 
       <Stack spacing={1} direction='row' sx={{ px: 1, alignItems: 'center', }}>
@@ -103,10 +103,44 @@ export function BookListItem ({ book, onClick }: BookListItemProps) {
           {Math.round(book.progress ?? 0)}%
         </Typography>
         <Box sx={{ flex: 1 }} />
-        <IconButton size='small' >
+        <IconButton
+          size='small'
+          onClick={(e) => {
+            e.stopPropagation();
+            setMenuAnchor(e.currentTarget);
+          }}
+        >
           <AppIcon >more_horiz</AppIcon>
         </IconButton>
       </Stack>
+
+      <Menu
+        anchorEl={menuAnchor}
+        open={Boolean(menuAnchor)}
+        onClose={(e) => {
+          (e as React.MouseEvent).stopPropagation?.();
+          setMenuAnchor(null);
+        }}
+        onClick={(e) => e.stopPropagation()}
+        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+        slotProps={{ list: { sx: { py: 0 } } }}
+      >
+        <MenuItem
+          dense
+          onClick={(e) => {
+            e.stopPropagation();
+            setMenuAnchor(null);
+            onRemove?.(book);
+          }}
+          sx={{ color: 'error.main', gap: 1 }}
+        >
+          <ListItemIcon sx={{ color: 'inherit', minWidth: 'auto' }}>
+            <AppIcon fontSize='small'>delete</AppIcon>
+          </ListItemIcon>
+          <ListItemText slotProps={{ primary: { variant: 'body2' } }}>حذف کتاب</ListItemText>
+        </MenuItem>
+      </Menu>
 
     </Paper>
   );

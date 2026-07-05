@@ -324,7 +324,6 @@ export default function BoxLevelReviewPage() {
                         sx={{
                           height: "100%",
                           overflow: "hidden",
-                          p: 2,
                           pt: 1,
                           boxSizing: "border-box",
                         }}

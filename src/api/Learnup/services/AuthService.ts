@@ -15,13 +15,13 @@ import { request as __request } from '../core/request';
 export class AuthService {
 
     /**
-     * @param requestBody 
+     * @param requestBody
      * @returns SendOtpResponse OK
      * @throws ApiError
      */
     public static sendOtp(
-requestBody?: SendOtpRequest,
-): CancelablePromise<SendOtpResponse> {
+        requestBody?: SendOtpRequest,
+    ): CancelablePromise<SendOtpResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/Mobile/Auth/send-otp',
@@ -31,13 +31,13 @@ requestBody?: SendOtpRequest,
     }
 
     /**
-     * @param requestBody 
+     * @param requestBody
      * @returns VerifyOtpResponse OK
      * @throws ApiError
      */
     public static verifyOtp(
-requestBody?: VerifyOtpRequest,
-): CancelablePromise<VerifyOtpResponse> {
+        requestBody?: VerifyOtpRequest,
+    ): CancelablePromise<VerifyOtpResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/Mobile/Auth/verify-otp',
@@ -47,13 +47,13 @@ requestBody?: VerifyOtpRequest,
     }
 
     /**
-     * @param requestBody 
+     * @param requestBody
      * @returns VerifyOtpResponse OK
      * @throws ApiError
      */
     public static completeSignup(
-requestBody?: CompleteSignupRequest,
-): CancelablePromise<VerifyOtpResponse> {
+        requestBody?: CompleteSignupRequest,
+    ): CancelablePromise<VerifyOtpResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/Mobile/Auth/complete-signup',

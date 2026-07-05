@@ -13,3 +13,4 @@ export type VocabSenseResponse = {
     exampleTranslation: string | null;
     type: VocabType;
 };
+

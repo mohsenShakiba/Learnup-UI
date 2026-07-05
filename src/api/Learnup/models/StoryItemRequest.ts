@@ -9,3 +9,4 @@ export type StoryItemRequest = {
     person: number;
     translation: string;
 };
+

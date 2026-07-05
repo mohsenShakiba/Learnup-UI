@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Icon,
   LinearProgress,
   Snackbar,
   Stack,
@@ -58,6 +59,7 @@ export default function BoxLevelReviewPage() {
   const [isAnswerVisible, setIsAnswerVisible] = useState(false);
   const [activeCardIndex, setActiveCardIndex] = useState(0);
   const [reviews, setReviews] = useState<Record<number, string>>({});
+  const [removedCardIds, setRemovedCardIds] = useState<Set<number>>(new Set());
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const swiperRef = useRef<SwiperType | null>(null);
 
@@ -96,6 +98,22 @@ export default function BoxLevelReviewPage() {
     },
   });
 
+  const removeMutation = useMutation({
+    mutationFn: (vocabId: number) =>
+      LeitnerBoxService.removeVocabFromLeitnerBox(vocabId),
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["leitner-box-levels"] }),
+        queryClient.invalidateQueries({
+          queryKey: ["leitner-box-level-due-cards", boxLevelId],
+        }),
+      ]);
+    },
+    onError: () => {
+      setShowErrorMessage(true);
+    },
+  });
+
   const levelInfo = useMemo(() => {
     return (boxLevelsQuery.data?.levels ?? []).find(
       (item) => item.id === boxLevelId,
@@ -104,8 +122,11 @@ export default function BoxLevelReviewPage() {
 
   const cards = dueCardsQuery.data ?? [];
   const pendingCards = useMemo(
-    () => cards.filter((card) => !(card.id in reviews)),
-    [cards, reviews],
+    () =>
+      cards.filter(
+        (card) => !(card.id in reviews) && !removedCardIds.has(card.id),
+      ),
+    [cards, reviews, removedCardIds],
   );
   const levelNumber = levelInfo ? Number(levelInfo.level) : null;
 
@@ -170,6 +191,33 @@ export default function BoxLevelReviewPage() {
     );
   }
 
+  function handleRemove() {
+    if (!activeCard || removeMutation.isPending || reviewMutation.isPending)
+      return;
+
+    const cardId = activeCard.id;
+    removeMutation.mutate(activeCard.vocabId, {
+      onSuccess: () => {
+        const nextPendingLength = pendingCards.length - 1;
+        const nextIndex =
+          nextPendingLength <= 0
+            ? 0
+            : Math.min(safeActiveCardIndex, nextPendingLength - 1);
+
+        setRemovedCardIds((prev) => {
+          const next = new Set(prev);
+          next.add(cardId);
+          return next;
+        });
+        setActiveCardIndex(nextIndex);
+        window.requestAnimationFrame(() => {
+          swiperRef.current?.slideTo(nextIndex, 0);
+        });
+        setIsAnswerVisible(false);
+      },
+    });
+  }
+
   function handleSlideChange(swiper: SwiperType) {
     setActiveCardIndex(swiper.activeIndex);
     setIsAnswerVisible(false);
@@ -200,8 +248,6 @@ export default function BoxLevelReviewPage() {
 
   return (
     <Scaffold
-      maxWidth="sm"
-      disablePadding
       header={
         <DefaultHeader header={`Box Level ${levelNumber ?? boxLevelId}`} />
       }
@@ -309,7 +355,10 @@ export default function BoxLevelReviewPage() {
                                     key={choice.id}
                                     variant="contained"
                                     color={choice.color}
-                                    disabled={reviewMutation.isPending}
+                                    disabled={
+                                      reviewMutation.isPending ||
+                                      removeMutation.isPending
+                                    }
                                     onClick={() => handleQualitySelect(choice)}
                                     sx={{
                                       flex: 1,
@@ -321,6 +370,19 @@ export default function BoxLevelReviewPage() {
                                   </Button>
                                 ))}
                               </Stack>
+                              <Button
+                                variant="text"
+                                color="error"
+                                startIcon={<Icon>delete_outline</Icon>}
+                                disabled={
+                                  reviewMutation.isPending ||
+                                  removeMutation.isPending
+                                }
+                                onClick={handleRemove}
+                                sx={{ alignSelf: "center", borderRadius: 999 }}
+                              >
+                                حذف از جعبه
+                              </Button>
                             </Stack>
                           </Stack>
                         ) : (

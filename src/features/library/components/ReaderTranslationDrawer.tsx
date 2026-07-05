@@ -54,6 +54,7 @@ export function ReaderTranslationDrawer({ selection }: Props) {
         vocabId = await VocabsService.createVocab({
           languageId: 1,
           word,
+          translation: wordTranslation || null,
         });
       }
       await LeitnerBoxService.addVocabToLeitnerBox(vocabId);

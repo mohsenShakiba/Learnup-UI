@@ -7,3 +7,4 @@ export type MotivationalSentenceResponse = {
     id: number;
     sentence: string;
 };
+

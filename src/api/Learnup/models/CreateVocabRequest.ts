@@ -6,4 +6,6 @@
 export type CreateVocabRequest = {
     languageId: number;
     word: string;
+    translation: string | null;
 };
+

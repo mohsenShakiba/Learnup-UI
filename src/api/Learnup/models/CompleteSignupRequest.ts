@@ -9,3 +9,4 @@ export type CompleteSignupRequest = {
     displayName: string;
     avatarUrl: string | null;
 };
+

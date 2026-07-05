@@ -8,3 +8,4 @@ export type PlacementAnswerReviewResponse = {
     selectedOptionId: number | null;
     isCorrect: boolean;
 };
+

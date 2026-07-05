@@ -11,3 +11,4 @@ export type StoryItemResponse = {
     person: number;
     voiceId: string | null;
 };
+

@@ -144,7 +144,6 @@ export const createLearnupTheme = (mode: PaletteMode) => {
           },
         },
       },
-
     },
   });
 };

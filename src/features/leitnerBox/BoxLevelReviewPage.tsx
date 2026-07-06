@@ -1,15 +1,20 @@
-import { Box, Card, IconButton, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   AnswerQuality,
   type DueLeitnerBoxItemResponse,
 } from "../../api/Learnup";
-import { AppIcon } from "../../shared/components/AppIcon";
 import { AppLoader } from "../../shared/components/AppLoader";
 import { DefaultHeader } from "../../shared/components/DefaultHeader";
 import { EmptyList } from "../../shared/components/EmptyList";
 import { ErrorPage } from "../../shared/components/ErrorPage";
+import { FilledActionButton } from "../../shared/components/FilledActionButton";
 import { Scaffold } from "../../shared/components/Scaffold";
 import { closeDrawer, showDrawer } from "../../shared/swipeableDrawer";
 import { LessonTimeline } from "../lessons/components/LessonTimeline";
@@ -17,12 +22,11 @@ import { ReviewAnswerPanel } from "./components/ReviewAnswerPanel";
 import { ReviewCompletedCard } from "./components/ReviewCompletedCard";
 import { useBoxLevelReview } from "./hooks/useBoxLevelReview";
 
-export default function BoxLevelReviewPage() {
+export default function BoxLevelReviewPage () {
   const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string; }>();
   const boxLevelId = Number(id);
 
-  const drawerIdRef = useRef<number | null>(null);
   const actionPendingRef = useRef(false);
   const [completedCards, setCompletedCards] = useState<
     DueLeitnerBoxItemResponse[]
@@ -48,10 +52,10 @@ export default function BoxLevelReviewPage() {
 
   actionPendingRef.current = isActionPending;
 
-  function handleOpenCard(card: DueLeitnerBoxItemResponse) {
+  function handleOpenCard (card: DueLeitnerBoxItemResponse) {
     if (actionPendingRef.current) return;
 
-    drawerIdRef.current = showDrawer(
+    showDrawer(
       <ReviewAnswerPanel
         card={card}
         disabled={actionPendingRef.current}
@@ -67,14 +71,11 @@ export default function BoxLevelReviewPage() {
         paperSx: {
           maxHeight: "88vh",
         },
-        onClose: () => {
-          drawerIdRef.current = null;
-        },
       },
     );
   }
 
-  function submitReview(
+  function submitReview (
     card: DueLeitnerBoxItemResponse,
     quality: AnswerQuality,
   ) {
@@ -95,7 +96,7 @@ export default function BoxLevelReviewPage() {
     );
   }
 
-  function handleRemove(card: DueLeitnerBoxItemResponse) {
+  function handleRemove (card: DueLeitnerBoxItemResponse) {
     if (actionPendingRef.current) return;
 
     removeMutation.mutate(
@@ -111,9 +112,8 @@ export default function BoxLevelReviewPage() {
     );
   }
 
-  function closeActiveDrawer() {
-    closeDrawer(drawerIdRef.current ?? undefined);
-    drawerIdRef.current = null;
+  function closeActiveDrawer () {
+    closeDrawer();
   }
 
   if (isLoading) {
@@ -161,7 +161,6 @@ export default function BoxLevelReviewPage() {
                     sx={{
                       cursor: completed ? "default" : "pointer",
                       direction: "rtl",
-                      opacity: completed ? 0.64 : 1,
                       p: 2,
                     }}
                   >
@@ -183,15 +182,14 @@ export default function BoxLevelReviewPage() {
                         </Typography>
                       </Stack>
                       <Box sx={{ flex: 1 }} />
-                      <IconButton
+                      <FilledActionButton
+                        icon={completed ? "check_circle" : "done"}
                         disabled={completed || isActionPending}
                         onClick={(event) => {
                           event.stopPropagation();
                           submitReview(c, AnswerQuality.MILD);
                         }}
-                      >
-                        <AppIcon>done</AppIcon>
-                      </IconButton>
+                      />
                     </Stack>
                   </Card>
                 </Box>

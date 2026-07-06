@@ -55,6 +55,7 @@ import TrendingDown from '@mui/icons-material/TrendingDownOutlined';
 import UploadFile from '@mui/icons-material/UploadFileOutlined';
 import VolumeUp from '@mui/icons-material/VolumeUpOutlined';
 import WorkspacePremium from '@mui/icons-material/WorkspacePremiumOutlined';
+import BrigtnessAuto from '@mui/icons-material/BrightnessAutoOutlined'
 
 // Registry of every icon the app renders, keyed by the Material Symbols name that
 // used to be passed as the ligature child of MUI's <Icon>. Only components listed
@@ -118,6 +119,7 @@ const ICONS = {
   volume_up: VolumeUp,
   workspace_premium: WorkspacePremium,
   done: Done,
+  brightness_auto: BrigtnessAuto,
 } satisfies Record<string, ComponentType<SvgIconProps>>;
 
 export type IconName = keyof typeof ICONS;
@@ -136,7 +138,7 @@ export type IconProps = Omit<SvgIconProps, 'children'> & {
  * by tree-shaken `@mui/icons-material` SVGs instead of the icon font. All SvgIcon
  * props (`sx`, `color`, `fontSize`, …) are forwarded unchanged.
  */
-export function AppIcon ({ children, ...props }: IconProps) {
+export function AppIcon({ children, ...props }: IconProps) {
   const Component = ICONS[children as IconName] as
     | ComponentType<SvgIconProps>
     | undefined;

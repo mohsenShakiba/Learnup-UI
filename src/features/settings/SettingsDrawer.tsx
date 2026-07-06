@@ -2,14 +2,14 @@ import {
   Avatar,
   Box,
   Divider,
-  ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
   Paper,
   Stack,
   SwipeableDrawer,
-  Switch,
+  ToggleButton,
+  ToggleButtonGroup,
   Typography,
 } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
@@ -27,7 +27,7 @@ type SettingsDrawerProps = {
 };
 
 export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
-  const { isDark, setMode } = useThemeMode();
+  const { mode, setMode } = useThemeMode();
   const navigate = useNavigate();
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
@@ -152,21 +152,32 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
 
       <Box sx={{ flex: 1 }} />
 
-      <Paper sx={{ p: 0 }}>
-        <ListItem
-          secondaryAction={
-            <Switch
-              edge="end"
-              checked={isDark}
-              onChange={(e) => setMode(e.target.checked ? 'dark' : 'light')}
-            />
-          }
+      <Paper sx={{ p: 1.5 }}>
+        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
+          حالت نمایش
+        </Typography>
+        <ToggleButtonGroup
+          value={mode}
+          exclusive
+          onChange={(_, next) => {
+            if (next) setMode(next);
+          }}
+          fullWidth
+          size="small"
         >
-          <ListItemIcon>
-            <AppIcon>{isDark ? 'dark_mode' : 'light_mode'}</AppIcon>
-          </ListItemIcon>
-          <ListItemText primary={isDark ? 'حالت تاریک' : 'حالت روشن'} />
-        </ListItem>
+          <ToggleButton color='primary' value="system">
+            <AppIcon sx={{ fontSize: 16, mr: 1 }}>brightness_auto</AppIcon>
+            خودکار
+          </ToggleButton>
+          <ToggleButton color='primary' value="light">
+            <AppIcon sx={{ fontSize: 16, mr: 1 }}>light_mode</AppIcon>
+            روشن
+          </ToggleButton>
+          <ToggleButton color='primary' value="dark">
+            <AppIcon sx={{ fontSize: 16, mr: 1 }}>dark_mode</AppIcon>
+            تاریک
+          </ToggleButton>
+        </ToggleButtonGroup>
       </Paper>
 
 

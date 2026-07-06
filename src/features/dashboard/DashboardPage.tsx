@@ -1,4 +1,4 @@
-import { Fade, Stack } from '@mui/material';
+import { Box, Fade, Stack } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { AppLoader } from '../../shared/components/AppLoader';
 import { DefaultHeader } from '../../shared/components/DefaultHeader';
@@ -52,6 +52,7 @@ export default function DashboardPage () {
               <div><UserSubscriptionCard subscription={subscription} /></div>
             </Fade>
 
+            <Box sx={{ height: 50 }}></Box>
           </Stack>
         )
       }

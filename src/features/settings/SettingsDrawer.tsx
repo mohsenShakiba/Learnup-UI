@@ -120,31 +120,31 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
 
       <Paper sx={{ p: 0, overflow: 'hidden' }}>
         <ListItemButton sx={{ height: 45 }} onClick={() => go('/settings/subscriptions')}>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>لیست اشتراک ها</Typography>
+          <Typography variant="body2" >لیست اشتراک ها</Typography>
           <Box sx={{ flex: 1 }} />
           <AppIcon sx={{ opacity: 0.4, fontSize: 18 }}>chevron_left</AppIcon>
         </ListItemButton>
         <Divider />
         <ListItemButton sx={{ height: 45 }} onClick={() => go('/placement')}>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>آزمون تعیین سطح</Typography>
+          <Typography variant="body2" >آزمون تعیین سطح</Typography>
           <Box sx={{ flex: 1 }} />
           <AppIcon sx={{ opacity: 0.4, fontSize: 18 }}>chevron_left</AppIcon>
         </ListItemButton>
         <Divider />
         <ListItemButton sx={{ height: 45 }} >
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>لیست دروس گرامر</Typography>
+          <Typography variant="body2" >لیست دروس گرامر</Typography>
           <Box sx={{ flex: 1 }} />
           <AppIcon sx={{ opacity: 0.4, fontSize: 18 }}>chevron_left</AppIcon>
         </ListItemButton>
         <Divider />
         <ListItemButton sx={{ height: 45 }} >
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>ارتباط با ما</Typography>
+          <Typography variant="body2" >ارتباط با ما</Typography>
           <Box sx={{ flex: 1 }} />
           <AppIcon sx={{ opacity: 0.4, fontSize: 18 }}>chevron_left</AppIcon>
         </ListItemButton>
         <Divider />
         <ListItemButton sx={{ height: 45 }} >
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>گزارش خطا</Typography>
+          <Typography variant="body2" >گزارش خطا</Typography>
           <Box sx={{ flex: 1 }} />
           <AppIcon sx={{ opacity: 0.4, fontSize: 18 }}>chevron_left</AppIcon>
         </ListItemButton>

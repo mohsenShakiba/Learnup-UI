@@ -9,7 +9,7 @@ import { DefaultHeader } from '../../shared/components/DefaultHeader';
 import { Scaffold } from '../../shared/components/Scaffold';
 import { BookListItem } from './components/BookListItem';
 
-export default function ListBooksPage () {
+export default function ListBooksPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -41,17 +41,11 @@ export default function ListBooksPage () {
     <Scaffold
       header={
         <DefaultHeader header="لیست کتاب ها">
-          <Button size='small'
-            onClick={() => navigate('/library/user-books/upload')}
-            endIcon={
-              <AppIcon>add</AppIcon>
-            }>افزودن کتاب</Button>
         </DefaultHeader>
       }
     >
 
       <Stack spacing={1}>
-
         {books.length === 0 ? (
           <Stack sx={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 1, opacity: 0.6 }}>
             <AppIcon sx={{ fontSize: 48 }}>menu_book</AppIcon>
@@ -78,7 +72,15 @@ export default function ListBooksPage () {
             ))}
           </Box>
         )}
+
       </Stack>
+
+      <Button sx={{ mt: 2 }} size='small'
+        onClick={() => navigate('/library/user-books/upload')}
+        endIcon={
+          <AppIcon>add</AppIcon>
+        }>افزودن کتاب</Button>
+
     </Scaffold>
   );
 }

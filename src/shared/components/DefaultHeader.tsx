@@ -13,7 +13,7 @@ type DefaultHeaderProps = {
   children?: ReactNode;
 };
 
-export function DefaultHeader ({
+export function DefaultHeader({
   header,
   children,
 }: DefaultHeaderProps) {

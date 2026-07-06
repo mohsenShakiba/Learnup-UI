@@ -6,7 +6,7 @@ type AppLoaderProps = {
 };
 
 export function AppLoader({
-  text = 'در حال بارگذاری...',
+  text = 'در حال بارگذاری',
   fullHeight = true,
 }: AppLoaderProps) {
   return (
@@ -19,10 +19,12 @@ export function AppLoader({
         alignItems: 'center',
         justifyContent: 'center',
         gap: 2,
+        opacity: 0.5,
+        color: "text.secondary"
       }}
     >
-      <CircularProgress />
-      <Typography variant="body2" color="text.secondary">
+      <CircularProgress size={25} color='inherit' />
+      <Typography variant="body2" color="inherit">
         {text}
       </Typography>
     </Box>

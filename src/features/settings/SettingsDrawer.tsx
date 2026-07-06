@@ -1,7 +1,7 @@
 import {
+  Avatar,
   Box,
   Divider,
-  IconButton,
   ListItem,
   ListItemButton,
   ListItemIcon,
@@ -12,7 +12,11 @@ import {
   Switch,
   Typography,
 } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { UsersService } from '../../api/Learnup';
+import { getFileById } from '../../services/fetchFile';
 import { AppIcon } from '../../shared/components/AppIcon';
 import { useThemeMode } from '../../shared/theme/themeMode';
 import { clearAuth } from '../../stores/authStore';
@@ -22,9 +26,46 @@ type SettingsDrawerProps = {
   onClose: () => void;
 };
 
-export function SettingsDrawer ({ open, onClose }: SettingsDrawerProps) {
+export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
   const { isDark, setMode } = useThemeMode();
   const navigate = useNavigate();
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+
+  const profileQuery = useQuery({
+    queryKey: ['user', 'profile'],
+    queryFn: () => UsersService.getProfile(),
+    enabled: open,
+  });
+  const profile = profileQuery.data;
+
+  useEffect(() => {
+    if (!profile?.avatarUrl) {
+      setAvatarUrl(null);
+      return;
+    }
+
+    let cancelled = false;
+    let objectUrl: string | null = null;
+
+    getFileById(profile.avatarUrl)
+      .then((buffer) => {
+        const url = URL.createObjectURL(new Blob([buffer]));
+        if (cancelled) {
+          URL.revokeObjectURL(url);
+          return;
+        }
+        objectUrl = url;
+        setAvatarUrl(url);
+      })
+      .catch(() => {
+        if (!cancelled) setAvatarUrl(null);
+      });
+
+    return () => {
+      cancelled = true;
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
+  }, [profile?.avatarUrl]);
 
   const go = (path: string) => {
     onClose();
@@ -59,46 +100,52 @@ export function SettingsDrawer ({ open, onClose }: SettingsDrawerProps) {
         },
       }}
     >
-      <Stack direction="row" spacing={1} sx={{ alignItems: 'center', mb: 2 }}>
-        <Typography variant="h6">تنظیمات</Typography>
-        <Box sx={{ flex: 1 }} />
-        <IconButton onClick={onClose} aria-label="Close settings">
-          <AppIcon>close</AppIcon>
-        </IconButton>
-      </Stack>
-
-
+      <ListItemButton
+        onClick={() => go('/profile')}
+        sx={{ flexGrow: 0, px: 0, pb: 2 }}
+      >
+        <Avatar
+          src={avatarUrl ?? undefined}
+          sx={{ width: 50, height: 50, fontSize: '1.25rem', mr: 1.5 }}
+        >
+          {!avatarUrl && (profile?.displayName?.[0]?.toUpperCase() ?? undefined)}
+        </Avatar>
+        <Stack spacing={0}>
+          <Typography variant="subtitle1" >
+            {profile?.displayName ?? '...'}
+          </Typography>
+          <Typography variant='caption'>اشتراک فعال</Typography>
+        </Stack>
+      </ListItemButton>
 
       <Paper sx={{ p: 0, overflow: 'hidden' }}>
-        <ListItemButton onClick={() => go('/profile')}>
-          <ListItemIcon>
-            <AppIcon>account_circle</AppIcon>
-          </ListItemIcon>
-          <ListItemText primary="پروفایل" />
+        <ListItemButton sx={{ height: 45 }} onClick={() => go('/settings/subscriptions')}>
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>لیست اشتراک ها</Typography>
+          <Box sx={{ flex: 1 }} />
           <AppIcon sx={{ opacity: 0.4, fontSize: 18 }}>chevron_left</AppIcon>
         </ListItemButton>
         <Divider />
-        <ListItemButton onClick={() => go('/settings/subscriptions')}>
-          <ListItemIcon>
-            <AppIcon>workspace_premium</AppIcon>
-          </ListItemIcon>
-          <ListItemText primary="لیست اشتراک ها" />
+        <ListItemButton sx={{ height: 45 }} onClick={() => go('/placement')}>
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>آزمون تعیین سطح</Typography>
+          <Box sx={{ flex: 1 }} />
           <AppIcon sx={{ opacity: 0.4, fontSize: 18 }}>chevron_left</AppIcon>
         </ListItemButton>
         <Divider />
-        <ListItemButton onClick={() => go('/placement')}>
-          <ListItemIcon>
-            <AppIcon>quiz</AppIcon>
-          </ListItemIcon>
-          <ListItemText primary="آزمون تعیین سطح" />
+        <ListItemButton sx={{ height: 45 }} >
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>لیست دروس گرامر</Typography>
+          <Box sx={{ flex: 1 }} />
           <AppIcon sx={{ opacity: 0.4, fontSize: 18 }}>chevron_left</AppIcon>
         </ListItemButton>
         <Divider />
-        <ListItemButton onClick={() => go('/grammar')}>
-          <ListItemIcon>
-            <AppIcon>menu_book</AppIcon>
-          </ListItemIcon>
-          <ListItemText primary="گرامرها" />
+        <ListItemButton sx={{ height: 45 }} >
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>ارتباط با ما</Typography>
+          <Box sx={{ flex: 1 }} />
+          <AppIcon sx={{ opacity: 0.4, fontSize: 18 }}>chevron_left</AppIcon>
+        </ListItemButton>
+        <Divider />
+        <ListItemButton sx={{ height: 45 }} >
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>گزارش خطا</Typography>
+          <Box sx={{ flex: 1 }} />
           <AppIcon sx={{ opacity: 0.4, fontSize: 18 }}>chevron_left</AppIcon>
         </ListItemButton>
       </Paper>

@@ -6,14 +6,14 @@ import {
   IconButton,
   Snackbar,
   Stack,
-  Typography,
+  Typography
 } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { LeitnerBoxService } from "../../../api/Learnup";
 import type { VocabResponse } from "../../../api/Learnup/models/VocabResponse";
 import { VocabType } from "../../../api/Learnup/models/VocabType";
-import { AppIcon } from '../../../shared/components/AppIcon';
+import { AppIcon } from "../../../shared/components/AppIcon";
 import { VocabPlayButton } from "./VocabPlayButton";
 
 const VOCAB_TYPE_LABELS: Record<VocabType, string> = {
@@ -36,10 +36,11 @@ const VOCAB_TYPE_COLORS: Record<
 };
 
 type Props = {
+  showBookmark?: boolean;
   vocab: VocabResponse;
 };
 
-export function VocabListItem ({ vocab }: Props) {
+export function VocabListItem ({ vocab, showBookmark = true }: Props) {
   const [open, setOpen] = useState(false);
   const [isInLeitnerBox, setIsInLeitnerBox] = useState(vocab.isInLeitnerBox);
 
@@ -60,111 +61,123 @@ export function VocabListItem ({ vocab }: Props) {
     addToLeitnerMutation.mutate();
   };
 
+  const replaceCommaWithFarsiComma = (w: string | null): string | null => {
+    return w?.replaceAll(',', '،') || null;
+  };
+
   return (
     <Card sx={{ p: 2 }}>
-      <Stack
-        direction="row"
-        sx={{ alignItems: "center", direction: "rtl", gap: 1 }}
-      >
-        <Typography variant="body1" sx={{ fontWeight: "500" }}>
-          {vocab.word}
-        </Typography>
-        <Typography variant="body1" sx={{ color: "text.secondary" }}>
-          {vocab.translation}
-        </Typography>
+      <Stack spacing={1}>
 
-        <Box sx={{ flex: 1 }} />
+        <Stack
+          direction="row"
+          sx={{ alignItems: "center", direction: "rtl" }}
+        >
+          <Typography variant="body1" sx={{ textTransform: 'capitalize', fontWeight: "500" }}>
+            {vocab.word}
+          </Typography>
 
-        <Stack direction="row" sx={{ alignItems: "center", gap: 0.5 }}>
-          {vocab.voiceId && <VocabPlayButton voiceId={vocab.voiceId} />}
-          <IconButton
-            onClick={handleAddToLeitner}
-            disabled={addToLeitnerMutation.isPending}
-            size="small"
-            aria-label={isInLeitnerBox ? "Saved in Leitner box" : "Save to Leitner box"}
-            sx={{ color: isInLeitnerBox ? "primary.main" : "text.secondary" }}
-          >
-            <AppIcon>{isInLeitnerBox ? "bookmark" : "bookmark_border"}</AppIcon>
-          </IconButton>
+          <Box sx={{ flex: 1 }} />
+
+          {showBookmark &&
+            <Stack direction="row" sx={{ alignItems: "center", gap: 0.5 }}>
+              {vocab.voiceId && <VocabPlayButton voiceId={vocab.voiceId} />}
+              <IconButton
+                onClick={handleAddToLeitner}
+                disabled={addToLeitnerMutation.isPending}
+                size="small"
+                aria-label={isInLeitnerBox ? "Saved in Leitner box" : "Save to Leitner box"}
+                sx={{ color: isInLeitnerBox ? "primary.main" : "text.secondary" }}
+              >
+                <AppIcon>{isInLeitnerBox ? "bookmark" : "bookmark_border"}</AppIcon>
+              </IconButton>
+            </Stack>
+          }
         </Stack>
+
+        <Typography variant="body1" sx={{ textAlign: 'right' }}>
+          {replaceCommaWithFarsiComma(vocab.translation)}
+        </Typography>
+
+        {vocab.description && (
+          <Typography variant="body2" sx={{ direction: 'rtl', color: "text.secondary" }}>
+            {vocab.description}
+          </Typography>
+        )}
+
+        {vocab.senses.length > 0 && (
+          <Stack spacing={1.5} sx={{ mt: 1.5 }}>
+            {vocab.senses.map((sense) => {
+              const typeLabel = VOCAB_TYPE_LABELS[sense.type];
+              const typeColor = VOCAB_TYPE_COLORS[sense.type];
+
+              return (
+                <Box key={sense.id} >
+                  <Divider sx={{ mb: 2 }} />
+                  <Stack
+                    direction="row"
+                    sx={{ alignItems: "center", gap: 1, direction: "rtl" }}
+                  >
+                    {typeLabel && (
+                      <Chip
+                        label={typeLabel}
+                        size="small"
+                        variant="filled"
+                        color={typeColor}
+                        sx={{ height: 20, fontSize: 12 }}
+                      />
+                    )}
+                    {sense.translation && (
+                      <Typography variant="body2" sx={{ direction: 'ltr' }} >
+                        {replaceCommaWithFarsiComma(sense.translation)}
+                      </Typography>
+                    )}
+                  </Stack>
+
+                  {sense.description && (
+                    <Typography
+                      variant="body2"
+                      sx={{ color: "text.primary", mt: 2, direction: 'rtl', }}
+                    >
+                      {sense.description}
+                    </Typography>
+                  )}
+
+                  <Stack spacing={0.5} sx={{ mt: 2 }}>
+                    {sense.example && (
+                      <Typography
+                        variant="body2"
+                        sx={{ fontStyle: "italic", color: "text.secondary", direction: "rtl" }}
+                      >
+                        {sense.example}
+                      </Typography>
+                    )}
+
+                    {sense.exampleTranslation && (
+                      <Typography
+                        variant="body2"
+                        sx={{ color: "text.secondary", direction: "lrt", textAlign: 'right' }}
+                      >
+                        {sense.exampleTranslation}
+                      </Typography>
+                    )}
+                  </Stack>
+                </Box>
+              );
+            })}
+          </Stack>
+        )}
+
+        <Snackbar
+          open={open}
+          autoHideDuration={3000}
+          onClose={() => setOpen(false)}
+          message="Note archived"
+          color="success"
+        />
+
       </Stack>
 
-      {vocab.description && (
-        <Typography variant="body2" sx={{ color: "text.secondary" }}>
-          {vocab.description}
-        </Typography>
-      )}
-
-      {vocab.senses.length > 0 && (
-        <Stack spacing={1.5} sx={{ mt: 1.5 }}>
-          {vocab.senses.map((sense) => {
-            const typeLabel = VOCAB_TYPE_LABELS[sense.type];
-            const typeColor = VOCAB_TYPE_COLORS[sense.type];
-
-            return (
-              <Box key={sense.id} >
-                <Divider sx={{ mb: 2 }} />
-                <Stack
-                  direction="row"
-                  sx={{ alignItems: "center", gap: 1, direction: "rtl" }}
-                >
-                  {typeLabel && (
-                    <Chip
-                      label={typeLabel}
-                      size="small"
-                      variant="filled"
-                      color={typeColor}
-                      sx={{ height: 20, fontSize: 12 }}
-                    />
-                  )}
-                  {sense.translation && (
-                    <Typography variant="body2" sx={{ direction: 'ltr' }} >
-                      {sense.translation}
-                    </Typography>
-                  )}
-                </Stack>
-
-                {sense.description && (
-                  <Typography
-                    variant="body2"
-                    sx={{ color: "text.secondary", mt: 1 }}
-                  >
-                    {sense.description}
-                  </Typography>
-                )}
-
-                <Stack spacing={0.5} sx={{ mt: 2 }}>
-                  {sense.example && (
-                    <Typography
-                      variant="body2"
-                      sx={{ fontStyle: "italic", direction: "rtl" }}
-                    >
-                      {sense.example}
-                    </Typography>
-                  )}
-
-                  {sense.exampleTranslation && (
-                    <Typography
-                      variant="body2"
-                      sx={{ color: "text.secondary", direction: "rtl" }}
-                    >
-                      {sense.exampleTranslation}
-                    </Typography>
-                  )}
-                </Stack>
-              </Box>
-            );
-          })}
-        </Stack>
-      )}
-
-      <Snackbar
-        open={open}
-        autoHideDuration={3000}
-        onClose={() => setOpen(false)}
-        message="Note archived"
-        color="success"
-      />
     </Card>
   );
 }

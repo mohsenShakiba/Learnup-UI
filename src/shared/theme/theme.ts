@@ -37,7 +37,7 @@ export const createLearnupTheme = (mode: PaletteMode) => {
     },
     spacing: 8,
     typography: {
-      fontFamily: 'IranSans, Roboto, sans-serif',
+      fontFamily: 'IranSans, Arial, sans-serif',
       h1: {
         fontSize: "32px",
       },

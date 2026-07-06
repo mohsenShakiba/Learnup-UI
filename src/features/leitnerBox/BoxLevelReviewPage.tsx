@@ -59,8 +59,6 @@ export default function BoxLevelReviewPage () {
       <ReviewAnswerPanel
         card={card}
         disabled={actionPendingRef.current}
-        isPending={actionPendingRef.current}
-        onHide={closeActiveDrawer}
         onMainAction={() => submitReview(card, AnswerQuality.MILD)}
         onQualitySelect={(quality) => submitReview(card, quality)}
         onRemove={() => handleRemove(card)}

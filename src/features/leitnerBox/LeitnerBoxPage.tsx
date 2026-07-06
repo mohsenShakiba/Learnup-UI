@@ -1,5 +1,4 @@
 import {
-  alpha,
   Box,
   Button,
   IconButton,
@@ -14,7 +13,6 @@ import { LeitnerBoxService } from "../../api/Learnup";
 import { AppIcon } from '../../shared/components/AppIcon';
 import { AppLoader } from "../../shared/components/AppLoader";
 import { DefaultHeader } from "../../shared/components/DefaultHeader";
-import { DotGrid } from "../../shared/components/DotGrid";
 import { EmptyList } from "../../shared/components/EmptyList";
 import { ErrorPage } from "../../shared/components/ErrorPage";
 import { Scaffold } from "../../shared/components/Scaffold";
@@ -23,11 +21,11 @@ import { LeitnerBoxSettingsDrawer } from "./components/LeitnerBoxSettingsDrawer"
 
 const numberFormatter = new Intl.NumberFormat("en-US");
 
-function formatNumber(value: number): string {
+function formatNumber (value: number): string {
   return numberFormatter.format(value);
 }
 
-function getIntervalDays(value: string): number {
+function getIntervalDays (value: string): number {
   const dayPart = value.match(/^(-?\d+)\./);
   if (dayPart) {
     return Number(dayPart[1]);
@@ -45,7 +43,7 @@ function getIntervalDays(value: string): number {
   return Number(parts[0]);
 }
 
-function formatReviewInterval(value: string): string {
+function formatReviewInterval (value: string): string {
   const days = getIntervalDays(value);
 
   if (days <= 0) {
@@ -73,7 +71,7 @@ function formatReviewInterval(value: string): string {
   return `every ${days} days`;
 }
 
-export default function LeitnerBoxPage() {
+export default function LeitnerBoxPage () {
   const navigate = useNavigate();
   const theme = useTheme();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -153,67 +151,8 @@ export default function LeitnerBoxPage() {
             bgcolor: 'primary.main',
           }}
         >
-          <DotGrid zIndex={1} gap={20} opacity={0.1} color="white" />
 
-          <Box
-            aria-hidden
-            sx={{
-              position: "absolute",
-              top: 16,
-              left: 16,
-              width: 80,
-              height: 80,
-              pointerEvents: "none",
-            }}
-          >
-            <Box
-              sx={{
-                position: "absolute",
-                top: 0,
-                right: 0,
-                width: 80,
-                height: 80,
-                borderRadius: 2,
-                bgcolor: alpha("#ffffff", 0.35),
-                backdropFilter: 'blur(20px)',
-              }}
-            />
-
-            <Box
-              sx={{
-                position: "absolute",
-                top: 8,
-                left: 8,
-                width: 80,
-                height: 80,
-                borderRadius: 2,
-                bgcolor: alpha("#ffffff", 0.35),
-                backdropFilter: 'blur(20px)',
-              }}
-            />
-
-            <Box
-              sx={{
-                position: "absolute",
-                top: 16,
-                left: 16,
-                width: 80,
-                height: 80,
-                borderRadius: 2,
-                bgcolor: alpha("#ffffff", 0.35),
-                backdropFilter: 'blur(20px)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'common.black'
-              }}
-            >
-              Word
-            </Box>
-
-          </Box>
-
-          <Stack spacing={1} >
+          <Stack direction='row' spacing={1} sx={{ justifyContent: 'space-between', alignItems: 'end' }}>
             <Stack direction='row' sx={{ gap: 1, alignItems: 'end' }}>
               <Typography
                 sx={{
@@ -224,28 +163,29 @@ export default function LeitnerBoxPage() {
               >
                 {formatNumber(dueItems)}
               </Typography>
-              <Typography variant="body1" >
-                Cards<br />
+              <Typography variant="body1" sx={{ opacity: 0.7 }}>
+                Words<br />
                 due today
               </Typography>
             </Stack>
 
-            <Button
-              disabled={!firstDueLevel}
-              startIcon={<AppIcon>arrow_forward</AppIcon>}
-              onClick={() => {
-                navigate(`/boxlevel/${firstDueLevel.id}`);
-              }}
-              sx={{
-                direction: 'ltr',
-                width: 'fit-content',
-                bgcolor: 'white',
-                color: 'primary.main',
-                fontFamily: 'Roboto'
-              }}
-            >
-              {firstDueLevel ? "Review now" : "All done"}
-            </Button>
+            {
+              firstDueLevel ? <Button
+                variant="contained"
+                startIcon={<AppIcon>arrow_forward</AppIcon>}
+                onClick={() => {
+                  navigate(`/boxlevel/${firstDueLevel.id}`);
+                }}
+                sx={{
+                  direction: 'ltr',
+                  width: 'fit-content',
+                  bgcolor: 'white',
+                  color: 'primary.main',
+                }}
+              >
+                Review now
+              </Button> : <Typography></Typography>
+            }
           </Stack>
         </Box>
 

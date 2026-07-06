@@ -12,10 +12,10 @@ export function ReviewCompletedCard ({
   return (
     <Card sx={{ borderRadius: 2, p: 2 }}>
       <Stack spacing={2} sx={{ p: 2, textAlign: "center" }}>
-        <Typography variant="h6" sx={{ fontWeight: 700 }}>
+        <Typography variant="body1" >
           مرور این سطح کامل شد
         </Typography>
-        <Typography color="text.secondary">
+        <Typography variant="caption" sx={{ color: "text.secondary" }}>
           شما {reviewedCount} واژه را در این سطح مرور کردید.
         </Typography>
         <Button variant="contained" onClick={onBackToBox}>

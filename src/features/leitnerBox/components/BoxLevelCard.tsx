@@ -13,15 +13,15 @@ type BoxLevelCardProps = {
 
 const numberFormatter = new Intl.NumberFormat("en-US");
 
-function formatNumber(value: number): string {
+function formatNumber (value: number): string {
   return numberFormatter.format(value);
 }
 
-function capitalize(value: string): string {
+function capitalize (value: string): string {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
-export function BoxLevelCard({
+export function BoxLevelCard ({
   levelId,
   level,
   totalItems,
@@ -119,8 +119,8 @@ export function BoxLevelCard({
           {canReview ? (
             <Box
               sx={{
-                px: 1.35,
-                py: 0.6,
+                px: 1.5,
+                py: 1,
                 borderRadius: 1.75,
                 bgcolor: tone.softColor,
                 color: tone.color,
@@ -128,10 +128,10 @@ export function BoxLevelCard({
                 minWidth: 40,
               }}
             >
-              <Typography sx={{ fontSize: 16, fontWeight: 700, lineHeight: 1 }}>
+              <Typography sx={{ fontSize: 12, lineHeight: 1, mb: 0.5 }}>
                 {formattedReady}
               </Typography>
-              <Typography sx={{ fontSize: 11, lineHeight: 1.1, mt: 0.35 }}>
+              <Typography sx={{ fontSize: 12, lineHeight: 1 }}>
                 due
               </Typography>
             </Box>
@@ -152,9 +152,6 @@ export function BoxLevelCard({
             </Box>
           )}
 
-          <AppIcon sx={{ color: "text.secondary", fontSize: 22 }}>
-            chevron_right
-          </AppIcon>
         </Stack>
       </Stack>
     </Card>

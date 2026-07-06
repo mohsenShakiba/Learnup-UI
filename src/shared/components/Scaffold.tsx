@@ -1,6 +1,5 @@
 import { Box } from "@mui/material";
 import type { ReactNode } from "react";
-import { DotGrid } from "./DotGrid";
 
 type ScaffoldProps = {
   header?: ReactNode;
@@ -10,7 +9,7 @@ type ScaffoldProps = {
   maxWidth?: string | number;
 };
 
-export function Scaffold({
+export function Scaffold ({
   header,
   children,
   disablePadding,
@@ -48,7 +47,6 @@ export function Scaffold({
           pb: disableBottomPadding ? 0 : 11.5,
         }}
       >
-        <DotGrid />
         {children}
       </Box>
     </Box>

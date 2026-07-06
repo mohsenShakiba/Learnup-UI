@@ -38,7 +38,6 @@ export default function GrammarDetailPage () {
       header={(
         <DefaultHeader
           header={grammar.name}
-          subtitle={`${grammar.lessons.length} lessons`}
         >
           <Chip
             size="small"

@@ -1,399 +1,209 @@
-import {
-  Box,
-  Button,
-  Divider,
-  IconButton,
-  ListItemIcon,
-  ListItemText,
-  Menu,
-  MenuItem,
-  Stack,
-  Typography
-} from "@mui/material";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Box, Card, IconButton, Stack, Typography } from "@mui/material";
+import { useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import type { Swiper as SwiperType } from "swiper";
-import "swiper/css";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { AnswerQuality, LeitnerBoxService } from "../../api/Learnup";
+import {
+  AnswerQuality,
+  type DueLeitnerBoxItemResponse,
+} from "../../api/Learnup";
 import { AppIcon } from "../../shared/components/AppIcon";
 import { AppLoader } from "../../shared/components/AppLoader";
 import { DefaultHeader } from "../../shared/components/DefaultHeader";
 import { EmptyList } from "../../shared/components/EmptyList";
 import { ErrorPage } from "../../shared/components/ErrorPage";
-import { FancyCard } from "../../shared/components/FancyCard";
 import { Scaffold } from "../../shared/components/Scaffold";
-import { ReviewAnswerCard } from "./components/ReviewAnswerCard";
-import { ReviewQuestionCard } from "./components/ReviewQuestionCard";
+import { closeDrawer, showDrawer } from "../../shared/swipeableDrawer";
+import { LessonTimeline } from "../lessons/components/LessonTimeline";
+import { ReviewAnswerPanel } from "./components/ReviewAnswerPanel";
+import { ReviewCompletedCard } from "./components/ReviewCompletedCard";
+import { useBoxLevelReview } from "./hooks/useBoxLevelReview";
 
-
-export default function BoxLevelReviewPage () {
+export default function BoxLevelReviewPage() {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  const { id } = useParams<{ id: string; }>();
+  const { id } = useParams<{ id: string }>();
   const boxLevelId = Number(id);
 
-  const [isAnswerVisible, setIsAnswerVisible] = useState(false);
-  const [activeCardIndex, setActiveCardIndex] = useState(0);
-  const [reviews, setReviews] = useState<Record<number, string>>({});
-  const [removedCardIds, setRemovedCardIds] = useState<Set<number>>(new Set());
-  const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
-  const swiperRef = useRef<SwiperType | null>(null);
+  const drawerIdRef = useRef<number | null>(null);
+  const actionPendingRef = useRef(false);
+  const [completedCards, setCompletedCards] = useState<
+    DueLeitnerBoxItemResponse[]
+  >([]);
+  const [reviewedCount, setReviewedCount] = useState(0);
 
-  const dueCardsQuery = useQuery({
-    queryKey: ["leitner-box-level-due-cards", boxLevelId],
-    queryFn: () => LeitnerBoxService.getDueWordsByBoxLevelId(boxLevelId),
-    enabled: Number.isFinite(boxLevelId) && boxLevelId > 0,
-  });
+  const {
+    cards,
+    isActionPending,
+    isError,
+    isLoading,
+    levelNumber,
+    refetch,
+    reviewMutation,
+    removeMutation,
+  } = useBoxLevelReview(boxLevelId);
 
-  const boxLevelsQuery = useQuery({
-    queryKey: ["leitner-box-levels"],
-    queryFn: () => LeitnerBoxService.getBoxLevelsInfo(),
-  });
-
-  const reviewMutation = useMutation({
-    mutationFn: ({
-      itemId,
-      answerQuality,
-    }: {
-      itemId: number;
-      answerQuality: AnswerQuality;
-    }) =>
-      LeitnerBoxService.reviewLeitnerBoxItem(itemId, {
-        answerQuality,
-      }),
-    onSuccess: async () => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["leitner-box-levels"] }),
-        queryClient.invalidateQueries({
-          queryKey: ["leitner-box-level-due-cards", boxLevelId],
-        }),
-      ]);
-    },
-  });
-
-  const removeMutation = useMutation({
-    mutationFn: (vocabId: number) =>
-      LeitnerBoxService.removeVocabFromLeitnerBox(vocabId),
-    onSuccess: async () => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["leitner-box-levels"] }),
-        queryClient.invalidateQueries({
-          queryKey: ["leitner-box-level-due-cards", boxLevelId],
-        }),
-      ]);
-    },
-  });
-
-  const levelInfo = useMemo(() => {
-    return (boxLevelsQuery.data?.levels ?? []).find(
-      (item) => item.id === boxLevelId,
-    );
-  }, [boxLevelId, boxLevelsQuery.data?.levels]);
-
-  const cards = dueCardsQuery.data ?? [];
-  const pendingCards = useMemo(
-    () =>
-      cards.filter(
-        (card) => !(card.id in reviews) && !removedCardIds.has(card.id),
-      ),
-    [cards, reviews, removedCardIds],
-  );
-  const levelNumber = levelInfo ? Number(levelInfo.level) : null;
-
-  const reviewedCount = Object.keys(reviews).length;
+  const completedCardIds = new Set(completedCards.map((card) => card.id));
+  const pendingCards = cards.filter((card) => !completedCardIds.has(card.id));
   const totalCards = reviewedCount + pendingCards.length;
-  const safeActiveCardIndex =
-    pendingCards.length > 0
-      ? Math.min(activeCardIndex, pendingCards.length - 1)
-      : 0;
-  const activeCard = pendingCards[safeActiveCardIndex] ?? null;
-  const isCompleted = totalCards > 0 && pendingCards.length === 0;
+  const isCompleted = reviewedCount > 0 && pendingCards.length === 0;
+  const timelineCards = [...completedCards, ...pendingCards];
 
-  useEffect(() => {
-    if (pendingCards.length === 0) {
-      if (activeCardIndex !== 0) {
-        setActiveCardIndex(0);
-      }
-      return;
-    }
+  actionPendingRef.current = isActionPending;
 
-    if (activeCardIndex > pendingCards.length - 1) {
-      const nextIndex = pendingCards.length - 1;
-      setActiveCardIndex(nextIndex);
-      swiperRef.current?.slideTo(nextIndex, 0);
-    }
-  }, [activeCardIndex, pendingCards.length]);
+  function handleOpenCard(card: DueLeitnerBoxItemResponse) {
+    if (actionPendingRef.current) return;
 
-  function handleReveal () {
-    if (!activeCard || reviewMutation.isPending) return;
-    setIsAnswerVisible(true);
-  }
-
-  function handleHideAnswer () {
-    if (reviewMutation.isPending) return;
-    setIsAnswerVisible(false);
-  }
-
-  function handleQualitySelect (quality: AnswerQuality) {
-    if (!activeCard) return;
-
-    reviewMutation.mutate(
+    drawerIdRef.current = showDrawer(
+      <ReviewAnswerPanel
+        card={card}
+        disabled={actionPendingRef.current}
+        isPending={actionPendingRef.current}
+        onHide={closeActiveDrawer}
+        onMainAction={() => submitReview(card, AnswerQuality.MILD)}
+        onQualitySelect={(quality) => submitReview(card, quality)}
+        onRemove={() => handleRemove(card)}
+      />,
       {
-        itemId: activeCard.id,
-        answerQuality: quality,
-      },
-      {
-        onSuccess: () => {
-          const nextPendingLength = pendingCards.length - 1;
-          const nextIndex =
-            nextPendingLength <= 0
-              ? 0
-              : Math.min(safeActiveCardIndex, nextPendingLength - 1);
-
-          setActiveCardIndex(nextIndex);
-          window.requestAnimationFrame(() => {
-            swiperRef.current?.slideTo(nextIndex, 0);
-          });
-          setIsAnswerVisible(false);
+        anchor: "bottom",
+        disableDiscovery: false,
+        paperSx: {
+          maxHeight: "88vh",
+        },
+        onClose: () => {
+          drawerIdRef.current = null;
         },
       },
     );
   }
 
-  function handleRemove () {
-    if (!activeCard || removeMutation.isPending || reviewMutation.isPending)
-      return;
+  function submitReview(
+    card: DueLeitnerBoxItemResponse,
+    quality: AnswerQuality,
+  ) {
+    if (actionPendingRef.current) return;
 
-    const cardId = activeCard.id;
-    removeMutation.mutate(activeCard.vocabId, {
-      onSuccess: () => {
-        const nextPendingLength = pendingCards.length - 1;
-        const nextIndex =
-          nextPendingLength <= 0
-            ? 0
-            : Math.min(safeActiveCardIndex, nextPendingLength - 1);
-
-        setRemovedCardIds((prev) => {
-          const next = new Set(prev);
-          next.add(cardId);
-          return next;
-        });
-        setActiveCardIndex(nextIndex);
-        window.requestAnimationFrame(() => {
-          swiperRef.current?.slideTo(nextIndex, 0);
-        });
-        setIsAnswerVisible(false);
+    reviewMutation.mutate(
+      {
+        itemId: card.id,
+        answerQuality: quality,
       },
-    });
-  }
-
-  function handleSlideChange (swiper: SwiperType) {
-    setActiveCardIndex(swiper.activeIndex);
-    setIsAnswerVisible(false);
-  }
-
-  function handleMainAction () {
-    if (!activeCard || reviewMutation.isPending || removeMutation.isPending)
-      return;
-
-    if (isAnswerVisible) {
-      handleQualitySelect(AnswerQuality.MILD);
-    } else {
-      setIsAnswerVisible(true);
-    }
-  }
-
-  function handleMenuSelect (action: () => void) {
-    setMenuAnchor(null);
-    action();
-  }
-
-  if (!Number.isFinite(boxLevelId) || boxLevelId <= 0) {
-    return (
-      <Scaffold header={<DefaultHeader header="جعبه‌ی لایتنر" />} maxWidth="sm">
-        <EmptyList message="سطح انتخاب‌شده نامعتبر است." />
-      </Scaffold>
+      {
+        onSuccess: () => {
+          setCompletedCards((prev) => [...prev, card]);
+          setReviewedCount((prev) => prev + 1);
+          closeActiveDrawer();
+        },
+      },
     );
   }
 
-  if (dueCardsQuery.isLoading || boxLevelsQuery.isLoading) {
+  function handleRemove(card: DueLeitnerBoxItemResponse) {
+    if (actionPendingRef.current) return;
+
+    removeMutation.mutate(
+      {
+        itemId: card.id,
+        vocabId: card.vocabId,
+      },
+      {
+        onSuccess: () => {
+          closeActiveDrawer();
+        },
+      },
+    );
+  }
+
+  function closeActiveDrawer() {
+    closeDrawer(drawerIdRef.current ?? undefined);
+    drawerIdRef.current = null;
+  }
+
+  if (isLoading) {
     return <AppLoader />;
   }
 
-  if (dueCardsQuery.isError || boxLevelsQuery.isError || !boxLevelsQuery.data) {
-    return (
-      <ErrorPage
-        onAction={() => {
-          void dueCardsQuery.refetch();
-          void boxLevelsQuery.refetch();
-        }}
-      />
-    );
+  if (isError) {
+    return <ErrorPage onAction={refetch} />;
   }
 
   return (
     <Scaffold
       header={
-        <DefaultHeader header={`سطح ${levelNumber ?? boxLevelId}`} />
+        <DefaultHeader
+          header={`سطح ${levelNumber ?? boxLevelId}`}
+        ></DefaultHeader>
       }
     >
       {totalCards === 0 ? (
         <EmptyList message="در حال حاضر واژه‌ای برای مرور در این سطح وجود ندارد." />
       ) : isCompleted ? (
-        <FancyCard sx={{ borderRadius: 2, p: 2 }}>
-          <Stack spacing={2} sx={{ p: 2, textAlign: "center" }}>
-            <Typography variant="h6" sx={{ fontWeight: 700 }}>
-              مرور این سطح کامل شد
-            </Typography>
-            <Typography color="text.secondary">
-              شما {reviewedCount} واژه را در این سطح مرور کردید.
-            </Typography>
-            <Button
-              variant="contained"
-              onClick={() => navigate("/leitner-box")}
-              sx={{ alignSelf: "center", borderRadius: 999 }}
-            >
-              بازگشت به جعبه‌ی لایتنر
-            </Button>
-          </Stack>
-        </FancyCard>
+        <ReviewCompletedCard
+          reviewedCount={reviewedCount}
+          onBackToBox={() => navigate("/leitner-box")}
+        />
       ) : (
-        <Stack
-          spacing={1}
-          sx={{
-            height: "100%",
-            justifyContent: "space-between",
-          }}
-        >
-          <Swiper
-            direction="horizontal"
-            slidesPerView={1}
-            style={{ flex: 1, width: "100%" }}
-            allowTouchMove={!reviewMutation.isPending}
-            onSwiper={(swiper) => {
-              swiperRef.current = swiper;
-              setActiveCardIndex(swiper.activeIndex);
-            }}
-            onSlideChange={handleSlideChange}
-          >
-            {pendingCards.map((card, index) => {
-              const isActiveCard = index === safeActiveCardIndex;
+        <Stack spacing={1}>
+          {timelineCards.map((c, index) => {
+            const completed = completedCardIds.has(c.id);
 
-              return (
-                <SwiperSlide key={card.id}>
-                  <Box
-                    sx={{
-                      width: '100%',
-                      height: "100%",
-                      overflow: "hidden",
-                      boxSizing: "border-box",
+            return (
+              <Stack
+                key={c.id}
+                direction="row"
+                spacing={1.5}
+                sx={{ alignItems: "stretch" }}
+              >
+                <Box sx={{ flex: 1 }}>
+                  <Card
+                    onClick={() => {
+                      if (!completed) {
+                        handleOpenCard(c);
+                      }
                     }}
-                    id={"test"}
+                    sx={{
+                      cursor: completed ? "default" : "pointer",
+                      direction: "rtl",
+                      opacity: completed ? 0.64 : 1,
+                      p: 2,
+                    }}
                   >
-                    {isActiveCard && isAnswerVisible ? (
-                      <ReviewAnswerCard
-                        card={card}
-                        isPending={reviewMutation.isPending}
-                        onHide={handleHideAnswer}
-                      />
-                    ) : (
-                      <ReviewQuestionCard
-                        card={card}
-                        isPending={reviewMutation.isPending}
-                        onReveal={handleReveal}
-                      />
-                    )}
-                  </Box>
-                </SwiperSlide>
-              );
-            })}
-          </Swiper>
-
-          <Stack
-            direction="row"
-            spacing={1}
-            sx={{ alignItems: "center" }}
-          >
-            <Button
-              variant="contained"
-              disabled={
-                !activeCard ||
-                reviewMutation.isPending ||
-                removeMutation.isPending
-              }
-              onClick={handleMainAction}
-              sx={{
-                flex: 1,
-                borderRadius: 1,
-              }}
-            >
-              {isAnswerVisible ? "انتقال به سطح بعد" : "نمایش ترجمه"}
-            </Button>
-
-            <IconButton
-              aria-label="گزینه‌های بیشتر"
-              disabled={
-                !activeCard ||
-                reviewMutation.isPending ||
-                removeMutation.isPending
-              }
-              onClick={(event) => setMenuAnchor(event.currentTarget)}
-              sx={{
-                border: "1px solid",
-                borderColor: "divider",
-                borderRadius: 1,
-              }}
-            >
-              <AppIcon>more_vert</AppIcon>
-            </IconButton>
-
-            <Menu
-              anchorEl={menuAnchor}
-              open={Boolean(menuAnchor)}
-              onClose={() => setMenuAnchor(null)}
-              anchorOrigin={{ vertical: "top", horizontal: "right" }}
-              transformOrigin={{ vertical: "bottom", horizontal: "right" }}
-              slotProps={{
-                list: { dense: true },
-              }}
-            >
-              <MenuItem onClick={() =>
-                handleMenuSelect(() => handleQualitySelect(AnswerQuality.NO_IDEA))
-              }>
-                <ListItemText>دوباره</ListItemText>
-              </MenuItem>
-
-              <MenuItem onClick={() =>
-                handleMenuSelect(() => handleQualitySelect(AnswerQuality.HARD))
-              }>
-                <ListItemText>سخت</ListItemText>
-              </MenuItem>
-
-              <MenuItem onClick={() =>
-                handleMenuSelect(() => handleQualitySelect(AnswerQuality.PEACE_OF_CAKE))
-              }>
-                <ListItemText>خیلی ساده</ListItemText>
-              </MenuItem>
-
-              <Divider />
-
-              <MenuItem onClick={() => handleMenuSelect(handleRemove)}>
-                <ListItemIcon sx={{ minWidth: 32 }}>
-                  <AppIcon sx={{ color: "error.main", fontSize: 20 }}>
-                    delete
-                  </AppIcon>
-                </ListItemIcon>
-                <ListItemText sx={{ color: "error.main" }}>
-                  حذف از جعبه
-                </ListItemText>
-              </MenuItem>
-            </Menu>
-          </Stack>
+                    <Stack direction="row">
+                      <Stack>
+                        <Typography
+                          variant="body1"
+                          sx={{ textTransform: "capitalize" }}
+                        >
+                          {c.word}
+                        </Typography>
+                        <Typography
+                          variant="caption"
+                          sx={{ color: "text.secondary" }}
+                        >
+                          {completed
+                            ? "Reviewed"
+                            : "Click for show translation"}
+                        </Typography>
+                      </Stack>
+                      <Box sx={{ flex: 1 }} />
+                      <IconButton
+                        disabled={completed || isActionPending}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          submitReview(c, AnswerQuality.MILD);
+                        }}
+                      >
+                        <AppIcon>done</AppIcon>
+                      </IconButton>
+                    </Stack>
+                  </Card>
+                </Box>
+                <LessonTimeline
+                  completed={completed}
+                  isLast={index === timelineCards.length - 1}
+                />
+              </Stack>
+            );
+          })}
         </Stack>
       )}
-
     </Scaffold>
   );
 }

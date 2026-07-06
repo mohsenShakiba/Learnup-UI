@@ -10,13 +10,11 @@ import { ROOT_TABS } from "./BottomNav";
 
 type DefaultHeaderProps = {
   header: string;
-  subtitle?: string;
   children?: ReactNode;
 };
 
 export function DefaultHeader ({
   header,
-  subtitle,
   children,
 }: DefaultHeaderProps) {
   const navigate = useNavigate();

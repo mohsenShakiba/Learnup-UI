@@ -20,6 +20,7 @@ import Close from '@mui/icons-material/CloseOutlined';
 import DarkMode from '@mui/icons-material/DarkModeOutlined';
 import Dashboard from '@mui/icons-material/DashboardOutlined';
 import Delete from '@mui/icons-material/DeleteOutlined';
+import Done from '@mui/icons-material/Done';
 import Edit from '@mui/icons-material/EditOutlined';
 import Forum from '@mui/icons-material/ForumOutlined';
 import HourglassEmpty from '@mui/icons-material/HourglassEmptyOutlined';
@@ -116,6 +117,7 @@ const ICONS = {
   upload_file: UploadFile,
   volume_up: VolumeUp,
   workspace_premium: WorkspacePremium,
+  done: Done,
 } satisfies Record<string, ComponentType<SvgIconProps>>;
 
 export type IconName = keyof typeof ICONS;
@@ -134,7 +136,7 @@ export type IconProps = Omit<SvgIconProps, 'children'> & {
  * by tree-shaken `@mui/icons-material` SVGs instead of the icon font. All SvgIcon
  * props (`sx`, `color`, `fontSize`, …) are forwarded unchanged.
  */
-export function AppIcon({ children, ...props }: IconProps) {
+export function AppIcon ({ children, ...props }: IconProps) {
   const Component = ICONS[children as IconName] as
     | ComponentType<SvgIconProps>
     | undefined;

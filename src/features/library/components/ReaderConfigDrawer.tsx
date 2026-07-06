@@ -26,13 +26,14 @@ interface OptionGroupProps<T> {
 
 function OptionGroup<T> ({ label, options, selected, onSelect }: OptionGroupProps<T>) {
   return (
-    <Box sx={{ mt: 2 }}>
-      <Typography variant="caption" color="text.secondary">
+    <Box sx={{ mt: 2, color: 'text.secondary' }}>
+      <Typography variant="body1" color="text.secondary">
         {label}
       </Typography>
       <Stack direction="row" sx={{ mt: 1, gap: 1, flexWrap: 'wrap' }}>
         {options.map((option) => (
           <Button
+            color={selected == option.value ? 'primary' : 'inherit'}
             key={option.key}
             variant={selected === option.value ? 'contained' : 'outlined'}
             onClick={() => onSelect(option.value)}
@@ -58,7 +59,7 @@ export function ReaderConfigDrawer ({ config, onConfigChange }: Props) {
   };
 
   return (
-    <Box>
+    <Box sx={{ direction: 'rtl' }}>
 
       <Box sx={{ px: 2, pb: 3 }}>
         <OptionGroup

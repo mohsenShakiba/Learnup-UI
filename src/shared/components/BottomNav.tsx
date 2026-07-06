@@ -1,5 +1,3 @@
-import type { SvgIconProps } from "@mui/material";
-import { Box, ButtonBase, SvgIcon, Typography, useTheme } from "@mui/material";
 import type { MaterialSymbolsComponent } from "@material-symbols-svg/react";
 import { ChatBubble } from "@material-symbols-svg/react/icons/chat-bubble";
 import { Dashboard } from "@material-symbols-svg/react/icons/dashboard";
@@ -7,6 +5,8 @@ import { Layers } from "@material-symbols-svg/react/icons/layers";
 import { MenuBook } from "@material-symbols-svg/react/icons/menu-book";
 import { School } from "@material-symbols-svg/react/icons/school";
 import { Search } from "@material-symbols-svg/react/icons/search";
+import type { SvgIconProps } from "@mui/material";
+import { Box, ButtonBase, SvgIcon, Typography, useTheme } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export const ROOT_TABS = [
@@ -33,7 +33,7 @@ type BottomNavSymbolProps = Omit<SvgIconProps, "children"> & {
   name: keyof typeof NAV_SYMBOLS;
 };
 
-function BottomNavSymbol({ name, sx, ...props }: BottomNavSymbolProps) {
+function BottomNavSymbol ({ name, sx, ...props }: BottomNavSymbolProps) {
   const Symbol = NAV_SYMBOLS[name];
 
   return (
@@ -50,7 +50,7 @@ function BottomNavSymbol({ name, sx, ...props }: BottomNavSymbolProps) {
   );
 }
 
-export function isBottomNavVisible(pathname: string) {
+export function isBottomNavVisible (pathname: string) {
   return (
     pathname.startsWith(LEITNER_REVIEW_PATH_PREFIX) ||
     tabs.some(t => t.path === pathname)
@@ -58,7 +58,7 @@ export function isBottomNavVisible(pathname: string) {
 }
 
 
-export function BottomNav() {
+export function BottomNav () {
   const theme = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
@@ -180,8 +180,8 @@ export function BottomNav() {
                   position: 'relative',
                   maxWidth: '100%',
                   fontSize: 10,
-                  lineHeight: 1.2,
-                  fontWeight: isActive ? 600 : 500,
+                  lineHeight: 1.1,
+                  fontWeight: 500,
                   color: isActive ? 'primary.contrastText' : 'text.secondary',
                   transition: theme.transitions.create(['color'], {
                     duration: theme.transitions.duration.shorter,

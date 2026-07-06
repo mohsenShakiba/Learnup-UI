@@ -12,7 +12,7 @@ import { ReaderConfigDrawer } from './components/ReaderConfigDrawer';
 import { ReaderTranslationDrawer } from './components/ReaderTranslationDrawer';
 import { TableOfContentsDrawer } from './components/TableOfContentsDrawer';
 
-export default function BookDetailPage() {
+export default function BookDetailPage () {
 
   // book id
   const { bookId } = useParams<{ bookId: string; }>();
@@ -93,11 +93,11 @@ export default function BookDetailPage() {
             <AppIcon sx={{ opacity: 0.5 }}>arrow_forward</AppIcon>
           </IconButton>
 
-          <Stack onClick={handleOpenToc}>
-            <Typography noWrap sx={{ direction: 'rtl', color: 'inherit', textAlign: 'center', opacity: 0.5, maxWidth: '100%' }}>
+          <Stack onClick={handleOpenToc} sx={{ flex: 1, minWidth: 0 }}>
+            <Typography noWrap sx={{ direction: 'rtl', color: 'inherit', textAlign: 'center', opacity: 0.5, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '100%' }}>
               {book?.title ?? 'loading'}
             </Typography>
-            <Typography variant="caption" noWrap sx={{ direction: 'rtl', color: 'inherit', textAlign: 'center', opacity: 0.4, maxWidth: '100%' }}>
+            <Typography variant="caption" noWrap sx={{ direction: 'rtl', color: 'inherit', textAlign: 'center', opacity: 0.4, overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>
               {pageInfo?.sectionTitle || 'loading...'}
             </Typography>
           </Stack>
@@ -119,7 +119,7 @@ export default function BookDetailPage() {
             left: 0,
             right: 0,
             bottom: 0,
-            height: 100,
+            height: 50,
             zIndex: 1,
           }}
           onClick={(e) => e.stopPropagation()}

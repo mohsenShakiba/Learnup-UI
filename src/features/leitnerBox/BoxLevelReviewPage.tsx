@@ -3,14 +3,12 @@ import {
   Button,
   Divider,
   IconButton,
-  LinearProgress,
   ListItemIcon,
   ListItemText,
   Menu,
   MenuItem,
-  Snackbar,
   Stack,
-  Typography,
+  Typography
 } from "@mui/material";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -19,67 +17,27 @@ import type { Swiper as SwiperType } from "swiper";
 import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { AnswerQuality, LeitnerBoxService } from "../../api/Learnup";
+import { AppIcon } from "../../shared/components/AppIcon";
 import { AppLoader } from "../../shared/components/AppLoader";
 import { DefaultHeader } from "../../shared/components/DefaultHeader";
 import { EmptyList } from "../../shared/components/EmptyList";
 import { ErrorPage } from "../../shared/components/ErrorPage";
 import { FancyCard } from "../../shared/components/FancyCard";
-import { AppIcon } from "../../shared/components/AppIcon";
 import { Scaffold } from "../../shared/components/Scaffold";
 import { ReviewAnswerCard } from "./components/ReviewAnswerCard";
 import { ReviewQuestionCard } from "./components/ReviewQuestionCard";
 
-type QualityChoice = {
-  id: string;
-  answerQuality: AnswerQuality;
-};
 
-// دکمه‌ی اصلی: پاسخ درست، واژه را به سطح بعد منتقل می‌کند.
-const advanceChoice: QualityChoice = {
-  id: "good",
-  answerQuality: AnswerQuality.MILD,
-};
-
-// گزینه‌های منو برای درجه‌بندی‌های دیگر.
-const menuQualityChoices: (QualityChoice & {
-  label: string;
-  icon: string;
-  color: string;
-})[] = [
-    {
-      id: "again",
-      label: "دوباره",
-      icon: "replay",
-      color: "error.main",
-      answerQuality: AnswerQuality.NO_IDEA,
-    },
-    {
-      id: "hard",
-      label: "سخت",
-      icon: "trending_down",
-      color: "warning.main",
-      answerQuality: AnswerQuality.HARD,
-    },
-    {
-      id: "easy",
-      label: "ساده",
-      icon: "bolt",
-      color: "info.main",
-      answerQuality: AnswerQuality.PEACE_OF_CAKE,
-    },
-  ];
-
-export default function BoxLevelReviewPage() {
+export default function BoxLevelReviewPage () {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string; }>();
   const boxLevelId = Number(id);
 
   const [isAnswerVisible, setIsAnswerVisible] = useState(false);
   const [activeCardIndex, setActiveCardIndex] = useState(0);
   const [reviews, setReviews] = useState<Record<number, string>>({});
   const [removedCardIds, setRemovedCardIds] = useState<Set<number>>(new Set());
-  const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const swiperRef = useRef<SwiperType | null>(null);
 
@@ -113,9 +71,6 @@ export default function BoxLevelReviewPage() {
         }),
       ]);
     },
-    onError: () => {
-      setShowErrorMessage(true);
-    },
   });
 
   const removeMutation = useMutation({
@@ -128,9 +83,6 @@ export default function BoxLevelReviewPage() {
           queryKey: ["leitner-box-level-due-cards", boxLevelId],
         }),
       ]);
-    },
-    onError: () => {
-      setShowErrorMessage(true);
     },
   });
 
@@ -174,23 +126,23 @@ export default function BoxLevelReviewPage() {
     }
   }, [activeCardIndex, pendingCards.length]);
 
-  function handleReveal() {
+  function handleReveal () {
     if (!activeCard || reviewMutation.isPending) return;
     setIsAnswerVisible(true);
   }
 
-  function handleHideAnswer() {
+  function handleHideAnswer () {
     if (reviewMutation.isPending) return;
     setIsAnswerVisible(false);
   }
 
-  function handleQualitySelect(choice: QualityChoice) {
+  function handleQualitySelect (quality: AnswerQuality) {
     if (!activeCard) return;
 
     reviewMutation.mutate(
       {
         itemId: activeCard.id,
-        answerQuality: choice.answerQuality,
+        answerQuality: quality,
       },
       {
         onSuccess: () => {
@@ -200,7 +152,6 @@ export default function BoxLevelReviewPage() {
               ? 0
               : Math.min(safeActiveCardIndex, nextPendingLength - 1);
 
-          setReviews((prev) => ({ ...prev, [activeCard.id]: choice.id }));
           setActiveCardIndex(nextIndex);
           window.requestAnimationFrame(() => {
             swiperRef.current?.slideTo(nextIndex, 0);
@@ -211,7 +162,7 @@ export default function BoxLevelReviewPage() {
     );
   }
 
-  function handleRemove() {
+  function handleRemove () {
     if (!activeCard || removeMutation.isPending || reviewMutation.isPending)
       return;
 
@@ -238,24 +189,23 @@ export default function BoxLevelReviewPage() {
     });
   }
 
-  function handleSlideChange(swiper: SwiperType) {
+  function handleSlideChange (swiper: SwiperType) {
     setActiveCardIndex(swiper.activeIndex);
     setIsAnswerVisible(false);
   }
 
-  // دکمه‌ی اصلی: ابتدا ترجمه را نشان می‌دهد، سپس واژه را به سطح بعد می‌برد.
-  function handleMainAction() {
+  function handleMainAction () {
     if (!activeCard || reviewMutation.isPending || removeMutation.isPending)
       return;
 
     if (isAnswerVisible) {
-      handleQualitySelect(advanceChoice);
+      handleQualitySelect(AnswerQuality.MILD);
     } else {
       setIsAnswerVisible(true);
     }
   }
 
-  function handleMenuSelect(action: () => void) {
+  function handleMenuSelect (action: () => void) {
     setMenuAnchor(null);
     action();
   }
@@ -407,24 +357,25 @@ export default function BoxLevelReviewPage() {
               transformOrigin={{ vertical: "bottom", horizontal: "right" }}
               slotProps={{
                 list: { dense: true },
-                paper: { sx: { minWidth: 180, borderRadius: 2 } },
               }}
             >
-              {menuQualityChoices.map((choice) => (
-                <MenuItem
-                  key={choice.id}
-                  onClick={() =>
-                    handleMenuSelect(() => handleQualitySelect(choice))
-                  }
-                >
-                  <ListItemIcon sx={{ minWidth: 32 }}>
-                    <AppIcon sx={{ color: choice.color, fontSize: 20 }}>
-                      {choice.icon}
-                    </AppIcon>
-                  </ListItemIcon>
-                  <ListItemText>{choice.label}</ListItemText>
-                </MenuItem>
-              ))}
+              <MenuItem onClick={() =>
+                handleMenuSelect(() => handleQualitySelect(AnswerQuality.NO_IDEA))
+              }>
+                <ListItemText>دوباره</ListItemText>
+              </MenuItem>
+
+              <MenuItem onClick={() =>
+                handleMenuSelect(() => handleQualitySelect(AnswerQuality.HARD))
+              }>
+                <ListItemText>سخت</ListItemText>
+              </MenuItem>
+
+              <MenuItem onClick={() =>
+                handleMenuSelect(() => handleQualitySelect(AnswerQuality.PEACE_OF_CAKE))
+              }>
+                <ListItemText>خیلی ساده</ListItemText>
+              </MenuItem>
 
               <Divider />
 
@@ -443,12 +394,6 @@ export default function BoxLevelReviewPage() {
         </Stack>
       )}
 
-      <Snackbar
-        open={showErrorMessage}
-        autoHideDuration={4000}
-        onClose={() => setShowErrorMessage(false)}
-        message="ثبت مرور با خطا مواجه شد."
-      />
     </Scaffold>
   );
 }

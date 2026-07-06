@@ -44,7 +44,7 @@ type DetailBlockProps = {
   direction?: "ltr" | "rtl";
 };
 
-function DetailBlock({
+function DetailBlock ({
   icon,
   label,
   children,
@@ -80,7 +80,7 @@ function DetailBlock({
   );
 }
 
-export function ReviewAnswerCard({
+export function ReviewAnswerCard ({
   card,
   isPending,
   onHide,

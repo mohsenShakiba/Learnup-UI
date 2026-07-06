@@ -94,7 +94,7 @@ export const createLearnupTheme = (mode: PaletteMode) => {
         styleOverrides: {
           root: {
             background: paperBackgorund,
-            padding: 16,
+            padding: 8,
             border: `1px solid ${dividerColor}`,
             boxShadow: 'none',
             borderRadius: '16px'
@@ -105,7 +105,7 @@ export const createLearnupTheme = (mode: PaletteMode) => {
         styleOverrides: {
           root: {
             background: paperBackgorund,
-            padding: 16,
+            padding: 8,
             border: `1px solid ${dividerColor}`,
             boxShadow: 'none',
             borderRadius: '16px'

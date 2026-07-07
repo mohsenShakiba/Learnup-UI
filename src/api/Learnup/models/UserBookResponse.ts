@@ -13,4 +13,3 @@ export type UserBookResponse = {
     progress: number | null;
     uploadedAt: string;
 };
-

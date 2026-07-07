@@ -5,6 +5,7 @@ import "./App.css";
 import LoginPage from "./features/auth/LoginPage";
 import { RequireAuth } from "./features/auth/RequireAuth";
 import SignupPage from "./features/auth/SignupPage";
+import ChatPage from "./features/chat/ChatPage";
 import CourseDetailPage from "./features/courses/CourseDetailPage";
 import ListCoursesPage from "./features/courses/ListCoursesPage";
 import DashboardPage from "./features/dashboard/DashboardPage";
@@ -79,6 +80,8 @@ function AppLayout () {
               element={<SubscriptionsPage />}
             />
             <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/chat" element={<ChatPage />} />
+            <Route path="/chat/:conversationId" element={<ChatPage />} />
             <Route path="/placement" element={<PlacementPage />} />
             <Route path="/library/book/:bookId" element={<BookDetailPage />} />
             <Route path="/library" element={<ListBooksPage />} />

@@ -1,0 +1,99 @@
+import { Box, Stack, Typography } from "@mui/material";
+import { useEffect, useRef } from "react";
+import { useParams } from "react-router-dom";
+import { AppIcon } from "../../shared/components/AppIcon";
+import { AppLoader } from "../../shared/components/AppLoader";
+import { DefaultHeader } from "../../shared/components/DefaultHeader";
+import { ChatComposer } from "./components/ChatComposer";
+import { ChatMessageBubble } from "./components/ChatMessageBubble";
+import { useChatStream } from "./useChatStream";
+
+const CONTENT_MAX_WIDTH = 500;
+
+export default function ChatPage () {
+  const { conversationId } = useParams();
+  const parsedId = conversationId ? Number(conversationId) : undefined;
+
+  const { messages, isStreaming, isLoadingHistory, send, stop } = useChatStream(
+    Number.isFinite(parsedId) ? parsedId : undefined,
+  );
+
+  const bottomRef = useRef<HTMLDivElement | null>(null);
+
+  // Keep the newest message in view as replies stream in.
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ block: "end" });
+  }, [messages]);
+
+  const isEmpty = messages.length === 0 && !isLoadingHistory;
+
+  return (
+    <Box
+      sx={{
+        height: "100%",
+        minHeight: 0,
+        display: "flex",
+        flexDirection: "column",
+        overflow: "hidden",
+      }}
+    >
+      <DefaultHeader header="گفتگو با هوش مصنوعی" />
+
+      <Box
+        component="main"
+        sx={{
+          flex: 1,
+          minHeight: 0,
+          width: "100%",
+          maxWidth: CONTENT_MAX_WIDTH,
+          mx: "auto",
+          px: 2,
+          py: 2,
+          overflowY: "auto",
+        }}
+      >
+        {isLoadingHistory ? (
+          <AppLoader />
+        ) : isEmpty ? (
+          <Stack
+            spacing={1}
+            sx={{
+              alignItems: "center",
+              justifyContent: "center",
+              height: "100%",
+              color: "text.secondary",
+              textAlign: "center",
+            }}
+          >
+            <AppIcon sx={{ fontSize: 56, opacity: 0.3 }}>chat_bubble</AppIcon>
+            <Typography variant="body1">دستیار هوشمند لرن‌آپ</Typography>
+            <Typography variant="caption" sx={{ opacity: 0.8, maxWidth: 280 }}>
+              هر سوالی درباره‌ی زبان، گرامر یا لغات داری بپرس. اینجا هستم تا کمکت
+              کنم.
+            </Typography>
+          </Stack>
+        ) : (
+          <Stack spacing={1.5}>
+            {messages.map((message) => (
+              <ChatMessageBubble key={message.id} message={message} />
+            ))}
+          </Stack>
+        )}
+        <Box ref={bottomRef} />
+      </Box>
+
+      <Box
+        sx={{
+          width: "100%",
+          maxWidth: CONTENT_MAX_WIDTH,
+          mx: "auto",
+          px: 2,
+          pt: 1,
+          pb: "calc(env(safe-area-inset-bottom, 0px) + 96px)",
+        }}
+      >
+        <ChatComposer isStreaming={isStreaming} onSend={send} onStop={stop} />
+      </Box>
+    </Box>
+  );
+}

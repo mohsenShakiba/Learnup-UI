@@ -10,4 +10,3 @@ export type LessonResponse = {
     courseId: number;
     isCompleted: boolean;
 };
-

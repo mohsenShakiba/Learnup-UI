@@ -45,6 +45,7 @@ import RocketLaunch from '@mui/icons-material/RocketLaunchOutlined';
 import Schedule from '@mui/icons-material/ScheduleOutlined';
 import School from '@mui/icons-material/SchoolOutlined';
 import Search from '@mui/icons-material/SearchOutlined';
+import Send from '@mui/icons-material/SendOutlined';
 import SentimentDissatisfied from '@mui/icons-material/SentimentDissatisfiedOutlined';
 import Settings from '@mui/icons-material/SettingsOutlined';
 import Speed from '@mui/icons-material/SpeedOutlined';
@@ -108,6 +109,7 @@ const ICONS = {
   schedule: Schedule,
   school: School,
   search: Search,
+  send: Send,
   sentiment_dissatisfied: SentimentDissatisfied,
   settings: Settings,
   speed: Speed,

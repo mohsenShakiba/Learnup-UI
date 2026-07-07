@@ -15,7 +15,7 @@ export const ROOT_TABS = [
   { label: 'لایتنر', icon: 'layers', path: '/leitner-box' },
   { label: 'کتابخانه', icon: 'menu_book', path: '/library' },
   { label: 'جستجو', icon: 'search', path: '/vocab' },
-  { label: 'مکالمه', icon: 'chat_bubble', path: '/vocab' },
+  { label: 'مکالمه', icon: 'chat_bubble', path: '/chat' },
 ] as const;
 
 const tabs = ROOT_TABS;

@@ -12,4 +12,3 @@ export type PlacementTestResponse = {
     instructions: string;
     questions: Array<PlacementQuestionResponse>;
 };
-

@@ -16,4 +16,3 @@ export type CurrentLessonProgressResponse = {
     isTestCompleted: boolean;
     nextLessonId: number | null;
 };
-

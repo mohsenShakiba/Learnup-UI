@@ -24,13 +24,13 @@ export class PlacementService {
     }
 
     /**
-     * @param requestBody
+     * @param requestBody 
      * @returns any OK
      * @throws ApiError
      */
     public static submitPlacementTest(
-        requestBody?: SubmitPlacementRequest,
-    ): CancelablePromise<any> {
+requestBody?: SubmitPlacementRequest,
+): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/Mobile/Placement/submit',

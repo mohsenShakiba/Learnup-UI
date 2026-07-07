@@ -7,4 +7,3 @@ export type PlacementOptionResponse = {
     id: number;
     text: string;
 };
-

@@ -19,4 +19,3 @@ export type CourseResponse = {
     languageId: number;
     lastVisitedAt: string | null;
 };
-

@@ -2,6 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { ChatRequest } from '../models/ChatRequest';
+import type { ChatResponse } from '../models/ChatResponse';
 import type { SendAiTextRequest } from '../models/SendAiTextRequest';
 import type { SendAiTextResponse } from '../models/SendAiTextResponse';
 
@@ -12,16 +14,32 @@ import { request as __request } from '../core/request';
 export class AiService {
 
     /**
-     * @param requestBody
+     * @param requestBody 
      * @returns SendAiTextResponse OK
      * @throws ApiError
      */
     public static postMobileAiProcess(
-        requestBody?: SendAiTextRequest,
-    ): CancelablePromise<SendAiTextResponse> {
+requestBody?: SendAiTextRequest,
+): CancelablePromise<SendAiTextResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/Mobile/Ai/Process',
+            body: requestBody,
+            mediaType: 'application/json',
+        });
+    }
+
+    /**
+     * @param requestBody 
+     * @returns ChatResponse OK
+     * @throws ApiError
+     */
+    public static chatWithAi(
+requestBody?: ChatRequest,
+): CancelablePromise<ChatResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/Mobile/Ai/Chat',
             body: requestBody,
             mediaType: 'application/json',
         });

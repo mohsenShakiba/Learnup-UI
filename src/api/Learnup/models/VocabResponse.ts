@@ -16,4 +16,3 @@ export type VocabResponse = {
     isInLeitnerBox: boolean;
     senses: Array<VocabSenseResponse>;
 };
-

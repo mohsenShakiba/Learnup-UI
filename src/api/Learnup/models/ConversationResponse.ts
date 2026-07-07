@@ -3,7 +3,9 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type MotivationalSentenceResponse = {
+export type ConversationResponse = {
     id: number;
-    sentence: string;
+    title: string | null;
+    createdAt: string;
+    updatedAt: string;
 };

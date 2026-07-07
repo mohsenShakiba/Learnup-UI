@@ -9,4 +9,3 @@ export type BoxLevelResponse = {
     id: number;
     levels: Array<BoxLevelInfoResponse>;
 };
-

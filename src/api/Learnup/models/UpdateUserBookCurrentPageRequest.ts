@@ -7,3 +7,4 @@ export type UpdateUserBookCurrentPageRequest = {
     currentRef: string;
     progress: number | null;
 };
+

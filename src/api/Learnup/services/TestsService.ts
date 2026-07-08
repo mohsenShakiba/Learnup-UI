@@ -13,15 +13,15 @@ import { request as __request } from '../core/request';
 export class TestsService {
 
     /**
-     * @param id 
-     * @param requestBody 
+     * @param id
+     * @param requestBody
      * @returns AnswerTestResponse OK
      * @throws ApiError
      */
     public static answerTest(
-id: number,
-requestBody?: AnswerTestRequest,
-): CancelablePromise<AnswerTestResponse> {
+        id: number,
+        requestBody?: AnswerTestRequest,
+    ): CancelablePromise<AnswerTestResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/Mobile/Tests/{id}/answer',
@@ -34,15 +34,15 @@ requestBody?: AnswerTestRequest,
     }
 
     /**
-     * @param lessonId 
-     * @param type 
+     * @param lessonId
+     * @param type
      * @returns any OK
      * @throws ApiError
      */
     public static resetTestResult(
-lessonId: number,
-type?: TestType,
-): CancelablePromise<any> {
+        lessonId: number,
+        type?: TestType,
+    ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/Mobile/Tests/lesson/{lessonId}/reset',

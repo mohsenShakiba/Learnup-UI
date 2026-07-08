@@ -7,3 +7,4 @@ export type UpdateProfileRequest = {
     displayName: string;
     avatarUrl: string | null;
 };
+

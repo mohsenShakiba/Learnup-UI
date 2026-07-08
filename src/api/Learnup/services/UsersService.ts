@@ -25,13 +25,13 @@ export class UsersService {
     }
 
     /**
-     * @param requestBody 
+     * @param requestBody
      * @returns UserProfileResponse OK
      * @throws ApiError
      */
     public static updateProfile(
-requestBody?: UpdateProfileRequest,
-): CancelablePromise<UserProfileResponse> {
+        requestBody?: UpdateProfileRequest,
+    ): CancelablePromise<UserProfileResponse> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/Mobile/Users/profile',
@@ -41,15 +41,15 @@ requestBody?: UpdateProfileRequest,
     }
 
     /**
-     * @param formData 
+     * @param formData
      * @returns UserProfileResponse OK
      * @throws ApiError
      */
     public static uploadAvatar(
-formData?: {
-File?: Blob;
-},
-): CancelablePromise<UserProfileResponse> {
+        formData?: {
+            File?: Blob;
+        },
+    ): CancelablePromise<UserProfileResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/Mobile/Users/profile/avatar',

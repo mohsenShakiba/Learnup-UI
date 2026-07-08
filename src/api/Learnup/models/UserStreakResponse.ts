@@ -11,3 +11,4 @@ export type UserStreakResponse = {
     lastVisitedAt: string | null;
     lastSevenDays: Array<UserStreakDayResponse>;
 };
+

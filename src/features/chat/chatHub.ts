@@ -26,12 +26,21 @@ import { getAuthToken } from "../../stores/authStore";
  * today and gains streaming automatically once the hub is deployed.
  */
 
-const HUB_URL =
-  (import.meta.env.VITE_CHAT_HUB_URL as string | undefined) ??
-  `${(OpenAPI.BASE ?? "").replace(/\/$/, "")}/hubs/chat`;
+/**
+ * Resolved lazily (not at module load) because `OpenAPI.BASE` is only populated
+ * once `setupOpenApi()` runs, which happens after this module is imported. A
+ * top-level const would capture an empty base and negotiate against the frontend
+ * origin instead of the API server (→ 404).
+ */
+function getHubUrl (): string {
+  return (
+    (import.meta.env.VITE_CHAT_HUB_URL as string | undefined) ??
+    `${(OpenAPI.BASE ?? "").replace(/\/$/, "")}/hubs/chat`
+  );
+}
 
 /** The method name invoked for the streaming reply. */
-const STREAM_METHOD = "StreamChat";
+const STREAM_METHOD = "StreamReply";
 
 let connection: HubConnection | null = null;
 
@@ -39,7 +48,7 @@ function getConnection (): HubConnection {
   if (connection) return connection;
 
   connection = new HubConnectionBuilder()
-    .withUrl(HUB_URL, {
+    .withUrl(getHubUrl(), {
       accessTokenFactory: () => getAuthToken() ?? "",
     })
     .withAutomaticReconnect()
@@ -50,8 +59,11 @@ function getConnection (): HubConnection {
 
 async function ensureConnected (): Promise<HubConnection> {
   const conn = getConnection();
+  console.log("[chatHub] ensureConnected: current state =", conn.state, "url =", getHubUrl());
   if (conn.state === HubConnectionState.Disconnected) {
+    console.log("[chatHub] starting connection…");
     await conn.start();
+    console.log("[chatHub] connection started, state =", conn.state);
   }
   return conn;
 }
@@ -73,18 +85,38 @@ export function streamChat (
   let subscription: ISubscription<string> | null = null;
   let cancelled = false;
 
+  console.log("[chatHub] streamChat invoked with request:", request);
+
   ensureConnected()
     .then((conn) => {
-      if (cancelled) return;
+      if (cancelled) {
+        console.log("[chatHub] streamChat cancelled before subscribe");
+        return;
+      }
+      console.log("[chatHub] subscribing to stream method:", STREAM_METHOD);
+      // The hub method takes positional args (conversationId, message); the
+      // CancellationToken is supplied server-side by SignalR, not from here.
       subscription = conn
-        .stream<string>(STREAM_METHOD, request)
+        .stream<string>(STREAM_METHOD, request.conversationId, request.message)
         .subscribe({
-          next: handlers.onToken,
-          complete: handlers.onComplete,
-          error: handlers.onError,
+          next: (chunk) => {
+            console.log("[chatHub] stream next (token):", chunk);
+            handlers.onToken(chunk);
+          },
+          complete: () => {
+            console.log("[chatHub] stream complete");
+            handlers.onComplete();
+          },
+          error: (error) => {
+            console.error("[chatHub] stream error:", error);
+            handlers.onError(error);
+          },
         });
     })
-    .catch(handlers.onError);
+    .catch((error) => {
+      console.error("[chatHub] ensureConnected/subscribe failed:", error);
+      handlers.onError(error);
+    });
 
   return () => {
     cancelled = true;

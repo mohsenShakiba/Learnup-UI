@@ -3,16 +3,17 @@ import { useRef } from "react";
 import type { StoryItemResponse } from "../../../api/Learnup";
 import { showDrawer } from "../../../shared/swipeableDrawer";
 import { useStoryAudio } from "../hooks/useStoryAudio";
-import { WordTranslationDrawer } from "./WordTranslationDrawer";
+import { StoryWordDrawer } from "./StoryWordDrawer";
 
 type StoryItemProps = {
+  storyId: number;
   item: StoryItemResponse;
 };
 
 const AVATAR_SIZE = 30;
 const LONG_PRESS_DURATION = 500;
 
-export function StoryItem({ item }: StoryItemProps) {
+export function StoryItem({ storyId, item }: StoryItemProps) {
   const { activeItemId, playbackStatus, showTranslation, playItemAudio } =
     useStoryAudio();
 
@@ -23,6 +24,11 @@ export function StoryItem({ item }: StoryItemProps) {
   const isPerson1 = item.person === 1;
 
   const play = () => {
+    // Swallow the tap that follows a long-press so it doesn't also start audio.
+    if (didLongPress.current) {
+      didLongPress.current = false;
+      return;
+    }
     if (item.id != null) {
       void playItemAudio(item.id);
     }
@@ -44,16 +50,10 @@ export function StoryItem({ item }: StoryItemProps) {
     longPressTimer.current = setTimeout(() => {
       longPressTimer.current = null;
       didLongPress.current = true;
-      showDrawer(<WordTranslationDrawer word={cleanWord} />);
+      showDrawer(
+        <StoryWordDrawer storyId={storyId} itemId={item.id} word={cleanWord} />,
+      );
     }, LONG_PRESS_DURATION);
-  };
-
-  const handleWordClick = (event: React.MouseEvent) => {
-    // Swallow the tap that follows a long-press so it doesn't also start audio.
-    if (didLongPress.current) {
-      event.stopPropagation();
-      didLongPress.current = false;
-    }
   };
 
   const words = item.content.split(/(\s+)/);
@@ -97,7 +97,6 @@ export function StoryItem({ item }: StoryItemProps) {
               onPointerUp={cancelLongPress}
               onPointerLeave={cancelLongPress}
               onPointerCancel={cancelLongPress}
-              onClick={handleWordClick}
               sx={{
                 cursor: 'pointer',
                 userSelect: 'none',

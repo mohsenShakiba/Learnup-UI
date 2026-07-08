@@ -4,7 +4,6 @@
 /* eslint-disable */
 import type { ImportGrammarRequest } from '../models/ImportGrammarRequest';
 import type { PlacementTestRequest } from '../models/PlacementTestRequest';
-import type { StoryRequest } from '../models/StoryRequest';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -13,17 +12,17 @@ import { request as __request } from '../core/request';
 export class ImportService {
 
     /**
-     * @param formData 
+     * @param formData
      * @returns number OK
      * @throws ApiError
      */
     public static importVocabs(
-formData?: {
-File?: Blob;
-LevelId?: number;
-LanguageId?: number;
-},
-): CancelablePromise<number> {
+        formData?: {
+            File?: Blob;
+            LevelId?: number;
+            LanguageId?: number;
+        },
+    ): CancelablePromise<number> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/Admin/Import/vocabs',
@@ -33,17 +32,19 @@ LanguageId?: number;
     }
 
     /**
-     * @param courseId 
-     * @param lessonOrder 
-     * @param requestBody 
+     * @param courseId
+     * @param lessonOrder
+     * @param formData
      * @returns number OK
      * @throws ApiError
      */
     public static importStory(
-courseId: number,
-lessonOrder: number,
-requestBody?: StoryRequest,
-): CancelablePromise<number> {
+        courseId: number,
+        lessonOrder: number,
+        formData?: {
+            File?: Blob;
+        },
+    ): CancelablePromise<number> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/Admin/Import/stories/{courseId}/{lessonOrder}',
@@ -51,19 +52,19 @@ requestBody?: StoryRequest,
                 'courseId': courseId,
                 'lessonOrder': lessonOrder,
             },
-            body: requestBody,
-            mediaType: 'application/json',
+            formData: formData,
+            mediaType: 'multipart/form-data',
         });
     }
 
     /**
-     * @param requestBody 
+     * @param requestBody
      * @returns number OK
      * @throws ApiError
      */
     public static importPlacementTest(
-requestBody?: PlacementTestRequest,
-): CancelablePromise<number> {
+        requestBody?: PlacementTestRequest,
+    ): CancelablePromise<number> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/Admin/Import/placement-test',
@@ -73,13 +74,13 @@ requestBody?: PlacementTestRequest,
     }
 
     /**
-     * @param requestBody 
+     * @param requestBody
      * @returns number OK
      * @throws ApiError
      */
     public static postAdminImportGrammars(
-requestBody?: ImportGrammarRequest,
-): CancelablePromise<number> {
+        requestBody?: ImportGrammarRequest,
+    ): CancelablePromise<number> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/Admin/Import/grammars',
@@ -89,15 +90,15 @@ requestBody?: ImportGrammarRequest,
     }
 
     /**
-     * @param formData 
+     * @param formData
      * @returns number OK
      * @throws ApiError
      */
     public static importLessonGrammars(
-formData?: {
-File?: Blob;
-},
-): CancelablePromise<number> {
+        formData?: {
+            File?: Blob;
+        },
+    ): CancelablePromise<number> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/Admin/Import/lesson-grammars',

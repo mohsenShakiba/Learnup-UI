@@ -8,3 +8,4 @@ export type ChatResponse = {
     reply: string;
     tokensUsed: number;
 };
+

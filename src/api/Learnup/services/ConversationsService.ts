@@ -34,13 +34,13 @@ export class ConversationsService {
     }
 
     /**
-     * @param id 
+     * @param id
      * @returns ConversationDetailResponse OK
      * @throws ApiError
      */
     public static getConversation(
-id: number,
-): CancelablePromise<ConversationDetailResponse> {
+        id: number,
+    ): CancelablePromise<ConversationDetailResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/Mobile/Conversations/{id}',

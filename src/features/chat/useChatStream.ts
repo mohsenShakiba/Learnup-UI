@@ -155,6 +155,7 @@ export function useChatStream (initialConversationId?: number): UseChatStream {
       cancelRef.current = streamChat(request, {
         onToken: (chunk) => {
           receivedAnyToken = true;
+          console.log("[useChatStream] onToken:", chunk);
           setMessages((prev) =>
             prev.map((m) =>
               m.id === assistantId
@@ -163,8 +164,12 @@ export function useChatStream (initialConversationId?: number): UseChatStream {
             ),
           );
         },
-        onComplete: finalize,
-        onError: () => {
+        onComplete: () => {
+          console.log("[useChatStream] onComplete, receivedAnyToken =", receivedAnyToken);
+          finalize();
+        },
+        onError: (error) => {
+          console.error("[useChatStream] onError, receivedAnyToken =", receivedAnyToken, error);
           // If the hub never produced a token, the reply is still fully
           // recoverable over REST; otherwise keep the partial text we have.
           if (receivedAnyToken) finalize();

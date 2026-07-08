@@ -8,3 +8,4 @@ import type { PlacementAnswerDto } from './PlacementAnswerDto';
 export type SubmitPlacementRequest = {
     answers: Array<PlacementAnswerDto>;
 };
+

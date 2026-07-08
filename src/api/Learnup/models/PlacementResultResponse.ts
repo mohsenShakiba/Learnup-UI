@@ -11,3 +11,4 @@ export type PlacementResultResponse = {
     startingCourseId: number | null;
     answers: Array<PlacementAnswerReviewResponse>;
 };
+

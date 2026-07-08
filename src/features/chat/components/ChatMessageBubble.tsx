@@ -1,5 +1,14 @@
 import { Box, Paper, Typography } from "@mui/material";
 import type { ChatMessage } from "../useChatStream";
+import { MarkdownMessage } from "./MarkdownMessage";
+
+// Persian/Arabic Unicode ranges. If the text contains any of these characters
+// we treat it as Farsi and render right-to-left, otherwise left-to-right.
+const RTL_CHARS = /[؀-ۿݐ-ݿࢠ-ࣿﭐ-﷿ﹰ-﻿]/;
+
+function getDirection(text: string): "rtl" | "ltr" {
+  return RTL_CHARS.test(text) ? "rtl" : "ltr";
+}
 
 function TypingDots () {
   return (
@@ -29,6 +38,7 @@ function TypingDots () {
 export function ChatMessageBubble ({ message }: { message: ChatMessage }) {
   const isUser = message.role === "user";
   const showTyping = message.pending && message.content.length === 0;
+  const direction = getDirection(message.content);
 
   return (
     <Box
@@ -54,17 +64,23 @@ export function ChatMessageBubble ({ message }: { message: ChatMessage }) {
       >
         {showTyping ? (
           <TypingDots />
-        ) : (
+        ) : isUser ? (
           <Typography
             variant="body2"
+            dir={direction}
             sx={{
               whiteSpace: "pre-wrap",
               wordBreak: "break-word",
               lineHeight: 1.7,
+              textAlign: direction === "rtl" ? "right" : "left",
             }}
           >
             {message.content}
           </Typography>
+        ) : (
+          <Box dir={direction} sx={{ textAlign: direction === "rtl" ? "right" : "left" }}>
+            <MarkdownMessage content={message.content} />
+          </Box>
         )}
       </Paper>
     </Box>

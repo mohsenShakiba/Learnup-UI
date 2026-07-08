@@ -12,3 +12,4 @@ export type UserLessonResponse = {
     isVocabCompleted: boolean;
     isTestCompleted: boolean;
 };
+

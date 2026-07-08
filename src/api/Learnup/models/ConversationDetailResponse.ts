@@ -12,3 +12,4 @@ export type ConversationDetailResponse = {
     updatedAt: string;
     messages: Array<ChatMessageResponse>;
 };
+

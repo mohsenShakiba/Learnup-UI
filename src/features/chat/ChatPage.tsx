@@ -1,22 +1,31 @@
-import { Box, Stack, Typography } from "@mui/material";
-import { useEffect, useRef } from "react";
+import { Box, IconButton, Stack, Typography } from "@mui/material";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { AppIcon } from "../../shared/components/AppIcon";
 import { AppLoader } from "../../shared/components/AppLoader";
 import { DefaultHeader } from "../../shared/components/DefaultHeader";
 import { ChatComposer } from "./components/ChatComposer";
 import { ChatMessageBubble } from "./components/ChatMessageBubble";
+import { ConversationListDrawer } from "./components/ConversationListDrawer";
 import { useChatStream } from "./useChatStream";
 
 const CONTENT_MAX_WIDTH = 500;
 
-export default function ChatPage () {
+export default function ChatPage() {
   const { conversationId } = useParams();
   const parsedId = conversationId ? Number(conversationId) : undefined;
+  const currentId = Number.isFinite(parsedId) ? parsedId : undefined;
 
-  const { messages, isStreaming, isLoadingHistory, send, stop } = useChatStream(
-    Number.isFinite(parsedId) ? parsedId : undefined,
-  );
+  // Remount on conversation change so the stream state fully resets between
+  // threads (the "new chat" case included), rather than leaking prior messages.
+  return <ChatView key={currentId ?? "new"} conversationId={currentId} />;
+}
+
+function ChatView({ conversationId }: { conversationId?: number }) {
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const { messages, isStreaming, isLoadingHistory, send, stop } =
+    useChatStream(conversationId);
 
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
@@ -37,7 +46,17 @@ export default function ChatPage () {
         overflow: "hidden",
       }}
     >
-      <DefaultHeader header="گفتگو با هوش مصنوعی" />
+      <DefaultHeader header="گفتگو با هوش مصنوعی">
+        <IconButton onClick={() => setDrawerOpen(true)}>
+          <AppIcon>forum</AppIcon>
+        </IconButton>
+      </DefaultHeader>
+
+      <ConversationListDrawer
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        currentConversationId={conversationId}
+      />
 
       <Box
         component="main"

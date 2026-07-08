@@ -6,8 +6,9 @@
 export type StoryItemResponse = {
     id: number;
     content: string;
-    translation: string;
+    translation: string | null;
     order: number;
     person: number;
     voiceId: string | null;
 };
+

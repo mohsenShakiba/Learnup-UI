@@ -7,3 +7,4 @@ export type ChatRequest = {
     conversationId: number | null;
     message: string;
 };
+

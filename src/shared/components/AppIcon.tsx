@@ -1,6 +1,10 @@
 import type { SvgIconProps } from '@mui/material';
 import type { ComponentType } from 'react';
 
+import PlayCircle from '@mui/icons-material/PlayCircleOutlineRounded';
+import PauseCircle from '@mui/icons-material/PauseCircleOutlined';
+import ArrowCircleLeft from '@mui/icons-material/ArrowCircleLeftOutlined';
+import ArrowCircleRight from '@mui/icons-material/ArrowCircleRightOutlined';
 import AccountCircle from '@mui/icons-material/AccountCircleOutlined';
 import AcUnit from '@mui/icons-material/AcUnitOutlined';
 import Add from '@mui/icons-material/AddOutlined';
@@ -122,6 +126,10 @@ const ICONS = {
   workspace_premium: WorkspacePremium,
   done: Done,
   brightness_auto: BrigtnessAuto,
+  play_circle: PlayCircle,
+  pause_circle: PauseCircle,
+  arrow_circle_left: ArrowCircleLeft,
+  arrow_circle_right: ArrowCircleRight
 } satisfies Record<string, ComponentType<SvgIconProps>>;
 
 export type IconName = keyof typeof ICONS;

@@ -20,7 +20,8 @@ export function StoryItem({ storyId, item }: StoryItemProps) {
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const didLongPress = useRef(false);
 
-  const isActive = playbackStatus === "playing" && activeItemId === item.id;
+  const isPlaying = playbackStatus === "playing";
+  const isActive = isPlaying && activeItemId === item.id;
   const isPerson1 = item.person === 1;
 
   const play = () => {
@@ -72,7 +73,7 @@ export function StoryItem({ storyId, item }: StoryItemProps) {
           : '16px 16px 2px 16px',
         bgcolor: isPerson1 ? 'primary.main' : 'background.paper',
         border: '1px solid',
-        borderColor: isActive ? 'secondary.main' : isPerson1 ? 'primary.dark' : 'divider',
+        borderColor: 'divider',
         cursor: 'pointer',
         transition: theme.transitions.create(['border-color'], {
           duration: theme.transitions.duration.short,
@@ -145,7 +146,14 @@ export function StoryItem({ storyId, item }: StoryItemProps) {
     <Stack
       direction="row"
       spacing={1}
-      sx={{ justifyContent: isPerson1 ? 'flex-start' : 'flex-end', alignItems: 'flex-end' }}
+      sx={(theme) => ({
+        justifyContent: isPerson1 ? 'flex-start' : 'flex-end',
+        alignItems: 'flex-end',
+        opacity: isPlaying && !isActive ? 0.5 : 1,
+        transition: theme.transitions.create(['opacity'], {
+          duration: theme.transitions.duration.short,
+        }),
+      })}
     >
       {isPerson1 ? (
         <>

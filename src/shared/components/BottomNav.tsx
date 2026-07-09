@@ -33,7 +33,7 @@ type BottomNavSymbolProps = Omit<SvgIconProps, "children"> & {
   name: keyof typeof NAV_SYMBOLS;
 };
 
-function BottomNavSymbol ({ name, sx, ...props }: BottomNavSymbolProps) {
+function BottomNavSymbol({ name, sx, ...props }: BottomNavSymbolProps) {
   const Symbol = NAV_SYMBOLS[name];
 
   return (
@@ -50,7 +50,7 @@ function BottomNavSymbol ({ name, sx, ...props }: BottomNavSymbolProps) {
   );
 }
 
-export function isBottomNavVisible (pathname: string) {
+export function isBottomNavVisible(pathname: string) {
   return (
     pathname.startsWith(LEITNER_REVIEW_PATH_PREFIX) ||
     tabs.some(t => t.path === pathname)
@@ -58,7 +58,7 @@ export function isBottomNavVisible (pathname: string) {
 }
 
 
-export function BottomNav () {
+export function BottomNav() {
   const theme = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
@@ -104,9 +104,7 @@ export function BottomNav () {
           px: 0.7,
           py: 0.7,
           borderRadius: '24px',
-          border: '1px solid',
-          borderColor: isDark ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.6)',
-          backgroundColor: isDark ? 'rgba(40,38,46,0.55)' : 'rgba(255,255,255,0.55)',
+          backgroundColor: isDark ? 'rgba(40,38,46,0.55)' : 'rgba(255,255,255,0.5)',
           backdropFilter: 'blur(24px) saturate(180%)',
           WebkitBackdropFilter: 'blur(24px) saturate(180%)',
           boxShadow: isDark

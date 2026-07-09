@@ -10,7 +10,7 @@ type MarkdownMessageProps = {
 // Renders assistant replies as basic Markdown (bold, italics, lists, code,
 // links, headings…) while keeping the visual language of the surrounding
 // MUI theme. Kept intentionally minimal — no raw HTML is allowed through.
-export function MarkdownMessage ({ content }: MarkdownMessageProps) {
+export function MarkdownMessage({ content }: MarkdownMessageProps) {
   return (
     <Box
       sx={{
@@ -84,7 +84,7 @@ export function MarkdownMessage ({ content }: MarkdownMessageProps) {
           li: ({ node, ...props }) => (
             <Typography variant="body2" component="li" {...props} />
           ),
-          a: ({ node, ...props }: ComponentProps<typeof Link>) => (
+          a: ({ ...props }: ComponentProps<typeof Link>) => (
             <Link
               target="_blank"
               rel="noopener noreferrer"

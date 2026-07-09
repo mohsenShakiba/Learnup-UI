@@ -9,4 +9,3 @@ export type ConversationResponse = {
     createdAt: string;
     updatedAt: string;
 };
-

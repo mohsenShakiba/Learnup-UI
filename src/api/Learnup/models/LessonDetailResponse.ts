@@ -21,4 +21,3 @@ export type LessonDetailResponse = {
     vocabs: Array<VocabResponse>;
     tests: Array<TestResponse>;
 };
-

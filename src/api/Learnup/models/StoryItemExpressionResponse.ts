@@ -9,4 +9,3 @@ export type StoryItemExpressionResponse = {
     meaning: string;
     translation: string | null;
 };
-

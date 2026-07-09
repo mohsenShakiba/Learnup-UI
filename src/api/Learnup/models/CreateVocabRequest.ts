@@ -8,4 +8,3 @@ export type CreateVocabRequest = {
     word: string;
     translation: string | null;
 };
-

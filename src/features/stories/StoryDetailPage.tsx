@@ -31,7 +31,7 @@ export default function StoryDetailPage () {
   }
 
   return (
-    <StoryAudioProvider storyItems={storyItems}>
+    <StoryAudioProvider storyId={storyIdNumber} storyItems={storyItems}>
       <Scaffold header={<DefaultHeader header='داستان' />}>
         <Stack direction='column' sx={{ gap: 1, pb: 0 }}>
           {storyItems.map((item) => (

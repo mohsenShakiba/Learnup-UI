@@ -10,9 +10,23 @@ import {
   type RefObject,
 } from 'react';
 import type { StoryItemResponse } from '../../../api/Learnup';
+import { getFileById } from '../../../services/fetchFile';
 
 export type PlaybackStatus = 'idle' | 'playing' | 'paused';
 
+/** A single word with its start/end offset (seconds) inside the story audio. */
+type WordTimestamp = {
+  text: string;
+  start: number;
+  end: number;
+};
+
+/** The time range (seconds) a story item occupies inside the story audio. */
+export type StorySegment = {
+  itemId: number;
+  start: number;
+  end: number;
+};
 
 type UseStoryAudioResult = {
   activeItemId: number | null;
@@ -38,129 +52,176 @@ type UseStoryAudioResult = {
 
 const StoryAudioContext = createContext<UseStoryAudioResult | null>(null);
 
-function useStoryAudioState (storyItems: StoryItemResponse[]): UseStoryAudioResult {
-  const [audioMap, setAudioMap] = useState<Record<number, string>>({});
-  const [playingItemId, setPlayingItemId] = useState<number | null>(null);
+/** Small epsilon (seconds) to make time comparisons tolerant of float drift. */
+const TIME_EPSILON = 0.01;
+
+/**
+ * Aligns the flat word-timestamp list against the ordered story items to work
+ * out the time range each item occupies. Words are assigned to items in order:
+ * an item consumes as many words as its content has whitespace-separated tokens.
+ * An item's end is the next item's start (so playback flows continuously); the
+ * final item keeps its last word's end time.
+ */
+function buildSegments (storyItems: StoryItemResponse[], words: WordTimestamp[]): StorySegment[] {
+  const orderedItems = [...storyItems]
+    .filter((item) => item.id != null)
+    .sort((first, second) => first.order - second.order);
+
+  const segments: StorySegment[] = [];
+  let wordIndex = 0;
+
+  for (const item of orderedItems) {
+    const tokenCount = item.content.trim().split(/\s+/).filter(Boolean).length;
+
+    if (tokenCount === 0 || wordIndex >= words.length) {
+      continue;
+    }
+
+    const start = words[wordIndex].start;
+    const lastWordIndex = Math.min(wordIndex + tokenCount, words.length) - 1;
+    const end = words[lastWordIndex].end;
+    wordIndex = lastWordIndex + 1;
+
+    segments.push({ itemId: item.id as number, start, end });
+  }
+
+  for (let index = 0; index < segments.length - 1; index += 1) {
+    segments[index].end = segments[index + 1].start;
+  }
+
+  return segments;
+}
+
+function useStoryAudioState (storyId: number, storyItems: StoryItemResponse[]): UseStoryAudioResult {
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [words, setWords] = useState<WordTimestamp[]>([]);
+  const [activeItemId, setActiveItemId] = useState<number | null>(null);
   const [playbackStatus, setPlaybackStatus] = useState<PlaybackStatus>('idle');
   const [audioProgress, setAudioProgress] = useState(0);
   const [audioDuration, setAudioDuration] = useState(0);
   const [showTranslation, setShowTranslation] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? '';
-
   useEffect(() => {
-    const voiceItems = storyItems.filter((item) => item.id != null && item.voiceId);
-    const abortController = new AbortController();
-    const objectUrls: string[] = [];
+    if (!Number.isFinite(storyId)) {
+      return;
+    }
 
-    const loadStoryAudios = async () => {
-      if (voiceItems.length === 0) {
-        setAudioMap((currentAudioMap) => {
-          Object.values(currentAudioMap).forEach((url) => URL.revokeObjectURL(url));
-          return {};
-        });
+    let cancelled = false;
+    let objectUrl: string | null = null;
+
+    const loadStoryAudio = async () => {
+      const [audioBuffer, wordsBuffer] = await Promise.all([
+        getFileById(`conversation_voices/${storyId}.mp3`),
+        getFileById(`conversation_voices/${storyId}.json`),
+      ]);
+
+      if (cancelled) {
         return;
       }
 
-      const results = await Promise.allSettled(
-        voiceItems.map(async (item) => {
-          const response = await fetch(`${apiBaseUrl}/Mobile/Files/${item.voiceId}`, {
-            signal: abortController.signal,
-          });
+      objectUrl = URL.createObjectURL(new Blob([audioBuffer], { type: 'audio/mpeg' }));
 
-          if (!response.ok) {
-            throw new Error(`Failed to load audio for story item ${item.id}`);
-          }
+      const parsed = JSON.parse(new TextDecoder().decode(wordsBuffer)) as { words?: WordTimestamp[]; };
 
-          const objectUrl = URL.createObjectURL(await response.blob());
-          objectUrls.push(objectUrl);
-
-          return [item.id as number, objectUrl] as const;
-        }),
-      );
-
-      if (abortController.signal.aborted) {
-        return;
-      }
-
-      const nextAudioMap = results.reduce<Record<number, string>>((audioUrls, result) => {
-        if (result.status === 'fulfilled') {
-          const [itemId, objectUrl] = result.value;
-          audioUrls[itemId] = objectUrl;
-        }
-
-        return audioUrls;
-      }, {});
-
-      setAudioMap((currentAudioMap) => {
-        Object.values(currentAudioMap).forEach((url) => URL.revokeObjectURL(url));
-        return nextAudioMap;
-      });
+      setAudioUrl(objectUrl);
+      setWords(Array.isArray(parsed.words) ? parsed.words : []);
     };
 
-    loadStoryAudios().catch((err) => {
-      if (!abortController.signal.aborted) {
-        console.error('Failed to load story item audios:', err);
+    loadStoryAudio().catch((err) => {
+      if (!cancelled) {
+        console.error('Failed to load story audio:', err);
       }
     });
 
     return () => {
-      abortController.abort();
-      objectUrls.forEach((url) => URL.revokeObjectURL(url));
+      cancelled = true;
+      setAudioUrl(null);
+      setWords([]);
+      if (objectUrl) {
+        URL.revokeObjectURL(objectUrl);
+      }
     };
-  }, [apiBaseUrl, storyItems]);
+  }, [storyId]);
 
-  const playableItemIds = useMemo(
-    () => storyItems
-      .filter((item) => item.id != null && audioMap[item.id])
-      .map((item) => item.id as number),
-    [audioMap, storyItems],
-  );
+  const segments = useMemo(() => buildSegments(storyItems, words), [storyItems, words]);
+
+  const segmentByItemId = useMemo(() => {
+    const map = new Map<number, StorySegment>();
+    segments.forEach((segment) => map.set(segment.itemId, segment));
+    return map;
+  }, [segments]);
 
   const progressPercentage = audioDuration > 0
     ? Math.min((audioProgress / audioDuration) * 100, 100)
     : 0;
 
-  const playItemAudio = async (itemId: number, startTime = 0) => {
-    const audioUrl = audioMap[itemId];
+  /** Returns the last segment whose start is at or before the given time. */
+  const segmentAtTime = (time: number): StorySegment | null => {
+    let match: StorySegment | null = null;
 
+    for (const segment of segments) {
+      if (time + TIME_EPSILON >= segment.start) {
+        match = segment;
+      } else {
+        break;
+      }
+    }
+
+    return match;
+  };
+
+  const playFromTime = async (startTime: number, itemId: number | null) => {
     if (!audioUrl || !audioRef.current) {
       return;
     }
-
-    setPlayingItemId(itemId);
-    setPlaybackStatus('playing');
-    audioRef.current.pause();
 
     if (audioRef.current.src !== audioUrl) {
       audioRef.current.src = audioUrl;
     }
 
+    setActiveItemId(itemId);
+    setPlaybackStatus('playing');
     audioRef.current.currentTime = startTime;
     setAudioProgress(startTime);
 
     try {
       await audioRef.current.play();
-      audioRef.current.playbackRate = 1;
     } catch (err) {
       setPlaybackStatus('paused');
-      console.error('Failed to play story item audio:', err);
+      console.error('Failed to play story audio:', err);
     }
   };
 
+  const playItemAudio = async (itemId: number) => {
+    const segment = segmentByItemId.get(itemId);
+
+    if (!segment) {
+      return;
+    }
+
+    await playFromTime(segment.start, itemId);
+  };
+
   const play = async () => {
-    if (!audioRef.current || playableItemIds.length === 0) {
+    if (!audioUrl || !audioRef.current || segments.length === 0) {
       return;
     }
 
-    if (playingItemId != null && audioMap[playingItemId]) {
-      const resumeTime = audioRef.current.src ? audioRef.current.currentTime : audioProgress;
-      await playItemAudio(playingItemId, resumeTime);
+    if (playbackStatus === 'paused' && audioRef.current.src) {
+      setPlaybackStatus('playing');
+
+      try {
+        await audioRef.current.play();
+      } catch (err) {
+        setPlaybackStatus('paused');
+        console.error('Failed to resume story audio:', err);
+      }
+
       return;
     }
 
-    await playItemAudio(playableItemIds[0]);
+    await playFromTime(segments[0].start, segments[0].itemId);
   };
 
   const pause = () => {
@@ -174,57 +235,42 @@ function useStoryAudioState (storyItems: StoryItemResponse[]): UseStoryAudioResu
   };
 
   const restart = async () => {
-    if (playableItemIds.length === 0) {
+    if (segments.length === 0) {
       return;
     }
 
-    setAudioProgress(0);
-    setAudioDuration(0);
-    await playItemAudio(playableItemIds[0]);
+    await playFromTime(segments[0].start, segments[0].itemId);
   };
 
   const playNextItem = async () => {
-    if (playableItemIds.length === 0) {
+    if (segments.length === 0) {
       return;
     }
 
-    const currentIndex = playingItemId == null
+    const currentIndex = activeItemId == null
       ? -1
-      : playableItemIds.indexOf(playingItemId);
-    const nextItemId = playableItemIds[currentIndex + 1] ?? playableItemIds[0];
+      : segments.findIndex((segment) => segment.itemId === activeItemId);
+    const nextSegment = segments[currentIndex + 1] ?? segments[0];
 
-    await playItemAudio(nextItemId);
+    await playFromTime(nextSegment.start, nextSegment.itemId);
   };
 
   const playPreviousItem = async () => {
-    if (playableItemIds.length === 0) {
+    if (segments.length === 0) {
       return;
     }
 
-    const currentIndex = playingItemId == null
+    const currentIndex = activeItemId == null
       ? 0
-      : playableItemIds.indexOf(playingItemId);
-    const previousItemId = playableItemIds[currentIndex - 1] ?? playableItemIds[playableItemIds.length - 1];
+      : segments.findIndex((segment) => segment.itemId === activeItemId);
+    const previousSegment = segments[currentIndex - 1] ?? segments[segments.length - 1];
 
-    await playItemAudio(previousItemId);
+    await playFromTime(previousSegment.start, previousSegment.itemId);
   };
 
   const handleAudioEnded = () => {
-    if (playingItemId == null) {
-      setPlaybackStatus('idle');
-      return;
-    }
-
-    const currentIndex = playableItemIds.indexOf(playingItemId);
-    const nextItemId = playableItemIds[currentIndex + 1];
-
-    if (nextItemId != null) {
-      void playItemAudio(nextItemId);
-      return;
-    }
-
     setPlaybackStatus('idle');
-    setPlayingItemId(null);
+    setActiveItemId(null);
     setAudioProgress(0);
   };
 
@@ -242,18 +288,24 @@ function useStoryAudioState (storyItems: StoryItemResponse[]): UseStoryAudioResu
     const currentTime = audioRef.current?.currentTime || 0;
 
     setAudioProgress(currentTime);
+
+    const segment = segmentAtTime(currentTime);
+
+    if (segment && segment.itemId !== activeItemId) {
+      setActiveItemId(segment.itemId);
+    }
   };
 
   return {
-    activeItemId: playingItemId,
+    activeItemId,
     audioProgress,
     audioRef,
     playbackStatus,
-    playableItemCount: playableItemIds.length,
+    playableItemCount: segments.length,
     progressPercentage,
     showTranslation,
     onToggleTranslation: () => setShowTranslation((current) => !current),
-    hasAudio: (itemId) => itemId != null && Boolean(audioMap[itemId]),
+    hasAudio: (itemId) => itemId != null && segmentByItemId.has(itemId),
     playItemAudio,
     play,
     pause,
@@ -267,8 +319,8 @@ function useStoryAudioState (storyItems: StoryItemResponse[]): UseStoryAudioResu
   };
 }
 
-export function StoryAudioProvider (props: { storyItems: StoryItemResponse[]; children: ReactNode; }) {
-  const storyAudio = useStoryAudioState(props.storyItems);
+export function StoryAudioProvider (props: { storyId: number; storyItems: StoryItemResponse[]; children: ReactNode; }) {
+  const storyAudio = useStoryAudioState(props.storyId, props.storyItems);
 
   return createElement(StoryAudioContext.Provider, { value: storyAudio }, props.children);
 }

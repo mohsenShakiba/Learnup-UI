@@ -12,13 +12,13 @@ import { request as __request } from '../core/request';
 export class StoriesService {
 
     /**
-     * @param id
+     * @param id 
      * @returns StoryResponse OK
      * @throws ApiError
      */
     public static getStoryById(
-        id: number,
-    ): CancelablePromise<StoryResponse> {
+id: number,
+): CancelablePromise<StoryResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/Mobile/Stories/{id}',
@@ -29,15 +29,15 @@ export class StoriesService {
     }
 
     /**
-     * @param id
-     * @param itemId
+     * @param id 
+     * @param itemId 
      * @returns StoryItemExpressionResponse OK
      * @throws ApiError
      */
     public static getStoryItemExpressions(
-        id: number,
-        itemId: number,
-    ): CancelablePromise<Array<StoryItemExpressionResponse>> {
+id: number,
+itemId: number,
+): CancelablePromise<Array<StoryItemExpressionResponse>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/Mobile/Stories/{id}/items/{itemId}/expressions',

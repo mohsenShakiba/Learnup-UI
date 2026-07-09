@@ -7,4 +7,3 @@ export type PlacementAnswerDto = {
     questionId: number;
     selectedOptionId: number;
 };
-

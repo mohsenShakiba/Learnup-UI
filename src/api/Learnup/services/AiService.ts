@@ -14,13 +14,13 @@ import { request as __request } from '../core/request';
 export class AiService {
 
     /**
-     * @param requestBody
+     * @param requestBody 
      * @returns SendAiTextResponse OK
      * @throws ApiError
      */
     public static postMobileAiProcess(
-        requestBody?: SendAiTextRequest,
-    ): CancelablePromise<SendAiTextResponse> {
+requestBody?: SendAiTextRequest,
+): CancelablePromise<SendAiTextResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/Mobile/Ai/Process',
@@ -30,13 +30,13 @@ export class AiService {
     }
 
     /**
-     * @param requestBody
+     * @param requestBody 
      * @returns ChatResponse OK
      * @throws ApiError
      */
     public static chatWithAi(
-        requestBody?: ChatRequest,
-    ): CancelablePromise<ChatResponse> {
+requestBody?: ChatRequest,
+): CancelablePromise<ChatResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/Mobile/Ai/Chat',

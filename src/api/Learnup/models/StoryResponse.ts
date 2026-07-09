@@ -14,4 +14,3 @@ export type StoryResponse = {
     isCompleted: boolean;
     items: Array<StoryItemResponse>;
 };
-

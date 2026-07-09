@@ -15,4 +15,3 @@ export type DueLeitnerBoxItemResponse = {
     senses: Array<VocabSenseResponse>;
     nextReviewAt: string | null;
 };
-

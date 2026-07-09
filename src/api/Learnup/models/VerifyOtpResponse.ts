@@ -8,4 +8,3 @@ export type VerifyOtpResponse = {
     expiresAt: string | null;
     requiresSignup: boolean;
 };
-

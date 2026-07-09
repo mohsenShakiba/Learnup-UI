@@ -14,4 +14,3 @@ export type PlacementQuestionResponse = {
     prompt: string;
     options: Array<PlacementOptionResponse>;
 };
-

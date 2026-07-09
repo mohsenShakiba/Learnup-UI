@@ -152,33 +152,32 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
 
       <Box sx={{ flex: 1 }} />
 
-      <Paper sx={{ p: 1.5 }}>
-        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
-          حالت نمایش
-        </Typography>
-        <ToggleButtonGroup
-          value={mode}
-          exclusive
-          onChange={(_, next) => {
-            if (next) setMode(next);
-          }}
-          fullWidth
-          size="small"
-        >
-          <ToggleButton color='primary' value="system">
-            <AppIcon sx={{ fontSize: 16, mr: 1 }}>brightness_auto</AppIcon>
-            خودکار
-          </ToggleButton>
-          <ToggleButton color='primary' value="light">
-            <AppIcon sx={{ fontSize: 16, mr: 1 }}>light_mode</AppIcon>
-            روشن
-          </ToggleButton>
-          <ToggleButton color='primary' value="dark">
-            <AppIcon sx={{ fontSize: 16, mr: 1 }}>dark_mode</AppIcon>
-            تاریک
-          </ToggleButton>
-        </ToggleButtonGroup>
-      </Paper>
+      <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
+        حالت نمایش
+      </Typography>
+
+      <ToggleButtonGroup
+        value={mode}
+        exclusive
+        onChange={(_, next) => {
+          if (next) setMode(next);
+        }}
+        fullWidth
+        size="small"
+      >
+        <ToggleButton color='primary' value="system">
+          <AppIcon sx={{ fontSize: 16, mr: 1 }}>brightness_auto</AppIcon>
+          خودکار
+        </ToggleButton>
+        <ToggleButton color='primary' value="light">
+          <AppIcon sx={{ fontSize: 16, mr: 1 }}>light_mode</AppIcon>
+          روشن
+        </ToggleButton>
+        <ToggleButton color='primary' value="dark">
+          <AppIcon sx={{ fontSize: 16, mr: 1 }}>dark_mode</AppIcon>
+          تاریک
+        </ToggleButton>
+      </ToggleButtonGroup>
 
 
       <Paper sx={{ p: 0, overflow: 'hidden', mt: 2 }}>

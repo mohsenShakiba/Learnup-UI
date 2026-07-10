@@ -5,6 +5,7 @@ import { Layers } from "@material-symbols-svg/react/icons/layers";
 import { MenuBook } from "@material-symbols-svg/react/icons/menu-book";
 import { School } from "@material-symbols-svg/react/icons/school";
 import { Search } from "@material-symbols-svg/react/icons/search";
+import { Box as BoxIcon } from "@material-symbols-svg/react/icons/box";
 import type { SvgIconProps } from "@mui/material";
 import { Box, ButtonBase, SvgIcon, Typography, useTheme } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -12,7 +13,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 export const ROOT_TABS = [
   { label: 'داشبورد', icon: 'dashboard', path: '/dashboard' },
   { label: 'دوره ها', icon: 'school', path: '/courses' },
-  { label: 'لایتنر', icon: 'layers', path: '/leitner-box' },
+  { label: 'لایتنر', icon: 'box', path: '/leitner-box' },
   { label: 'کتابخانه', icon: 'menu_book', path: '/library' },
   { label: 'جستجو', icon: 'search', path: '/vocab' },
   { label: 'مکالمه', icon: 'chat_bubble', path: '/chat' },
@@ -25,7 +26,7 @@ const extraPaths = [
 const NAV_SYMBOLS = {
   chat_bubble: ChatBubble,
   dashboard: Dashboard,
-  layers: Layers,
+  box: BoxIcon,
   menu_book: MenuBook,
   school: School,
   search: Search,
@@ -35,7 +36,7 @@ type BottomNavSymbolProps = Omit<SvgIconProps, "children"> & {
   name: keyof typeof NAV_SYMBOLS;
 };
 
-function BottomNavSymbol ({ name, sx, ...props }: BottomNavSymbolProps) {
+function BottomNavSymbol({ name, sx, ...props }: BottomNavSymbolProps) {
   const Symbol = NAV_SYMBOLS[name];
 
   return (
@@ -52,7 +53,7 @@ function BottomNavSymbol ({ name, sx, ...props }: BottomNavSymbolProps) {
   );
 }
 
-export function isBottomNavVisible (pathname: string) {
+export function isBottomNavVisible(pathname: string) {
   return (
     extraPaths.some(t => pathname.startsWith(t)) ||
     tabs.some(t => pathname.startsWith(t.path))
@@ -60,7 +61,7 @@ export function isBottomNavVisible (pathname: string) {
 }
 
 
-export function BottomNav () {
+export function BottomNav() {
   const theme = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
@@ -118,10 +119,10 @@ export function BottomNav () {
                 position: 'relative',
                 overflow: 'hidden',
                 flex: 1,
-                height: 45,
+                height: 50,
                 maxWidth: 55,
                 flexDirection: 'column',
-                gap: 0.35,
+                gap: 0.3,
                 borderRadius: '16px',
                 color: 'text.secondary',
                 backgroundColor: 'transparent',
@@ -158,7 +159,7 @@ export function BottomNav () {
                 name={tab.icon}
                 sx={{
                   position: 'relative',
-                  fontSize: 20,
+                  fontSize: 24,
                   color: isActive ? 'primary.contrastText' : 'text.secondary',
                   transition: theme.transitions.create(['color', 'opacity'], {
                     duration: theme.transitions.duration.shorter,
@@ -171,7 +172,7 @@ export function BottomNav () {
                 sx={{
                   position: 'relative',
                   maxWidth: '100%',
-                  fontSize: 9,
+                  fontSize: 10,
                   lineHeight: 1,
                   fontWeight: 500,
                   color: isActive ? 'primary.contrastText' : 'text.secondary',

@@ -1,7 +1,6 @@
 import type { MaterialSymbolsComponent } from "@material-symbols-svg/react";
-import { ChatBubble } from "@material-symbols-svg/react/icons/chat-bubble";
-import { Dashboard } from "@material-symbols-svg/react/icons/dashboard";
-import { Layers } from "@material-symbols-svg/react/icons/layers";
+import { Forum } from "@material-symbols-svg/react/icons/forum";
+import { SpaceDashboard } from "@material-symbols-svg/react/icons/space-dashboard";
 import { MenuBook } from "@material-symbols-svg/react/icons/menu-book";
 import { School } from "@material-symbols-svg/react/icons/school";
 import { Search } from "@material-symbols-svg/react/icons/search";
@@ -11,12 +10,12 @@ import { Box, ButtonBase, SvgIcon, Typography, useTheme } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export const ROOT_TABS = [
-  { label: 'داشبورد', icon: 'dashboard', path: '/dashboard' },
+  { label: 'داشبورد', icon: 'space_dashboard', path: '/dashboard' },
   { label: 'دوره ها', icon: 'school', path: '/courses' },
   { label: 'لایتنر', icon: 'box', path: '/leitner-box' },
   { label: 'کتابخانه', icon: 'menu_book', path: '/library' },
   { label: 'جستجو', icon: 'search', path: '/vocab' },
-  { label: 'مکالمه', icon: 'chat_bubble', path: '/chat' },
+  { label: 'مکالمه', icon: 'forum', path: '/chat' },
 ] as const;
 
 const tabs = ROOT_TABS;
@@ -24,8 +23,8 @@ const extraPaths = [
   "/boxlevel",
 ];
 const NAV_SYMBOLS = {
-  chat_bubble: ChatBubble,
-  dashboard: Dashboard,
+  forum: Forum,
+  space_dashboard: SpaceDashboard,
   box: BoxIcon,
   menu_book: MenuBook,
   school: School,

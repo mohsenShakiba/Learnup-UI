@@ -21,7 +21,6 @@ export const ROOT_TABS = [
 const tabs = ROOT_TABS;
 const extraPaths = [
   "/boxlevel",
-  "/",
 ];
 const NAV_SYMBOLS = {
   chat_bubble: ChatBubble,

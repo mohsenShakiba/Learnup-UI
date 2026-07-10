@@ -1,5 +1,11 @@
 import { Box, Stack } from "@mui/material";
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 import setupOpenApi from "./api/setup";
 import "./App.css";
 import LoginPage from "./features/auth/LoginPage";
@@ -90,7 +96,7 @@ function AppLayout () {
               element={<UploadBookPage />}
             />
             <Route path="/courses" element={<ListCoursesPage />} />
-            <Route path="/" element={<ListCoursesPage />} />
+            <Route path="/" element={<Navigate to="/courses" replace />} />
             <Route path="*" element={<h1>404 - Not Found</h1>} />
           </Route>
         </Routes>

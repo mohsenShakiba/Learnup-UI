@@ -33,7 +33,7 @@ type BottomNavSymbolProps = Omit<SvgIconProps, "children"> & {
   name: keyof typeof NAV_SYMBOLS;
 };
 
-function BottomNavSymbol({ name, sx, ...props }: BottomNavSymbolProps) {
+function BottomNavSymbol ({ name, sx, ...props }: BottomNavSymbolProps) {
   const Symbol = NAV_SYMBOLS[name];
 
   return (
@@ -50,7 +50,7 @@ function BottomNavSymbol({ name, sx, ...props }: BottomNavSymbolProps) {
   );
 }
 
-export function isBottomNavVisible(pathname: string) {
+export function isBottomNavVisible (pathname: string) {
   return (
     pathname.startsWith(LEITNER_REVIEW_PATH_PREFIX) ||
     tabs.some(t => t.path === pathname)
@@ -58,7 +58,7 @@ export function isBottomNavVisible(pathname: string) {
 }
 
 
-export function BottomNav() {
+export function BottomNav () {
   const theme = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
@@ -123,11 +123,10 @@ export function BottomNav() {
                 position: 'relative',
                 overflow: 'hidden',
                 flex: 1,
-                minWidth: 0,
-                height: 52,
+                height: 45,
+                maxWidth: 55,
                 flexDirection: 'column',
-                gap: 0.25,
-                px: 0.5,
+                gap: 0.35,
                 borderRadius: '16px',
                 color: 'text.secondary',
                 backgroundColor: 'transparent',
@@ -177,8 +176,8 @@ export function BottomNav() {
                 sx={{
                   position: 'relative',
                   maxWidth: '100%',
-                  fontSize: 10,
-                  lineHeight: 1.1,
+                  fontSize: 9,
+                  lineHeight: 1,
                   fontWeight: 500,
                   color: isActive ? 'primary.contrastText' : 'text.secondary',
                   transition: theme.transitions.create(['color'], {

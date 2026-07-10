@@ -1,5 +1,5 @@
-import { Avatar, Box, Stack, Typography } from "@mui/material";
-import { useRef } from "react";
+import { alpha, Avatar, Box, Stack, Typography } from "@mui/material";
+import { useEffect, useRef } from "react";
 import type { StoryItemResponse } from "../../../api/Learnup";
 import { showDrawer } from "../../../shared/swipeableDrawer";
 import { useStoryAudio } from "../hooks/useStoryAudio";
@@ -13,16 +13,26 @@ type StoryItemProps = {
 const AVATAR_SIZE = 30;
 const LONG_PRESS_DURATION = 500;
 
-export function StoryItem({ storyId, item }: StoryItemProps) {
+export function StoryItem ({ storyId, item }: StoryItemProps) {
   const { activeItemId, playbackStatus, showTranslation, playItemAudio } =
     useStoryAudio();
 
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const didLongPress = useRef(false);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   const isPlaying = playbackStatus === "playing";
   const isActive = isPlaying && activeItemId === item.id;
   const isPerson1 = item.person === 1;
+
+  useEffect(() => {
+    if (isActive) {
+      containerRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, [isActive]);
 
   const play = () => {
     // Swallow the tap that follows a long-press so it doesn't also start audio.
@@ -71,19 +81,15 @@ export function StoryItem({ storyId, item }: StoryItemProps) {
         borderRadius: isPerson1
           ? '16px 16px 16px 2px'
           : '16px 16px 2px 16px',
-        bgcolor: isPerson1 ? 'primary.main' : 'background.paper',
+        bgcolor: alpha(isPerson1 ? theme.palette.primary.main : theme.palette.secondary.main, 0.05),
         border: '1px solid',
         borderColor: 'divider',
         cursor: 'pointer',
-        transition: theme.transitions.create(['border-color'], {
-          duration: theme.transitions.duration.short,
-        }),
       })}
     >
       <Typography
         sx={{
           direction: 'rtl',
-          color: isPerson1 ? 'primary.contrastText' : 'text.primary',
           m: 0,
         }}
       >
@@ -115,7 +121,6 @@ export function StoryItem({ storyId, item }: StoryItemProps) {
         <Typography
           variant="body2"
           sx={{
-            color: isPerson1 ? 'primary.contrastText' : 'text.secondary',
             opacity: 0.8,
             direction: 'ltr',
             mt: 0.5,
@@ -144,6 +149,7 @@ export function StoryItem({ storyId, item }: StoryItemProps) {
 
   return (
     <Stack
+      ref={containerRef}
       direction="row"
       spacing={1}
       sx={(theme) => ({

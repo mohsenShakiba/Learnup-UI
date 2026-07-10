@@ -11,7 +11,7 @@ import { StoryControls } from './components/StoryControls';
 import { StoryItem } from './components/StoryItem';
 import { StoryAudioProvider } from './hooks/useStoryAudio';
 
-export default function StoryDetailPage() {
+export default function StoryDetailPage () {
   const { lessonId, id: storyId } = useParams<{ lessonId: string; id: string; }>();
   const lessonIdNumber = Number(lessonId);
   const storyIdNumber = Number(storyId);

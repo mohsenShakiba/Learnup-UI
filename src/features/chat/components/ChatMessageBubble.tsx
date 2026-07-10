@@ -6,10 +6,9 @@ import { MarkdownMessage } from "./MarkdownMessage";
 // we treat it as Farsi and render right-to-left, otherwise left-to-right.
 const RTL_CHARS = /[؀-ۿݐ-ݿࢠ-ࣿﭐ-﷿ﹰ-﻿]/;
 
-function getDirection(text: string): "rtl" | "ltr" {
+function getDirection (text: string): "rtl" | "ltr" {
   return RTL_CHARS.test(text) ? "rtl" : "ltr";
 }
-
 function TypingDots () {
   return (
     <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, py: 0.5 }}>
@@ -35,31 +34,31 @@ function TypingDots () {
   );
 }
 
-export function ChatMessageBubble ({ message }: { message: ChatMessage }) {
+export function ChatMessageBubble ({ message }: { message: ChatMessage; }) {
   const isUser = message.role === "user";
   const showTyping = message.pending && message.content.length === 0;
   const direction = getDirection(message.content);
+
+  console.log('direction is', message.content, direction);
 
   return (
     <Box
       sx={{
         display: "flex",
-        justifyContent: isUser ? "flex-end" : "flex-start",
+        justifyContent: isUser ? "flex-start" : "flex-end",
       }}
     >
       <Paper
         elevation={0}
         sx={{
-          maxWidth: "82%",
-          px: 1.75,
-          py: 1.25,
-          borderRadius: 3,
-          borderStartStartRadius: isUser ? 3 : 0.5,
-          borderStartEndRadius: isUser ? 0.5 : 3,
-          backgroundColor: isUser ? "primary.main" : "action.hover",
+          maxWidth: "90%",
+          borderRadius: '16px',
+          borderTopLeftRadius: isUser ? 0 : '16px',
+          borderTopRightRadius: isUser ? '16px' : 0,
+          border: '1px solid',
+          borderColor: isUser ? "transparent" : "divider",
+          backgroundColor: isUser ? "primary.main" : "background.paper",
           color: isUser ? "primary.contrastText" : "text.primary",
-          border: message.error ? "1px solid" : "none",
-          borderColor: message.error ? "error.main" : "transparent",
         }}
       >
         {showTyping ? (
@@ -71,14 +70,13 @@ export function ChatMessageBubble ({ message }: { message: ChatMessage }) {
             sx={{
               whiteSpace: "pre-wrap",
               wordBreak: "break-word",
-              lineHeight: 1.7,
-              textAlign: direction === "rtl" ? "right" : "left",
+              direction: direction === 'rtl' ? 'ltr' : 'rtl'
             }}
           >
             {message.content}
           </Typography>
         ) : (
-          <Box dir={direction} sx={{ textAlign: direction === "rtl" ? "right" : "left" }}>
+          <Box dir={direction} sx={{ direction: direction === 'rtl' ? 'ltr' : 'rtl' }}>
             <MarkdownMessage content={message.content} />
           </Box>
         )}

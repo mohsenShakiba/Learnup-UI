@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { AppIcon } from "../../shared/components/AppIcon";
 import { AppLoader } from "../../shared/components/AppLoader";
 import { DefaultHeader } from "../../shared/components/DefaultHeader";
+import { Scaffold } from "../../shared/components/Scaffold";
 import { ChatComposer } from "./components/ChatComposer";
 import { ChatMessageBubble } from "./components/ChatMessageBubble";
 import { ConversationListDrawer } from "./components/ConversationListDrawer";
@@ -11,7 +12,7 @@ import { useChatStream } from "./useChatStream";
 
 const CONTENT_MAX_WIDTH = 500;
 
-export default function ChatPage() {
+export default function ChatPage () {
   const { conversationId } = useParams();
   const parsedId = conversationId ? Number(conversationId) : undefined;
   const currentId = Number.isFinite(parsedId) ? parsedId : undefined;
@@ -21,7 +22,7 @@ export default function ChatPage() {
   return <ChatView key={currentId ?? "new"} conversationId={currentId} />;
 }
 
-function ChatView({ conversationId }: { conversationId?: number }) {
+function ChatView ({ conversationId }: { conversationId?: number; }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const { messages, isStreaming, isLoadingHistory, send, stop } =
@@ -37,20 +38,13 @@ function ChatView({ conversationId }: { conversationId?: number }) {
   const isEmpty = messages.length === 0 && !isLoadingHistory;
 
   return (
-    <Box
-      sx={{
-        height: "100%",
-        minHeight: 0,
-        display: "flex",
-        flexDirection: "column",
-        overflow: "hidden",
-      }}
-    >
-      <DefaultHeader header="گفتگو با هوش مصنوعی">
+    <Scaffold header={
+      <DefaultHeader header="دستیار هشومند">
         <IconButton onClick={() => setDrawerOpen(true)}>
-          <AppIcon>forum</AppIcon>
+          <AppIcon>conversation</AppIcon>
         </IconButton>
       </DefaultHeader>
+    }>
 
       <ConversationListDrawer
         open={drawerOpen}
@@ -85,10 +79,9 @@ function ChatView({ conversationId }: { conversationId?: number }) {
             }}
           >
             <AppIcon sx={{ fontSize: 56, opacity: 0.3 }}>chat_bubble</AppIcon>
-            <Typography variant="body1">دستیار هوشمند لرن‌آپ</Typography>
+            <Typography variant="body1">دستیار هوشمند</Typography>
             <Typography variant="caption" sx={{ opacity: 0.8, maxWidth: 280 }}>
-              هر سوالی درباره‌ی زبان، گرامر یا لغات داری بپرس. اینجا هستم تا کمکت
-              کنم.
+              هر سوالی درباره‌ی زبان، گرامر یا لغات داری بپرس.
             </Typography>
           </Stack>
         ) : (
@@ -101,18 +94,7 @@ function ChatView({ conversationId }: { conversationId?: number }) {
         <Box ref={bottomRef} />
       </Box>
 
-      <Box
-        sx={{
-          width: "100%",
-          maxWidth: CONTENT_MAX_WIDTH,
-          mx: "auto",
-          px: 2,
-          pt: 1,
-          pb: "calc(env(safe-area-inset-bottom, 0px) + 96px)",
-        }}
-      >
-        <ChatComposer isStreaming={isStreaming} onSend={send} onStop={stop} />
-      </Box>
-    </Box>
+      <ChatComposer isStreaming={isStreaming} onSend={send} onStop={stop} />
+    </Scaffold>
   );
 }

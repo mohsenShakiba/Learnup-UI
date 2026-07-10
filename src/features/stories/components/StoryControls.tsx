@@ -1,10 +1,10 @@
-import { alpha, Box, IconButton, Stack, useTheme } from "@mui/material";
+import { Box, IconButton, Stack, useTheme } from "@mui/material";
 import { useState } from "react";
 import { AppIcon } from '../../../shared/components/AppIcon';
 import { toast } from "../../../shared/toast";
 import { useStoryAudio } from "../hooks/useStoryAudio";
 
-export function StoryControls() {
+export function StoryControls () {
 
   const {
     audioRef,

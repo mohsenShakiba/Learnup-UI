@@ -25,7 +25,7 @@ function makeId (): string {
 function toChatMessage (message: ChatMessageResponse): ChatMessage {
   return {
     id: String(message.id),
-    role: message.role === "assistant" ? "assistant" : "user",
+    role: message.role === "Assistant" ? "assistant" : "user",
     content: message.content,
   };
 }

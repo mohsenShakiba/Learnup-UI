@@ -89,6 +89,7 @@ function AppLayout () {
               path="/library/user-books/upload"
               element={<UploadBookPage />}
             />
+            <Route path="/courses" element={<ListCoursesPage />} />
             <Route path="/" element={<ListCoursesPage />} />
             <Route path="*" element={<h1>404 - Not Found</h1>} />
           </Route>

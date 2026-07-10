@@ -11,7 +11,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 export const ROOT_TABS = [
   { label: 'داشبورد', icon: 'dashboard', path: '/dashboard' },
-  { label: 'دوره ها', icon: 'school', path: '/' },
+  { label: 'دوره ها', icon: 'school', path: '/courses' },
   { label: 'لایتنر', icon: 'layers', path: '/leitner-box' },
   { label: 'کتابخانه', icon: 'menu_book', path: '/library' },
   { label: 'جستجو', icon: 'search', path: '/vocab' },
@@ -19,7 +19,10 @@ export const ROOT_TABS = [
 ] as const;
 
 const tabs = ROOT_TABS;
-const LEITNER_REVIEW_PATH_PREFIX = "/boxlevel/";
+const extraPaths = [
+  "/boxlevel",
+  "/",
+];
 const NAV_SYMBOLS = {
   chat_bubble: ChatBubble,
   dashboard: Dashboard,
@@ -52,8 +55,8 @@ function BottomNavSymbol ({ name, sx, ...props }: BottomNavSymbolProps) {
 
 export function isBottomNavVisible (pathname: string) {
   return (
-    pathname.startsWith(LEITNER_REVIEW_PATH_PREFIX) ||
-    tabs.some(t => t.path === pathname)
+    extraPaths.some(t => pathname.startsWith(t)) ||
+    tabs.some(t => pathname.startsWith(t.path))
   );
 }
 
@@ -63,20 +66,13 @@ export function BottomNav () {
   const location = useLocation();
   const navigate = useNavigate();
   const isDark = theme.palette.mode === 'dark';
-  const isLeitnerReviewRoute = location.pathname.startsWith(LEITNER_REVIEW_PATH_PREFIX);
 
   if (!isBottomNavVisible(location.pathname)) {
     return null;
   }
 
   const currentTab = tabs.findIndex((tab) => {
-    if (isLeitnerReviewRoute) {
-      return tab.path === "/leitner-box";
-    }
-
-    return tab.path === "/"
-      ? location.pathname === "/"
-      : location.pathname.startsWith(tab.path);
+    return location.pathname.startsWith(tab.path);
   });
 
   return (
@@ -163,7 +159,7 @@ export function BottomNav () {
                 name={tab.icon}
                 sx={{
                   position: 'relative',
-                  fontSize: 22,
+                  fontSize: 20,
                   color: isActive ? 'primary.contrastText' : 'text.secondary',
                   transition: theme.transitions.create(['color', 'opacity'], {
                     duration: theme.transitions.duration.shorter,

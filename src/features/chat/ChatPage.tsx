@@ -41,7 +41,7 @@ function ChatView({ conversationId }: { conversationId?: number; }) {
   const isEmpty = messages.length === 0 && !isLoadingHistory;
 
   return (
-    <Scaffold header={
+    <Scaffold disablePadding header={
       <DefaultHeader header="دستیار هوشمند">
         <IconButton onClick={() => setDrawerOpen(true)}>
           <AppIcon>conversation</AppIcon>
@@ -55,48 +55,41 @@ function ChatView({ conversationId }: { conversationId?: number; }) {
         currentConversationId={conversationId}
       />
 
+      <Box sx={{ flex: 1, p: 2, overflowY: 'auto' }}>
+        {isLoadingHistory ? (
+          <AppLoader />
+        ) : isEmpty ? (
+          <Stack
+            spacing={1}
+            sx={{
+              alignItems: "center",
+              justifyContent: "center",
+              color: "text.secondary",
+              textAlign: "center",
+            }}
+          >
+            <AppIcon sx={{ fontSize: 56, opacity: 0.3 }}>chat_bubble</AppIcon>
+            <Typography variant="body1">دستیار هوشمند</Typography>
+            <Typography variant="caption" sx={{ opacity: 0.8, maxWidth: 280 }}>
+              هر سوالی درباره‌ی زبان، گرامر یا لغات داری بپرس.
+            </Typography>
+          </Stack>
+        ) : (
+          <Stack spacing={2} sx={{ pb: 2 }}>
+            {messages.map((message) => (
+              <ChatMessageBubble key={message.id} message={message} />
+            ))}
+          </Stack>
+        )}
 
-      {isLoadingHistory ? (
-        <AppLoader />
-      ) : isEmpty ? (
-        <Stack
-          spacing={1}
-          sx={{
-            alignItems: "center",
-            justifyContent: "center",
-            height: "100%",
-            color: "text.secondary",
-            textAlign: "center",
-          }}
-        >
-          <AppIcon sx={{ fontSize: 56, opacity: 0.3 }}>chat_bubble</AppIcon>
-          <Typography variant="body1">دستیار هوشمند</Typography>
-          <Typography variant="caption" sx={{ opacity: 0.8, maxWidth: 280 }}>
-            هر سوالی درباره‌ی زبان، گرامر یا لغات داری بپرس.
-          </Typography>
-        </Stack>
-      ) : (
-        <Stack spacing={2} sx={{ pb: 2 }}>
-          {messages.map((message) => (
-            <ChatMessageBubble key={message.id} message={message} />
-          ))}
-        </Stack>
-      )}
 
-      <Box ref={bottomRef} />
+
+      </Box>
 
       <Box
         sx={{
-          position: 'sticky',
-          left: 0,
-          right: 0,
-          bottom: 0,
-          // Cancel Scaffold's px/pb so the bar bleeds to the column edges.
-          mx: -2,
-          mb: -2,
-          px: 2,
           pt: 1,
-          pb: 'calc(env(safe-area-inset-bottom, 0px) + 8px)',
+          px: 2,
           borderTop: '1px solid',
           borderColor: 'divider',
           backgroundColor: 'background.default',

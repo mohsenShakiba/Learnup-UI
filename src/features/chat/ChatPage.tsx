@@ -39,7 +39,7 @@ function ChatView ({ conversationId }: { conversationId?: number; }) {
 
   return (
     <Scaffold header={
-      <DefaultHeader header="دستیار هشومند">
+      <DefaultHeader header="دستیار هوشمند">
         <IconButton onClick={() => setDrawerOpen(true)}>
           <AppIcon>conversation</AppIcon>
         </IconButton>

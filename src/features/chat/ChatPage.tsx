@@ -12,7 +12,7 @@ import { useChatStream } from "./useChatStream";
 
 const CONTENT_MAX_WIDTH = 500;
 
-export default function ChatPage () {
+export default function ChatPage() {
   const { conversationId } = useParams();
   const parsedId = conversationId ? Number(conversationId) : undefined;
   const currentId = Number.isFinite(parsedId) ? parsedId : undefined;
@@ -22,7 +22,7 @@ export default function ChatPage () {
   return <ChatView key={currentId ?? "new"} conversationId={currentId} />;
 }
 
-function ChatView ({ conversationId }: { conversationId?: number; }) {
+function ChatView({ conversationId }: { conversationId?: number; }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const { messages, isStreaming, isLoadingHistory, send, stop } =
@@ -85,7 +85,23 @@ function ChatView ({ conversationId }: { conversationId?: number; }) {
 
       <Box ref={bottomRef} />
 
-      <Box sx={{ position: 'sticky', left: 0, right: 0, bottom: 0, }}>
+      <Box
+        sx={{
+          position: 'sticky',
+          left: 0,
+          right: 0,
+          bottom: 0,
+          // Cancel Scaffold's px/pb so the bar bleeds to the column edges.
+          mx: -2,
+          mb: -2,
+          px: 2,
+          pt: 1,
+          pb: 'calc(env(safe-area-inset-bottom, 0px) + 8px)',
+          borderTop: '1px solid',
+          borderColor: 'divider',
+          backgroundColor: 'background.default',
+        }}
+      >
         <ChatComposer isStreaming={isStreaming} onSend={send} onStop={stop} />
       </Box>
 

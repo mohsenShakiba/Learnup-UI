@@ -12,7 +12,7 @@ import { useChatStream } from "./useChatStream";
 
 const CONTENT_MAX_WIDTH = 500;
 
-export default function ChatPage() {
+export default function ChatPage () {
   const { chatId } = useParams();
   const parsedId = chatId ? Number(chatId) : undefined;
   const currentId = Number.isFinite(parsedId) ? parsedId : undefined;
@@ -22,7 +22,7 @@ export default function ChatPage() {
   return <ChatView key={currentId ?? "new"} chatId={currentId} />;
 }
 
-function ChatView({ chatId }: { chatId?: number; }) {
+function ChatView ({ chatId }: { chatId?: number; }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const { messages, isStreaming, isLoadingHistory, send, stop } =
@@ -81,9 +81,6 @@ function ChatView({ chatId }: { chatId?: number; }) {
             ))}
           </Stack>
         )}
-
-
-
       </Box>
 
       <Box

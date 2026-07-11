@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ChatMessageResponse, ChatRequest } from "../../api/Learnup";
-import { AiService, ChatsService } from "../../api/Learnup";
+import { ChatsService } from "../../api/Learnup";
 import { toast } from "../../shared/toast";
 import { streamChat } from "./chatHub";
 
@@ -131,7 +131,7 @@ export function useChatStream (initialChatId?: number): UseChatStream {
 
       const fallbackToRest = async () => {
         try {
-          const response = await AiService.chatWithAi(request);
+          const response = await ChatsService.chatWithAi(request);
           chatIdRef.current = response.chatId;
           patchMessage(assistantId, {
             content: response.reply,

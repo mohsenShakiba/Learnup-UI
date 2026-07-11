@@ -1,6 +1,5 @@
 import {
   Box,
-  CircularProgress,
   Divider,
   IconButton,
   Stack,
@@ -8,7 +7,7 @@ import {
 } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { AiService, LeitnerBoxService, SendAiTextResponse, VocabsService } from '../../../api/Learnup';
+import { ChatsService, LeitnerBoxService, SendAiTextResponse, VocabsService } from '../../../api/Learnup';
 import type { SentenceDetectionResult } from '../../../services/SentenceDetection';
 import { AppIcon } from '../../../shared/components/AppIcon';
 import { AppLoader } from '../../../shared/components/AppLoader';
@@ -17,7 +16,7 @@ interface Props {
   selection: SentenceDetectionResult;
 }
 
-function getTranslationText(
+function getTranslationText (
   result: SendAiTextResponse | null,
   camelCaseKey: keyof SendAiTextResponse,
   pascalCaseKey: string,
@@ -29,11 +28,11 @@ function getTranslationText(
 
 type BookmarkState = 'idle' | 'loading' | 'saved' | 'error';
 
-export function ReaderTranslationDrawer({ selection }: Props) {
+export function ReaderTranslationDrawer ({ selection }: Props) {
   const { word, sentence } = selection;
   const { data: result = null, isPending: loading, isError: error } = useQuery({
     queryKey: ['readerTranslation', word, sentence],
-    queryFn: () => AiService.postMobileAiProcess(selection),
+    queryFn: () => ChatsService.postMobileChatsProcess(selection),
     refetchOnWindowFocus: false,
     retry: false,
   });

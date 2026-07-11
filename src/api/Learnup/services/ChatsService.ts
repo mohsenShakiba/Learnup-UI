@@ -3,7 +3,12 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { ChatDetailResponse } from '../models/ChatDetailResponse';
+import type { ChatRequest } from '../models/ChatRequest';
+import type { ChatResponse } from '../models/ChatResponse';
 import type { ChatSummaryResponse } from '../models/ChatSummaryResponse';
+import type { SendAiTextRequest } from '../models/SendAiTextRequest';
+import type { SendAiTextResponse } from '../models/SendAiTextResponse';
+import type { TokenUsageResponse } from '../models/TokenUsageResponse';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -47,6 +52,49 @@ id: number,
             path: {
                 'id': id,
             },
+        });
+    }
+
+    /**
+     * @param requestBody 
+     * @returns SendAiTextResponse OK
+     * @throws ApiError
+     */
+    public static postMobileChatsProcess(
+requestBody?: SendAiTextRequest,
+): CancelablePromise<SendAiTextResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/Mobile/Chats/Process',
+            body: requestBody,
+            mediaType: 'application/json',
+        });
+    }
+
+    /**
+     * @param requestBody 
+     * @returns ChatResponse OK
+     * @throws ApiError
+     */
+    public static chatWithAi(
+requestBody?: ChatRequest,
+): CancelablePromise<ChatResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/Mobile/Chats/Chat',
+            body: requestBody,
+            mediaType: 'application/json',
+        });
+    }
+
+    /**
+     * @returns TokenUsageResponse OK
+     * @throws ApiError
+     */
+    public static getAvailableTokenUsage(): CancelablePromise<TokenUsageResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/Mobile/Chats/TokenUsage',
         });
     }
 

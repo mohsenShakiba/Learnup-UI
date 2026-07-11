@@ -64,6 +64,7 @@ export type { TestOptionResponse } from './models/TestOptionResponse';
 export { TestQuestionType } from './models/TestQuestionType';
 export type { TestResponse } from './models/TestResponse';
 export { TestType } from './models/TestType';
+export type { TokenUsageResponse } from './models/TokenUsageResponse';
 export type { UpdateBoxLevelReviewIntervalRequest } from './models/UpdateBoxLevelReviewIntervalRequest';
 export type { UpdateProfileRequest } from './models/UpdateProfileRequest';
 export type { UpdateUserBookCurrentPageRequest } from './models/UpdateUserBookCurrentPageRequest';
@@ -83,7 +84,6 @@ export type { VocabResponse } from './models/VocabResponse';
 export type { VocabSenseResponse } from './models/VocabSenseResponse';
 export { VocabType } from './models/VocabType';
 
-export { AiService } from './services/AiService';
 export { AudioBooksService } from './services/AudioBooksService';
 export { AuthService } from './services/AuthService';
 export { BooksControllersService } from './services/BooksControllersService';

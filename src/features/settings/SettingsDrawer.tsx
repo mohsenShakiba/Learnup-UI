@@ -180,9 +180,7 @@ export function SettingsDrawer ({ open, onClose }: SettingsDrawerProps) {
         </ToggleButton>
       </ToggleButtonGroup>
 
-
       <Paper sx={{ p: 0, overflow: 'hidden', mt: 2 }}>
-
         <ListItemButton sx={{ height: 45 }} onClick={handleLogout}>
           <ListItemIcon>
             <AppIcon sx={{ color: 'error.main', fontSize: '20px' }}>logout</AppIcon>

@@ -9,26 +9,26 @@ import {
   type ReactNode,
   type RefObject,
 } from 'react';
-import type { StoryItemResponse } from '../../../api/Learnup';
+import type { ConversationItemResponse } from '../../../api/Learnup';
 import { getFileById } from '../../../services/fetchFile';
 
 export type PlaybackStatus = 'idle' | 'playing' | 'paused';
 
-/** A single word with its start/end offset (seconds) inside the story audio. */
+/** A single word with its start/end offset (seconds) inside the conversation audio. */
 type WordTimestamp = {
   text: string;
   start: number;
   end: number;
 };
 
-/** The time range (seconds) a story item occupies inside the story audio. */
-export type StorySegment = {
+/** The time range (seconds) a conversation item occupies inside the conversation audio. */
+export type ConversationSegment = {
   itemId: number;
   start: number;
   end: number;
 };
 
-type UseStoryAudioResult = {
+type UseConversationAudioResult = {
   activeItemId: number | null;
   audioProgress: number;
   audioRef: RefObject<HTMLAudioElement | null>;
@@ -50,24 +50,24 @@ type UseStoryAudioResult = {
   handleTimeUpdate: () => void;
 };
 
-const StoryAudioContext = createContext<UseStoryAudioResult | null>(null);
+const ConversationAudioContext = createContext<UseConversationAudioResult | null>(null);
 
 /** Small epsilon (seconds) to make time comparisons tolerant of float drift. */
 const TIME_EPSILON = 0.01;
 
 /**
- * Aligns the flat word-timestamp list against the ordered story items to work
+ * Aligns the flat word-timestamp list against the ordered conversation items to work
  * out the time range each item occupies. Words are assigned to items in order:
  * an item consumes as many words as its content has whitespace-separated tokens.
  * An item's end is the next item's start (so playback flows continuously); the
  * final item keeps its last word's end time.
  */
-function buildSegments (storyItems: StoryItemResponse[], words: WordTimestamp[]): StorySegment[] {
-  const orderedItems = [...storyItems]
+function buildSegments (conversationItems: ConversationItemResponse[], words: WordTimestamp[]): ConversationSegment[] {
+  const orderedItems = [...conversationItems]
     .filter((item) => item.id != null)
     .sort((first, second) => first.order - second.order);
 
-  const segments: StorySegment[] = [];
+  const segments: ConversationSegment[] = [];
   let wordIndex = 0;
 
   for (const item of orderedItems) {
@@ -92,7 +92,7 @@ function buildSegments (storyItems: StoryItemResponse[], words: WordTimestamp[])
   return segments;
 }
 
-function useStoryAudioState (storyId: number, storyItems: StoryItemResponse[]): UseStoryAudioResult {
+function useConversationAudioState (conversationId: number, conversationItems: ConversationItemResponse[]): UseConversationAudioResult {
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [words, setWords] = useState<WordTimestamp[]>([]);
   const [activeItemId, setActiveItemId] = useState<number | null>(null);
@@ -103,17 +103,17 @@ function useStoryAudioState (storyId: number, storyItems: StoryItemResponse[]): 
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    if (!Number.isFinite(storyId)) {
+    if (!Number.isFinite(conversationId)) {
       return;
     }
 
     let cancelled = false;
     let objectUrl: string | null = null;
 
-    const loadStoryAudio = async () => {
+    const loadConversationAudio = async () => {
       const [audioBuffer, wordsBuffer] = await Promise.all([
-        getFileById(`conversation_voices/${storyId}.mp3`),
-        getFileById(`conversation_voices/${storyId}.json`),
+        getFileById(`conversation_voices/${conversationId}.mp3`),
+        getFileById(`conversation_voices/${conversationId}.json`),
       ]);
 
       if (cancelled) {
@@ -128,9 +128,9 @@ function useStoryAudioState (storyId: number, storyItems: StoryItemResponse[]): 
       setWords(Array.isArray(parsed.words) ? parsed.words : []);
     };
 
-    loadStoryAudio().catch((err) => {
+    loadConversationAudio().catch((err) => {
       if (!cancelled) {
-        console.error('Failed to load story audio:', err);
+        console.error('Failed to load conversation audio:', err);
       }
     });
 
@@ -142,12 +142,12 @@ function useStoryAudioState (storyId: number, storyItems: StoryItemResponse[]): 
         URL.revokeObjectURL(objectUrl);
       }
     };
-  }, [storyId]);
+  }, [conversationId]);
 
-  const segments = useMemo(() => buildSegments(storyItems, words), [storyItems, words]);
+  const segments = useMemo(() => buildSegments(conversationItems, words), [conversationItems, words]);
 
   const segmentByItemId = useMemo(() => {
-    const map = new Map<number, StorySegment>();
+    const map = new Map<number, ConversationSegment>();
     segments.forEach((segment) => map.set(segment.itemId, segment));
     return map;
   }, [segments]);
@@ -157,8 +157,8 @@ function useStoryAudioState (storyId: number, storyItems: StoryItemResponse[]): 
     : 0;
 
   /** Returns the last segment whose start is at or before the given time. */
-  const segmentAtTime = (time: number): StorySegment | null => {
-    let match: StorySegment | null = null;
+  const segmentAtTime = (time: number): ConversationSegment | null => {
+    let match: ConversationSegment | null = null;
 
     for (const segment of segments) {
       if (time + TIME_EPSILON >= segment.start) {
@@ -189,7 +189,7 @@ function useStoryAudioState (storyId: number, storyItems: StoryItemResponse[]): 
       await audioRef.current.play();
     } catch (err) {
       setPlaybackStatus('paused');
-      console.error('Failed to play story audio:', err);
+      console.error('Failed to play conversation audio:', err);
     }
   };
 
@@ -215,7 +215,7 @@ function useStoryAudioState (storyId: number, storyItems: StoryItemResponse[]): 
         await audioRef.current.play();
       } catch (err) {
         setPlaybackStatus('paused');
-        console.error('Failed to resume story audio:', err);
+        console.error('Failed to resume conversation audio:', err);
       }
 
       return;
@@ -319,18 +319,18 @@ function useStoryAudioState (storyId: number, storyItems: StoryItemResponse[]): 
   };
 }
 
-export function StoryAudioProvider (props: { storyId: number; storyItems: StoryItemResponse[]; children: ReactNode; }) {
-  const storyAudio = useStoryAudioState(props.storyId, props.storyItems);
+export function ConversationAudioProvider (props: { conversationId: number; conversationItems: ConversationItemResponse[]; children: ReactNode; }) {
+  const conversationAudio = useConversationAudioState(props.conversationId, props.conversationItems);
 
-  return createElement(StoryAudioContext.Provider, { value: storyAudio }, props.children);
+  return createElement(ConversationAudioContext.Provider, { value: conversationAudio }, props.children);
 }
 
-export function useStoryAudio (): UseStoryAudioResult {
-  const storyAudio = useContext(StoryAudioContext);
+export function useConversationAudio (): UseConversationAudioResult {
+  const conversationAudio = useContext(ConversationAudioContext);
 
-  if (!storyAudio) {
-    throw new Error('useStoryAudio must be used within StoryAudioProvider');
+  if (!conversationAudio) {
+    throw new Error('useConversationAudio must be used within ConversationAudioProvider');
   }
 
-  return storyAudio;
+  return conversationAudio;
 }

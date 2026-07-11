@@ -26,7 +26,7 @@ import UploadBookPage from "./features/library/UploadBookPage";
 import PlacementPage from "./features/placement/PlacementPage";
 import ProfilePage from "./features/profile/ProfilePage";
 import SubscriptionsPage from "./features/settings/SubscriptionsPage";
-import StoryDetailPage from "./features/stories/StoryDetailPage";
+import ConversationDetailPage from "./features/conversations/ConversationDetailPage";
 import LessonVocabsPage from "./features/vocabs/LessonVocabsPage";
 import VocabSearchPage from "./features/vocabs/VocabSearchPage";
 import LessonVocabTestsPage from "./features/VocabTests/LessonVocabTestsPage";
@@ -61,8 +61,8 @@ function AppLayout () {
           <Route path="/signup" element={<SignupPage />} />
           <Route element={<RequireAuth />}>
             <Route
-              path="/lessons/:lessonId/stories/:id"
-              element={<StoryDetailPage />}
+              path="/lessons/:lessonId/conversations/:id"
+              element={<ConversationDetailPage />}
             />
             <Route path="/courses/:id" element={<CourseDetailPage />} />
             <Route path="/grammar" element={<ListGrammarPage />} />
@@ -87,7 +87,7 @@ function AppLayout () {
             />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/chat" element={<ChatPage />} />
-            <Route path="/chat/:conversationId" element={<ChatPage />} />
+            <Route path="/chat/:chatId" element={<ChatPage />} />
             <Route path="/placement" element={<PlacementPage />} />
             <Route path="/library/book/:bookId" element={<BookDetailPage />} />
             <Route path="/library" element={<ListBooksPage />} />

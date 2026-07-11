@@ -1,12 +1,11 @@
 import { Box, Stack, Typography } from '@mui/material';
-import type { StoryResponse } from '../../../api/Learnup';
-import { ImageLoader } from '../../../shared/components/ImageLoader';
+import type { ConversationResponse } from '../../../api/Learnup';
 
-type StoryCoverHeaderProps = {
-  story: StoryResponse;
+type ConversationCoverHeaderProps = {
+  conversation: ConversationResponse;
 };
 
-export function StoryCoverHeader ({ story }: StoryCoverHeaderProps) {
+export function ConversationCoverHeader ({ conversation }: ConversationCoverHeaderProps) {
 
   return (
     <Box
@@ -18,8 +17,6 @@ export function StoryCoverHeader ({ story }: StoryCoverHeaderProps) {
         overflow: 'hidden',
       }}
     >
-
-      <ImageLoader coverId={story.coverId} />
 
       <Box
         sx={{
@@ -44,10 +41,10 @@ export function StoryCoverHeader ({ story }: StoryCoverHeaderProps) {
         }}
       >
         <Typography variant='caption' sx={{ color: 'primary.light', fontWeight: 700, letterSpacing: 1 }}>
-          LESSON {story.id}
+          LESSON {conversation.id}
         </Typography>
         <Typography variant='h5' sx={{ color: '#fff', fontWeight: 700, lineHeight: 1.3 }}>
-          {story.title}
+          {conversation.title}
         </Typography>
       </Stack>
     </Box>

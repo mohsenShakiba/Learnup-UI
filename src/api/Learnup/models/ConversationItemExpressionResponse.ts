@@ -3,11 +3,9 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type StoryItemResponse = {
+export type ConversationItemExpressionResponse = {
     id: number;
-    content: string;
+    phrase: string;
+    meaning: string;
     translation: string | null;
-    order: number;
-    person: number;
-    voiceId: string | null;
 };

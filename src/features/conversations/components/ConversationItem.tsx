@@ -1,21 +1,21 @@
 import { alpha, Avatar, Box, Stack, Typography } from "@mui/material";
 import { useEffect, useRef } from "react";
-import type { StoryItemResponse } from "../../../api/Learnup";
+import type { ConversationItemResponse } from "../../../api/Learnup";
 import { showDrawer } from "../../../shared/swipeableDrawer";
-import { useStoryAudio } from "../hooks/useStoryAudio";
-import { StoryWordDrawer } from "./StoryWordDrawer";
+import { useConversationAudio } from "../hooks/useConversationAudio";
+import { ConversationWordDrawer } from "./ConversationWordDrawer";
 
-type StoryItemProps = {
-  storyId: number;
-  item: StoryItemResponse;
+type ConversationItemProps = {
+  conversationId: number;
+  item: ConversationItemResponse;
 };
 
 const AVATAR_SIZE = 30;
 const LONG_PRESS_DURATION = 500;
 
-export function StoryItem ({ storyId, item }: StoryItemProps) {
+export function ConversationItem ({ conversationId, item }: ConversationItemProps) {
   const { activeItemId, playbackStatus, showTranslation, playItemAudio } =
-    useStoryAudio();
+    useConversationAudio();
 
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const didLongPress = useRef(false);
@@ -62,7 +62,7 @@ export function StoryItem ({ storyId, item }: StoryItemProps) {
       longPressTimer.current = null;
       didLongPress.current = true;
       showDrawer(
-        <StoryWordDrawer storyId={storyId} itemId={item.id} word={cleanWord} />,
+        <ConversationWordDrawer conversationId={conversationId} itemId={item.id} word={cleanWord} />,
       );
     }, LONG_PRESS_DURATION);
   };

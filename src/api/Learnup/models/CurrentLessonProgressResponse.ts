@@ -10,7 +10,7 @@ export type CurrentLessonProgressResponse = {
     courseSlug: string;
     order: number;
     courseId: number;
-    isStoryCompleted: boolean;
+    isConversationCompleted: boolean;
     isGrammarCompleted: boolean;
     isVocabCompleted: boolean;
     isTestCompleted: boolean;

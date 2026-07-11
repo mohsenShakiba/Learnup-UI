@@ -7,7 +7,7 @@ import type { UserLessonStatus } from './UserLessonStatus';
 
 export type UserLessonResponse = {
     status: UserLessonStatus;
-    isStoryCompleted: boolean;
+    isConversationCompleted: boolean;
     isGrammarCompleted: boolean;
     isVocabCompleted: boolean;
     isTestCompleted: boolean;

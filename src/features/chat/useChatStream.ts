@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ChatMessageResponse, ChatRequest } from "../../api/Learnup";
-import { AiService, ConversationsService } from "../../api/Learnup";
+import { AiService, ChatsService } from "../../api/Learnup";
 import { toast } from "../../shared/toast";
 import { streamChat } from "./chatHub";
 
@@ -46,27 +46,27 @@ export interface UseChatStream {
  * hub is unavailable (or errors before any token arrives) it falls back to the
  * REST `AiService.chatWithAi` endpoint so a reply is still produced.
  */
-export function useChatStream (initialConversationId?: number): UseChatStream {
+export function useChatStream (initialChatId?: number): UseChatStream {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isStreaming, setIsStreaming] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(
-    initialConversationId != null,
+    initialChatId != null,
   );
 
-  const conversationIdRef = useRef<number | null>(initialConversationId ?? null);
+  const chatIdRef = useRef<number | null>(initialChatId ?? null);
   const cancelRef = useRef<(() => void) | null>(null);
 
-  // Load prior messages when resuming an existing conversation.
+  // Load prior messages when resuming an existing chat.
   useEffect(() => {
-    if (initialConversationId == null) return;
+    if (initialChatId == null) return;
     let cancelled = false;
 
     setIsLoadingHistory(true);
-    ConversationsService.getConversation(initialConversationId)
-      .then((conversation) => {
+    ChatsService.getChat(initialChatId)
+      .then((chat) => {
         if (cancelled) return;
-        conversationIdRef.current = conversation.id;
-        setMessages(conversation.messages.map(toChatMessage));
+        chatIdRef.current = chat.id;
+        setMessages(chat.messages.map(toChatMessage));
       })
       .catch(() => {
         if (!cancelled) toast.error("خطا در بارگذاری گفتگو");
@@ -78,7 +78,7 @@ export function useChatStream (initialConversationId?: number): UseChatStream {
     return () => {
       cancelled = true;
     };
-  }, [initialConversationId]);
+  }, [initialChatId]);
 
   // Abort any in-flight stream on unmount.
   useEffect(() => {
@@ -107,19 +107,19 @@ export function useChatStream (initialConversationId?: number): UseChatStream {
       ]);
       setIsStreaming(true);
 
-      // A stable conversation id lets the stream and REST fallback agree on the
-      // same thread; start one lazily on the first message.
-      if (conversationIdRef.current == null) {
+      // A stable chat id lets the stream and REST fallback agree on the same
+      // thread; start one lazily on the first message.
+      if (chatIdRef.current == null) {
         try {
-          const conversation = await ConversationsService.startConversation();
-          conversationIdRef.current = conversation.id;
+          const chat = await ChatsService.startChat();
+          chatIdRef.current = chat.id;
         } catch {
-          // Non-fatal: chatWithAi accepts a null conversationId and creates one.
+          // Non-fatal: chatWithAi accepts a null chatId and creates one.
         }
       }
 
       const request: ChatRequest = {
-        conversationId: conversationIdRef.current,
+        chatId: chatIdRef.current,
         message: content,
       };
 
@@ -132,7 +132,7 @@ export function useChatStream (initialConversationId?: number): UseChatStream {
       const fallbackToRest = async () => {
         try {
           const response = await AiService.chatWithAi(request);
-          conversationIdRef.current = response.conversationId;
+          chatIdRef.current = response.chatId;
           patchMessage(assistantId, {
             content: response.reply,
             pending: false,

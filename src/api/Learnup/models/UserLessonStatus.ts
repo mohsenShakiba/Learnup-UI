@@ -5,7 +5,7 @@
 
 export enum UserLessonStatus {
     NONE = 0,
-    STORY_COMPLETED = 1,
+    CONVERSATION_COMPLETED = 1,
     GRAMMAR_COMPLETED = 2,
     VOCAB_COMPLETED = 4,
     TEST_COMPLETED = 8,

@@ -12,7 +12,7 @@ export type CourseResponse = {
     brief: string;
     order: number;
     totalLessonsCount: number;
-    totalStories: number;
+    totalConversations: number;
     totalGrammars: number;
     totalVocabs: number;
     completedLessonsCount: number;

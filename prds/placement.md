@@ -12,7 +12,7 @@ Place each learner at the correct starting level in one sitting, with no teacher
 - Not a full proficiency exam (no writing, speaking, or listening).
 - No adaptive/branching logic in v1 — questions are fixed and ordered.
 
-## User Story
+## User Scenario
 As a new learner, I answer a set of increasingly hard questions and immediately see my
 level, so I start at lessons that are neither too easy nor too hard.
 

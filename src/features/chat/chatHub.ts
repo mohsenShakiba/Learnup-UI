@@ -94,10 +94,10 @@ export function streamChat (
         return;
       }
       console.log("[chatHub] subscribing to stream method:", STREAM_METHOD);
-      // The hub method takes positional args (conversationId, message); the
+      // The hub method takes positional args (chatId, message); the
       // CancellationToken is supplied server-side by SignalR, not from here.
       subscription = conn
-        .stream<string>(STREAM_METHOD, request.conversationId, request.message)
+        .stream<string>(STREAM_METHOD, request.chatId, request.message)
         .subscribe({
           next: (chunk) => {
             console.log("[chatHub] stream next (token):", chunk);

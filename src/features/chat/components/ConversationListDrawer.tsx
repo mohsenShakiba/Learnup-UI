@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { ConversationsService } from "../../../api/Learnup";
+import { ChatsService } from "../../../api/Learnup";
 import { AppIcon } from "../../../shared/components/AppIcon";
 import { AppLoader } from "../../../shared/components/AppLoader";
 
@@ -34,8 +34,8 @@ export function ConversationListDrawer ({
   const navigate = useNavigate();
 
   const conversationsQuery = useQuery({
-    queryKey: ["conversations"],
-    queryFn: () => ConversationsService.listConversations(),
+    queryKey: ["chats"],
+    queryFn: () => ChatsService.listChats(),
     enabled: open,
     // Reflect newly started threads each time the list is opened.
     staleTime: 0,

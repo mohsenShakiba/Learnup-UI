@@ -1,23 +1,23 @@
 import { Box, Divider, Stack, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-import { StoriesService, VocabsService } from '../../../api/Learnup';
+import { ConversationsService, VocabsService } from '../../../api/Learnup';
 import { AppLoader } from '../../../shared/components/AppLoader';
 
 type Props = {
-  storyId: number;
+  conversationId: number;
   itemId: number;
   word: string;
 };
 
 /**
- * Drawer body shown when a word inside a story is long-pressed. Shows the
+ * Drawer body shown when a word inside a conversation is long-pressed. Shows the
  * expressions for that line first, followed by the translation of the pressed
  * word.
  */
-export function StoryWordDrawer ({ storyId, itemId, word }: Props) {
+export function ConversationWordDrawer ({ conversationId, itemId, word }: Props) {
   const expressionsQuery = useQuery({
-    queryKey: ['story-item-expressions', storyId, itemId],
-    queryFn: () => StoriesService.getStoryItemExpressions(storyId, itemId),
+    queryKey: ['conversation-item-expressions', conversationId, itemId],
+    queryFn: () => ConversationsService.getConversationItemExpressions(conversationId, itemId),
   });
 
   const vocabQuery = useQuery({

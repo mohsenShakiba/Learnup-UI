@@ -30,7 +30,7 @@ function CompletionBox ({ label, icon, done }: CompletionBoxProps) {
 export function ContinueCard ({ lesson }: Props) {
   const navigate = useNavigate();
 
-  const storyDone = lesson?.isStoryCompleted ?? false;
+  const conversationDone = lesson?.isConversationCompleted ?? false;
   const grammarDone = lesson?.isGrammarCompleted ?? false;
   const vocabDone = lesson?.isVocabCompleted ?? false;
 
@@ -66,7 +66,7 @@ export function ContinueCard ({ lesson }: Props) {
 
           {/* Completion boxes */}
           <Stack direction="row" spacing={1}>
-            <CompletionBox label="داستان" icon="conversation" done={storyDone} />
+            <CompletionBox label="مکالمه" icon="conversation" done={conversationDone} />
             <CompletionBox label="گرامر" icon="menu_book" done={grammarDone} />
             <CompletionBox label="لغات" icon="translate" done={vocabDone} />
             <CompletionBox label="تست" icon="quiz" done={vocabDone} />

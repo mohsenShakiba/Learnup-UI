@@ -1,31 +1,31 @@
 import { Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import type { StoryResponse } from '../../../api/Learnup';
+import type { ConversationResponse } from '../../../api/Learnup';
 import { ActionCard } from '../../../shared/components/ActionCard';
 import { LessonListItemHeader } from './LessonListItemHeader';
 
-type StoryListItemProps = {
-  story: StoryResponse;
+type ConversationListItemProps = {
+  conversation: ConversationResponse;
   lessonId: number;
 };
 
-export function ConversationListItem ({ story, lessonId }: StoryListItemProps) {
+export function ConversationListItem ({ conversation, lessonId }: ConversationListItemProps) {
   const navigate = useNavigate();
 
-  const goToStory = () => navigate(`/lessons/${lessonId}/stories/${story.id}`);
+  const goToConversation = () => navigate(`/lessons/${lessonId}/conversations/${conversation.id}`);
 
   return (
-    <ActionCard onClick={goToStory} sx={{ p: 2 }}>
+    <ActionCard onClick={goToConversation} sx={{ p: 2 }}>
       <Stack spacing={2}>
         <LessonListItemHeader
           icon='conversation'
           label='Conversation'
-          durationMinutes={story.duration}
+          durationMinutes={conversation.duration}
         />
 
         <Stack spacing={1}>
           <Typography sx={{ direction: 'rtl' }} >
-            {story.title}
+            {conversation.title}
           </Typography>
 
           <Stack direction='row' sx={{ gap: 0.5, alignItems: 'center' }}>

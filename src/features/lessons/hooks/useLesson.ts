@@ -3,7 +3,7 @@ import { LessonsService } from '../../../api/Learnup';
 
 /**
  * Loads a lesson detail by id. Shared across the lesson detail page and the
- * pages nested under it (stories, vocabs, tests) so the lesson is fetched once
+ * pages nested under it (conversations, vocabs, tests) so the lesson is fetched once
  * and reused from the react-query cache.
  */
 export function useLesson(lessonId: number) {

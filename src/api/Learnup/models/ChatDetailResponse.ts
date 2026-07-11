@@ -5,7 +5,7 @@
 
 import type { ChatMessageResponse } from './ChatMessageResponse';
 
-export type ConversationDetailResponse = {
+export type ChatDetailResponse = {
     id: number;
     title: string | null;
     createdAt: string;

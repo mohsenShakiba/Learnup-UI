@@ -10,7 +10,6 @@ import AcUnit from '@mui/icons-material/AcUnitOutlined';
 import Add from '@mui/icons-material/AddOutlined';
 import ArrowBack from '@mui/icons-material/ArrowBackOutlined';
 import ArrowForward from '@mui/icons-material/ArrowForwardOutlined';
-import AutoStories from '@mui/icons-material/AutoStoriesOutlined';
 import Bolt from '@mui/icons-material/BoltOutlined';
 import BookmarkBorder from '@mui/icons-material/BookmarkBorderOutlined';
 import Bookmark from '@mui/icons-material/BookmarkOutlined';
@@ -75,7 +74,6 @@ const ICONS = {
   arrow_back: ArrowBack,
   arrow_backward: ArrowBack,
   arrow_forward: ArrowForward,
-  auto_stories: AutoStories,
   bolt: Bolt,
   book_ribbon: MenuBook,
   bookmark: Bookmark,

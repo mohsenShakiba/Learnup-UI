@@ -2,9 +2,9 @@ import { Box, IconButton, Stack, useTheme } from "@mui/material";
 import { useState } from "react";
 import { AppIcon } from '../../../shared/components/AppIcon';
 import { toast } from "../../../shared/toast";
-import { useStoryAudio } from "../hooks/useStoryAudio";
+import { useConversationAudio } from "../hooks/useConversationAudio";
 
-export function StoryControls () {
+export function ConversationControls () {
 
   const {
     audioRef,
@@ -19,7 +19,7 @@ export function StoryControls () {
     handleTimeUpdate,
     showTranslation,
     onToggleTranslation,
-  } = useStoryAudio();
+  } = useConversationAudio();
 
   const theme = useTheme();
   const isDark = theme.palette.mode === 'dark';

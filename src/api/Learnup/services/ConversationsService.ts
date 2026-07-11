@@ -2,7 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { ConversationDetailResponse } from '../models/ConversationDetailResponse';
+import type { ConversationItemExpressionResponse } from '../models/ConversationItemExpressionResponse';
 import type { ConversationResponse } from '../models/ConversationResponse';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -12,40 +12,38 @@ import { request as __request } from '../core/request';
 export class ConversationsService {
 
     /**
-     * @returns ConversationResponse OK
-     * @throws ApiError
-     */
-    public static startConversation(): CancelablePromise<ConversationResponse> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/Mobile/Conversations',
-        });
-    }
-
-    /**
-     * @returns ConversationResponse OK
-     * @throws ApiError
-     */
-    public static listConversations(): CancelablePromise<Array<ConversationResponse>> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/Mobile/Conversations',
-        });
-    }
-
-    /**
      * @param id 
-     * @returns ConversationDetailResponse OK
+     * @returns ConversationResponse OK
      * @throws ApiError
      */
-    public static getConversation(
+    public static getConversationById(
 id: number,
-): CancelablePromise<ConversationDetailResponse> {
+): CancelablePromise<ConversationResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/Mobile/Conversations/{id}',
             path: {
                 'id': id,
+            },
+        });
+    }
+
+    /**
+     * @param id 
+     * @param itemId 
+     * @returns ConversationItemExpressionResponse OK
+     * @throws ApiError
+     */
+    public static getConversationItemExpressions(
+id: number,
+itemId: number,
+): CancelablePromise<Array<ConversationItemExpressionResponse>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/Mobile/Conversations/{id}/items/{itemId}/expressions',
+            path: {
+                'id': id,
+                'itemId': itemId,
             },
         });
     }

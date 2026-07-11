@@ -13,20 +13,20 @@ import { useChatStream } from "./useChatStream";
 const CONTENT_MAX_WIDTH = 500;
 
 export default function ChatPage() {
-  const { conversationId } = useParams();
-  const parsedId = conversationId ? Number(conversationId) : undefined;
+  const { chatId } = useParams();
+  const parsedId = chatId ? Number(chatId) : undefined;
   const currentId = Number.isFinite(parsedId) ? parsedId : undefined;
 
-  // Remount on conversation change so the stream state fully resets between
+  // Remount on chat change so the stream state fully resets between
   // threads (the "new chat" case included), rather than leaking prior messages.
-  return <ChatView key={currentId ?? "new"} conversationId={currentId} />;
+  return <ChatView key={currentId ?? "new"} chatId={currentId} />;
 }
 
-function ChatView({ conversationId }: { conversationId?: number; }) {
+function ChatView({ chatId }: { chatId?: number; }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const { messages, isStreaming, isLoadingHistory, send, stop } =
-    useChatStream(conversationId);
+    useChatStream(chatId);
 
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
@@ -52,7 +52,7 @@ function ChatView({ conversationId }: { conversationId?: number; }) {
       <ConversationListDrawer
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
-        currentConversationId={conversationId}
+        currentConversationId={chatId}
       />
 
       <Box sx={{ flex: 1, p: 2, overflowY: 'auto' }}>

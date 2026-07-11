@@ -3,8 +3,9 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type ChatResponse = {
-    chatId: number;
-    reply: string;
-    tokensUsed: number;
+export type ChatSummaryResponse = {
+    id: number;
+    title: string | null;
+    createdAt: string;
+    updatedAt: string;
 };

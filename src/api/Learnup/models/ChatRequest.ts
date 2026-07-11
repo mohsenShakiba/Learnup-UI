@@ -4,6 +4,6 @@
 /* eslint-disable */
 
 export type ChatRequest = {
-    conversationId: number | null;
+    chatId: number | null;
     message: string;
 };

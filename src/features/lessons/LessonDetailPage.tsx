@@ -36,18 +36,18 @@ export default function LessonDetailPage () {
     >
       <Stack sx={{ height: "100%", gap: 2 }}>
         <Stack sx={{ flex: 1, gap: 2, overflowY: "auto" }}>
-          {lesson.stories.map((story) => {
+          {lesson.conversations.map((conversation) => {
             return (
               <Stack
-                key={story.id}
+                key={conversation.id}
                 direction="row"
                 spacing={1.5}
                 sx={{ alignItems: "stretch" }}
               >
                 <Box sx={{ flex: 1 }}>
-                  <ConversationListItem story={story} lessonId={lesson.id} />
+                  <ConversationListItem conversation={conversation} lessonId={lesson.id} />
                 </Box>
-                <LessonTimeline completed={lesson.userLesson.isStoryCompleted} isLast={false} />
+                <LessonTimeline completed={lesson.userLesson.isConversationCompleted} isLast={false} />
               </Stack>
             );
           })}

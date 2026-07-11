@@ -3,8 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 
+import type { ConversationResponse } from './ConversationResponse';
 import type { GrammarResponse } from './GrammarResponse';
-import type { StoryResponse } from './StoryResponse';
 import type { TestResponse } from './TestResponse';
 import type { UserLessonResponse } from './UserLessonResponse';
 import type { VocabResponse } from './VocabResponse';
@@ -16,7 +16,7 @@ export type LessonDetailResponse = {
     courseId: number;
     nextLessonId: number | null;
     userLesson: UserLessonResponse;
-    stories: Array<StoryResponse>;
+    conversations: Array<ConversationResponse>;
     grammars: Array<GrammarResponse>;
     vocabs: Array<VocabResponse>;
     tests: Array<TestResponse>;

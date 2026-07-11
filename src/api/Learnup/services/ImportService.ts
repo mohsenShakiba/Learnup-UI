@@ -38,7 +38,7 @@ LanguageId?: number;
      * @returns number OK
      * @throws ApiError
      */
-    public static importStory(
+    public static importConversation(
 courseId: number,
 lessonOrder: number,
 formData?: {
@@ -47,7 +47,7 @@ File?: Blob;
 ): CancelablePromise<number> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/Admin/Import/stories/{courseId}/{lessonOrder}',
+            url: '/Admin/Import/conversations/{courseId}/{lessonOrder}',
             path: {
                 'courseId': courseId,
                 'lessonOrder': lessonOrder,

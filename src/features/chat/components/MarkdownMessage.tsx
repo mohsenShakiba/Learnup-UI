@@ -10,9 +10,11 @@ type MarkdownMessageProps = {
 // Renders assistant replies as basic Markdown (bold, italics, lists, code,
 // links, headings…) while keeping the visual language of the surrounding
 // MUI theme. Kept intentionally minimal — no raw HTML is allowed through.
-export function MarkdownMessage({ content }: MarkdownMessageProps) {
+export function MarkdownMessage ({ content }: MarkdownMessageProps) {
   return (
     <Box
+      dir="rtl"
+      style={{ direction: "rtl", textAlign: "right" }}
       sx={{
         lineHeight: 1.7,
         wordBreak: "break-word",
@@ -35,21 +37,16 @@ export function MarkdownMessage({ content }: MarkdownMessageProps) {
           color: "text.secondary",
         },
         "& code": {
-          fontFamily: "monospace",
-          fontSize: "0.85em",
-          px: 0.5,
-          py: 0.125,
-          borderRadius: 1,
-          backgroundColor: "rgba(0, 0, 0, 0.08)",
+          fontFamily: 'arial',
+          unicodeBidi: "plaintext",
         },
         "& pre": {
           my: 0.75,
           p: 1.25,
           borderRadius: 2,
           overflowX: "auto",
-          backgroundColor: "rgba(0, 0, 0, 0.08)",
-          direction: "ltr",
-          textAlign: "left",
+          direction: 'rtl',
+          textAlign: "right",
         },
         "& pre code": {
           p: 0,

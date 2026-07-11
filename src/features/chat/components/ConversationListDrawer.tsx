@@ -1,14 +1,13 @@
 import {
   Box,
   Button,
-  Divider,
   LinearProgress,
   List,
   ListItemButton,
   ListItemText,
   Stack,
   SwipeableDrawer,
-  Typography,
+  Typography
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -154,7 +153,6 @@ export function ConversationListDrawer ({
           )}
         </Box>
 
-        <Divider sx={{ mb: 1 }} />
 
         <Box sx={{ flex: 1, minHeight: 0, overflowY: "auto" }}>
           {conversationsQuery.isLoading ? (

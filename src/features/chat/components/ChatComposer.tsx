@@ -1,4 +1,4 @@
-import { IconButton, InputAdornment, Stack, TextField } from "@mui/material";
+import { IconButton, InputAdornment, TextField } from "@mui/material";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { AppIcon } from "../../../shared/components/AppIcon";
 
@@ -29,6 +29,17 @@ interface SpeechRecognitionLike {
 }
 type SpeechRecognitionCtor = new () => SpeechRecognitionLike;
 
+const RTL_CHARS = /[\u0591-\u07FF\uFB1D-\uFDFD\uFE70-\uFEFC]/;
+const LTR_CHARS = /[A-Za-z\u00C0-\u024F\u1E00-\u1EFF]/;
+
+function getInputDirection (text: string): "rtl" | "ltr" {
+  for (const char of text.trimStart()) {
+    if (RTL_CHARS.test(char)) return "rtl";
+    if (LTR_CHARS.test(char)) return "ltr";
+  }
+  return "rtl";
+}
+
 const getSpeechRecognition = (): SpeechRecognitionCtor | undefined => {
   const w = window as unknown as {
     SpeechRecognition?: SpeechRecognitionCtor;
@@ -37,10 +48,11 @@ const getSpeechRecognition = (): SpeechRecognitionCtor | undefined => {
   return w.SpeechRecognition ?? w.webkitSpeechRecognition;
 };
 
-export function ChatComposer({ isStreaming, onSend, onStop, lang = "fa-IR" }: ChatComposerProps) {
+export function ChatComposer ({ isStreaming, onSend, onStop, lang = "fa-IR" }: ChatComposerProps) {
   const [value, setValue] = useState("");
   const [isListening, setIsListening] = useState(false);
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
+  const inputDirection = getInputDirection(value);
 
   const speechSupported = typeof window !== "undefined" && !!getSpeechRecognition();
 
@@ -100,15 +112,22 @@ export function ChatComposer({ isStreaming, onSend, onStop, lang = "fa-IR" }: Ch
       fullWidth
       multiline
       maxRows={5}
-      placeholder="پیام خود را بنویسید..."
+      placeholder="سوالت رو اینجا بپرس"
       value={value}
       onChange={(e) => setValue(e.target.value)}
       onKeyDown={handleKeyDown}
       sx={{
         "& .MuiOutlinedInput-root": { border: "none", borderRadius: 0 },
         "& .MuiOutlinedInput-notchedOutline": { border: "none" },
+        "& textarea": {
+          direction: inputDirection === 'rtl' ? 'ltr' : 'rtl',
+          textAlign: inputDirection === 'rtl' ? 'left' : 'right'
+        },
       }}
       slotProps={{
+        htmlInput: {
+          dir: inputDirection,
+        },
         input: {
           sx: {
             py: 1,
@@ -120,46 +139,43 @@ export function ChatComposer({ isStreaming, onSend, onStop, lang = "fa-IR" }: Ch
           },
           startAdornment: (
             <InputAdornment position="start">
-
-            </InputAdornment>
-          ),
-          endAdornment: (
-            <InputAdornment position="end">
-              <Stack direction='row' spacing={1}>
-                {speechSupported && (
-                  <IconButton
-                    size="small"
-                    onClick={toggleListening}
-                    color={isListening ? "primary" : "default"}
-                    sx={{
-                      width: 35,
-                      height: 35,
-                      borderRadius: 999,
-                    }}
-                  >
-                    <AppIcon sx={{ fontSize: 20 }}>{isListening ? "mic" : "mic_none"}</AppIcon>
-                  </IconButton>
-                )}
+              {speechSupported && (
                 <IconButton
                   size="small"
-                  onClick={isStreaming ? onStop : submit}
-                  disabled={!isStreaming && value.trim().length === 0}
+                  onClick={toggleListening}
+                  color={isListening ? "primary" : "default"}
                   sx={{
                     width: 35,
                     height: 35,
                     borderRadius: 999,
-                    color: "primary.contrastText",
-                    backgroundColor: "primary.main",
-                    "&:hover": { backgroundColor: "primary.dark" },
-                    "&.Mui-disabled": {
-                      backgroundColor: "action.disabledBackground",
-                      color: "action.disabled",
-                    },
                   }}
                 >
-                  <AppIcon sx={{ fontSize: 20 }}>{isStreaming ? "pause" : "arrow_upward"}</AppIcon>
+                  <AppIcon sx={{ fontSize: 20 }}>{isListening ? "mic" : "mic_none"}</AppIcon>
                 </IconButton>
-              </Stack>
+              )}
+            </InputAdornment>
+          ),
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton
+                size="small"
+                onClick={isStreaming ? onStop : submit}
+                disabled={!isStreaming && value.trim().length === 0}
+                sx={{
+                  width: 35,
+                  height: 35,
+                  borderRadius: 999,
+                  color: "primary.contrastText",
+                  backgroundColor: "primary.main",
+                  "&:hover": { backgroundColor: "primary.dark" },
+                  "&.Mui-disabled": {
+                    backgroundColor: "action.disabledBackground",
+                    color: "action.disabled",
+                  },
+                }}
+              >
+                <AppIcon sx={{ fontSize: 20 }}>{isStreaming ? "pause" : "arrow_upward"}</AppIcon>
+              </IconButton>
             </InputAdornment>
           ),
         },

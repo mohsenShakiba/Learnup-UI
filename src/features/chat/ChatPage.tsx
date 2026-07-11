@@ -66,12 +66,17 @@ function ChatView ({ chatId }: { chatId?: number; }) {
               justifyContent: "center",
               color: "text.secondary",
               textAlign: "center",
+              mt: 4
             }}
           >
             <AppIcon sx={{ fontSize: 56, opacity: 0.3 }}>chat_bubble</AppIcon>
             <Typography variant="body1">دستیار هوشمند</Typography>
-            <Typography variant="caption" sx={{ opacity: 0.8, maxWidth: 280 }}>
+            <Typography variant="caption" sx={{ opacity: 0.9, maxWidth: 280 }}>
               هر سوالی درباره‌ی زبان، گرامر یا لغات داری بپرس.
+            </Typography>
+
+            <Typography variant="caption" sx={{ opacity: 0.8, maxWidth: 280 }}>
+              می‌تونی تایپ کنی یا با میکروفون صحبت کنی.
             </Typography>
           </Stack>
         ) : (

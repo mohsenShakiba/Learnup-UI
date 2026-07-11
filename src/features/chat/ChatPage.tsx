@@ -75,7 +75,7 @@ function ChatView ({ chatId }: { chatId?: number; }) {
               هر سوالی درباره‌ی زبان، گرامر یا لغات داری بپرس.
             </Typography>
 
-            <Typography variant="caption" sx={{ opacity: 0.8, maxWidth: 280 }}>
+            <Typography variant="caption" sx={{ opacity: 0.7, maxWidth: 280 }}>
               می‌تونی تایپ کنی یا با میکروفون صحبت کنی.
             </Typography>
           </Stack>

@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Divider,
+  LinearProgress,
   List,
   ListItemButton,
   ListItemText,
@@ -18,12 +19,17 @@ import { AppLoader } from "../../../shared/components/AppLoader";
 type ConversationListDrawerProps = {
   open: boolean;
   onClose: () => void;
-  /** Id of the conversation currently shown, to highlight it in the list. */
   currentConversationId?: number;
 };
 
 function formatDate (value: string): string {
   return new Date(value).toLocaleDateString("fa-IR");
+}
+
+const numberFormatter = new Intl.NumberFormat("fa-IR");
+
+function formatNumber (value: number): string {
+  return numberFormatter.format(value);
 }
 
 export function ConversationListDrawer ({
@@ -40,7 +46,22 @@ export function ConversationListDrawer ({
     // Reflect newly started threads each time the list is opened.
     staleTime: 0,
   });
+
+  const tokenUsageQuery = useQuery({
+    queryKey: ["chat-token-usage"],
+    queryFn: () => ChatsService.getAvailableTokenUsage(),
+    enabled: open,
+    staleTime: 0,
+  });
+
   const conversations = conversationsQuery.data ?? [];
+  const tokenUsage = tokenUsageQuery.data;
+  const usageLimit = tokenUsage?.usageLimit ?? 0;
+  const currentUsage = tokenUsage?.currentUsage ?? 0;
+  const usagePercent = usageLimit > 0
+    ? Math.min((currentUsage / usageLimit) * 100, 100)
+    : 0;
+  const remainingUsage = Math.max(usageLimit - currentUsage, 0);
 
   const go = (path: string) => {
     onClose();
@@ -68,18 +89,70 @@ export function ConversationListDrawer ({
       }}
     >
       <Stack sx={{ height: "100%" }}>
-        <Typography variant="subtitle1" sx={{ px: 1, mb: 1 }}>
-          گفتگوها
-        </Typography>
+        <Stack direction='row' sx={{ alignItems: 'end', justifyContent: 'space-between' }}>
+          <Typography variant="subtitle1" sx={{ px: 1, mb: 1 }}>
+            گفتگوها
+          </Typography>
 
-        <Button
-          variant="outlined"
-          startIcon={<AppIcon>add</AppIcon>}
-          onClick={() => go("/chat")}
-          sx={{ mb: 1 }}
+          <Button
+            size="small"
+            variant="outlined"
+            startIcon={<AppIcon>add</AppIcon>}
+            onClick={() => go("/chat")}
+            sx={{ mb: 1 }}
+          >
+            گفتگوی جدید
+          </Button>
+        </Stack>
+
+        <Box
+          sx={{
+            border: "1px solid",
+            borderColor: "divider",
+            borderRadius: 1.5,
+            p: 1.25,
+            mb: 1,
+          }}
         >
-          گفتگوی جدید
-        </Button>
+          <Stack direction="row" spacing={1} sx={{ alignItems: "center", mb: 1 }}>
+            <Typography variant="caption">
+              مصرف توکن شما
+            </Typography>
+            <Box sx={{ flex: 1 }} />
+            {tokenUsageQuery.isFetching && (
+              <Typography variant="caption" sx={{ color: "text.secondary" }}>
+                در حال دریافت...
+              </Typography>
+            )}
+          </Stack>
+
+          {tokenUsageQuery.isError ? (
+            <Typography variant="caption" sx={{ color: "text.secondary" }}>
+              امکان نمایش مصرف توکن وجود ندارد.
+            </Typography>
+          ) : (
+            <>
+              <LinearProgress
+                variant="determinate"
+                value={usagePercent}
+                sx={{ height: 6, borderRadius: 1, mb: 1 }}
+              />
+              <Stack direction="row" sx={{ alignItems: "center" }}>
+                <Typography variant="caption" sx={{ color: "text.secondary" }}>
+                  {usageLimit > 0
+                    ? `${formatNumber(currentUsage)} از ${formatNumber(usageLimit)}`
+                    : formatNumber(currentUsage)}
+                </Typography>
+                <Box sx={{ flex: 1 }} />
+                {usageLimit > 0 && (
+                  <Typography variant="caption" sx={{ color: "text.secondary" }}>
+                    {formatNumber(remainingUsage)} باقی‌مانده
+                  </Typography>
+                )}
+              </Stack>
+            </>
+          )}
+        </Box>
 
         <Divider sx={{ mb: 1 }} />
 

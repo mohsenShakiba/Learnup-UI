@@ -4,13 +4,12 @@ import {
   Divider,
   ListItemButton,
   ListItemIcon,
-  ListItemText,
   Paper,
   Stack,
   SwipeableDrawer,
   ToggleButton,
   ToggleButtonGroup,
-  Typography,
+  Typography
 } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
@@ -26,7 +25,7 @@ type SettingsDrawerProps = {
   onClose: () => void;
 };
 
-export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
+export function SettingsDrawer ({ open, onClose }: SettingsDrawerProps) {
   const { mode, setMode } = useThemeMode();
   const navigate = useNavigate();
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
@@ -152,28 +151,30 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
 
       <Box sx={{ flex: 1 }} />
 
-      <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
+      <Typography variant="body2" sx={{ mb: 1 }}>
         حالت نمایش
       </Typography>
 
       <ToggleButtonGroup
         value={mode}
+        color='primary'
+        sx={{ bgcolor: 'background.paper', borderRadius: 2, }}
         exclusive
         onChange={(_, next) => {
           if (next) setMode(next);
         }}
         fullWidth
-        size="small"
+        size="medium"
       >
-        <ToggleButton color='primary' value="system">
+        <ToggleButton value="system">
           <AppIcon sx={{ fontSize: 16, mr: 1 }}>brightness_auto</AppIcon>
           خودکار
         </ToggleButton>
-        <ToggleButton color='primary' value="light">
+        <ToggleButton value="light">
           <AppIcon sx={{ fontSize: 16, mr: 1 }}>light_mode</AppIcon>
           روشن
         </ToggleButton>
-        <ToggleButton color='primary' value="dark">
+        <ToggleButton value="dark">
           <AppIcon sx={{ fontSize: 16, mr: 1 }}>dark_mode</AppIcon>
           تاریک
         </ToggleButton>
@@ -181,11 +182,13 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
 
 
       <Paper sx={{ p: 0, overflow: 'hidden', mt: 2 }}>
-        <ListItemButton onClick={handleLogout}>
+
+        <ListItemButton sx={{ height: 45 }} onClick={handleLogout}>
           <ListItemIcon>
-            <AppIcon sx={{ color: 'error.main' }}>logout</AppIcon>
+            <AppIcon sx={{ color: 'error.main', fontSize: '20px' }}>logout</AppIcon>
           </ListItemIcon>
-          <ListItemText primary={<Typography color="error">خروج از حساب</Typography>} />
+          <Typography variant='body2' color="error">خروج از حساب</Typography>
+          <Box sx={{ flex: 1 }} />
         </ListItemButton>
       </Paper>
     </SwipeableDrawer>

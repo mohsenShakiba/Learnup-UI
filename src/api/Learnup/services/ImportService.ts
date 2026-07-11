@@ -32,6 +32,24 @@ LanguageId?: number;
     }
 
     /**
+     * @param formData 
+     * @returns number OK
+     * @throws ApiError
+     */
+    public static importAudioBook(
+formData?: {
+File?: Blob;
+},
+): CancelablePromise<number> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/Admin/Import/audio-books',
+            formData: formData,
+            mediaType: 'multipart/form-data',
+        });
+    }
+
+    /**
      * @param courseId 
      * @param lessonOrder 
      * @param formData 

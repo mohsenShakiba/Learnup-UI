@@ -20,6 +20,7 @@ import ListGrammarPage from "./features/grammar/pages/ListGrammarPage";
 import BoxLevelReviewPage from "./features/leitnerBox/BoxLevelReviewPage";
 import LeitnerBoxPage from "./features/leitnerBox/LeitnerBoxPage";
 import LessonDetailPage from "./features/lessons/LessonDetailPage";
+import AudioBookDetailPage from "./features/library/AudioBookDetailPage";
 import BookDetailPage from "./features/library/BookDetailPage";
 import ListBooksPage from "./features/library/ListBooksPage";
 import UploadBookPage from "./features/library/UploadBookPage";
@@ -90,6 +91,10 @@ function AppLayout () {
             <Route path="/chat/:chatId" element={<ChatPage />} />
             <Route path="/placement" element={<PlacementPage />} />
             <Route path="/library/book/:bookId" element={<BookDetailPage />} />
+            <Route
+              path="/library/audio-book/:audioBookId"
+              element={<AudioBookDetailPage />}
+            />
             <Route path="/library" element={<ListBooksPage />} />
             <Route
               path="/library/user-books/upload"

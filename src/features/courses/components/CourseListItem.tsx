@@ -28,7 +28,7 @@ export function CourseListItem ({ course }: CourseListItemProps) {
   };
 
   const stats = [
-    { icon: "conversation", value: course.totalConversations, label: "مکالمه" },
+    { icon: "conversation", value: course.totalStories, label: "داستان" },
     { icon: "book_ribbon", value: course.totalGrammars, label: "گرامر" },
     { icon: "translate", value: course.totalVocabs, label: "کلمه" },
   ];

@@ -10,6 +10,10 @@ export type { OpenAPIConfig } from './core/OpenAPI';
 export { AnswerQuality } from './models/AnswerQuality';
 export type { AnswerTestRequest } from './models/AnswerTestRequest';
 export type { AnswerTestResponse } from './models/AnswerTestResponse';
+export type { AudioBookDetailResponse } from './models/AudioBookDetailResponse';
+export type { AudioBookItemExpressionResponse } from './models/AudioBookItemExpressionResponse';
+export type { AudioBookItemResponse } from './models/AudioBookItemResponse';
+export type { AudioBookResponse } from './models/AudioBookResponse';
 export type { BoxLevelInfoResponse } from './models/BoxLevelInfoResponse';
 export type { BoxLevelResponse } from './models/BoxLevelResponse';
 export type { ChatDetailResponse } from './models/ChatDetailResponse';
@@ -80,6 +84,7 @@ export type { VocabSenseResponse } from './models/VocabSenseResponse';
 export { VocabType } from './models/VocabType';
 
 export { AiService } from './services/AiService';
+export { AudioBooksService } from './services/AudioBooksService';
 export { AuthService } from './services/AuthService';
 export { BooksControllersService } from './services/BooksControllersService';
 export { ChatsService } from './services/ChatsService';

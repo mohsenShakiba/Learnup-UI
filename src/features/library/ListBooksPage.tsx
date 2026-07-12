@@ -2,8 +2,8 @@ import { Box, Button, Stack, ToggleButton, ToggleButtonGroup, Typography } from 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AudioBooksService, BooksControllersService } from '../../api/Learnup';
 import type { UserBookResponse } from '../../api/Learnup';
+import { AudioBooksService, BooksControllersService } from '../../api/Learnup';
 import { AppIcon } from '../../shared/components/AppIcon';
 import { AppLoader } from '../../shared/components/AppLoader';
 import { DefaultHeader } from '../../shared/components/DefaultHeader';
@@ -13,10 +13,10 @@ import { BookListItem } from './components/BookListItem';
 
 type LibrarySection = 'ebooks' | 'audioBooks';
 
-export default function ListBooksPage() {
+export default function ListBooksPage () {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [section, setSection] = useState<LibrarySection>('ebooks');
+  const [section, setSection] = useState<LibrarySection>('audioBooks');
 
   const booksQuery = useQuery({
     queryKey: ['userBooks'],
@@ -72,20 +72,20 @@ export default function ListBooksPage() {
             if (value) setSection(value);
           }}
           sx={{
-            direction: 'rtl',
+            bgcolor: 'background.paper',
             '& .MuiToggleButton-root': {
               gap: 0.75,
               py: 1,
             },
           }}
         >
-          <ToggleButton value="ebooks">
-            <AppIcon fontSize="small">menu_book</AppIcon>
-            کتاب‌ها
-          </ToggleButton>
           <ToggleButton value="audioBooks">
             <AppIcon fontSize="small">volume_up</AppIcon>
             کتاب‌های صوتی
+          </ToggleButton>
+          <ToggleButton value="ebooks">
+            <AppIcon fontSize="small">menu_book</AppIcon>
+            کتاب‌ها
           </ToggleButton>
         </ToggleButtonGroup>
 
@@ -97,7 +97,6 @@ export default function ListBooksPage() {
         ) : isEbooksSection ? (
           <Box
             sx={{
-              flex: 1,
               overflowY: 'auto',
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
@@ -122,7 +121,6 @@ export default function ListBooksPage() {
         ) : (
           <Box
             sx={{
-              flex: 1,
               overflowY: 'auto',
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
@@ -143,11 +141,15 @@ export default function ListBooksPage() {
       </Stack>
 
       {isEbooksSection && (
-        <Button sx={{ mt: 2 }} size='small'
-          onClick={() => navigate('/library/user-books/upload')}
-          endIcon={
-            <AppIcon>add</AppIcon>
-          }>افزودن کتاب</Button>
+        <Stack >
+          <Typography variant='caption' sx={{ color: 'text.secondary', textAlign: 'center' }}>میدونستی میتونی کتاب خودت رو هم اضافه کنی؟</Typography>
+          <Button variant='outlined' sx={{ mt: 2 }} size='small'
+            onClick={() => navigate('/library/user-books/upload')}
+            endIcon={
+              <AppIcon>add</AppIcon>
+            }>افزودن کتاب</Button>
+        </Stack>
+
       )}
 
     </Scaffold>

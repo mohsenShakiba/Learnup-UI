@@ -1,10 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ChatMessageResponse, ChatRequest } from "../../api/Learnup";
-import { ApiError, ChatsService } from "../../api/Learnup";
-import { dialogStore } from "../../shared/dialog/dialogStore";
+import { ChatsService } from "../../api/Learnup";
 import { toast } from "../../shared/toast";
+import { checkError } from "../../utils/GetHttpError";
 import { ensureChatHubConnected, subscribeToChatHub } from "./chatHub";
-import { TokenExceededDialog } from "./components/TokenExceededDialog";
 
 export type ChatRole = "user" | "assistant";
 
@@ -12,46 +11,16 @@ export interface ChatMessage {
   id: string;
   role: ChatRole;
   content: string;
-  /** True while the assistant reply is still streaming in. */
   pending?: boolean;
-  /** True when the reply failed to be generated. */
   error?: boolean;
 }
 
 function makeId (): string {
-  return typeof crypto !== "undefined" && "randomUUID" in crypto
-    ? crypto.randomUUID()
-    : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  return Math.random().toString(16).slice(2);
 }
 
 const TOKEN_EXCEED_CODE = "TokenExceed";
-const TOKEN_EXCEEDED_MESSAGE =
-  "اعتبار گفتگوی هوش مصنوعی شما کافی نیست. لطفاً اشتراک خود را تمدید کنید یا بعداً دوباره تلاش کنید.";
-const DEFAULT_STREAM_ERROR =
-  "پاسخی دریافت نشد. لطفاً دوباره تلاش کنید.";
-
-function containsTokenExceedCode (value: unknown): boolean {
-  if (typeof value === "string") return value.includes(TOKEN_EXCEED_CODE);
-  if (value instanceof Error) {
-    return containsTokenExceedCode(value.message) ||
-      containsTokenExceedCode(value.cause);
-  }
-  if (value && typeof value === "object") {
-    try {
-      return JSON.stringify(value).includes(TOKEN_EXCEED_CODE);
-    } catch {
-      return false;
-    }
-  }
-  return false;
-}
-
-function isTokenExceedError (error: unknown): boolean {
-  if (error instanceof ApiError) {
-    return containsTokenExceedCode(error.body);
-  }
-  return containsTokenExceedCode(error);
-}
+const DEFAULT_STREAM_ERROR = "پاسخی دریافت نشد. لطفاً دوباره تلاش کنید.";
 
 function toChatMessage (message: ChatMessageResponse): ChatMessage {
   return {
@@ -87,6 +56,7 @@ export interface UseChatStream {
   messages: ChatMessage[];
   isStreaming: boolean;
   isLoadingHistory: boolean;
+  isLimitExceed: boolean;
   send: (text: string) => void;
   stop: () => void;
 }
@@ -100,6 +70,7 @@ export interface UseChatStream {
  */
 export function useChatStream (initialChatId?: number): UseChatStream {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [isExceedToken, setIsExceedToken] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(
     initialChatId != null,
@@ -198,15 +169,6 @@ export function useChatStream (initialChatId?: number): UseChatStream {
         }
       };
 
-      const showTokenExceeded = () => {
-        const didFinish = finish({
-          content: TOKEN_EXCEEDED_MESSAGE,
-          pending: false,
-          error: true,
-        });
-        if (didFinish) dialogStore.show(TokenExceededDialog);
-      };
-
       unsubscribe = subscribeToChatHub({
         onStarted: ({ chatId }) => {
           if (!acceptsEvent(chatId)) return;
@@ -240,12 +202,13 @@ export function useChatStream (initialChatId?: number): UseChatStream {
           chatIdRef.current = response.chatId;
         }
       } catch (error) {
-        if (isTokenExceedError(error)) {
-          showTokenExceeded();
-          return;
+        const isTokenExceed = checkError(error, TOKEN_EXCEED_CODE);
+        if (isTokenExceed) {
+          setIsExceedToken(true);
+          finish({ pending: false });
+        } else {
+          fail();
         }
-
-        fail();
       }
     },
     [isStreaming, patchMessage],
@@ -264,6 +227,7 @@ export function useChatStream (initialChatId?: number): UseChatStream {
     messages,
     isStreaming,
     isLoadingHistory,
+    isLimitExceed: isExceedToken,
     send,
     stop,
   };

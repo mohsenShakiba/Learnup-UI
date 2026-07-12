@@ -1,14 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-import { ApiError, LessonsService } from '../../../api/Learnup';
+import { LessonsService } from '../../../api/Learnup';
+import { checkError as checkErrorCode } from '../../../utils/GetHttpError';
 
 const ACCESS_LIMIT_CODE = "AccessLimit";
 
-function isAccessLimitError (error: unknown): boolean {
-  if (error instanceof ApiError) {
-    return error.body === ACCESS_LIMIT_CODE;
-  }
-  return false;
-}
 
 /**
  * Loads a lesson detail by id. Shared across the lesson detail page and the
@@ -25,6 +20,6 @@ export function useLesson (lessonId: number) {
 
   return {
     ...lessonQuery,
-    isAccessLimitError: lessonQuery.isError && isAccessLimitError(lessonQuery.error),
+    isAccessLimitError: lessonQuery.isError && checkErrorCode(lessonQuery.error, ACCESS_LIMIT_CODE),
   };
 }

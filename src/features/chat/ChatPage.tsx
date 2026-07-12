@@ -5,9 +5,11 @@ import { AppIcon } from "../../shared/components/AppIcon";
 import { AppLoader } from "../../shared/components/AppLoader";
 import { DefaultHeader } from "../../shared/components/DefaultHeader";
 import { Scaffold } from "../../shared/components/Scaffold";
+import { dialogStore } from "../../shared/dialog/dialogStore";
 import { ChatComposer } from "./components/ChatComposer";
 import { ChatMessageBubble } from "./components/ChatMessageBubble";
 import { ConversationListDrawer } from "./components/ConversationListDrawer";
+import { TokenExceededDialog } from "./components/TokenExceededDialog";
 import { useChatStream } from "./useChatStream";
 
 export default function ChatPage () {
@@ -23,7 +25,13 @@ export default function ChatPage () {
 function ChatView ({ chatId }: { chatId?: number; }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const { messages, isStreaming, isLoadingHistory, send, stop } = useChatStream(chatId);
+  const { messages, isStreaming, isLoadingHistory, send, stop, isLimitExceed } = useChatStream(chatId);
+
+  useEffect(() => {
+    if (isLimitExceed) {
+      dialogStore.show(TokenExceededDialog);
+    }
+  }, [isLimitExceed]);
 
   const bottomRef = useRef<HTMLDivElement | null>(null);
 

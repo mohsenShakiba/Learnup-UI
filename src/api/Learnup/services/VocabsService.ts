@@ -32,7 +32,7 @@ requestBody?: CreateVocabRequest,
      * @returns VocabResponse OK
      * @throws ApiError
      */
-    public static getVocabByWord(
+    public static searchVocab(
 word: string,
 ): CancelablePromise<Array<VocabResponse>> {
         return __request(OpenAPI, {

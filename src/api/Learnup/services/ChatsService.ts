@@ -49,12 +49,12 @@ id: number,
      * @returns SendAiTextResponse OK
      * @throws ApiError
      */
-    public static postMobileChatsProcess(
+    public static translateWithAi(
 requestBody?: SendAiTextRequest,
 ): CancelablePromise<SendAiTextResponse> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/Mobile/Chats/Process',
+            url: '/Mobile/Chats/Translate/Ai',
             body: requestBody,
             mediaType: 'application/json',
         });

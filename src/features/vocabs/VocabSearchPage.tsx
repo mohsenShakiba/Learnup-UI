@@ -114,13 +114,15 @@ export default function VocabSearchPage () {
 
   const query = useQuery({
     queryKey: ['vocab-search', searchWord],
-    queryFn: () => VocabsService.getVocabByWord(searchWord),
+    queryFn: () => VocabsService.searchVocab(searchWord),
     enabled: searchWord.length > 0,
   });
 
   return (
     <Scaffold header={<DefaultHeader header="جستجوی لغات" />}>
+
       <Stack spacing={2}>
+
         <TextField
           fullWidth
           placeholder="جستجوی کلمات و لغات"
@@ -172,6 +174,7 @@ export default function VocabSearchPage () {
             ))}
           </Stack>
         )}
+
       </Stack>
 
       <Dialog open={dialogOpen} onClose={closeMicDialog} slotProps={{ paper: { sx: { borderRadius: 4, m: 2 } } }}>
@@ -230,8 +233,11 @@ export default function VocabSearchPage () {
             </ToggleButtonGroup>
 
           </Stack>
+
         </DialogContent>
+
       </Dialog>
+
     </Scaffold>
   );
 }

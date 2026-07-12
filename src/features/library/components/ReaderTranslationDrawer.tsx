@@ -32,7 +32,7 @@ export function ReaderTranslationDrawer ({ selection }: Props) {
   const { word, sentence } = selection;
   const { data: result = null, isPending: loading, isError: error } = useQuery({
     queryKey: ['readerTranslation', word, sentence],
-    queryFn: () => ChatsService.postMobileChatsProcess(selection),
+    queryFn: () => ChatsService.translateWithAi(selection),
     refetchOnWindowFocus: false,
     retry: false,
   });
@@ -45,7 +45,7 @@ export function ReaderTranslationDrawer ({ selection }: Props) {
     if (!word || bookmarkState === 'loading' || bookmarkState === 'saved') return;
     setBookmarkState('loading');
     try {
-      const vocabs = await VocabsService.getVocabByWord(word);
+      const vocabs = await VocabsService.searchVocab(word);
       let vocabId: number;
       if (vocabs.length > 0) {
         vocabId = vocabs[0].id;

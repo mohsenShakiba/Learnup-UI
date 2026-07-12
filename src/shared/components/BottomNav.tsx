@@ -15,7 +15,7 @@ export const ROOT_TABS = [
   { label: 'لایتنر', icon: 'deployed_code', path: '/leitner-box' },
   { label: 'کتابخانه', icon: 'menu_book', path: '/library' },
   { label: 'جستجو', icon: 'search', path: '/vocab' },
-  { label: 'دستیار زبان', icon: 'sms', path: '/chat' },
+  { label: 'دستیار Ai', icon: 'sms', path: '/chat' },
 ] as const;
 
 const tabs = ROOT_TABS;
@@ -58,7 +58,6 @@ export function isBottomNavVisible (pathname: string) {
     tabs.some(t => pathname.startsWith(t.path))
   );
 }
-
 
 export function BottomNav () {
   const theme = useTheme();

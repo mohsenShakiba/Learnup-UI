@@ -27,6 +27,8 @@ function makeId (): string {
 const TOKEN_EXCEED_CODE = "TokenExceed";
 const TOKEN_EXCEEDED_MESSAGE =
   "اعتبار گفتگوی هوش مصنوعی شما کافی نیست. لطفاً اشتراک خود را تمدید کنید یا بعداً دوباره تلاش کنید.";
+const DEFAULT_STREAM_ERROR =
+  "پاسخی دریافت نشد. لطفاً دوباره تلاش کنید.";
 
 function containsTokenExceedCode (value: unknown): boolean {
   if (typeof value === "string") return value.includes(TOKEN_EXCEED_CODE);
@@ -57,6 +59,28 @@ function toChatMessage (message: ChatMessageResponse): ChatMessage {
     role: message.role === "Assistant" ? "assistant" : "user",
     content: message.content,
   };
+}
+
+function updateMessage (
+  messages: ChatMessage[],
+  id: string,
+  patch: Partial<ChatMessage>,
+): ChatMessage[] {
+  return messages.map((message) =>
+    message.id === id ? { ...message, ...patch } : message,
+  );
+}
+
+function appendAssistantToken (
+  messages: ChatMessage[],
+  assistantId: string,
+  token: string,
+): ChatMessage[] {
+  return messages.map((message) =>
+    message.id === assistantId
+      ? { ...message, content: message.content + token, pending: true }
+      : message,
+  );
 }
 
 export interface UseChatStream {
@@ -113,14 +137,9 @@ export function useChatStream (initialChatId?: number): UseChatStream {
     return () => cancelRef.current?.();
   }, []);
 
-  const patchMessage = useCallback(
-    (id: string, patch: Partial<ChatMessage>) => {
-      setMessages((prev) =>
-        prev.map((m) => (m.id === id ? { ...m, ...patch } : m)),
-      );
-    },
-    [],
-  );
+  const patchMessage = useCallback((id: string, patch: Partial<ChatMessage>) => {
+    setMessages((prev) => updateMessage(prev, id, patch));
+  }, []);
 
   const send = useCallback(
     async (text: string) => {
@@ -135,73 +154,57 @@ export function useChatStream (initialChatId?: number): UseChatStream {
       ]);
       setIsStreaming(true);
 
-      const request: ChatRequest = {
-        chatId: chatIdRef.current,
-        message: content,
-      };
-
-      let activeChatId = request.chatId;
-      let finished = false;
+      let streamChatId = chatIdRef.current;
+      let isDone = false;
+      let unsubscribe: (() => void) | undefined;
 
       const acceptsEvent = (eventChatId?: number | null) => {
         if (eventChatId == null) return true;
 
-        if (activeChatId == null) {
-          activeChatId = eventChatId;
+        if (streamChatId == null) {
+          streamChatId = eventChatId;
           chatIdRef.current = eventChatId;
           return true;
         }
 
-        return eventChatId === activeChatId;
+        return eventChatId === streamChatId;
       };
-
-      let unsubscribe: (() => void) | null = null;
 
       const cleanup = () => {
         unsubscribe?.();
-        unsubscribe = null;
+        unsubscribe = undefined;
         if (cancelRef.current === cancel) {
           cancelRef.current = null;
         }
       };
 
       const cancel = () => {
-        finished = true;
+        isDone = true;
         cleanup();
       };
 
-      const finalize = () => {
-        if (finished) return;
-        finished = true;
-        patchMessage(assistantId, { pending: false });
+      const finish = (patch?: Partial<ChatMessage>) => {
+        if (isDone) return false;
+        isDone = true;
+        if (patch) patchMessage(assistantId, patch);
         setIsStreaming(false);
         cleanup();
+        return true;
+      };
+
+      const fail = (message = DEFAULT_STREAM_ERROR) => {
+        if (finish({ content: message, pending: false, error: true })) {
+          toast.error("خطا در دریافت پاسخ");
+        }
       };
 
       const showTokenExceeded = () => {
-        if (finished) return;
-        finished = true;
-        patchMessage(assistantId, {
+        const didFinish = finish({
           content: TOKEN_EXCEEDED_MESSAGE,
           pending: false,
           error: true,
         });
-        dialogStore.show(TokenExceededDialog);
-        setIsStreaming(false);
-        cleanup();
-      };
-
-      const failReply = (errorMessage = "پاسخی دریافت نشد. لطفاً دوباره تلاش کنید.") => {
-        if (finished) return;
-        finished = true;
-        patchMessage(assistantId, {
-          content: errorMessage,
-          pending: false,
-          error: true,
-        });
-        setIsStreaming(false);
-        cleanup();
-        toast.error("خطا در دریافت پاسخ");
+        if (didFinish) dialogStore.show(TokenExceededDialog);
       };
 
       unsubscribe = subscribeToChatHub({
@@ -211,23 +214,15 @@ export function useChatStream (initialChatId?: number): UseChatStream {
         },
         onCompleted: ({ chatId }) => {
           if (!acceptsEvent(chatId)) return;
-          finalize();
+          finish({ pending: false });
         },
         onFailed: ({ chatId }) => {
           if (!acceptsEvent(chatId)) return;
-          failReply();
+          fail();
         },
         onDelta: ({ chatId, token }) => {
           if (!token || !acceptsEvent(chatId)) return;
-          setMessages((prev) =>
-            prev.map((m) =>
-              m.id === assistantId ? {
-                ...m,
-                content: m.content + token,
-                pending: true,
-              } : m,
-            ),
-          );
+          setMessages((prev) => appendAssistantToken(prev, assistantId, token));
         },
       });
 
@@ -235,9 +230,13 @@ export function useChatStream (initialChatId?: number): UseChatStream {
 
       try {
         await ensureChatHubConnected();
+        const request: ChatRequest = {
+          chatId: streamChatId,
+          message: content,
+        };
         const response = await ChatsService.chatWithAi(request);
         if (response.chatId != null) {
-          activeChatId = response.chatId;
+          streamChatId = response.chatId;
           chatIdRef.current = response.chatId;
         }
       } catch (error) {
@@ -246,7 +245,7 @@ export function useChatStream (initialChatId?: number): UseChatStream {
           return;
         }
 
-        failReply();
+        fail();
       }
     },
     [isStreaming, patchMessage],

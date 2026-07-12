@@ -5,17 +5,19 @@ import remarkGfm from "remark-gfm";
 
 type MarkdownMessageProps = {
   content: string;
+  direction: string,
+  textAlign: string;
 };
 
 // Renders assistant replies as basic Markdown (bold, italics, lists, code,
 // links, headings…) while keeping the visual language of the surrounding
 // MUI theme. Kept intentionally minimal — no raw HTML is allowed through.
-export function MarkdownMessage ({ content }: MarkdownMessageProps) {
+export function MarkdownMessage ({ content, direction, textAlign }: MarkdownMessageProps) {
   return (
     <Box
-      dir="rtl"
-      style={{ direction: "rtl", textAlign: "right" }}
       sx={{
+        direction: direction,
+        textAlign: textAlign,
         lineHeight: 1.7,
         wordBreak: "break-word",
         "& > *:first-of-type": { mt: 0 },

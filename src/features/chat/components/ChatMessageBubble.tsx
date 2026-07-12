@@ -39,6 +39,9 @@ export function ChatMessageBubble ({ message }: { message: ChatMessage; }) {
   const showTyping = message.pending && message.content.length === 0;
   const direction = getDirection(message.content);
 
+  const dir = direction === "rtl" ? "ltr" : "rtl";
+  const textAlign = direction === "rtl" ? "left" : "right";
+
   return (
     <Box
       sx={{
@@ -64,10 +67,9 @@ export function ChatMessageBubble ({ message }: { message: ChatMessage; }) {
         ) : isUser ? (
           <Typography
             variant="body2"
-            dir={direction}
             style={{
-              direction,
-              textAlign: direction === "rtl" ? "right" : "left",
+              direction: dir,
+              textAlign: textAlign,
             }}
             sx={{
               whiteSpace: "pre-wrap",
@@ -77,15 +79,7 @@ export function ChatMessageBubble ({ message }: { message: ChatMessage; }) {
             {message.content}
           </Typography>
         ) : (
-          <Box
-            dir={direction}
-            style={{
-              direction,
-              textAlign: direction === "rtl" ? "right" : "left",
-            }}
-          >
-            <MarkdownMessage content={message.content} />
-          </Box>
+          <MarkdownMessage content={message.content} direction={dir} textAlign={textAlign} />
         )}
       </Paper>
     </Box>

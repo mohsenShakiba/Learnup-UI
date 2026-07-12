@@ -2,9 +2,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { ChatMessageResponse, ChatRequest } from "../../api/Learnup";
 import { ApiError, ChatsService } from "../../api/Learnup";
 import { dialogStore } from "../../shared/dialog/dialogStore";
-import { TokenExceededDialog } from "./components/TokenExceededDialog";
 import { toast } from "../../shared/toast";
 import { ensureChatHubConnected, subscribeToChatHub } from "./chatHub";
+import { TokenExceededDialog } from "./components/TokenExceededDialog";
 
 export type ChatRole = "user" | "assistant";
 
@@ -209,6 +209,14 @@ export function useChatStream (initialChatId?: number): UseChatStream {
           if (!acceptsEvent(chatId)) return;
           if (chatId != null) chatIdRef.current = chatId;
         },
+        onCompleted: ({ chatId }) => {
+          if (!acceptsEvent(chatId)) return;
+          finalize();
+        },
+        onFailed: ({ chatId }) => {
+          if (!acceptsEvent(chatId)) return;
+          failReply();
+        },
         onDelta: ({ chatId, token }) => {
           if (!token || !acceptsEvent(chatId)) return;
           setMessages((prev) =>
@@ -220,19 +228,6 @@ export function useChatStream (initialChatId?: number): UseChatStream {
               } : m,
             ),
           );
-        },
-        onCompleted: ({ chatId }) => {
-          if (!acceptsEvent(chatId)) return;
-          finalize();
-        },
-        onFailed: ({ chatId, error }) => {
-          if (!acceptsEvent(chatId)) return;
-          if (isTokenExceedError(error)) {
-            showTokenExceeded();
-            return;
-          }
-
-          failReply();
         },
       });
 

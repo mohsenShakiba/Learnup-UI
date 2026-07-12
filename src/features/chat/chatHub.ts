@@ -11,23 +11,13 @@ const CHAT_DELTA = "ChatDelta";
 const CHAT_COMPLETED = "ChatCompleted";
 const CHAT_FAILED = "ChatFailed";
 
-/**
- * Resolved lazily because `OpenAPI.BASE` is populated after module import.
- */
-function getHubUrl (): string {
-  return (
-    (import.meta.env.VITE_CHAT_HUB_URL as string | undefined) ??
-    `${(OpenAPI.BASE ?? "").replace(/\/$/, "")}/hubs/chat`
-  );
-}
-
 let connection: HubConnection | null = null;
 
 function getConnection (): HubConnection {
   if (connection) return connection;
 
   connection = new HubConnectionBuilder()
-    .withUrl(getHubUrl(), {
+    .withUrl(`${OpenAPI.BASE}/hubs/chat`, {
       accessTokenFactory: () => getAuthToken() ?? "",
     })
     .withAutomaticReconnect()
@@ -52,76 +42,42 @@ export interface ChatDeltaEvent extends ChatHubEvent {
   token: string;
 }
 
-export interface ChatFailedEvent extends ChatHubEvent {
-  error: unknown;
-}
-
 export interface ChatHubHandlers {
   onStarted?: (event: ChatHubEvent) => void;
   onDelta?: (event: ChatDeltaEvent) => void;
   onCompleted?: (event: ChatHubEvent) => void;
-  onFailed?: (event: ChatFailedEvent) => void;
+  onFailed?: (event: ChatHubEvent) => void;
 }
 
-function toChatId (value: unknown): number | null | undefined {
-  if (value == null) return value;
-  if (typeof value === "number" && Number.isFinite(value)) return value;
-  if (typeof value === "string" && value.trim()) {
-    const parsed = Number(value);
-    return Number.isFinite(parsed) ? parsed : undefined;
-  }
-  return undefined;
-}
-
-function readObjectProp (value: unknown, key: string): unknown {
-  if (!value || typeof value !== "object" || !(key in value)) return undefined;
-  return (value as Record<string, unknown>)[key];
-}
-
-function eventChatId (args: unknown[]): number | null | undefined {
-  for (const arg of args) {
-    const objectChatId = toChatId(readObjectProp(arg, "chatId"));
-    if (objectChatId !== undefined) return objectChatId;
-  }
-
-  return toChatId(args.find((arg) => typeof arg === "number"));
-}
-
-function eventText (args: unknown[], keys: string[]): string {
-  for (const arg of args) {
-    if (typeof arg === "string") return arg;
-
-    for (const key of keys) {
-      const value = readObjectProp(arg, key);
-      if (typeof value === "string") return value;
-    }
-  }
-
-  return "";
+function getChatId (args: unknown[]): number | null | undefined {
+  return (args[0] as any)?.chatId as number | null;
 }
 
 export function subscribeToChatHub (handlers: ChatHubHandlers): () => void {
   const conn = getConnection();
 
   const handleStarted = (...args: unknown[]) => {
-    handlers.onStarted?.({ chatId: eventChatId(args) });
-  };
-
-  const handleDelta = (...args: unknown[]) => {
-    handlers.onDelta?.({
-      chatId: eventChatId(args),
-      token: eventText(args, ["delta", "token", "chunk", "content", "message"]),
-    });
+    handlers.onStarted?.({ chatId: getChatId(args) });
   };
 
   const handleCompleted = (...args: unknown[]) => {
-    handlers.onCompleted?.({ chatId: eventChatId(args) });
+    handlers.onCompleted?.({ chatId: getChatId(args) });
   };
 
   const handleFailed = (...args: unknown[]) => {
-    handlers.onFailed?.({
-      chatId: eventChatId(args),
-      error: eventText(args, ["error", "reason", "message"]) || args[0],
+    handlers.onFailed?.({ chatId: getChatId(args), });
+  };
+
+  const handleDelta = (...args: unknown[]) => {
+    const delta = (args[0] as any)?.delta as string | null;
+
+    if (!delta) {
+      return;
+    }
+
+    handlers.onDelta?.({
+      chatId: getChatId(args),
+      token: delta,
     });
   };
 

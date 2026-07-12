@@ -22,7 +22,7 @@ export function ConversationWordDrawer ({ conversationId, itemId, word }: Props)
 
   const vocabQuery = useQuery({
     queryKey: ['vocab', word],
-    queryFn: () => VocabsService.getVocabByWord(word),
+    queryFn: () => VocabsService.searchVocab(word),
     enabled: word.length > 0,
   });
 

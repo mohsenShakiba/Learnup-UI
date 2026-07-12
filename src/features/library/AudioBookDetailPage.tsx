@@ -1,77 +1,33 @@
-import { alpha, Box, Chip, Paper, Stack, Typography } from '@mui/material';
+import { Paper, Stack, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { AudioBooksService, type AudioBookItemResponse } from '../../api/Learnup';
-import { AppIcon } from '../../shared/components/AppIcon';
 import { AppLoader } from '../../shared/components/AppLoader';
 import { DefaultHeader } from '../../shared/components/DefaultHeader';
 import { ErrorPage } from '../../shared/components/ErrorPage';
 import { Scaffold } from '../../shared/components/Scaffold';
 
-function AudioBookItemCard({ item }: { item: AudioBookItemResponse }) {
+function AudioBookItemCard ({ item }: { item: AudioBookItemResponse; }) {
   return (
-    <Paper
-      sx={(theme) => ({
-        p: 1.5,
-        borderRadius: 2,
-        border: '1px solid',
-        borderColor: 'divider',
-        boxShadow: 'none',
-        bgcolor: alpha(theme.palette.background.paper, 0.84),
-      })}
-    >
-      <Stack spacing={1.25}>
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'flex-start' }}>
-          <Box
-            sx={(theme) => ({
-              width: 28,
-              height: 28,
-              borderRadius: '50%',
-              flexShrink: 0,
-              display: 'grid',
-              placeItems: 'center',
-              bgcolor: alpha(theme.palette.primary.main, 0.12),
-              color: 'primary.main',
-              fontSize: 12,
-              fontWeight: 700,
-            })}
-          >
-            {item.order}
-          </Box>
+    <Paper>
+      <Stack>
+        <Typography variant='body1' sx={{ direction: 'rtl', lineHeight: 1.75 }}>
+          {item.sentence}
+        </Typography>
 
-          <Stack spacing={0.75} sx={{ minWidth: 0, flex: 1 }}>
-            <Typography sx={{ direction: 'ltr', lineHeight: 1.75 }}>
-              {item.sentence}
-            </Typography>
-
-            {item.translation && (
-              <Typography variant="body2" sx={{ color: 'text.secondary', direction: 'rtl', lineHeight: 1.8 }}>
-                {item.translation}
-              </Typography>
-            )}
-          </Stack>
-        </Stack>
-
-        {item.expressions.length > 0 && (
-          <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 0.75, pl: 4.5 }}>
-            {item.expressions.map((expression) => (
-              <Chip
-                key={expression.id}
-                size="small"
-                label={`${expression.phrase} - ${expression.meaning}`}
-                sx={{ maxWidth: '100%', '& .MuiChip-label': { overflow: 'hidden', textOverflow: 'ellipsis' } }}
-              />
-            ))}
-          </Stack>
+        {item.translation && (
+          <Typography variant="caption" sx={{ color: 'text.secondary', direction: 'ltr' }}>
+            {item.translation}
+          </Typography>
         )}
       </Stack>
     </Paper>
   );
 }
 
-export default function AudioBookDetailPage() {
-  const { audioBookId } = useParams<{ audioBookId: string }>();
+export default function AudioBookDetailPage () {
+  const { audioBookId } = useParams<{ audioBookId: string; }>();
   const parsedAudioBookId = Number(audioBookId);
   const hasValidAudioBookId = Number.isFinite(parsedAudioBookId) && parsedAudioBookId > 0;
 
@@ -82,19 +38,11 @@ export default function AudioBookDetailPage() {
   });
 
   const audioBook = audioBookQuery.data;
+
   const items = useMemo(
     () => [...(audioBook?.items ?? [])].sort((a, b) => a.order - b.order),
     [audioBook?.items],
   );
-  const metadata = [audioBook?.author, audioBook?.level, audioBook?.year].filter(Boolean).join(' • ');
-
-  if (!hasValidAudioBookId) {
-    return (
-      <Scaffold header={<DefaultHeader header="کتاب صوتی" />}>
-        <ErrorPage message="شناسه کتاب صوتی معتبر نیست" />
-      </Scaffold>
-    );
-  }
 
   if (audioBookQuery.isLoading) {
     return <AppLoader />;
@@ -109,53 +57,49 @@ export default function AudioBookDetailPage() {
   }
 
   return (
-    <Scaffold header={<DefaultHeader header="کتاب صوتی" />}>
-      <Stack spacing={2} sx={{ minHeight: 0 }}>
-        <Paper
-          sx={(theme) => ({
-            p: 2,
-            borderRadius: 2,
-            border: '1px solid',
-            borderColor: 'divider',
-            boxShadow: 'none',
-            background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)}, ${alpha(theme.palette.secondary.main, 0.08)})`,
-          })}
-        >
+    <Scaffold header={<DefaultHeader header={audioBook.title} />}>
+
+      <Stack spacing={2} >
+        <Paper sx={{ p: 2 }}>
           <Stack spacing={1} sx={{ direction: 'rtl' }}>
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-              <AppIcon sx={{ color: 'primary.main' }}>volume_up</AppIcon>
-              <Typography variant="h6" sx={{ fontWeight: 800 }}>
-                {audioBook.title}
+            <Typography variant="h6" >
+              {audioBook.title}
+            </Typography>
+
+            <Stack direction='row' sx={{ gap: 1 }}>
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                {audioBook.level}
+              </Typography>
+
+              <Typography variant='body2' sx={{ color: 'text.secondary' }}>-</Typography>
+
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                {audioBook.author}
+              </Typography>
+
+              <Typography variant='body2' sx={{ color: 'text.secondary' }}>-</Typography>
+
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                {audioBook.wordCount} Words
               </Typography>
             </Stack>
 
-            {metadata && (
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {metadata}
-              </Typography>
-            )}
-
             {audioBook.description && (
-              <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.8 }}>
+              <Typography variant="body2" sx={{ color: 'text.secondary', direction: 'ltr' }}>
                 {audioBook.description}
               </Typography>
             )}
           </Stack>
         </Paper>
 
-        {items.length === 0 ? (
-          <Stack sx={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 1, opacity: 0.6, py: 8 }}>
-            <AppIcon sx={{ fontSize: 48 }}>format_list_bulleted</AppIcon>
-            <Typography variant="body2">هنوز آیتمی برای این کتاب صوتی ثبت نشده</Typography>
-          </Stack>
-        ) : (
-          <Stack spacing={1}>
-            {items.map((item) => (
-              <AudioBookItemCard key={item.id} item={item} />
-            ))}
-          </Stack>
-        )}
+        <Stack spacing={1}>
+          {items.map((item) => (
+            <AudioBookItemCard key={item.id} item={item} />
+          ))}
+        </Stack>
+
       </Stack>
+
     </Scaffold>
   );
 }

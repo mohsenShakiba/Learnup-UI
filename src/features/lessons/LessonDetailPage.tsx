@@ -1,10 +1,13 @@
 import { Box, Button, Stack } from "@mui/material";
+import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AppIcon } from "../../shared/components/AppIcon";
 import { AppLoader } from "../../shared/components/AppLoader";
 import { DefaultHeader } from "../../shared/components/DefaultHeader";
 import { ErrorPage } from "../../shared/components/ErrorPage";
 import { Scaffold } from "../../shared/components/Scaffold";
+import { dialogStore } from "../../shared/dialog/dialogStore";
+import { AccessLimitDialog } from "./components/AccessLimitDialog";
 import { ConversationListItem } from "./components/ConversationListItem";
 import { GrammarListItem } from "./components/GrammarListItem";
 import { LessonTimeline } from "./components/LessonTimeline";
@@ -19,8 +22,18 @@ export default function LessonDetailPage () {
 
   const lessonQuery = useLesson(lessonIdNumber);
 
+  useEffect(() => {
+    if (lessonQuery.isAccessLimitError) {
+      dialogStore.show(AccessLimitDialog);
+    }
+  }, [lessonQuery.isAccessLimitError]);
+
   if (lessonQuery.isLoading) {
     return <AppLoader />;
+  }
+
+  if (lessonQuery.isAccessLimitError) {
+    return <></>;
   }
 
   if (lessonQuery.isError || !lessonQuery.data) {
@@ -85,7 +98,7 @@ export default function LessonDetailPage () {
 
         {lesson.nextLessonId !== null && (
           <>
-            <Stack sx={{ gap: 2, pb: 2 }}>
+            <Stack sx={{ gap: 2, pb: 2, borderRadius: 999 }}>
               <Button
                 variant="outlined"
                 fullWidth

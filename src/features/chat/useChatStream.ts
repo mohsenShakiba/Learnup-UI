@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ChatMessageResponse, ChatRequest } from "../../api/Learnup";
-import { ChatsService } from "../../api/Learnup";
+import { ApiError, ChatsService } from "../../api/Learnup";
+import { dialogStore } from "../../shared/dialog/dialogStore";
+import { TokenExceededDialog } from "./components/TokenExceededDialog";
 import { toast } from "../../shared/toast";
-import { streamChat } from "./chatHub";
+import { ensureChatHubConnected, subscribeToChatHub } from "./chatHub";
 
 export type ChatRole = "user" | "assistant";
 
@@ -20,6 +22,33 @@ function makeId (): string {
   return typeof crypto !== "undefined" && "randomUUID" in crypto
     ? crypto.randomUUID()
     : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
+const TOKEN_EXCEED_CODE = "TokenExceed";
+const TOKEN_EXCEEDED_MESSAGE =
+  "اعتبار گفتگوی هوش مصنوعی شما کافی نیست. لطفاً اشتراک خود را تمدید کنید یا بعداً دوباره تلاش کنید.";
+
+function containsTokenExceedCode (value: unknown): boolean {
+  if (typeof value === "string") return value.includes(TOKEN_EXCEED_CODE);
+  if (value instanceof Error) {
+    return containsTokenExceedCode(value.message) ||
+      containsTokenExceedCode(value.cause);
+  }
+  if (value && typeof value === "object") {
+    try {
+      return JSON.stringify(value).includes(TOKEN_EXCEED_CODE);
+    } catch {
+      return false;
+    }
+  }
+  return false;
+}
+
+function isTokenExceedError (error: unknown): boolean {
+  if (error instanceof ApiError) {
+    return containsTokenExceedCode(error.body);
+  }
+  return containsTokenExceedCode(error);
 }
 
 function toChatMessage (message: ChatMessageResponse): ChatMessage {
@@ -42,9 +71,8 @@ export interface UseChatStream {
  * Owns the chat message list and the send/stream lifecycle.
  *
  * Sending a message optimistically appends the user's message plus a pending
- * assistant bubble, then streams tokens into that bubble over SignalR. If the
- * hub is unavailable (or errors before any token arrives) it falls back to the
- * REST `AiService.chatWithAi` endpoint so a reply is still produced.
+ * assistant bubble. The request is sent over REST, while SignalR is only used
+ * to receive the ChatStarted/ChatDelta/ChatCompleted/ChatFailed events.
  */
 export function useChatStream (initialChatId?: number): UseChatStream {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -107,75 +135,124 @@ export function useChatStream (initialChatId?: number): UseChatStream {
       ]);
       setIsStreaming(true);
 
-      // A stable chat id lets the stream and REST fallback agree on the same
-      // thread; start one lazily on the first message.
-      if (chatIdRef.current == null) {
-        try {
-          const chat = await ChatsService.startChat();
-          chatIdRef.current = chat.id;
-        } catch {
-          // Non-fatal: chatWithAi accepts a null chatId and creates one.
-        }
-      }
-
       const request: ChatRequest = {
         chatId: chatIdRef.current,
         message: content,
       };
 
-      const finalize = () => {
-        patchMessage(assistantId, { pending: false });
-        setIsStreaming(false);
-        cancelRef.current = null;
+      let activeChatId = request.chatId;
+      let finished = false;
+
+      const acceptsEvent = (eventChatId?: number | null) => {
+        if (eventChatId == null) return true;
+
+        if (activeChatId == null) {
+          activeChatId = eventChatId;
+          chatIdRef.current = eventChatId;
+          return true;
+        }
+
+        return eventChatId === activeChatId;
       };
 
-      const fallbackToRest = async () => {
-        try {
-          const response = await ChatsService.chatWithAi(request);
-          chatIdRef.current = response.chatId;
-          patchMessage(assistantId, {
-            content: response.reply,
-            pending: false,
-          });
-        } catch {
-          patchMessage(assistantId, {
-            content: "پاسخی دریافت نشد. لطفاً دوباره تلاش کنید.",
-            pending: false,
-            error: true,
-          });
-          toast.error("خطا در دریافت پاسخ");
-        } finally {
-          setIsStreaming(false);
+      let unsubscribe: (() => void) | null = null;
+
+      const cleanup = () => {
+        unsubscribe?.();
+        unsubscribe = null;
+        if (cancelRef.current === cancel) {
           cancelRef.current = null;
         }
       };
 
-      let receivedAnyToken = false;
+      const cancel = () => {
+        finished = true;
+        cleanup();
+      };
 
-      cancelRef.current = streamChat(request, {
-        onToken: (chunk) => {
-          receivedAnyToken = true;
-          console.log("[useChatStream] onToken:", chunk);
+      const finalize = () => {
+        if (finished) return;
+        finished = true;
+        patchMessage(assistantId, { pending: false });
+        setIsStreaming(false);
+        cleanup();
+      };
+
+      const showTokenExceeded = () => {
+        if (finished) return;
+        finished = true;
+        patchMessage(assistantId, {
+          content: TOKEN_EXCEEDED_MESSAGE,
+          pending: false,
+          error: true,
+        });
+        dialogStore.show(TokenExceededDialog);
+        setIsStreaming(false);
+        cleanup();
+      };
+
+      const failReply = (errorMessage = "پاسخی دریافت نشد. لطفاً دوباره تلاش کنید.") => {
+        if (finished) return;
+        finished = true;
+        patchMessage(assistantId, {
+          content: errorMessage,
+          pending: false,
+          error: true,
+        });
+        setIsStreaming(false);
+        cleanup();
+        toast.error("خطا در دریافت پاسخ");
+      };
+
+      unsubscribe = subscribeToChatHub({
+        onStarted: ({ chatId }) => {
+          if (!acceptsEvent(chatId)) return;
+          if (chatId != null) chatIdRef.current = chatId;
+        },
+        onDelta: ({ chatId, token }) => {
+          if (!token || !acceptsEvent(chatId)) return;
           setMessages((prev) =>
             prev.map((m) =>
-              m.id === assistantId
-                ? { ...m, content: m.content + chunk, pending: true }
-                : m,
+              m.id === assistantId ? {
+                ...m,
+                content: m.content + token,
+                pending: true,
+              } : m,
             ),
           );
         },
-        onComplete: () => {
-          console.log("[useChatStream] onComplete, receivedAnyToken =", receivedAnyToken);
+        onCompleted: ({ chatId }) => {
+          if (!acceptsEvent(chatId)) return;
           finalize();
         },
-        onError: (error) => {
-          console.error("[useChatStream] onError, receivedAnyToken =", receivedAnyToken, error);
-          // If the hub never produced a token, the reply is still fully
-          // recoverable over REST; otherwise keep the partial text we have.
-          if (receivedAnyToken) finalize();
-          else void fallbackToRest();
+        onFailed: ({ chatId, error }) => {
+          if (!acceptsEvent(chatId)) return;
+          if (isTokenExceedError(error)) {
+            showTokenExceeded();
+            return;
+          }
+
+          failReply();
         },
       });
+
+      cancelRef.current = cancel;
+
+      try {
+        await ensureChatHubConnected();
+        const response = await ChatsService.chatWithAi(request);
+        if (response.chatId != null) {
+          activeChatId = response.chatId;
+          chatIdRef.current = response.chatId;
+        }
+      } catch (error) {
+        if (isTokenExceedError(error)) {
+          showTokenExceeded();
+          return;
+        }
+
+        failReply();
+      }
     },
     [isStreaming, patchMessage],
   );
@@ -189,5 +266,11 @@ export function useChatStream (initialChatId?: number): UseChatStream {
     );
   }, []);
 
-  return { messages, isStreaming, isLoadingHistory, send, stop };
+  return {
+    messages,
+    isStreaming,
+    isLoadingHistory,
+    send,
+    stop,
+  };
 }

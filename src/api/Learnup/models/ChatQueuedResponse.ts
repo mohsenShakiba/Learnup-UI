@@ -3,8 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type ChatResponse = {
-    chatId: number;
-    reply: string;
-    tokensUsed: number;
+export type ChatQueuedResponse = {
+    chatId: number | null;
+    status: string;
 };

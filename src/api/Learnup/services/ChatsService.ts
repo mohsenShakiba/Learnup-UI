@@ -3,8 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { ChatDetailResponse } from '../models/ChatDetailResponse';
+import type { ChatQueuedResponse } from '../models/ChatQueuedResponse';
 import type { ChatRequest } from '../models/ChatRequest';
-import type { ChatResponse } from '../models/ChatResponse';
 import type { ChatSummaryResponse } from '../models/ChatSummaryResponse';
 import type { SendAiTextRequest } from '../models/SendAiTextRequest';
 import type { SendAiTextResponse } from '../models/SendAiTextResponse';
@@ -15,17 +15,6 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 
 export class ChatsService {
-
-    /**
-     * @returns ChatSummaryResponse OK
-     * @throws ApiError
-     */
-    public static startChat(): CancelablePromise<ChatSummaryResponse> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/Mobile/Chats',
-        });
-    }
 
     /**
      * @returns ChatSummaryResponse OK
@@ -73,12 +62,12 @@ requestBody?: SendAiTextRequest,
 
     /**
      * @param requestBody 
-     * @returns ChatResponse OK
+     * @returns ChatQueuedResponse OK
      * @throws ApiError
      */
     public static chatWithAi(
 requestBody?: ChatRequest,
-): CancelablePromise<ChatResponse> {
+): CancelablePromise<ChatQueuedResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/Mobile/Chats/Chat',

@@ -1,10 +1,10 @@
 import type { MaterialSymbolsComponent } from "@material-symbols-svg/react";
-import { Forum } from "@material-symbols-svg/react/icons/forum";
-import { SpaceDashboard } from "@material-symbols-svg/react/icons/space-dashboard";
+import { DeployedCode } from "@material-symbols-svg/react/icons/deployed-code";
 import { MenuBook } from "@material-symbols-svg/react/icons/menu-book";
 import { School } from "@material-symbols-svg/react/icons/school";
 import { Search } from "@material-symbols-svg/react/icons/search";
-import { Box as BoxIcon } from "@material-symbols-svg/react/icons/box";
+import { Sms } from "@material-symbols-svg/react/icons/sms";
+import { SpaceDashboard } from "@material-symbols-svg/react/icons/space-dashboard";
 import type { SvgIconProps } from "@mui/material";
 import { Box, ButtonBase, SvgIcon, Typography, useTheme } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -12,10 +12,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 export const ROOT_TABS = [
   { label: 'داشبورد', icon: 'space_dashboard', path: '/dashboard' },
   { label: 'دوره ها', icon: 'school', path: '/courses' },
-  { label: 'لایتنر', icon: 'box', path: '/leitner-box' },
+  { label: 'لایتنر', icon: 'deployed_code', path: '/leitner-box' },
   { label: 'کتابخانه', icon: 'menu_book', path: '/library' },
   { label: 'جستجو', icon: 'search', path: '/vocab' },
-  { label: 'مکالمه', icon: 'forum', path: '/chat' },
+  { label: 'دستیار زبان', icon: 'sms', path: '/chat' },
 ] as const;
 
 const tabs = ROOT_TABS;
@@ -23,9 +23,9 @@ const extraPaths = [
   "/boxlevel",
 ];
 const NAV_SYMBOLS = {
-  forum: Forum,
+  sms: Sms,
   space_dashboard: SpaceDashboard,
-  box: BoxIcon,
+  deployed_code: DeployedCode,
   menu_book: MenuBook,
   school: School,
   search: Search,
@@ -35,7 +35,7 @@ type BottomNavSymbolProps = Omit<SvgIconProps, "children"> & {
   name: keyof typeof NAV_SYMBOLS;
 };
 
-function BottomNavSymbol({ name, sx, ...props }: BottomNavSymbolProps) {
+function BottomNavSymbol ({ name, sx, ...props }: BottomNavSymbolProps) {
   const Symbol = NAV_SYMBOLS[name];
 
   return (
@@ -52,7 +52,7 @@ function BottomNavSymbol({ name, sx, ...props }: BottomNavSymbolProps) {
   );
 }
 
-export function isBottomNavVisible(pathname: string) {
+export function isBottomNavVisible (pathname: string) {
   return (
     extraPaths.some(t => pathname.startsWith(t)) ||
     tabs.some(t => pathname.startsWith(t.path))
@@ -60,7 +60,7 @@ export function isBottomNavVisible(pathname: string) {
 }
 
 
-export function BottomNav() {
+export function BottomNav () {
   const theme = useTheme();
   const location = useLocation();
   const navigate = useNavigate();

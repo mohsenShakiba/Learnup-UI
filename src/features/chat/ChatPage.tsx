@@ -10,8 +10,6 @@ import { ChatMessageBubble } from "./components/ChatMessageBubble";
 import { ConversationListDrawer } from "./components/ConversationListDrawer";
 import { useChatStream } from "./useChatStream";
 
-const CONTENT_MAX_WIDTH = 500;
-
 export default function ChatPage () {
   const { chatId } = useParams();
   const parsedId = chatId ? Number(chatId) : undefined;
@@ -25,8 +23,7 @@ export default function ChatPage () {
 function ChatView ({ chatId }: { chatId?: number; }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const { messages, isStreaming, isLoadingHistory, send, stop } =
-    useChatStream(chatId);
+  const { messages, isStreaming, isLoadingHistory, send, stop } = useChatStream(chatId);
 
   const bottomRef = useRef<HTMLDivElement | null>(null);
 

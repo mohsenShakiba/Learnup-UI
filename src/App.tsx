@@ -32,6 +32,7 @@ import LessonVocabsPage from "./features/vocabs/LessonVocabsPage";
 import VocabSearchPage from "./features/vocabs/VocabSearchPage";
 import LessonVocabTestsPage from "./features/VocabTests/LessonVocabTestsPage";
 import { BottomNav, isBottomNavVisible } from "./shared/components/BottomNav";
+import { DialogHost } from "./shared/dialog/DialogHost";
 setupOpenApi();
 
 function AppLayout () {
@@ -116,6 +117,7 @@ function App () {
   return (
     <BrowserRouter>
       <AppLayout />
+      <DialogHost />
     </BrowserRouter>
   );
 }

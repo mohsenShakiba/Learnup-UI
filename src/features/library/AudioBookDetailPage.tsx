@@ -1,4 +1,4 @@
-import { Paper, Stack, Typography } from '@mui/material';
+import { Box, Paper, Stack, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
@@ -6,6 +6,7 @@ import { AudioBooksService, type AudioBookItemResponse } from '../../api/Learnup
 import { AppLoader } from '../../shared/components/AppLoader';
 import { DefaultHeader } from '../../shared/components/DefaultHeader';
 import { ErrorPage } from '../../shared/components/ErrorPage';
+import { ImageLoader } from '../../shared/components/ImageLoader';
 import { Scaffold } from '../../shared/components/Scaffold';
 
 function AudioBookItemCard ({ item }: { item: AudioBookItemResponse; }) {
@@ -44,6 +45,9 @@ export default function AudioBookDetailPage () {
     [audioBook?.items],
   );
 
+  const metadata = [audioBook?.level, audioBook?.author, audioBook?.wordCount ? `${audioBook.wordCount} Words` : null]
+    .filter((value): value is string => Boolean(value));
+
   if (audioBookQuery.isLoading) {
     return <AppLoader />;
   }
@@ -60,32 +64,62 @@ export default function AudioBookDetailPage () {
     <Scaffold header={<DefaultHeader header={audioBook.title} />}>
 
       <Stack spacing={2} >
-        <Paper sx={{ p: 2 }}>
-          <Stack spacing={1} sx={{ direction: 'rtl' }}>
-            <Typography variant="h6" >
+        <Paper
+          sx={(theme) => ({
+            position: 'relative',
+            overflow: 'hidden',
+            aspectRatio: '6/9',
+            p: 0,
+          })}
+        >
+          {audioBook.coverId && (
+            <ImageLoader
+              coverId={audioBook.coverId}
+              alt={audioBook.title}
+              sx={{
+                position: 'absolute',
+                inset: 0,
+              }}
+            />
+          )}
+
+          <Box
+            sx={{
+              position: 'absolute',
+              inset: 0,
+            }}
+          />
+
+          <Stack
+            spacing={1}
+            sx={(theme) => ({
+              position: 'absolute',
+              left: 0,
+              right: 0,
+              bottom: 0,
+              direction: 'rtl',
+              p: 2,
+              background: 'rgba(25, 23, 29, 0.3)',
+              color: 'common.white',
+              backdropFilter: audioBook.coverId ? 'blur(18px)' : undefined,
+            })}
+          >
+            <Typography variant="h6">
               {audioBook.title}
             </Typography>
 
-            <Stack direction='row' sx={{ gap: 1 }}>
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {audioBook.level}
-              </Typography>
-
-              <Typography variant='body2' sx={{ color: 'text.secondary' }}>-</Typography>
-
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {audioBook.author}
-              </Typography>
-
-              <Typography variant='body2' sx={{ color: 'text.secondary' }}>-</Typography>
-
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {audioBook.wordCount} Words
-              </Typography>
-            </Stack>
+            {metadata.length > 0 && (
+              <Stack direction='row' sx={{ gap: 1, flexWrap: 'wrap', alignItems: 'center' }}>
+                {metadata.map((value) => (
+                  <Typography key={value} variant="body2">
+                    {value}
+                  </Typography>
+                ))}
+              </Stack>
+            )}
 
             {audioBook.description && (
-              <Typography variant="body2" sx={{ color: 'text.secondary', direction: 'ltr' }}>
+              <Typography variant="body2" sx={{ direction: 'ltr' }}>
                 {audioBook.description}
               </Typography>
             )}

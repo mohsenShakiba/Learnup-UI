@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import type { UserBookResponse } from '../../../api/Learnup';
 import { getFileById } from '../../../services/fetchFile';
 import { AppIcon } from '../../../shared/components/AppIcon';
+import { ImagePlaceholder } from '../../../shared/components/ImagePlaceholder';
 
 interface BookListItemProps {
   book: UserBookResponse;
@@ -12,17 +13,21 @@ interface BookListItemProps {
 
 export function BookListItem ({ book, onClick, onRemove }: BookListItemProps) {
   const [coverUrl, setCoverUrl] = useState<string | null>(null);
+  const [imageStatus, setImageStatus] = useState<'idle' | 'loading' | 'loaded' | 'error'>('idle');
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
     if (!book.coverId) {
       setCoverUrl(null);
+      setImageStatus('idle');
       return;
     }
 
     let cancelled = false;
     let objectUrl: string | null = null;
 
+    setCoverUrl(null);
+    setImageStatus('loading');
     getFileById(book.coverId)
       .then((buffer) => {
         const url = URL.createObjectURL(new Blob([buffer]));
@@ -32,9 +37,13 @@ export function BookListItem ({ book, onClick, onRemove }: BookListItemProps) {
         }
         objectUrl = url;
         setCoverUrl(url);
+        setImageStatus('loading');
       })
       .catch(() => {
-        if (!cancelled) setCoverUrl(null);
+        if (!cancelled) {
+          setCoverUrl(null);
+          setImageStatus('error');
+        }
       });
 
     return () => {
@@ -70,32 +79,95 @@ export function BookListItem ({ book, onClick, onRemove }: BookListItemProps) {
           }}
         >
           {coverUrl ? (
-            <Box
-              component="img"
-              src={coverUrl}
-              alt={book.title}
-              sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            />
-          ) : (
-            <Stack sx={{ flex: 1, justifyContent: 'space-between', p: 2, mb: 1, direction: 'rtl', }}>
-              <Typography
-                sx={{
-                  textAlign: 'center',
-                  fontWeight: 600,
+            imageStatus === 'loaded' ? (
+              <Box
+                component="img"
+                src={coverUrl}
+                alt={book.title}
+                sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                onLoad={() => setImageStatus('loaded')}
+                onError={() => {
+                  setCoverUrl(null);
+                  setImageStatus('error');
                 }}
+              />
+            ) : (
+              <ImagePlaceholder
+                alt={book.title}
+                loading={imageStatus === 'loading'}
+                sx={{ width: '100%', height: '100%' }}
               >
-                {book.title}
-              </Typography>
-              <Typography variant='caption' sx={{
-                color: 'text.secondary',
-                textAlign: 'center',
-              }}>
-                {book.author}
-              </Typography>
-              <Box component='img'
-                src='/images/subscriptions/book.png'
-                sx={{ position: 'absolute', bottom: 0, right: -100, width: '250px', opacity: 0.05 }} />
-            </Stack>
+                {imageStatus !== 'loading' && (
+                  <Stack
+                    sx={{ flex: 1, justifyContent: 'space-between', p: 2, mb: 1, direction: 'rtl' }}
+                  >
+                    <Typography
+                      sx={{
+                        textAlign: 'center',
+                        fontWeight: 600,
+                      }}
+                    >
+                      {book.title}
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        color: 'text.secondary',
+                        textAlign: 'center',
+                      }}
+                    >
+                      {book.author}
+                    </Typography>
+                    <Box
+                      component="img"
+                      src="/images/subscriptions/book.png"
+                      sx={{
+                        position: 'absolute',
+                        bottom: 0,
+                        right: -100,
+                        width: '250px',
+                        opacity: 0.05,
+                      }}
+                    />
+                  </Stack>
+                )}
+              </ImagePlaceholder>
+            )
+          ) : (
+            <ImagePlaceholder alt={book.title} loading={imageStatus === 'loading'} sx={{ width: '100%', height: '100%' }}>
+              {imageStatus === 'loading' ? null : (
+                <Stack sx={{ flex: 1, justifyContent: 'space-between', p: 2, mb: 1, direction: 'rtl' }}>
+                  <Typography
+                    sx={{
+                      textAlign: 'center',
+                      fontWeight: 600,
+                    }}
+                  >
+                    {book.title}
+                  </Typography>
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      color: 'text.secondary',
+                      textAlign: 'center',
+                    }}
+                  >
+                    {book.author}
+                  </Typography>
+                  <Box
+                    component="img"
+                    src="/images/subscriptions/book.png"
+                    sx={{
+                      position: 'absolute',
+                      bottom: 0,
+                      right: -100,
+                      width: '250px',
+                      opacity: 0.05,
+                    }}
+                  />
+                </Stack>
+              )}
+            </ImagePlaceholder>
           )}
 
         </Box>

@@ -1,24 +1,25 @@
-import { CssBaseline, ThemeProvider, useMediaQuery } from '@mui/material';
-import { CacheProvider } from '@emotion/react';
-import createCache from '@emotion/cache';
-import { prefixer } from 'stylis';
-import rtlPlugin from 'stylis-plugin-rtl';
-import { useEffect, useMemo, useState, type ReactNode } from 'react';
-import { createLearnupTheme } from './theme';
+import createCache from "@emotion/cache";
+import { CacheProvider } from "@emotion/react";
+import { CssBaseline, ThemeProvider, useMediaQuery } from "@mui/material";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { prefixer } from "stylis";
+import rtlPlugin from "stylis-plugin-rtl";
+import { createLearnupTheme } from "./theme";
 
 const rtlCache = createCache({
-  key: 'muirtl',
+  key: "muirtl",
   stylisPlugins: [prefixer, rtlPlugin],
 });
+
 import {
   getStoredThemeMode,
-  ThemeModeContext,
   THEME_MODE_STORAGE_KEY,
+  ThemeModeContext,
   type ThemeMode,
-} from './themeMode';
+} from "./themeMode";
 
-export function LearnupThemeProvider ({ children }: { children: ReactNode; }) {
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+export function LearnupThemeProvider({ children }: { children: ReactNode }) {
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
   const [mode, setModeState] = useState<ThemeMode>(getStoredThemeMode);
 
   const setMode = (next: ThemeMode) => {
@@ -26,15 +27,15 @@ export function LearnupThemeProvider ({ children }: { children: ReactNode; }) {
     localStorage.setItem(THEME_MODE_STORAGE_KEY, next);
   };
 
-  const isDark = mode === 'system' ? prefersDarkMode : mode === 'dark';
+  const isDark = mode === "system" ? prefersDarkMode : mode === "dark";
 
   const theme = useMemo(
-    () => createLearnupTheme(isDark ? 'dark' : 'light'),
+    () => createLearnupTheme(isDark ? "dark" : "light"),
     [isDark],
   );
 
   useEffect(() => {
-    document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
+    document.documentElement.style.colorScheme = isDark ? "dark" : "light";
   }, [isDark]);
 
   return (

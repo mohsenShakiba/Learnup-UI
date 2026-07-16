@@ -26,6 +26,9 @@ import ListBooksPage from "./features/library/ListBooksPage";
 import UploadBookPage from "./features/library/UploadBookPage";
 import PlacementPage from "./features/placement/PlacementPage";
 import ProfilePage from "./features/profile/ProfilePage";
+import InvalidDataReportListPage from "./features/reports/InvalidDataReportListPage";
+import InvalidDataReportPage from "./features/reports/InvalidDataReportPage";
+import ContactUsPage from "./features/settings/ContactUsPage";
 import SubscriptionsPage from "./features/settings/SubscriptionsPage";
 import ConversationDetailPage from "./features/conversations/ConversationDetailPage";
 import LessonVocabsPage from "./features/vocabs/LessonVocabsPage";
@@ -87,10 +90,16 @@ function AppLayout () {
               path="/settings/subscriptions"
               element={<SubscriptionsPage />}
             />
+            <Route path="/contact" element={<ContactUsPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/chat" element={<ChatPage />} />
             <Route path="/chat/:chatId" element={<ChatPage />} />
             <Route path="/placement" element={<PlacementPage />} />
+            <Route
+              path="/report/invalid-data/list"
+              element={<InvalidDataReportListPage />}
+            />
+            <Route path="/report/invalid-data" element={<InvalidDataReportPage />} />
             <Route path="/library/book/:bookId" element={<BookDetailPage />} />
             <Route
               path="/library/audio-book/:audioBookId"

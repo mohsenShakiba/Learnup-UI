@@ -132,7 +132,6 @@ export const createLearnupTheme = (mode: PaletteMode) => {
         styleOverrides: {
           root: {
             borderRadius: '16px',
-            border: '1px solid',
             borderColor: dividerColor
           },
         },

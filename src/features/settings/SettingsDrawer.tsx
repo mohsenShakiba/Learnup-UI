@@ -136,13 +136,13 @@ export function SettingsDrawer ({ open, onClose }: SettingsDrawerProps) {
           <AppIcon sx={{ opacity: 0.4, fontSize: 18 }}>chevron_left</AppIcon>
         </ListItemButton>
         <Divider />
-        <ListItemButton sx={{ height: 45 }} >
+        <ListItemButton sx={{ height: 45 }} onClick={() => go('/contact')}>
           <Typography variant="body2" >ارتباط با ما</Typography>
           <Box sx={{ flex: 1 }} />
           <AppIcon sx={{ opacity: 0.4, fontSize: 18 }}>chevron_left</AppIcon>
         </ListItemButton>
         <Divider />
-        <ListItemButton sx={{ height: 45 }} >
+        <ListItemButton sx={{ height: 45 }} onClick={() => go('/report/invalid-data')}>
           <Typography variant="body2" >گزارش خطا</Typography>
           <Box sx={{ flex: 1 }} />
           <AppIcon sx={{ opacity: 0.4, fontSize: 18 }}>chevron_left</AppIcon>
